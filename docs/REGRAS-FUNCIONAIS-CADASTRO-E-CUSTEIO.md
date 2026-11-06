@@ -39,7 +39,7 @@ A origem do custo é determinada pelo tipo e pela existência de estrutura:
 
 Para uma estrutura cuja quantidade-base representa uma unidade do item composto:
 
-**Custo unitário do composto = soma do (quantidade utilizada de cada componente × custo unitário vigente desse componente), com conversões de unidade aplicáveis.**
+**Custo unitário do composto = soma do (quantidade utilizada de cada componente × custo unitário vigente desse componente), respeitando a unidade única cadastrada para cada item. Não há unidades alternativas nem conversão automática.**
 
 Exemplo confirmado:
 
@@ -109,7 +109,7 @@ A interface deve deixar evidente quando o custo é manual e quando é calculado,
 
 Não assumir decisões para os pontos abaixo sem confirmação:
 
-1. Unidades de medida suportadas e conversões permitidas entre unidade, kg, g, metro, mm etc.
+1. Recuperar a lista exata de unidades de medida já aprovada nas conversas anteriores. Não criar unidades alternativas nem conversões automáticas.
 2. Quantidade-base da estrutura (sempre uma unidade ou lote de produção configurável).
 3. Regras universais de aproveitamento de barras/tubos e arredondamento de compras.
 4. Precisão interna, arredondamento e apresentação monetária.
