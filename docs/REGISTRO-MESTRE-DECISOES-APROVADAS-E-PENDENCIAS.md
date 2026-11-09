@@ -1447,3 +1447,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Testes autorizados e controlados; testes em produção exigem autorização e salvaguardas específicas.
 - Falhas críticas recebem prioridade imediata; correções exigem reteste e evidência de encerramento.
 - Pendências: metodologia, independência, severidade, prazos, gestão de evidências, testes de terceiros, escopo de produção e critérios de aceite.
+
+
+### Independência das auditorias de segurança — decisão aprovada (09/11/2026)
+- Testes não podem ser executados exclusivamente pelo Administrador ou equipe diretamente responsável pela operação avaliada; devem ser conduzidos por pessoa/equipe independente e tecnicamente competente.
+- Administradores acompanham resultados e recebem comunicação de falhas críticas.
+- Relatórios/resultados são preservados, sem exclusão ou alteração silenciosa.
+- Correções e retestes ficam vinculados ao relatório original, preservando achados, responsáveis, evidências e histórico.
+- Pendências: critérios de independência/conflitos, qualificação/seleção, contratação, acesso controlado, confidencialidade, comunicação e aceite.
