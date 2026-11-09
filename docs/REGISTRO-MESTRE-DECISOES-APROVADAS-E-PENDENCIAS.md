@@ -555,3 +555,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - A mudança é exclusivamente classificatória: não altera custo unitário, unidade de medida, tipo ou estrutura de composição.
 - O histórico do item deve preservar a família anterior e a nova, o responsável e a data/hora da alteração.
 - Aplicam-se permissões, validações, prévia, confirmação explícita e auditoria já aprovadas.
+
+
+## 36. Exclusão definitiva de famílias (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Família que já tenha sido utilizada em vínculos ou registros históricos não pode ser excluída definitivamente, mesmo sem itens vinculados atualmente.
+- Famílias utilizadas devem ser preservadas para integridade referencial e rastreabilidade; quando aplicável, usar inativação e arquivamento.
+- Exclusão definitiva só pode ser permitida se a família nunca tiver sido utilizada e não possuir vínculos atuais ou históricos.
+- A exclusão permitida exige prévia, confirmação explícita do Administrador e registro de auditoria.
+- A verificação considera histórico de uso, não apenas a contagem atual de itens; a implementação técnica dessa verificação permanece para a especificação de dados.
