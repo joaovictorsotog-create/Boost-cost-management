@@ -1014,3 +1014,14 @@ O sistema utilizará inicialmente as seguintes categorias para organizar as noti
 - **Sistema**
 
 As categorias devem ser apresentadas de forma clara no painel e no histórico de notificações. A classificação de cada evento, eventuais subcategorias, ícones, cores, filtros e regras para eventos que possam se enquadrar em mais de uma categoria permanecem pendentes de detalhamento. A lista poderá ser ampliada mediante decisão aprovada, sem criar categorias automaticamente por iniciativa do frontend.
+
+### Prioridade visual das notificações — decisão aprovada (09/11/2026)
+
+As notificações terão quatro níveis de prioridade:
+
+- **Crítica**
+- **Alta**
+- **Normal**
+- **Baixa**
+
+A prioridade é um atributo distinto da categoria da notificação. A categoria informa o assunto (Aprovações, Alterações de cadastro, Exclusões, Segurança ou Sistema); a prioridade indica o grau de atenção exigido. A classificação de cada evento deverá ser definida por regras de negócio no backend, não por decisão do frontend. Critérios objetivos de enquadramento, apresentação visual/sonora, escalonamento, filtros e eventual tratamento especial de notificações críticas permanecem pendentes de especificação.
