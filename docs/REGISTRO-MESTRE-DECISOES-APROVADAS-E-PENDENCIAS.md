@@ -1183,3 +1183,7 @@ Se a conexão cair com a tela aberta, os últimos dados recebidos e confirmados 
 ### Atualização dos detalhes quando a tela não estiver ativa — APROVADO (09/11/2026)
 
 Quando o usuário sair da tela de detalhes ou ela deixar de estar ativa/em primeiro plano, as consultas automáticas serão suspensas ou reduzidas. Ao retornar ou reativar a tela, o sistema consultará imediatamente o estado atual no backend, respeitando permissões. Os dados anteriores permanecerão identificados como última atualização confirmada até a validação da nova consulta. Essa política não poderá pausar, reiniciar, cancelar ou alterar a exportação. **PENDENTE:** definir mecanismo técnico e limites de frequência para telas ativas e inativas.
+
+### Frequência de atualização automática dos detalhes — APROVADO (09/11/2026)
+
+Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backend a cada **10 segundos**. O intervalo deverá ser tratado como referência máxima de frequência, com controle de carga, sem consultas simultâneas para a mesma tela/solicitação. Em segundo plano, aplicam-se as regras de suspensão/redução; ao retornar, haverá consulta imediata. Somente dados confirmados pelo backend serão apresentados como atuais.
