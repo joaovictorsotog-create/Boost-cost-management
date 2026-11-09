@@ -1078,3 +1078,8 @@ Alertas críticos, notificações e lembretes não dependem de Administradores c
 ### Ocorrências críticas simultâneas — APROVADO (09/11/2026)
 
 Cada ocorrência crítica terá identidade, estado, reconhecimento, resolução, reabertura, lembretes e linha do tempo independentes. A ação sobre um alerta não altera os demais. O contador do sino soma alertas distintos em **Aguardando reconhecimento**; o painel mantém cada ocorrência identificável. Persistência, autorização, concorrência, contagens e transições ficam sob autoridade do backend. Agrupamento que esconda identidades e operações em lote/resolução conjunta não ficam autorizados por esta decisão e dependerão de aprovação específica.
+
+
+### Limite de alertas críticos exibidos simultaneamente — APROVADO (09/11/2026)
+
+O painel exibirá no máximo **5 alertas críticos simultaneamente**. Ocorrências excedentes continuarão persistidas e acessíveis por paginação ou **Ver todos**, sem descarte ou perda de histórico. A visualização inicial será ordenada da mais recente para a mais antiga. O contador do sino continuará mostrando o total de alertas distintos em **Aguardando reconhecimento**, inclusive os que não aparecem na primeira visualização. O limite é apenas de apresentação, não de registro ou quantidade de alertas pendentes. O ciclo de vida de cada alerta permanece independente e o backend controla dados, contagens e permissões.
