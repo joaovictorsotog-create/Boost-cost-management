@@ -1435,3 +1435,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Permitir que o usuário conteste uma solicitação que não reconheça.
 - Uma contestação válida bloqueia a alteração pendente; o e-mail cadastrado permanece inalterado até resolução.
 - Registrar tentativas, avisos, contestações, bloqueios e resultados na auditoria, com responsável/ator e data/hora.
+
+
+### Recuperação de senha — decisão aprovada (09/11/2026)
+- Permitir que o usuário solicite recuperação de senha por e-mail.
+- Enviar link individual, de uso único, com validade de 30 minutos.
+- A emissão de um novo link invalida imediatamente o link anterior.
+- A resposta da solicitação deve ser genérica, sem revelar se o endereço informado possui ou não uma conta.
+- Após redefinição bem-sucedida da senha, invalidar todas as sessões anteriores do usuário.
+- Registrar a solicitação e o resultado da recuperação na auditoria, sem registrar senha ou token em texto aberto.
