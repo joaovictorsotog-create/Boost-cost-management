@@ -1642,3 +1642,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Relatórios e resultados dos testes são preservados; nenhum responsável pode apagá-los ou alterá-los silenciosamente.
 - Correções e retestes devem permanecer vinculados ao relatório original, preservando achados, responsáveis, evidências e histórico de resolução.
 - Pendências: critérios de independência/conflito de interesses, qualificação e seleção do auditor, contratação/periodicidade, acesso controlado a ambientes e evidências, confidencialidade, comunicação e aceite dos relatórios.
+
+
+### Classificação de falhas de segurança — decisão aprovada (09/11/2026)
+- Classificar achados dos testes e auditorias em quatro níveis: P0 Crítica, P1 Alta, P2 Média e P3 Baixa.
+- P0: ação imediata; P1: correção prioritária; P2: correção programada; P3: melhoria planejada.
+- Cada falha deve possuir responsável, prazo, evidências, plano de correção, estado e reteste documentado.
+- Falhas P0 impedem a liberação de nova versão até correção e reteste satisfatório, ou tratamento formal por exceção de risco autorizada e documentada.
+- Exceções não podem ser silenciosas: devem registrar justificativa, risco residual, controles compensatórios, responsável autorizador, prazo de validade e plano de resolução. A autorização não apaga nem reclassifica o achado original.
+- Pendências: critérios objetivos por nível, prazos máximos de P1/P2/P3, autoridade e segregação para exceções P0, validade/renovação, critérios de reteste e política de bloqueio de release.
