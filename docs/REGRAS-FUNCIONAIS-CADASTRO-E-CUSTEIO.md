@@ -550,3 +550,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A prévia deve respeitar permissões e visibilidade. Alterações nos registros selecionados ou no conjunto afetado enquanto a prévia estiver aberta exigem atualização ou nova validação antes da confirmação.
 - Após a confirmação, a operação deve ser executada com validação no backend e registrada na auditoria, com resultado identificável. Falhas parciais não podem ser apresentadas como sucesso integral; o tratamento de atomicidade ou retomada deverá ser especificado conforme cada operação.
 - A regra aplica-se, entre outras, a importações, alterações em lote e inativações em massa, sem substituir validações específicas de cada módulo.
+
+## 51. Proteção de vínculos e dependências antes de excluir itens — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Antes de qualquer operação de exclusão de um item do Cadastro Central, o sistema deve verificar se existem vínculos ou dependências atuais, inclusive em estruturas de composição e em outros registros ou módulos que referenciem o item.
+- Quando houver vínculos ou dependências, a prévia deve informar a quantidade e permitir consultar a relação dos registros afetados, identificando-os por código/ID e descrição ou pelos identificadores próprios do módulo.
+- A prévia deve explicar as consequências concretas da operação, incluindo estruturas e custos compostos que possam ser afetados, perda de disponibilidade para novas composições e impactos sobre histórico ou rastreabilidade.
+- A existência de vínculos não autoriza rompimento automático. A exclusão não poderá prosseguir enquanto houver dependências que comprometam a integridade referencial ou o histórico; o sistema deverá orientar a resolução segura dessas dependências.
+- Quando a exclusão for tecnicamente e funcionalmente permitida, deverá haver prévia atualizada, confirmação explícita do usuário autorizado e registro completo na auditoria.
+- A verificação e a proteção devem ser aplicadas no backend, não apenas na interface. Se os vínculos mudarem enquanto a prévia estiver aberta, exigir atualização ou nova validação antes de confirmar.
+- Esta regra não define ainda todos os estados possíveis de exclusão (por exemplo, exclusão lógica ou física) nem substitui a decisão específica sobre exclusão de itens com vínculos, que deverá ser detalhada antes da implementação.
