@@ -277,3 +277,14 @@ A listagem principal deve apresentar as seguintes colunas:
 - Situação (Ativo ou Inativo, quando o filtro de inativos estiver habilitado).
 
 A **Descrição complementar** não será exibida como coluna na listagem principal, para manter a tabela objetiva. Ela continuará disponível na tela do cadastro e será considerada na pesquisa.
+
+## 26. Organização da tela de cadastro — decisão aprovada em 09/11/2026
+
+O formulário de cadastro do Cadastro Central será apresentado em uma única tela, com quatro blocos organizados verticalmente:
+
+1. **Identificação:** ID, descrição principal, descrição complementar e família.
+2. **Características:** unidade de medida e tipo do item.
+3. **Custeio:** custo unitário e origem do custo (manual ou calculado), respeitando as regras de itens Simples e Compostos.
+4. **Controle:** situação do item e informações de atualização.
+
+Não serão usadas abas separadas para esses quatro blocos. A decisão trata da organização visual; não altera regras de validação, permissões, confirmação ou cálculo já aprovadas.
