@@ -912,3 +912,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Sem tela anterior disponível, **Voltar** fica desabilitado.
 - Sem tela posterior disponível, **Avançar** fica desabilitado.
 - Não executar navegação artificial; refletir o histórico real.
+
+### Preservação do contexto na navegação Voltar/Avançar — 09/11/2026
+
+**Status: APROVADO**
+
+- Voltar/Avançar preserva e restaura a posição de rolagem e os filtros aplicados da tela de destino.
+- A restauração respeita permissões e validade atual dos dados; atualizações em tempo real continuam aplicáveis sem perder critérios válidos.
+- Filtros temporários ainda não aplicados continuam sujeitos à confirmação de saída já aprovada.
+- Implementação técnica e tratamento de dados removidos ou permissões alteradas permanecem pendentes.
