@@ -1284,7 +1284,7 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Os filtros poderão ser combinados para refinar os resultados.
 - O backend deverá validar identidade, permissões e escopo de cada consulta, inclusive o filtro por usuário solicitante. O frontend não poderá ampliar o conjunto de registros acessíveis.
 - Os resultados deverão respeitar também a retenção de 15 meses e as regras de acesso individual aos arquivos exportados.
-- Comportamento de aplicação/limpeza dos filtros, paginação e ordenação dos resultados permanece pendente de definição.
+- A aplicação/limpeza dos filtros e a paginação estão definidas; a ordenação dos resultados permanece pendente.
 
 
 ### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
@@ -1295,3 +1295,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Enquanto o usuário editar critérios ainda não aplicados, os resultados da última consulta aplicada permanecerão visíveis e inalterados.
 - Somente uma nova ação explícita em **Aplicar filtros** substituirá os resultados pela consulta correspondente aos novos critérios.
 - A execução, validação de parâmetros, identidade, permissões e escopo permanecerão sob autoridade do backend.
+
+
+### Paginação do histórico de exportações — decisão aprovada (09/11/2026)
+
+- A paginação utilizará **20 registros por página** como padrão.
+- O usuário poderá selecionar **20, 50 ou 100 registros por página**.
+- O backend retornará somente os registros da página solicitada, sem exigir o carregamento integral do histórico.
+- Os filtros efetivamente aplicados deverão ser preservados durante a navegação entre páginas.
+- A paginação, seus parâmetros e o escopo dos resultados serão validados pelo backend.
+- A ordenação dos resultados permanece pendente de definição.
