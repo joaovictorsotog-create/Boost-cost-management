@@ -1139,3 +1139,7 @@ O usuário terá uma área para acompanhar suas próprias solicitações de expo
 ### Localização da área de exportações — APROVADO (09/11/2026)
 
 A área ficará em **Configurações → Exportações**, com acesso permanente pelo menu do usuário apontando para a mesma área. O histórico operacional ficará separado do Log de Atividades: o primeiro é para acompanhamento das solicitações; o segundo permanece como trilha de auditoria. A separação não elimina registros de auditoria, e a localização no menu não concede privilégios: o backend valida identidade e permissões.
+
+### Retenção do histórico de exportações — APROVADO (09/11/2026)
+
+O histórico operacional das solicitações de exportação ficará disponível para consulta por **15 meses**, permitindo consultar e obter relatórios referentes a períodos anteriores dentro dessa janela. Esse prazo se aplica aos registros e metadados do histórico, não aos arquivos exportados: permanecem válidas as regras de arquivos temporários e links individuais com expiração de 30 minutos. O Log de Atividades mantém política de retenção própria, ainda não definida. O backend controlará retenção e autorização; critérios de expurgo após o prazo deverão preservar obrigações de auditoria e integridade.
