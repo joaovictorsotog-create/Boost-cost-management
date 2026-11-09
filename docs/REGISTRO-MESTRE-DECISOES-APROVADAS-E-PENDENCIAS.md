@@ -311,3 +311,13 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - Cada item continua identificado por seu ID numérico obrigatório e exclusivo.
 - A descrição é utilizada para identificação e pesquisa, mas não funciona como chave única.
 - Resultados de pesquisa com descrições iguais devem ser distinguíveis pelo ID e pela família, além dos demais dados pertinentes.
+
+## 12. Decisão incremental — descrição complementar opcional (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Incluir no Cadastro Central o campo opcional **Descrição complementar**.
+- Utilizá-lo para registrar características técnicas e diferenciar itens com descrições principais iguais ou semelhantes.
+- Permitir pesquisa e filtros por esse campo.
+- Não substituir nem alterar a descrição principal; o preenchimento não é obrigatório.
+- O campo é informativo e não interfere em família, unidade, estrutura, origem do custo ou cálculo.
