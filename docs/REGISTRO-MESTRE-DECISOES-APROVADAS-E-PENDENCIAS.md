@@ -942,3 +942,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Consolidar várias alterações em um único resumo, evitando notificações repetitivas.
 - Sem alterações relevantes, não exibir aviso.
 - Permanecem pendentes os textos finais, apresentação visual, classificação de relevância e critérios técnicos/testes de aceite.
+
+### Conteúdo do resumo consolidado de alterações — 09/11/2026
+
+**Status: APROVADO**
+
+- O resumo consolidado apresenta a quantidade de alterações por categoria, como registros excluídos, registros atualizados e alterações de permissão.
+- O usuário deve compreender o volume e a natureza das mudanças sem precisar abrir cada aviso individualmente.
+- A contagem por categoria não pode revelar dados de registros cujo acesso foi revogado; permissões e confidencialidade prevalecem.
+- Permanecem pendentes os textos finais, apresentação visual, critérios de classificação/contagem e critérios técnicos/testes de aceite.
