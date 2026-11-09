@@ -473,3 +473,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Se houver qualquer vínculo, bloquear a inativação e informar que os itens precisam ser reclassificados antes de nova tentativa.
 - Se a família estiver sem vínculos, permitir ao administrador confirmar ou cancelar.
 - Não alterar o registro antes da confirmação explícita. Após confirmação, registrar a operação na auditoria e mover a família para a área **Arquivados**, sem excluir o registro.
+
+## 28. Confirmação antes de reativar família (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Ao solicitar a reativação de uma família arquivada, apresentar confirmação com o nome da família e a data da última inativação.
+- Informar que a família voltará a aparecer na seleção do Cadastro Central.
+- Esclarecer que a reativação não cria nem restaura vínculos automaticamente.
+- Permitir confirmar ou cancelar; não alterar nada antes da confirmação explícita.
+- Preservar a identidade e o histórico do registro original e aplicar a validação de unicidade do nome já aprovada.
