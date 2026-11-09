@@ -1097,3 +1097,11 @@ Legenda:
 - [x] Preservar falha original, justificativa, risco, controles, escopo, solicitante, aprovadores, horários, validade e plano de resolução.
 - [x] Manter classificação P0 e exigir contenção, correção e reteste.
 - [ ] Definir fluxo, indisponibilidade do segundo Administrador, conflitos, notificações, revogação antecipada e critérios de risco residual.
+
+
+### Indisponibilidade do segundo Administrador em exceções P0 — decisão aprovada (09/11/2026)
+- [x] Proibir exceção P0 com apenas uma aprovação, mesmo em urgência ou indisponibilidade do segundo Administrador.
+- [x] Manter versão bloqueada até a segunda aprovação distinta.
+- [x] Manter contenção, preservação de evidências e resposta ao incidente enquanto aguarda; não liberar por esse motivo.
+- [x] Registrar indisponibilidade, tentativas de convocação, responsáveis, horários e medidas adotadas.
+- [ ] Definir canais de convocação/escalonamento e continuidade operacional sem flexibilizar dupla aprovação.
