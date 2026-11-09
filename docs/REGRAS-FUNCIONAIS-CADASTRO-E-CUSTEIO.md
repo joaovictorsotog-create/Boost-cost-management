@@ -327,3 +327,14 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - O contador aumenta quando um item é associado à família e diminui quando o item é reclassificado para outra família ou deixa de estar vinculado, conforme operação permitida.
 - A quantidade é somente informativa e não pode ser preenchida ou editada manualmente.
 - A contagem deve refletir os vínculos efetivos, sem exigir manutenção manual pelo usuário.
+
+
+## 31. Nome obrigatório e único da família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Toda família deve possuir um nome preenchido; não é permitido salvar família sem nome.
+- O nome da família deve ser único no cadastro de Configurações.
+- O sistema deve impedir classificações duplicadas decorrentes de variações de escrita, incluindo os exemplos “Chapas”, “CHAPAS” e “Chapa”.
+- A validação de unicidade deve ocorrer antes de salvar, inclusive no backend.
+- A regra de comparação/normalização que identificará variações equivalentes de escrita deverá ser definida tecnicamente, sem enfraquecer o resultado funcional aprovado: não permitir famílias duplicadas por variação de grafia.
