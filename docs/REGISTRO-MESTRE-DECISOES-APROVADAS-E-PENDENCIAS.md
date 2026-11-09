@@ -1028,3 +1028,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Manter notificações anteriores acessíveis no histórico completo.
 - Respeitar permissões, confidencialidade e estado real de leitura.
 - Paginação/carregamento do histórico e desempate de datas iguais permanecem pendentes.
+
+### Marcação de notificações como lidas — APROVADO (09/11/2026)
+
+- Permitir marcar cada notificação individualmente como lida.
+- Oferecer ação **Marcar todas como lidas** para as notificações visíveis/autorizadas que estiverem não lidas no momento da execução.
+- Abrir/fechar o painel não marca notificações como lidas.
+- Atualizar indicador e contador do sino somente após persistência confirmada pelo backend.
+- Estado de leitura individual por usuário, validado e persistido no backend; frontend não é autoridade.
+- Política de auditoria e retenção do estado de leitura ainda precisa de detalhamento.
