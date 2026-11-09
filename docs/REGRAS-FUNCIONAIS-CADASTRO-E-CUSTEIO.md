@@ -976,3 +976,12 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Em telas maiores, manter apresentação compacta e alinhada ao sino no canto superior direito; em telas menores, adaptar a largura para preservar leitura e interação.
 - A adaptação não deve retirar o usuário da tela ou do módulo atual nem alterar as regras de abertura e fechamento já aprovadas.
 - Valores exatos de largura, margens, pontos de quebra e comportamento em dispositivos específicos permanecem pendentes de especificação visual/técnica.
+
+### Conteúdo inicial do painel de notificações — decisão aprovada (09/11/2026)
+
+- Ao abrir, o painel deve apresentar uma relação de notificações recentes.
+- Cada notificação deve exibir, no mínimo, data, horário, categoria e indicação visual de leitura/não leitura.
+- O painel deve oferecer acesso ao histórico completo de notificações, sem obrigar o usuário a sair do módulo/tela atual para consultar as notificações recentes.
+- A indicação de leitura deve refletir o estado real da notificação; abrir ou fechar o painel, por si só, não altera esse estado.
+- A consulta e o histórico devem respeitar permissões e confidencialidade.
+- Quantidade de notificações recentes, ordenação, paginação, categorias definitivas e ação para marcar como lida permanecem pendentes de detalhamento.
