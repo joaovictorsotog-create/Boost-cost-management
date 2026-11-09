@@ -523,3 +523,17 @@ Legenda:
 - [x] Não transferir titularidade, reconhecer, resolver ou encerrar automaticamente após o limite.
 - [x] Contabilizar somente envios efetivos e manter agendamento/contagem sob controle do backend.
 - [x] Registrar lembretes, resultados, datas/horários e ciclo na linha do tempo/auditoria.
+
+### Apresentação visual de alertas críticos — decisão aprovada (09/11/2026)
+
+- [x] Exibir indicador vermelho no sino com a quantidade de alertas críticos aguardando reconhecimento.
+- [x] Atualizar indicador e contagem somente com estado confirmado pelo backend.
+- [x] Dar destaque visual aos alertas críticos não reconhecidos no painel.
+- [x] Exibir alertas críticos antes das notificações não críticas.
+- [x] Preservar ordem cronológica decrescente entre alertas críticos e, separadamente, entre as demais notificações.
+- [x] Manter identificação de criticidade após reconhecimento, com estado visual distinto.
+- [x] Retirar alertas resolvidos das pendências ativas, preservando-os no histórico.
+- [x] Retornar alertas reabertos ao destaque e à contagem de aguardando reconhecimento.
+- [x] Não alterar leitura, reconhecimento ou resolução ao abrir/fechar o painel.
+- [x] Manter classificação, estado e contagem sob autoridade do backend.
+- [ ] Especificar cores, ícones, acessibilidade, responsividade e testes de aceite.
