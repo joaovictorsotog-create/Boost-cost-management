@@ -1073,3 +1073,8 @@ O sino global exibirá indicador vermelho com a quantidade de alertas críticos 
 ### Alertas críticos com Administradores desconectados — APROVADO (09/11/2026)
 
 Alertas críticos, notificações e lembretes não dependem de Administradores conectados: o backend persiste o alerta e registra duravelmente os avisos destinados aos Administradores autorizados. Ao retornarem, os usuários poderão consultar notificações pendentes e histórico, após revalidação das permissões atuais. A desconexão não pausa, reinicia nem estende prazos ou ciclos de lembretes. Horários previstos, resultados de persistência/entrega e ciclos permanecem auditados; falhas reais continuam não sendo contabilizadas como envio efetivo. A reconexão não deve gerar duplicatas nem repetição sonora excessiva. Nenhum alerta será reconhecido, resolvido, encerrado ou transferido automaticamente devido à ausência de Administradores conectados.
+
+
+### Ocorrências críticas simultâneas — APROVADO (09/11/2026)
+
+Cada ocorrência crítica terá identidade, estado, reconhecimento, resolução, reabertura, lembretes e linha do tempo independentes. A ação sobre um alerta não altera os demais. O contador do sino soma alertas distintos em **Aguardando reconhecimento**; o painel mantém cada ocorrência identificável. Persistência, autorização, concorrência, contagens e transições ficam sob autoridade do backend. Agrupamento que esconda identidades e operações em lote/resolução conjunta não ficam autorizados por esta decisão e dependerão de aprovação específica.
