@@ -243,3 +243,14 @@ Legenda:
 - [x] Preservar histórico cumulativo, sem sobrescrita ou exclusão.
 - [x] Respeitar permissões de acesso ao histórico.
 - [ ] Definir critérios técnicos, retenção e testes de aceite para integridade e consulta do histórico.
+
+
+### Histórico integral de atividades da análise
+
+- [x] Registrar cronologicamente início e retomada da análise e encerramento sem decisão.
+- [x] Registrar lembretes enviados, ciclos, transferências de titularidade e justificativas.
+- [x] Registrar aprovação, rejeição e consultas/ações relevantes realizadas durante a análise.
+- [x] Identificar em cada evento a solicitação, o ator responsável, data/hora, operação e resultado.
+- [x] Preservar histórico cumulativo, sem sobrescrita ou exclusão pela interface; backend como fonte de verdade.
+- [ ] Definir critérios de relevância e granularidade para registro de consultas e ações.
+- [ ] Definir retenção, permissões detalhadas, integridade técnica e critérios de aceite/testes do histórico.
