@@ -952,3 +952,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O sino de notificações deve permanecer visível no cabeçalho global padrão do Alianza, independentemente do módulo ou tela em que o usuário esteja.
 - O sino mantém acesso ao resumo consolidado e ao indicador de notificações não lidas em toda a navegação autenticada, respeitando permissões e confidencialidade.
 - A presença global do sino não altera as preferências individuais de alertas sonoros nem implica que o som esteja sempre ativado.
+
+### Abertura do painel do sino de notificações — decisão aprovada (09/11/2026)
+
+- Ao acionar o sino no cabeçalho global, abrir o painel de notificações imediatamente abaixo do sino, alinhado ao canto superior direito da interface.
+- O painel deve funcionar como elemento flutuante/suspenso, mantendo o usuário na tela e no módulo atuais, sem navegação para outra página.
+- O painel deve permitir consultar o resumo e as notificações respeitando as permissões e regras de confidencialidade já aprovadas.
+- Esta decisão define o comportamento funcional e a posição do painel; dimensões, responsividade, interação de fechamento e detalhes visuais permanecem pendentes.
