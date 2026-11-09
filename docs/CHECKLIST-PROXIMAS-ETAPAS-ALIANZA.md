@@ -810,3 +810,11 @@ Legenda:
 - [x] Identificar os dados anteriores como última atualização confirmada até validar a nova consulta.
 - [x] Impedir que a suspensão/redução das consultas pause, reinicie, cancele ou altere a exportação.
 - [ ] Definir mecanismo técnico e limites de frequência para telas ativas e inativas.
+
+### Frequência de atualização automática dos detalhes — decisão aprovada (09/11/2026)
+
+- [x] Definir consulta automática ao backend a cada 10 segundos enquanto a tela estiver ativa e em primeiro plano.
+- [x] Tratar o intervalo como frequência máxima, com controle de carga.
+- [x] Impedir consultas simultâneas para a mesma tela/solicitação.
+- [x] Aplicar suspensão/redução em segundo plano e consulta imediata ao retornar.
+- [x] Apresentar como atuais somente dados confirmados pelo backend.
