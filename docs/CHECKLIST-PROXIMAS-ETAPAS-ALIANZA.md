@@ -1050,3 +1050,12 @@ Legenda:
 - [x] Determinar que bloqueio de acesso isolado não encerra incidente; exigir investigação, avaliação de impacto, registro de ações/resultados e medidas corretivas/preventivas aplicáveis.
 - [x] Registrar responsáveis, horários, classificação, decisões, notificações, evidências, contenção, investigação, impacto e fundamento do encerramento.
 - [ ] Definir severidade, prazos/escalonamento, responsáveis/substitutos, canais, cadeia de custódia detalhada, critérios de encerramento, comunicação externa e testes/simulações.
+
+
+### Testes periódicos de segurança — decisão aprovada (09/11/2026)
+- [x] Definir testes trimestrais e extraordinários após mudanças relevantes de segurança.
+- [x] Cobrir acesso indevido, bypass de permissões via API, adulteração de auditoria, exposição de segredos, ataques automatizados e recuperação de incidentes.
+- [x] Exigir relatório com escopo, data, métodos, resultados, evidências seguras, classificação, riscos e plano de correção com responsáveis/prazos.
+- [x] Exigir autorização e controle dos testes; produção requer salvaguardas específicas.
+- [x] Priorizar falhas críticas e exigir reteste/evidência para encerramento.
+- [ ] Definir metodologia, independência dos executores, severidade, prazos, gestão de evidências, testes de terceiros, escopo de produção e critérios de aceite.
