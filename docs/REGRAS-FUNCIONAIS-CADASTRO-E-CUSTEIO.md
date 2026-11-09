@@ -1114,3 +1114,14 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O painel poderá apresentar vários alertas simultaneamente, mantendo cada ocorrência identificável e seu histórico acessível.
 - O backend será responsável por persistência, identidade, autorização, concorrência, contagens e transições independentes; o frontend apenas apresentará os estados confirmados.
 - Operações em lote, agrupamento que esconda identidades ou resolução conjunta não estão autorizados por esta decisão e exigem definição específica antes de serem oferecidos.
+
+
+### Limite de alertas críticos exibidos simultaneamente — decisão aprovada (09/11/2026)
+
+- O painel exibirá no máximo **5 alertas críticos simultaneamente** na área de visualização inicial, para evitar sobrecarga e preservar a legibilidade.
+- Quando houver mais de cinco alertas críticos, os excedentes permanecerão registrados e acessíveis por paginação ou pela opção **Ver todos**; não poderão ser descartados, ocultados permanentemente ou perder seu histórico.
+- A ordenação inicial será da ocorrência mais recente para a mais antiga, respeitando a prioridade e o estado definidos pelo backend.
+- O contador do sino continuará representando o total de alertas críticos distintos em **Aguardando reconhecimento**, inclusive os que não estiverem na primeira visualização de cinco itens.
+- O limite de cinco é exclusivamente de apresentação simultânea; não limita a quantidade de alertas que o sistema pode registrar ou manter pendentes.
+- A identidade, o reconhecimento, a resolução, a reabertura, os lembretes e a linha do tempo de cada alerta continuarão independentes.
+- O backend fornecerá os dados, a contagem e as permissões; o frontend aplicará o limite de apresentação sem alterar o estado dos alertas.
