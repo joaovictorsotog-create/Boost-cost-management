@@ -562,4 +562,6 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A exclusão e o tratamento dos vínculos devem ser executados com validação no backend, consistência transacional e registro completo na auditoria. A interface só poderá indicar conclusão após confirmação do backend; falhas não podem deixar vínculos quebrados nem ser apresentadas como sucesso integral.
 - Se o conjunto de dependências mudar enquanto a prévia estiver aberta, o sistema deverá atualizar a prévia ou exigir nova validação e confirmação antes de executar.
 - A exclusão deve deixar de permitir que o item seja selecionado em novas estruturas. A operação não deve apagar o registro de auditoria da exclusão.
-- A modalidade técnica de exclusão e a forma de preservar a consulta de custos históricos anteriores à exclusão ainda deverão ser especificadas antes da implementação.
+- A exclusão não poderá apagar nem reescrever o passado: o sistema deverá preservar uma fotografia histórica imutável das composições e dos custos vigentes antes da exclusão, permitindo consultar como cada produto era composto e custeado naquele momento, mesmo após a remoção do item do Cadastro Central.
+- A fotografia histórica deverá manter os dados necessários à rastreabilidade da composição e dos valores considerados no cálculo, sem depender da existência do cadastro ativo do item excluído.
+- A modalidade técnica de exclusão e os detalhes de modelagem, retenção e consulta dessas fotografias históricas ainda deverão ser especificados antes da implementação.
