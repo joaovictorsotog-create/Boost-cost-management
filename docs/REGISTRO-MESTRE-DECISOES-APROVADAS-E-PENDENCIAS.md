@@ -408,7 +408,7 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - Famílias sem itens vinculados poderão ser inativadas, em vez de excluídas definitivamente.
 - Não será permitida a inativação enquanto houver itens vinculados; os itens deverão ser reclassificados primeiro.
 - Famílias inativas não serão oferecidas na seleção de família do Cadastro Central.
-- O registro da família será preservado. Regras adicionais de reativação e visibilidade em consultas permanecem pendentes.
+- O registro da família será preservado. A reativação foi aprovada e está detalhada na decisão incremental 22.
 
 
 ## 22. Decisão incremental — reativação de famílias inativas (09/11/2026)
