@@ -885,3 +885,11 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Quando não houver uma tela posterior disponível, o botão **Avançar** ficará desabilitado.
 - Botões desabilitados não executam navegação artificial nem alteram o histórico.
 - O estado dos botões deve refletir o histórico real de navegação e atualizar quando esse histórico mudar.
+
+### Preservação do contexto na navegação Voltar/Avançar — decisão aprovada em 09/11/2026
+
+- Ao navegar por **Voltar** ou **Avançar**, o sistema deve preservar e restaurar o contexto da tela correspondente, incluindo posição de rolagem e filtros aplicados.
+- A restauração deve apresentar o usuário no contexto em que estava antes de sair daquela tela, respeitando permissões e a validade atual dos dados.
+- Critérios de filtro temporariamente alterados, mas ainda não aplicados, continuam sujeitos à confirmação de saída já aprovada; não devem ser confundidos com filtros aplicados.
+- Se dados tiverem mudado enquanto a tela estava fora de foco, atualizar os resultados conforme as regras de atualização em tempo real, preservando os critérios de consulta quando ainda válidos.
+- Detalhes técnicos de armazenamento/restauração do estado e comportamento diante de dados removidos ou permissões alteradas permanecem pendentes.
