@@ -492,3 +492,11 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Se outra família ativa já utilizar nome conflitante, bloquear a reativação e informar o nome em conflito e, quando possível, qual família ativa o utiliza.
 - O administrador deverá resolver o conflito e tentar novamente. Nenhuma renomeação automática, sobrescrita ou criação de vínculo será permitida.
 - Após a resolução, exigir nova validação bem-sucedida e confirmação explícita para reativar.
+
+## 30. Permissões de manutenção de famílias (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Apenas o papel **Administrador** pode criar, editar, inativar ou reativar famílias.
+- Os papéis **Editor** e **Visualizador** podem consultar, sem permissão para essas operações.
+- A autorização deve ser imposta no backend, e não somente pela interface. Tentativas não autorizadas não podem alterar dados.
