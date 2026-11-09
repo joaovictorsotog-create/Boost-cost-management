@@ -708,3 +708,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Enviar lembrete ao Administrador responsável após 30 minutos sem atividade; se persistir a inatividade, repetir em intervalos de 30 minutos, até o máximo de 3 lembretes por solicitação.
 - Depois do terceiro lembrete, interromper os envios e aguardar a resposta do Administrador. A solicitação permanece **Em análise**, sem liberação, aprovação, rejeição ou transferência automática.
 - Contagem e agendamento individualizados por solicitação, com prevenção de notificações duplicadas e ciclos infinitos.
+
+
+## 47. Backend como autoridade exclusiva das regras de negócio (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Backend é a única autoridade para validar e executar regras de negócio; frontend nunca é confiável nem fonte de verdade.
+- Autorização, permissões, validações, estados, custeio, recálculos, vínculos, aprovações, exclusões, reativações, limites e agendamentos são impostos no backend.
+- Validação visual no frontend não substitui validação no servidor. APIs diretas, manipulação de requisições, importações e operações em massa não podem contornar regras.
+- O frontend apenas apresenta dados, recebe comandos e exibe resultados após confirmação do backend.
+- Estados e contadores que precisam persistir entre sessões ou reinicializações são controlados e persistidos no backend. Regra global para todos os módulos.
