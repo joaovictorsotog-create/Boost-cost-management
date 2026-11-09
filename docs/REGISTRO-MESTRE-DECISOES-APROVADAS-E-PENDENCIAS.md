@@ -3,7 +3,7 @@
 **Projeto:** Alianza — Sistema de Custos  
 **Repositório:** Boost Cost Management  
 **Branch de documentação:** `docs/regras-custeio-cadastro-central`  
-**Atualizado:** 06/11/2026  
+**Atualizado:** 09/11/2026  
 **Finalidade:** separar decisões aprovadas de assuntos pendentes e evitar reabrir definições já fechadas.
 
 ## Como interpretar este documento
@@ -88,14 +88,26 @@
 ## 2. Decisões anteriores já existentes — não reabrir
 
 ### 2.1 Controle de acesso e usuários
-**Status: JÁ DEFINIDO — RECUPERAR DETALHE.**
+<badge>APROVADO — DETALHES RECUPERADOS</badge>
 
-O usuário confirmou que o projeto já definiu um controle padrão de usuários/permissões em outra conversa do projeto. Não propor um novo modelo, não inventar perfis, papéis ou permissões. Recuperar a decisão original e transcrevê-la aqui quando a fonte estiver disponível.
+1. Login individual por usuário.
+2. Autenticação de dois fatores (2FA) integrada.
+3. Row Level Security (RLS) aplicada no banco de dados.
+4. Três níveis de acesso aprovados: **Administrador, Editor e Visualizador**.
+5. A pesquisa global deve respeitar as permissões de cada usuário; não pode contornar acessos restritos.
+6. Registrar quem realizou cada alteração.
 
-### 2.2 Arquivamento periódico
-**Status: JÁ DEFINIDO — RECUPERAR DETALHE.**
+Não importar para este projeto regras de administração de usuários/cargos discutidas no CRM Alianza. A conversa “Corrigir usuários e permissões” refere-se ao CRM e não é fonte para ampliar os papéis do Sistema de Custos.
 
-O usuário confirmou que a regra de arquivamento periódico já havia sido definida. Não perguntar novamente se deve arquivar e não inventar periodicidade, idade dos registros, retenção ou política de consulta. Recuperar a regra original.
+### 2.2 Arquivamento de logs de atividades
+<badge>APROVADO — DETALHES RECUPERADOS</badge>
+
+1. Os registros do Log de Atividades permanecem no ambiente principal durante o primeiro ano.
+2. Após um ano, são transferidos para o Arquivamento.
+3. Os registros arquivados permanecem consultáveis.
+4. A exclusão definitiva não é automática: o administrador decide explicitamente se e quando excluir.
+5. Esse prazo se aplica ao **Log de Atividades**, não autoriza apagar automaticamente histórico de custos, estruturas antigas ou memórias de cálculo.
+
 
 ### 2.3 Outras decisões existentes no projeto
 Há conversas anteriores sobre unidades de medida, menu Configurações/engrenagem, histórico, estrutura de custos e outros módulos. Quando a decisão original não estiver reproduzida neste documento, tratá-la como informação a recuperar, não como autorização para propor uma alternativa nova.
@@ -122,8 +134,106 @@ Antes de fazer uma nova pergunta ou propor uma regra:
 6. Quando uma nova decisão for aprovada, atualizar este documento na branch de documentação e registrar um commit.
 7. Não fazer merge na branch principal nem implementar código, alterar banco ou infraestrutura sem autorização específica.
 
-## 5. Limitação de cobertura desta revisão
+## 5. Cobertura da auditoria do export enviado em 09/11/2026
 
-Esta consolidação foi feita a partir das conversas do projeto que estavam efetivamente disponíveis no contexto desta sessão e do documento funcional encontrado na branch de documentação. Não é correto afirmar que todos os chats históricos do projeto foram varridos integralmente: a interface/conexão disponível não expôs automaticamente o conteúdo completo de todas as conversas.
+1. O ZIP enviado contém 36 conversas no total.
+2. Foram localizadas e lidas as 17 conversas correspondentes aos links compartilhados pelo usuário (sequência “Pesquisa sobre criação no Manus” e ramificações “Avaliar capacidade da VPS”).
+3. Também foram inspecionadas conversas adicionais do export para separar assuntos de outros sistemas. Conversas do CRM, como “Corrigir usuários e permissões” e “Problema no Kanban”, não foram usadas como fonte de requisitos do Sistema de Custos.
+4. “Desenvolver Tabela Automatizada” contém requisitos de uma aplicação de planilha/custos, mas o vínculo com o escopo atual ainda precisa ser confirmado; por isso não foi incorporada como decisão do Alianza.
+5. A auditoria das 17 conversas vinculadas está registrada em `docs/AUDITORIA-CONVERSAS-PROJETO-2026-11-09.md`.
 
-Por isso, este documento distingue expressamente decisões confirmadas nesta sequência de decisões anteriores cujo detalhe precisa ser recuperado. A auditoria completa dos demais chats ainda é uma tarefa pendente, não algo que deva ser declarado concluído.
+**Limite importante:** o usuário havia mencionado 27 conversas no projeto, mas o export contém 36 conversas gerais e os 17 links fornecidos identificam 17 conversas da sequência atual. Não se deve declarar que as 27 conversas do projeto foram todas auditadas sem identificar e conferir as 10 conversas restantes. A cobertura atual é completa para as 17 conversas vinculadas e parcial para o universo de 27 conversas mencionado pelo usuário.
+
+
+## 6. Decisões recuperadas na auditoria de 09/11/2026
+
+As regras abaixo foram recuperadas de confirmações explícitas nas conversas vinculadas. A trilha por conversa está no documento de auditoria.
+
+### 6.1 Unidades, identificação e famílias
+
+1. Unidades aprovadas: **metro, quilograma (kg), metro quadrado (m²) e unidade**.
+2. Cada item possui uma única unidade de medida; não criar conversões ou unidades alternativas.
+3. O identificador interno é numérico e sua definição/organização será feita manualmente pelo administrador. Ele serve para busca e organização.
+4. Famílias/classificações são cadastráveis e editáveis. A família não determina a unidade de medida.
+5. O usuário pode localizar itens por ID, descrição ou família.
+
+### 6.2 Precisão e arredondamento de custo
+
+1. Regra de arredondamento de apresentação aprovada por item, individualmente: olhando a casa decimal seguinte, valores de 0 a 5 arredondam para baixo; valores acima de 5 arredondam para cima.
+2. Exemplos aprovados: R$ 1,543 → R$ 1,54; R$ 1,546 → R$ 1,55.
+3. Não arredondar apenas o total final se a decisão aprovada é arredondar cada item individualmente.
+4. A precisão interna de armazenamento/cálculo além dessa regra de apresentação ainda precisa ser especificada tecnicamente.
+
+### 6.3 Custos, matérias-primas e fatores
+
+1. Matéria-prima é cadastrada com custo por sua unidade: chapa por kg e tubo por metro, por exemplo.
+2. O custo utilizado na estrutura é quantidade × custo unitário cadastrado.
+3. O desperdício já está incorporado nos custos/pesos preparados pelo usuário; não aplicar uma segunda margem automática de desperdício.
+4. O sistema apura custo industrial a partir dos valores cadastrados e das estruturas. Não deve acrescentar impostos por conta própria nem formar preço de venda.
+5. O fator Gama é uma correção associada a produtos em aço inox, mas **não é obrigatório nem automático**: sua aplicação será manual quando o usuário considerar necessária. O valor 1,20 aparece como referência na planilha analisada, não como regra fixa global.
+6. Usinagem externa pode ser cadastrada como item/serviço com custo unitário.
+7. Pintura é um item/serviço com custo próprio e pode ser ativada ou não no produto/subconjunto. Quando ativada, seu valor compõe o custo e propaga para os itens-pai.
+8. A classificação “corte a laser” não gera, por si só, um adicional automático. O custo do material utilizado já é calculado a partir do peso/custo da matéria-prima conforme os dados fornecidos.
+9. Não incluir Alpha/Beta ou outros multiplicadores de preço comercial no motor de custo sem decisão específica; o escopo aprovado exclui formação de preço de venda.
+
+### 6.4 Estruturas, famílias e prevenção de dupla contagem
+
+1. Um item composto pode ser usado dentro de outro composto, em vários níveis.
+2. Um mesmo componente pode aparecer diretamente no produto e também dentro de um subconjunto; isso não deve gerar bloqueio por duplicidade. Cada ocorrência é contabilizada conforme sua quantidade na respectiva posição da árvore.
+3. Quando um subconjunto composto entra na estrutura de um produto-pai, o resumo por família do produto-pai considera a família principal do subconjunto e seu custo total; não deve reabrir e somar novamente as famílias internas do subconjunto.
+4. A estrutura deve exibir quantidade, unidade, custo unitário informativo e custo total por linha.
+5. O resumo de custo por família mostra quantidades e custos acumulados das famílias diretas consideradas na estrutura, sem dupla contagem dos componentes internos já incorporados em subconjuntos.
+6. Duplicar produto cria uma cópia independente, permitindo adaptar descrição e estrutura para variantes (ex.: aço carbono e inox).
+
+### 6.5 Itens inativos e valores zerados
+
+1. Item inativo fica em uma aba própria de inativos.
+2. Item inativo não aparece na árvore de composição nem participa do custeamento.
+3. Inativar/remover componente reduz o custo calculado; substituir componente recalcula o custo correspondente.
+4. Itens podem ser salvos com R$ 0,00, mas zero não é tratado como primeiro valor/base de histórico. O sistema deve sinalizar/notificar a situação para revisão.
+5. Itens inativos ficam ocultos por padrão na pesquisa global, com filtro específico para localizá-los.
+
+### 6.6 Atualização, histórico e alertas
+
+1. Revisão de custos de materiais idealmente semestral.
+2. Se não houver revisão nem alteração no ciclo de seis meses, o sistema deve emitir lembrete.
+3. Quando o usuário altera o custo e salva o cadastro, o ciclo de seis meses reinicia. A alteração só é reconhecida após salvar.
+4. Não calcular média entre custo antigo e novo: o sistema utiliza o custo vigente real informado.
+5. O primeiro custo válido (maior que zero) é a base de comparação da evolução; registros seguintes mostram aumentos e quedas.
+6. A evolução pode ser visualizada em gráfico e em valores monetários ou percentuais, com alternância entre R$ e %.
+7. Limites de variação/alerta podem ser configurados no ambiente do produto.
+8. Histórico de custos permanece intacto quando a estrutura vigente é alterada; apenas a composição atual e seus custos derivados são recalculados.
+9. Relatórios são solicitados manualmente; pode haver geração de PDF sob demanda.
+
+### 6.7 Importação e atualização em lote
+
+1. A atualização em lote usa planilha Excel padronizada disponibilizada para download.
+2. O usuário preenche/edita a planilha e envia novamente.
+3. O sistema apresenta prévia somente das linhas/dados alterados.
+4. Erros são destacados por linha/campo. Linhas válidas podem ser aprovadas mesmo que outras apresentem erros.
+5. A mesma proteção de prévia e aprovação vale para importação e atualização em lote.
+6. Nenhuma linha é consolidada antes da aprovação do usuário.
+
+### 6.8 Interface, navegação e notificações
+
+1. Painel Geral é a tela inicial.
+2. Sidebar pode ser recolhida, mantendo ícones, e o usuário pode escolher se permanece fixa.
+3. Sino de notificações exibe contador e abre painel flutuante; o usuário pode expandir uma notificação para ver detalhes.
+4. Cadastro do item apresenta ID, descrição, família, unidade e custo; a busca/listagem permite filtrar Simples e Composto.
+5. A estrutura permite pesquisa por ID, descrição ou família e seleção de grupos da família desejada.
+6. A pesquisa global apresenta ID, descrição, família, tipo e custo vigente; selecionar um resultado abre seu cadastro.
+7. A pesquisa global respeita permissões e preserva o contexto de navegação anterior ao retornar.
+8. Atalhos aprovados: Esc fecha modal; Enter confirma pesquisa; Ctrl+K abre pesquisa global; Alt+← retorna à tela anterior.
+9. Alterações não salvas geram aviso antes de sair. Se o usuário confirmar a saída, as alterações são descartadas e não geram gravação nem histórico.
+10. Responsividade: desktop com experiência completa; notebook/tablet adaptados; celular prioriza consultas, notificações, histórico e relatórios. Edição complexa de estruturas tem prioridade no desktop.
+11. Desempenho: tabelas extensas carregam progressivamente; gráficos, históricos e relatórios sob demanda; recálculos não devem bloquear a navegação.
+
+### 6.9 Segurança, continuidade e saúde do sistema
+
+1. Login individual, 2FA integrado e RLS no banco de dados.
+2. Níveis de acesso: Administrador, Editor e Visualizador.
+3. Backup automático periódico aprovado.
+4. Operações interrompidas não podem ser apresentadas como concluídas; o sistema deve evitar duplicidade em tentativas repetidas e preservar integridade.
+5. Painel discreto de Informações do Sistema deve mostrar status real do banco, autenticação, serviços internos e horário da última verificação.
+6. A frequência de backup e os procedimentos/cadência de teste de restauração não foram especificados nas mensagens auditadas; não inventar.
+
