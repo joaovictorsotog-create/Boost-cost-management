@@ -593,3 +593,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Operações que afetem diretamente estruturas, custos de produtos dependentes, vínculos ou integridade histórica permanecem exclusivas do **Administrador**.
 - A autorização deverá ser validada no backend. A interface deverá ocultar ou desabilitar ações sem permissão, mas isso não substitui a validação de servidor.
 - Os campos e operações específicos que o Editor poderá alterar sem impacto direto deverão ser discriminados na matriz completa de permissões antes da implementação. Em caso de dúvida sobre impacto, a operação não será liberada ao Editor por presunção.
+
+
+## 54. Matriz de edição de campos do item por papel — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- O papel **Editor** poderá alterar somente a descrição principal e a descrição complementar do item, respeitadas as validações cadastrais e a auditoria.
+- A alteração da **família** será exclusiva do **Administrador**, mesmo quando não modificar diretamente o custo. A mudança de família é uma alteração de classificação com impacto na organização e localização do item.
+- Também serão exclusivas do Administrador as alterações de unidade, tipo do item, custo manual, estrutura de composição, exclusão e reativação, bem como qualquer outra operação que afete diretamente custeio, vínculos, estruturas ou histórico.
+- O Editor não poderá contornar essas restrições por importação, edição em massa, API ou qualquer outro caminho; as permissões serão validadas no backend.
+- A matriz completa deverá detalhar as demais ações e campos antes da implementação. Até lá, o Editor só poderá alterar os dois campos expressamente autorizados nesta decisão.
