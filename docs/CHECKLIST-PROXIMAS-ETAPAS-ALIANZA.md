@@ -461,3 +461,14 @@ Legenda:
 - [x] Estabelecer classificação como regra de backend.
 - [ ] Definir critérios objetivos de prioridade por evento.
 - [ ] Definir apresentação visual/sonora, escalonamento, filtros e tratamento de críticas.
+
+### Critérios gerais de prioridade das notificações — decisão aprovada (09/11/2026)
+
+- [x] Definir **Crítica** como risco imediato à segurança ou à integridade dos dados.
+- [x] Definir **Alta** como ação administrativa importante que exige atenção rápida.
+- [x] Definir **Normal** como atualização ou solicitação que precisa ser acompanhada, sem urgência alta/crítica.
+- [x] Definir **Baixa** como aviso informativo sem necessidade de ação imediata.
+- [x] Manter o enquadramento de eventos sob responsabilidade do backend.
+- [x] Evitar banalizar os níveis de urgência com classificações excessivas.
+- [ ] Mapear eventos concretos, exceções e critérios de desempate/classificação.
+- [ ] Definir apresentação visual/sonora, escalonamento e tratamento especial das notificações críticas.
