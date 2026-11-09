@@ -371,3 +371,11 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - Famílias arquivadas não serão oferecidas na seleção do Cadastro Central.
 - Após a reativação, a família retornará à listagem normal de famílias ativas, respeitando a validação de unicidade já aprovada.
 - Esta decisão define a organização funcional da interface em Configurações; não autoriza implementação ou alteração técnica.
+
+## 35. Data de inativação na área Arquivados — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A listagem **Configurações → Famílias → Arquivados** deve exibir também a data em que cada família foi inativada.
+- A data exibida corresponde à inativação mais recente do registro. Se a família for reativada e posteriormente inativada novamente, a data deverá ser atualizada para a nova inativação.
+- A informação é de consulta e rastreabilidade; não altera as regras de reativação, seleção ou vínculo de itens.
