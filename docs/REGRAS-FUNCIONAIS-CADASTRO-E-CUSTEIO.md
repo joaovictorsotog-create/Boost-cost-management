@@ -1265,3 +1265,11 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O histórico operacional de exportações permanecerá separado do **Log de Atividades**: o primeiro serve para acompanhar solicitações e seus estados; o segundo mantém os registros de auditoria das operações.
 - A separação visual não elimina nem duplica os registros de auditoria. Eventos relevantes da exportação continuarão registrados no Log de Atividades conforme as regras aprovadas.
 - O backend continuará validando identidade e permissões para consulta e acesso aos arquivos; a localização no menu não concede privilégios adicionais.
+
+### Retenção do histórico de exportações — decisão aprovada (09/11/2026)
+
+- O histórico operacional das solicitações de exportação ficará disponível para consulta por **15 meses**.
+- O prazo deverá permitir que o usuário consulte e obtenha relatórios referentes a períodos anteriores dentro dessa janela.
+- A retenção de 15 meses aplica-se aos registros e metadados do histórico operacional; não altera a regra de arquivos exportados temporários nem a expiração de **30 minutos** dos links individuais de download.
+- O prazo de retenção do histórico operacional não define nem altera a retenção do Log de Atividades, que permanece sujeito a regra própria.
+- O backend controlará o prazo de retenção e a autorização de consulta; critérios técnicos de expurgo após o prazo deverão ser definidos sem comprometer obrigações de auditoria ou integridade.
