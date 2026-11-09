@@ -962,3 +962,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Haverá opções de alerta sonoro, incluindo ativar/desativar o som; os alertas não podem se repetir indefinidamente nem gerar excesso de notificações.
 - Permissões e confidencialidade continuam prevalecendo em todos os avisos.
 - Permanecem pendentes detalhes de configuração, seleção de sons, volume, disparo, frequência, agrupamento e sincronização entre dispositivos.
+
+### Preferências individuais de alertas sonoros — 09/11/2026
+
+**Status: APROVADO**
+
+- Preferências de som individuais por usuário, sem imposição de padrão global da empresa.
+- Controles disponíveis: ligar/desligar som, escolher entre diferentes sons, ajustar volume e testar antes de salvar.
+- Alertas respeitam as preferências individuais e os limites contra repetição excessiva.
+- Permanecem pendentes persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
