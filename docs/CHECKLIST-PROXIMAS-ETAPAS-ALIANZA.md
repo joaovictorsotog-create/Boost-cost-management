@@ -508,4 +508,6 @@ Legenda:
 - [x] Validar autorização, estado atual e concorrência no backend.
 - [x] Registrar reabertura na mesma linha do tempo, com responsável, data/hora, justificativa e resultado.
 - [x] Preservar resolução anterior e todos os eventos históricos, sem sobrescrita.
-- [ ] Definir estado operacional após reabertura e se será exigido novo reconhecimento.
+- [x] Retornar o alerta reaberto ao estado **Aguardando reconhecimento**.
+- [x] Exigir novo reconhecimento por Administrador autorizado a cada reabertura.
+- [x] Preservar o reconhecimento anterior apenas como histórico, sem aproveitá-lo no novo ciclo.
