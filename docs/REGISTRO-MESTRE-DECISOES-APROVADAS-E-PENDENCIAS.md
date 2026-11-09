@@ -688,3 +688,16 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Recálculo depende do impacto real da alteração: mudanças exclusivamente descritivas não recalculam custos; alterações que afetem custeio, estruturas ou vínculos exigem recálculo em cascata dos dependentes.
 - Dados usados em wireframes são exemplos fictícios e não representam solicitações reais.
 - A aprovação consolida o desenho funcional/visual, mas não escolhe tecnologia nem autoriza implementação, alteração de banco, infraestrutura ou deploy.
+
+
+## 46. Estado Em análise e prevenção de decisões simultâneas na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Abrir uma solicitação apenas para consulta não altera seu estado; ela permanece **Pendente**.
+- Ao iniciar formalmente a análise, o Administrador assume a solicitação e seu estado passa para **Em análise**, identificando o responsável.
+- Outros Administradores podem consultar, mas não podem aprovar ou rejeitar enquanto a solicitação estiver sob análise.
+- Se a análise for abandonada ou encerrada sem decisão, a solicitação retorna a **Pendente** e fica disponível para outro Administrador.
+- Aprovação/rejeição só se conclui após validação e persistência confirmadas pelo backend.
+- O backend deve controlar concorrência e titularidade da análise, impedindo decisões simultâneas e bloqueios indevidos.
+- Prazo para considerar uma análise abandonada e mecanismo técnico de liberação automática permanecem pendentes.
