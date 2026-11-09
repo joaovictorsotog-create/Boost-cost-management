@@ -968,3 +968,11 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O fechamento do painel não marca notificações como lidas nem altera seu conteúdo ou estado; a leitura deve seguir ação própria já definida.
 - Os três comportamentos são formas equivalentes de dispensar o painel e não devem provocar perda de contexto da tela atual.
 - Detalhes de acessibilidade, foco de teclado e compatibilidade permanecem sujeitos à especificação técnica.
+
+### Largura e adaptação do painel de notificações — decisão aprovada (09/11/2026)
+
+- A largura do painel de notificações será adaptável ao espaço disponível, em vez de depender de uma largura fixa para todos os dispositivos.
+- O painel deve respeitar os limites da área visível da tela, sem ultrapassar as bordas ou ficar parcialmente inacessível.
+- Em telas maiores, manter apresentação compacta e alinhada ao sino no canto superior direito; em telas menores, adaptar a largura para preservar leitura e interação.
+- A adaptação não deve retirar o usuário da tela ou do módulo atual nem alterar as regras de abertura e fechamento já aprovadas.
+- Valores exatos de largura, margens, pontos de quebra e comportamento em dispositivos específicos permanecem pendentes de especificação visual/técnica.
