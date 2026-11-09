@@ -921,3 +921,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - A restauração respeita permissões e validade atual dos dados; atualizações em tempo real continuam aplicáveis sem perder critérios válidos.
 - Filtros temporários ainda não aplicados continuam sujeitos à confirmação de saída já aprovada.
 - Implementação técnica e tratamento de dados removidos ou permissões alteradas permanecem pendentes.
+
+### Revalidação ao retornar à tela — 09/11/2026
+
+**Status: APROVADO**
+
+- Ao retornar por Voltar/Avançar, revalidar dados e permissões no backend.
+- Se registros tiverem sido excluídos ou permissões tiverem sido revogadas enquanto a tela estava fora de foco, atualizar a tela e informar claramente a mudança, sem exibir dados não mais autorizados.
+- Preservar somente filtros/critérios ainda válidos; resultados devem refletir o estado atual confirmado pelo backend.
+- Detalhes de apresentação das mensagens, tratamento de múltiplas alterações e critérios técnicos/testes de aceite permanecem pendentes.
