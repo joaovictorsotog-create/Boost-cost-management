@@ -1053,3 +1053,7 @@ Critérios gerais aprovados: **Crítica** = risco imediato à segurança ou à i
 ### Reconhecimento e ciclo de vida das notificações críticas — APROVADO (09/11/2026)
 
 Notificações **Críticas** terão destaque visual próprio e estados separados: **Aguardando reconhecimento**, **Reconhecido** e **Resolvido**. Leitura não equivale a reconhecimento; reconhecimento não equivale a resolução. Qualquer Administrador autorizado a visualizar o alerta poderá reconhecê-lo. O primeiro reconhecimento aceito pelo backend será o responsável registrado; demais Administradores consultarão responsável e horário. O backend controla autorização e concorrência atomicamente. O reconhecimento será auditado e não apagará, alterará nem resolverá a ocorrência. Alertas reconhecidos continuarão visíveis enquanto não resolvidos, com estado distinto. O sino contará alertas críticos não reconhecidos. Regras de resolução, evidências, responsáveis, reabertura, escalonamento e detalhes visuais/sonoros permanecem pendentes.
+
+### Resolução de notificações críticas — APROVADO (09/11/2026)
+
+Um Administrador autorizado poderá declarar o alerta crítico **Resolvido**, mediante justificativa obrigatória. O backend validará autorização, estado e concorrência antes da persistência. A auditoria registrará responsável, data/hora, justificativa e resultado. Resolver não equivale a ler ou reconhecer e não apaga a ocorrência, o reconhecimento anterior ou a linha do tempo. Critérios objetivos de resolução por tipo de ocorrência, evidências exigidas, reabertura e escalonamento permanecem pendentes.
