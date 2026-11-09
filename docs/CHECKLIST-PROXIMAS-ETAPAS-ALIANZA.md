@@ -1076,3 +1076,14 @@ Legenda:
 - [x] Bloquear release com P0 até correção/reteste ou exceção formal autorizada e documentada.
 - [x] Exigir justificativa, risco residual, controles compensatórios, autorizador, validade e plano para exceção, sem apagar/reclassificar achado.
 - [ ] Definir critérios objetivos, prazos P1/P2/P3, autoridade/segregação de exceções P0, validade, reteste e política de release.
+
+
+### Prazos de correção de falhas de segurança — decisão aprovada (09/11/2026)
+- [x] P0: contenção imediata, primeira medida em até 4 horas; contenção não encerra a falha.
+- [x] P1: correção em até 2 dias úteis.
+- [x] P2: correção em até 15 dias úteis.
+- [x] P3: correção em até 60 dias úteis.
+- [x] Acompanhar prazos, alertar antes/no vencimento e escalonar atrasos aos Administradores.
+- [x] Preservar histórico de identificação, classificação, responsável, prazo, justificativas, contenção/correção, reteste e encerramento.
+- [x] Exigir justificativa e autorização para prorrogações, preservando prazo original; não postergar contenção de risco ativo.
+- [ ] Definir marco inicial, calendário/fuso/feriados, pausas, alertas/escalonamento e autoridade para prorrogar.
