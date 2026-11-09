@@ -1737,3 +1737,10 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A supressão deve ocorrer no backend/API; não basta ocultar resultados na interface. Consultas e exportações devem aplicar a mesma regra.
 - Quando o limite não for atendido, informar indisponibilidade por insuficiência de volume sem revelar o valor suprimido nem permitir sua dedução por comparação.
 - Pendências: definir técnica de supressão complementar, proteção contra consultas diferenciais, tratamento de totais/subtotais, filtros temporais, arredondamentos e testes de reidentificação.
+
+### Imutabilidade do limite mínimo de agregação — decisão aprovada (09/11/2026)
+- O limite mínimo de 5 ocorrências para exibição de grupos/resultados agregados a Editores e Visualizadores é fixo e não pode ser alterado por configuração administrativa ou exceção operacional.
+- Qualquer proposta de mudança exige revisão formal da política de segurança, justificativa documentada, avaliação de risco e registro auditável; não pode ser aplicada como ajuste pontual para revelar grupos abaixo do limite vigente.
+- Até eventual aprovação formal de nova política, permanece obrigatório o limite de 5 ocorrências, inclusive em filtros, consultas sucessivas, detalhamentos e exportações.
+- Administradores mantêm o acesso completo previsto nas regras, sem que isso configure alteração do limite aplicável aos demais perfis.
+- Pendências: definir rito de revisão formal, responsáveis pela avaliação independente, critérios de risco, aprovação e comunicação de eventual mudança.
