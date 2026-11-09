@@ -772,3 +772,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Somente após o envio efetivo do terceiro lembrete desse novo ciclo, a solicitação ficará elegível para nova transferência por outro Administrador.
 - Os ciclos e lembretes anteriores permanecem preservados no histórico/auditoria; reiniciar a contagem não apaga registros anteriores.
 - O backend controla timestamps, contagem, elegibilidade e concorrência; notificações não podem ser duplicadas por reprocessamento.
+
+
+## 67. Histórico integral de justificativas de transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Ao assumir uma solicitação transferida, o novo Administrador deve ter acesso à justificativa da transferência imediatamente anterior e às justificativas de todas as transferências anteriores daquela solicitação.
+- As justificativas integram o histórico permanente da solicitação, vinculadas a cada evento de transferência e aos respectivos titulares, responsáveis pela operação e datas/horários.
+- O histórico deve permitir compreender a sequência de titularidades e os motivos informados, sem sobrescrita ou exclusão de justificativas anteriores.
+- O acesso respeita as permissões administrativas aplicáveis; o novo titular recebe acesso ao histórico necessário para continuar a análise.
