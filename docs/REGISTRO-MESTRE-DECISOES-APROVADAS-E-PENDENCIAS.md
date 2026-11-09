@@ -1057,3 +1057,7 @@ Notificações **Críticas** terão destaque visual próprio e estados separados
 ### Resolução de notificações críticas — APROVADO (09/11/2026)
 
 Um Administrador autorizado poderá declarar o alerta crítico **Resolvido**, mediante justificativa obrigatória. O backend validará autorização, estado e concorrência antes da persistência. A auditoria registrará responsável, data/hora, justificativa e resultado. Resolver não equivale a ler ou reconhecer e não apaga a ocorrência, o reconhecimento anterior ou a linha do tempo. Critérios objetivos de resolução por tipo de ocorrência, evidências exigidas, reabertura e escalonamento permanecem pendentes.
+
+### Reabertura de notificações críticas — APROVADO (09/11/2026)
+
+Um alerta crítico já resolvido poderá ser reaberto somente por Administrador autorizado, com justificativa obrigatória. O backend validará autorização, estado e concorrência. A reabertura será registrada na mesma linha do tempo, com responsável, data/hora, justificativa e resultado. A resolução anterior e os eventos anteriores permanecerão preservados, sem sobrescrita. O estado operacional após reabertura e a exigência de novo reconhecimento permanecem pendentes de definição.
