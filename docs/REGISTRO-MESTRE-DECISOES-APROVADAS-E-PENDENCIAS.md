@@ -1162,3 +1162,8 @@ A listagem utilizará **20 registros por página** como padrão, com opções de
 ### Ordenação do histórico de exportações — APROVADO (09/11/2026)
 
 A ordenação padrão será pela data e horário da solicitação, da mais recente para a mais antiga. O usuário poderá alternar para a ordem da mais antiga para a mais recente. A ordenação escolhida será preservada durante a navegação entre páginas. Quando solicitações tiverem a mesma data e horário, o identificador único da solicitação será usado como critério adicional de desempate, garantindo uma ordem estável. O backend valida e executa a ordenação e a paginação.
+
+
+### Tela de detalhes da solicitação de exportação — APROVADO (09/11/2026)
+
+Cada solicitação do histórico poderá ser aberta em uma visualização individual, somente leitura. A tela apresentará identificador único e solicitante; data/hora, formato e filtros utilizados; estado confirmado pelo backend e horários de início/encerramento quando disponíveis; quantidade de registros e resultado final; motivo e horários de cancelamentos/falhas quando aplicáveis; acesso ao arquivo apenas se concluído, autorizado e dentro da validade de 30 minutos do link; e histórico dos eventos relevantes de auditoria. Não será possível editar ou excluir informações pela interface. O backend valida identidade, permissões e dados; a interface apenas apresenta estados e resultados confirmados.
