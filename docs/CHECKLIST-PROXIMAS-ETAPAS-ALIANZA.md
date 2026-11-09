@@ -1004,3 +1004,12 @@ Legenda:
 - [x] Exigir procedimento formal e trilha auditável para descarte excepcional.
 - [x] Compatibilizar retenção com LGPD e normas aplicáveis.
 - [ ] Definir marco inicial, categorias/exceções, legal hold, minimização/anonimização, descarte seguro, responsáveis, revisão periódica e testes.
+
+
+### Verificação periódica da integridade da auditoria — decisão aprovada (09/11/2026)
+- [x] Programar verificação automática diária da integridade da auditoria.
+- [x] Prever verificação adicional após operações administrativas de infraestrutura relevantes.
+- [x] Gerar alerta crítico e identificar o trecho/período/conjunto afetado em caso de divergência.
+- [x] Preservar registros originais e evidências; não executar correção automática.
+- [x] Registrar investigação e resolução com responsáveis, evidências, ações e resultado.
+- [ ] Definir mecanismo, cobertura, limiares, canal/escalonamento, responsáveis, procedimento de contenção/recuperação, metas e testes.
