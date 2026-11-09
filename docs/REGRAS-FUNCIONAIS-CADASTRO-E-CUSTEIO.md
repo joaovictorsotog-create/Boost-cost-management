@@ -444,3 +444,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Usuários com papel **Editor** ou **Visualizador** podem consultar as famílias, mas não podem executar essas operações de manutenção.
 - A restrição deve ser aplicada também no backend, não apenas ocultando ou desabilitando controles na interface.
 - Tentativas não autorizadas devem ser recusadas sem alterar dados e devem respeitar as regras gerais de auditoria e segurança do sistema.
+
+
+## 42. Pesquisa na gestão de famílias — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- A listagem normal de **Configurações → Famílias** deve permitir pesquisar pelo nome da família.
+- A pesquisa deve aceitar correspondência parcial, permitindo localizar uma família ao informar apenas parte de seu nome.
+- A pesquisa não deve diferenciar letras maiúsculas de minúsculas.
+- A listagem normal e sua pesquisa consideram somente famílias ativas.
+- Famílias inativas continuam consultáveis exclusivamente na área **Arquivados**, sem aparecer nos resultados da listagem normal.
+- A pesquisa é somente um recurso de localização; não altera famílias, vínculos, permissões ou regras de unicidade.
