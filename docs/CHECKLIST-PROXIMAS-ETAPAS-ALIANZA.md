@@ -571,3 +571,13 @@ Legenda:
 - [x] Definir o limite como regra de apresentação, sem limitar registros ou alertas pendentes.
 - [x] Preservar identidade, ciclo de vida e histórico independentes de cada alerta.
 - [x] Manter dados, contagens e permissões sob autoridade do backend.
+
+
+### Reincidência de manifestações em alertas críticos — decisão aprovada (09/11/2026)
+
+- [x] Não criar alerta duplicado quando nova manifestação corresponder à mesma ocorrência crítica ainda aberta/não resolvida.
+- [x] Registrar cada nova manifestação na linha do tempo do alerta original, com dados necessários para auditoria.
+- [x] Manter alertas independentes para problemas efetivamente distintos.
+- [x] Exigir correlação validada pelo backend; frontend não decide equivalência por conta própria.
+- [x] Preservar histórico, reconhecimento e prazos do alerta original ao anexar manifestação.
+- [ ] Especificar critérios técnicos de equivalência, prevenção de falsos agrupamentos e distinção entre reincidência e problema novo.
