@@ -727,7 +727,10 @@ Legenda:
 - [x] Retornar somente a página solicitada pelo backend, sem carregar todo o histórico.
 - [x] Preservar filtros aplicados durante a navegação entre páginas.
 - [x] Validar paginação e escopo no backend.
-- [ ] Definir ordenação dos resultados.
+- [x] Definir ordenação padrão por data/hora da solicitação, da mais recente para a mais antiga.
+- [x] Permitir alternância para data/hora da mais antiga para a mais recente.
+- [x] Preservar a ordenação escolhida durante a navegação entre páginas.
+- [x] Usar o identificador único da solicitação como critério de desempate quando data/hora forem iguais, garantindo estabilidade.
 
 
 ### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
@@ -749,3 +752,12 @@ Legenda:
 - [x] Preservar filtros aplicados durante a navegação entre páginas.
 - [x] Validar parâmetros de paginação e escopo no backend.
 - [ ] Definir ordenação dos resultados.
+
+
+### Ordenação do histórico de exportações — decisão aprovada (09/11/2026)
+
+- [x] Ordenar por data e horário da solicitação, da mais recente para a mais antiga, como padrão.
+- [x] Permitir alternar para a ordem da mais antiga para a mais recente.
+- [x] Preservar a ordenação escolhida durante a navegação entre páginas.
+- [x] Utilizar o identificador único da solicitação como desempate quando data/hora forem iguais.
+- [x] Manter validação e execução da ordenação e paginação sob responsabilidade do backend.
