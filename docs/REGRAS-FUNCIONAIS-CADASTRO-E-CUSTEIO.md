@@ -1681,3 +1681,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Enquanto aguarda, devem continuar as medidas de contenção do risco, preservação de evidências e resposta ao incidente; isso não equivale a autorizar a liberação.
 - Registrar a indisponibilidade, tentativas de obter a segunda aprovação, responsáveis, horários e medidas de contenção adotadas.
 - Pendências: definir canais de convocação/escalonamento e procedimentos operacionais de continuidade sem flexibilizar a dupla aprovação.
+
+
+### Encerramento de falhas de segurança — decisão aprovada (09/11/2026)
+- Uma falha de segurança só pode ser encerrada após correção implementada, reteste independente aprovado, evidências anexadas e resultado técnico registrado.
+- O encerramento exige validação explícita de um Administrador diferente do responsável pela correção.
+- O responsável técnico registra a correção, o resultado do reteste e as evidências; não pode validar sozinho o encerramento administrativo.
+- Se o reteste falhar ou as evidências forem insuficientes, a falha permanece aberta, preservando classificação, histórico e prazos aplicáveis.
+- A decisão de encerramento, o Administrador validador, os responsáveis, datas/horários, evidências e resultado ficam registrados na auditoria.
+- Pendências: definir evidências mínimas por classe de falha, critérios de independência/competência do reteste, fluxo de validação, reabertura e critérios de aceite.
