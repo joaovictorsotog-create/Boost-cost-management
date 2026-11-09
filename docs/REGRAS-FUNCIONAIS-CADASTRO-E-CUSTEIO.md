@@ -1329,3 +1329,11 @@ Ao selecionar uma solicitação no histórico, o usuário poderá abrir uma visu
 - **Auditoria:** histórico dos eventos relevantes da solicitação, sem possibilidade de edição ou exclusão pela interface.
 
 A consulta não altera a solicitação nem seus registros. O backend valida identidade, permissões e dados apresentados; a interface não poderá antecipar estados ou resultados não confirmados.
+
+### Consulta dos detalhes durante o processamento — decisão aprovada (09/11/2026)
+
+- Os detalhes de uma solicitação poderão ser consultados em qualquer estado, inclusive **Aguardando processamento**, **Em processamento** e **Cancelamento solicitado**, sem necessidade de aguardar o encerramento.
+- Enquanto a solicitação estiver ativa, a visualização apresentará os dados e eventos já disponíveis, atualizados conforme as confirmações persistidas pelo backend.
+- Informações ainda não disponíveis, como horário de encerramento, quantidade final de registros ou resultado final, não serão presumidas nem preenchidas antecipadamente.
+- A consulta continuará sendo somente leitura; abrir ou atualizar os detalhes não altera o processamento, não solicita cancelamento e não interfere na tarefa.
+- Identidade, permissões, estado e conteúdo exibido serão validados pelo backend.
