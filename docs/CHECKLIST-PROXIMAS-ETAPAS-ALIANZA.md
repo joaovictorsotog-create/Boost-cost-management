@@ -1,0 +1,121 @@
+# Checklist de próximas etapas — Alianza Sistema de Custos
+
+**Atualizado:** 09/11/2026  
+**Base:** auditoria documental de 17 conversas vinculadas e decisões registradas nos documentos funcionais.  
+**Branch:** `docs/regras-custeio-cadastro-central`  
+**Objetivo:** acompanhar o que falta esclarecer, validar e só depois implementar. Este checklist não transforma pendências em decisões aprovadas.
+
+Legenda:
+- [x] concluído/documentado
+- [ ] pendente
+- [!] exige decisão explícita do usuário
+- [~] depende de material ou validação externa
+
+---
+
+## 1. Consolidação documental já realizada
+
+- [x] Auditar as 17 conversas correspondentes aos links compartilhados.
+- [x] Criar `docs/AUDITORIA-CONVERSAS-PROJETO-2026-11-09.md`.
+- [x] Atualizar `docs/REGISTRO-MESTRE-DECISOES-APROVADAS-E-PENDENCIAS.md`.
+- [x] Atualizar `docs/REGRAS-FUNCIONAIS-CADASTRO-E-CUSTEIO.md`.
+- [x] Recuperar e registrar unidades aprovadas: metro, kg, m² e unidade.
+- [x] Recuperar e registrar acesso aprovado: login individual, 2FA, RLS e perfis Administrador, Editor e Visualizador.
+- [x] Recuperar e registrar arquivamento do Log de Atividades: um ano no ambiente principal, depois arquivo; exclusão apenas por decisão expressa do administrador.
+- [x] Registrar revisão semestral de custos, lembretes e regra de Gama manual/opcional.
+- [x] Registrar arredondamento de apresentação individual por item.
+- [x] Manter documentação na branch de documentação; sem merge, deploy ou implementação.
+
+## 2. Completar a auditoria histórica
+
+- [ ] Identificar quais são exatamente as 27 conversas do projeto que o usuário mencionou.
+- [ ] Cruzar os 17 links já auditados com a lista completa e marcar quais conversas ainda faltam.
+- [ ] Obter/exportar o conteúdo das conversas restantes que não estejam no ZIP atual.
+- [ ] Auditar cada conversa restante, separando aprovação explícita, proposta, pendência, conflito e assunto de outro projeto.
+- [ ] Registrar origem (título, data e identificador) de cada nova decisão.
+- [ ] Atualizar Registro Mestre e documento de auditoria após a conferência.
+- [ ] Confirmar se “Desenvolver Tabela Automatizada” pertence ao Alianza Sistema de Custos ou é outro projeto.
+- [ ] Fazer conferência cruzada final com `BOOST-COST-MANAGEMENT-ORDEM-MESTRA.md` e a especificação funcional original de 381 linhas.
+- [ ] Resolver e documentar divergências entre as fontes oficiais, sem escolher uma versão silenciosamente.
+
+## 3. Fechar pendências funcionais — decisões do usuário
+
+### 3.1 Exclusão de item que está em uso
+- [ ] [!] Decidir se um item vinculado a estruturas pode ser excluído após exibir os impactos e receber confirmação explícita.
+- [ ] [!] Ou decidir se o sistema deve bloquear a exclusão enquanto houver vínculos, exigindo substituição/remoção prévia nas estruturas.
+- [ ] Definir o comportamento para item histórico que já foi utilizado em custos anteriores, preservando integridade e rastreabilidade.
+
+### 3.2 Quantidade-base da estrutura
+- [ ] [!] Definir se toda estrutura representa sempre uma unidade do produto ou se pode representar um lote com quantidade-base configurável.
+- [ ] [!] Se houver lote, definir como converter o custo total da estrutura em custo unitário do produto.
+
+### 3.3 Precisão numérica
+- [ ] [!] Definir a precisão interna de armazenamento e cálculo monetário.
+- [ ] [!] Definir em qual etapa aplicar o arredondamento aprovado por item, sem perda acumulada de precisão nem dupla aplicação.
+- [ ] Validar exemplos reais da planilha com os resultados esperados.
+
+### 3.4 Aproveitamento de matéria-prima
+- [ ] [!] Definir se haverá cálculo automático de aproveitamento de barras/tubos ou se o sistema usará apenas quantidades/pesos já preparados e informados pelo usuário.
+- [ ] [!] Se houver aproveitamento automático, definir as regras, perdas, sobras reutilizáveis e unidade de cálculo antes de implementar.
+- [ ] Não transformar observações da planilha em regra universal sem aprovação.
+
+### 3.5 Fornecedores e valores
+- [ ] [!] Confirmar se cada item terá apenas um custo vigente ou se haverá preços por fornecedor/tabelas diferentes.
+- [ ] [!] Definir como tratar itens sem custo informado e estruturas incompletas, sem inventar custo zero como custo válido.
+
+## 4. Validar regras técnicas e operacionais
+
+- [ ] [!] Definir frequência, retenção e responsável pelo monitoramento dos backups automáticos.
+- [ ] [!] Definir periodicidade e procedimento de teste de restauração de backup.
+- [ ] [ ] Validar arquitetura de autenticação, 2FA e políticas RLS com os três níveis aprovados.
+- [ ] [ ] Definir estratégia técnica de recálculo transacional e propagação multinível, respeitando atomicidade e prevenção de ciclos já aprovadas.
+- [ ] [ ] Definir idempotência para importações, atualizações em lote e tentativas repetidas após falha.
+- [ ] [ ] Definir como preservar versões/instantâneos de estrutura e memória de cálculo, além do histórico de custo já aprovado.
+- [ ] [ ] Definir monitoramento e critérios de saúde para banco, autenticação e serviços internos.
+- [ ] [ ] Confirmar dimensionamento da VPS e arquitetura de implantação com base em carga real; os dados KVM2 (2 vCPU, 8 GB RAM, 100 GB) são referência informada, não validação de capacidade.
+- [ ] [!] Aprovar a stack tecnológica específica do Sistema de Custos. Não copiar automaticamente a stack do CRM.
+- [ ] [ ] Revisar requisitos de segurança: frontend não confiável, validações críticas no backend e segredos protegidos.
+
+## 5. Preparar especificação para implementação
+
+- [ ] Consolidar todos os requisitos aprovados em uma única especificação funcional versionada.
+- [ ] Criar matriz de rastreabilidade: requisito → conversa/fonte → aprovação → documento → módulo afetado → teste de aceite.
+- [ ] Criar mapa de módulos e dependências (cadastro central, famílias, estruturas, custeio, histórico, importação, relatórios, configurações, usuários e auditoria).
+- [ ] Descrever fluxos de criação, edição, exclusão, inativação e confirmação global.
+- [ ] Descrever fluxo de alteração de custo e recálculo de todos os produtos dependentes.
+- [ ] Descrever fluxo de importação/atualização em lote com prévia, erros por linha e aprovação parcial.
+- [ ] Definir critérios de aceite verificáveis para cada regra.
+- [ ] Revisar a especificação com o usuário antes de autorizar implementação.
+
+## 6. Implementação — somente após fechamento e autorização
+
+- [ ] [!] Receber autorização explícita para iniciar implementação.
+- [ ] [ ] Preparar ambiente separado do CRM e banco Supabase próprio.
+- [ ] [ ] Implementar primeiro fundações: autenticação, autorização, auditoria e configurações.
+- [ ] [ ] Implementar cadastro central, famílias e unidades.
+- [ ] [ ] Implementar estruturas multinível, prevenção de ciclos e custeio.
+- [ ] [ ] Implementar recálculo transacional e histórico.
+- [ ] [ ] Implementar importação/atualização em lote com aprovação.
+- [ ] [ ] Implementar pesquisa global, notificações e relatórios.
+- [ ] [ ] Executar testes unitários, integração, segurança, concorrência, falhas/rollback e testes de aceite.
+- [ ] [ ] Revisar backup e restauração antes de produção.
+- [ ] [ ] Solicitar autorização específica antes de merge para branch principal, deploy ou alteração de infraestrutura.
+
+---
+
+## 7. Ordem recomendada de trabalho
+
+1. **Completar o inventário das 27 conversas** — para não perder aprovações antigas.
+2. **Fechar as decisões funcionais pendentes** — exclusão de item em uso, quantidade-base, precisão e aproveitamento.
+3. **Conferir documentos oficiais** — Ordem Mestra e especificação de 381 linhas.
+4. **Fechar arquitetura e segurança** — stack, backup, autenticação, RLS e implantação.
+5. **Produzir especificação e critérios de aceite** — com rastreabilidade de cada decisão.
+6. **Só então iniciar implementação**, mediante autorização explícita.
+
+## 8. Regra de atualização deste checklist
+
+- Marcar uma tarefa como concluída somente após evidência verificável.
+- Decisões novas devem registrar data, contexto e confirmação explícita do usuário.
+- Sugestões do assistente não são decisões aprovadas.
+- Pendências não devem ser resolvidas por suposição.
+- Atualizar este arquivo e o Registro Mestre juntos quando uma decisão for fechada.
