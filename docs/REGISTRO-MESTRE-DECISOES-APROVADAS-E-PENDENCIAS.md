@@ -753,3 +753,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Não existe bloqueio ou espera específica para a reassunção pelo mesmo Administrador.
 - Cada nova assunção constitui novo ciclo, com novo responsável e data/hora registrados; ciclos anteriores permanecem no histórico/auditoria.
 - A reassunção respeita a titularidade exclusiva e o controle atômico do backend.
+
+
+## 51. Perda inesperada de acesso durante análise (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Falha de conexão, encerramento inesperado da sessão, fechamento do navegador ou perda momentânea de acesso não encerram a análise nem liberam sua titularidade.
+- A solicitação permanece **Em análise**, vinculada ao Administrador responsável, até retomada pelo titular ou encerramento formal sem decisão.
+- Após autenticar-se novamente, o Administrador titular pode retomar a análise, mediante validação do backend.
+- Outros Administradores podem consultar, mas não assumir, decidir ou tomar o controle enquanto a titularidade estiver ativa.
+- Estado e titularidade são persistidos no backend, nunca dependentes da sessão ou do frontend.
+- Permanecem os lembretes já aprovados (30 minutos, repetição a cada 30 minutos, máximo de 3), sem liberação automática após os lembretes.
