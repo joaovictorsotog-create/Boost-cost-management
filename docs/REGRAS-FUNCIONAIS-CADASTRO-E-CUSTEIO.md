@@ -1547,3 +1547,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Manter este painel distinto do histórico de notificações e do histórico de solicitações, ainda que consulte eventos relacionados.
 - Aplicar paginação e ordenação controladas pelo backend, preservando filtros e critérios entre páginas.
 - Permanecem pendentes: perfis autorizados e escopo de visualização, catálogo de eventos, campos exibidos por evento, retenção, paginação/ordenação específicas, limites e processamento das exportações, mascaramento de dados e critérios de aceite/teste.
+
+
+### Permissões do painel central de auditoria — decisão aprovada (09/11/2026)
+- Administrador: acesso completo ao painel e aos eventos de auditoria, respeitadas as proteções para dados secretos e informações que não devem ser exibidas em claro.
+- Editor: acesso somente para consulta dos eventos relacionados às próprias ações; não pode consultar eventos de outros usuários nem executar ações administrativas sobre os registros.
+- Visualizador: não possui acesso ao painel administrativo de auditoria.
+- Exportações Excel/PDF devem respeitar exatamente o mesmo escopo de consulta autorizado para cada perfil, validado pelo backend; não podem ampliar o acesso aos dados.
+- Toda consulta e exportação deve respeitar autorização no backend e registrar os eventos relevantes de acesso/exportação na auditoria/Log de Atividades, evitando registrar recursivamente cada leitura de forma indiscriminada.
+- Permanecem pendentes: definição de quais eventos são considerados relacionados às próprias ações do Editor, campos mascarados por perfil, acesso excepcional e critérios de teste.
