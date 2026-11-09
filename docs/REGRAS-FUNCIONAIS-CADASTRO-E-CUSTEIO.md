@@ -379,3 +379,17 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - A listagem **Configurações → Famílias → Arquivados** deve exibir também a data em que cada família foi inativada.
 - A data exibida corresponde à inativação mais recente do registro. Se a família for reativada e posteriormente inativada novamente, a data deverá ser atualizada para a nova inativação.
 - A informação é de consulta e rastreabilidade; não altera as regras de reativação, seleção ou vínculo de itens.
+
+## 36. Colunas da listagem de famílias ativas — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+A listagem normal de famílias ativas em **Configurações → Famílias** deve apresentar:
+
+- **Nome da família**;
+- **Quantidade de itens vinculados**, calculada automaticamente e somente para consulta;
+- **Data de criação**;
+- **Última atualização**;
+- **Situação**.
+
+A listagem também disponibilizará as ações **Editar** e **Inativar**, respeitando as regras já aprovadas: somente famílias sem itens vinculados podem ser inativadas. Famílias inativas permanecem na área separada **Arquivados**, com data da inativação mais recente e opção de reativação para o administrador.
