@@ -306,3 +306,14 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - O campo aceita letras, números e caracteres especiais; não será imposto um padrão rígido de nomenclatura.
 - Descrições repetidas são permitidas. A identidade exclusiva do item continua sendo seu ID numérico.
 - A descrição principal permanece disponível para pesquisa, em conjunto com os demais critérios já definidos.
+
+## 27. Cadastro de família por seleção controlada — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- O campo Família no cadastro do item será uma lista de seleção alimentada pelas famílias previamente cadastradas em Configurações.
+- O usuário não poderá digitar livremente ou criar uma família diretamente durante o cadastro do item.
+- O cadastro e a edição das famílias serão realizados na área de Configurações, por usuário com permissão administrativa.
+- A família continua obrigatória e única por item.
+- A seleção deve referenciar o registro da família existente, evitando variações de grafia e classificações duplicadas por digitação.
+- A regra de exclusão permanece: uma família vinculada a itens não pode ser excluída até que os itens sejam reclassificados.
