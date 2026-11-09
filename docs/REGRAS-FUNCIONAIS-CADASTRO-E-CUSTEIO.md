@@ -1469,3 +1469,11 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Registrar na auditoria a solicitação, a verificação realizada, os Administradores participantes, a decisão, o resultado e as respectivas datas/horários.
 - A recuperação não deve reativar sessões ou tokens anteriores; após a conclusão, o usuário deverá configurar novamente o 2FA e autenticar-se de novo.
 - Procedimentos de verificação de identidade, controles contra conluio/abuso, tratamento de indisponibilidade de um segundo Administrador e critérios de aceite permanecem pendentes de especificação.
+
+
+### Contingência para recuperação administrativa do 2FA — decisão aprovada (09/11/2026)
+- Se não houver segundo Administrador disponível, não permitir que o próprio titular recupere sozinho uma conta administrativa por procedimento simplificado.
+- Admitir um procedimento excepcional de contingência com verificação reforçada de identidade, período de segurança antes da liberação e registro integral em auditoria.
+- A contingência não concede acesso imediato: a liberação só ocorre após cumprir as verificações e o prazo de segurança definidos no procedimento.
+- Preservar a exigência de separação entre solicitante e autorizador; a contingência não pode ser usada para contornar essa proteção.
+- Quantidade de verificadores independentes, duração do prazo, canal de validação, critérios de evidência, notificações e tratamento de emergência permanecem pendentes de definição técnica e operacional.
