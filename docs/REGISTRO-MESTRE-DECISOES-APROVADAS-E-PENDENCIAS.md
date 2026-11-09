@@ -1175,3 +1175,7 @@ Os detalhes da solicitação poderão ser consultados em qualquer estado, inclus
 ### Atualização automática dos detalhes da exportação — APROVADO (09/11/2026)
 
 Com a tela de detalhes aberta, os dados da solicitação serão atualizados automaticamente, sem exigir atualização manual. Serão apresentados somente estados, dados e eventos confirmados pelo backend. O mecanismo deverá evitar consultas excessivas, tráfego desnecessário e sobrecarga; a atualização será somente leitura e não poderá interferir no processamento nem solicitar cancelamento. **PENDENTE:** definir frequência, mecanismo técnico, tratamento de perda de conexão e comportamento quando a tela não estiver ativa.
+
+### Perda e recuperação de conexão na atualização dos detalhes — APROVADO (09/11/2026)
+
+Se a conexão cair com a tela aberta, os últimos dados recebidos e confirmados pelo backend permanecerão visíveis. A interface informará claramente a desconexão e que os dados exibidos são da última atualização confirmada, sem sugerir que estejam atuais. O sistema tentará reconectar e retomará a atualização automática; após reconectar, consultará e validará o estado atual no backend antes de indicar dados atualizados. Desconexão/reconexão não poderá alterar, reiniciar, cancelar ou duplicar a exportação, e as tentativas de reconexão deverão ser controladas para evitar excesso.
