@@ -878,3 +878,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A cobertura deverá considerar navegação interna, voltar/avançar do navegador e atualização/recarregamento; para fechamento de aba/janela, utilizar o mecanismo nativo de aviso do navegador quando disponível, sem prometer modal personalizado.
 - Regras de negócio, validação de estado e proteção contra perda de dados devem ser garantidas pelo backend quando envolverem persistência; o frontend não será autoridade.
 - Detalhes de posicionamento responsivo, comportamento quando não houver histórico e compatibilidade de atalhos permanecem sujeitos à especificação técnica e aos critérios de aceite.
+
+### Estado dos botões de navegação sem histórico disponível — decisão aprovada em 09/11/2026
+
+- Quando não houver uma tela anterior disponível, o botão **Voltar** ficará desabilitado.
+- Quando não houver uma tela posterior disponível, o botão **Avançar** ficará desabilitado.
+- Botões desabilitados não executam navegação artificial nem alteram o histórico.
+- O estado dos botões deve refletir o histórico real de navegação e atualizar quando esse histórico mudar.
