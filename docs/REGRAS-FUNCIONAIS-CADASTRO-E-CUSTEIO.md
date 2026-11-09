@@ -456,3 +456,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A listagem normal e sua pesquisa consideram somente famílias ativas.
 - Famílias inativas continuam consultáveis exclusivamente na área **Arquivados**, sem aparecer nos resultados da listagem normal.
 - A pesquisa é somente um recurso de localização; não altera famílias, vínculos, permissões ou regras de unicidade.
+
+
+## 43. Ordenação das listagens de famílias — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- A listagem normal de famílias ativas será apresentada em ordem alfabética crescente (A–Z), pelo nome da família.
+- A listagem da área **Arquivados** será ordenada pela data de inativação mais recente primeiro (ordem decrescente).
+- A ordenação é apenas de apresentação e não altera registros, identificadores, vínculos, datas ou histórico.
+- A pesquisa já aprovada continuará funcionando sobre a listagem correspondente, respeitando a separação entre famílias ativas e arquivadas.
