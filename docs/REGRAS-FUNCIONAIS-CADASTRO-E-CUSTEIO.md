@@ -536,3 +536,17 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A consulta dos itens afetados é somente informativa: não permite alterar, remover ou reclassificar os itens dentro da prévia.
 - A listagem deve respeitar permissões e regras de visibilidade do Cadastro Central. Se a relação for extensa, deverá ser apresentada de forma consultável e paginada ou equivalente, sem omitir silenciosamente itens do total informado.
 - A prévia deve refletir os vínculos existentes no momento da confirmação; se os vínculos mudarem enquanto a prévia estiver aberta, o sistema deve atualizar a relação ou exigir nova validação da prévia antes de permitir confirmar, evitando confirmar com impacto desatualizado.
+
+
+## 50. Prévia de impacto para operações em massa — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Toda operação em massa que possa alterar múltiplos registros deve apresentar uma prévia antes da confirmação.
+- A prévia deve informar a quantidade total de registros que serão afetados e permitir consultar a relação dos registros, identificando-os por seus códigos/IDs e descrições ou pelos campos identificadores próprios do módulo.
+- A prévia deve descrever claramente a ação pretendida e seu impacto esperado, incluindo alterações de dados, situação, vínculos ou efeitos em módulos dependentes, quando aplicável.
+- O usuário autorizado deve poder confirmar ou cancelar. Nenhuma alteração pode ser efetivada antes da confirmação explícita.
+- A relação deve ser consultável mesmo quando extensa, por paginação ou recurso equivalente, sem divergência entre o total informado e os registros efetivamente apresentados.
+- A prévia deve respeitar permissões e visibilidade. Alterações nos registros selecionados ou no conjunto afetado enquanto a prévia estiver aberta exigem atualização ou nova validação antes da confirmação.
+- Após a confirmação, a operação deve ser executada com validação no backend e registrada na auditoria, com resultado identificável. Falhas parciais não podem ser apresentadas como sucesso integral; o tratamento de atomicidade ou retomada deverá ser especificado conforme cada operação.
+- A regra aplica-se, entre outras, a importações, alterações em lote e inativações em massa, sem substituir validações específicas de cada módulo.
