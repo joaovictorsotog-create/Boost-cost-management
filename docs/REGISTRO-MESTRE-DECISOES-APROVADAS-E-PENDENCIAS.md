@@ -971,3 +971,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Controles disponíveis: ligar/desligar som, escolher entre diferentes sons, ajustar volume e testar antes de salvar.
 - Alertas respeitam as preferências individuais e os limites contra repetição excessiva.
 - Permanecem pendentes persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
+
+
+### Localização das preferências de notificações — APROVADO (09/11/2026)
+
+- Criar área própria em **Configurações → Notificações** para centralizar as preferências de alertas sonoros.
+- Preferências individuais por usuário: ligar/desligar som, escolher entre sons, ajustar volume e testar antes de salvar.
+- As preferências não são globais; a escolha de um usuário não altera a experiência sonora dos demais.
+- Desativar áudio mantém notificações visuais e o sino funcionando normalmente.
+- O sino continua exibindo o indicador de notificações não lidas e permitindo consultar o resumo consolidado.
+- Persistência, catálogo, compatibilidade e bloqueios de áudio pelo navegador/sistema permanecem pendentes de detalhamento técnico.
