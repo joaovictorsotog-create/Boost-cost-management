@@ -930,3 +930,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Se registros tiverem sido excluídos ou permissões tiverem sido revogadas enquanto a tela estava fora de foco, atualizar a tela e informar claramente a mudança, sem exibir dados não mais autorizados.
 - Preservar somente filtros/critérios ainda válidos; resultados devem refletir o estado atual confirmado pelo backend.
 - Detalhes de apresentação das mensagens, tratamento de múltiplas alterações e critérios técnicos/testes de aceite permanecem pendentes.
+
+### Comunicação das alterações ao retornar à tela — 09/11/2026
+
+**Status: APROVADO**
+
+- Usar avisos objetivos e não intrusivos para comunicar alterações desde a última visualização.
+- Registro excluído: informar a exclusão e removê-lo dos resultados atuais.
+- Permissão revogada: informar a alteração de acesso e bloquear a visualização, sem revelar dados protegidos do registro.
+- Dados modificados: atualizar as informações e indicar que houve atualização desde a última visita.
+- Consolidar várias alterações em um único resumo, evitando notificações repetitivas.
+- Sem alterações relevantes, não exibir aviso.
+- Permanecem pendentes os textos finais, apresentação visual, classificação de relevância e critérios técnicos/testes de aceite.
