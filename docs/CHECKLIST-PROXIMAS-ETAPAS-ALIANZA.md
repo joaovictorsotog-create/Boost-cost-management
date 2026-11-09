@@ -343,3 +343,13 @@ Legenda:
 - [x] Informar claramente o que mudou, sem expor dados que o usuário não esteja mais autorizado a acessar.
 - [x] Preservar apenas critérios de consulta ainda válidos e atualizar os resultados conforme o estado atual.
 - [ ] Definir apresentação das mensagens, tratamento de múltiplas alterações e critérios técnicos/testes de aceite.
+
+### Comunicação das alterações ao retornar à tela — decisão aprovada
+
+- [x] Exibir avisos objetivos e não intrusivos para alterações relevantes desde a última visualização.
+- [x] Informar exclusões e remover os registros excluídos dos resultados atuais.
+- [x] Informar revogação de acesso sem revelar dados protegidos e impedir a visualização não autorizada.
+- [x] Atualizar dados modificados e indicar que houve atualização desde a última visita.
+- [x] Consolidar múltiplas alterações em um único resumo, evitando notificações repetitivas.
+- [x] Não exibir aviso quando não houver alterações relevantes.
+- [ ] Definir textos finais, apresentação visual, classificação de relevância e critérios técnicos/testes de aceite.
