@@ -1510,3 +1510,10 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - A falha reaberta volta ao estado aberto, mantém a classificação original até reavaliação formal e exige novo plano de correção, responsável, prazo, contenção quando aplicável e novo reteste independente.
 - A reabertura não equivale a uma nova falha sem vínculo: reincidência relacionada deve manter referência à identidade e ao histórico da falha original; ocorrências distintas devem receber identificação própria.
 - Pendências: critérios técnicos de correlação automática, autorização/perfil para reabertura manual, critérios de reclassificação, notificações e tratamento de prazos após reabertura.
+
+### Classificação de falhas após reabertura — decisão aprovada (09/11/2026)
+- A falha reaberta mantém sua classificação anterior (P0, P1, P2 ou P3) até que ocorra reavaliação formal.
+- Somente Administrador autorizado pode aprovar mudança de classificação, mediante justificativa técnica registrada.
+- A reclassificação não pode ser usada para reduzir artificialmente a prioridade, evitar prazos, contornar bloqueios ou dispensar contenção, correção e reteste aplicáveis.
+- Registrar classificação anterior e nova, justificativa, evidências, Administrador responsável e data/hora, preservando o histórico completo.
+- Pendências: definir critérios objetivos de reclassificação, evidências mínimas, fluxo de aprovação e efeitos sobre prazos e escalonamentos.
