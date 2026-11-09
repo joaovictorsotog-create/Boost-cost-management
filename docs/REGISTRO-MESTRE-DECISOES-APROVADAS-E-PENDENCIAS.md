@@ -249,3 +249,17 @@ As regras abaixo foram recuperadas de confirmações explícitas nas conversas v
 6. O usuário exigiu diretrizes rigorosas para execução no Manus: frontend não confiável, validações críticas no backend, proteção de segredos e arquivos `.env`, sem exposição de chaves, tokens, senhas ou credenciais.
 7. A stack específica do Sistema de Custos **não foi aprovada** nas conversas auditadas. Não copiar automaticamente a stack do CRM.
 8. A Ordem Mestra e a especificação técnica de segurança são fontes de precedência e devem ser consultadas antes de qualquer implementação.
+
+
+
+## 7. Complemento de cobertura e decisões — export conferido em 09/11/2026
+
+- O identificador `conversation_template_id = g-p-6ae9c560f4908191aa722657220d9362` confirma **19 conversas** do ZIP como pertencentes a este projeto. Duas conversas antes não incluídas nos 17 links foram revisadas: “Desenvolver Tabela Automatizada” (`6ae9c59e-b148-83e9-9e66-83bd911c5aca`) e “Pesquisa sobre criação no Manus (1)” (`6aea176d-65cc-83e9-ab2d-a8d456162f14`).
+- O ZIP tem 36 conversas no total; 17 não pertencem ao identificador deste projeto. Das 27 conversas mencionadas pelo usuário, 19 aparecem no ZIP e **8 ainda precisam ser localizadas**. Auditoria integral das 27 ainda não concluída.
+- “Desenvolver Tabela Automatizada” pertence ao mesmo projeto Alianza, mas o usuário esclareceu que é uma aplicação separada do CRM. O nome escolhido para a aplicação é **Alianza — Sistema de Custos**.
+- O usuário definiu a finalidade principal como cálculo do custo industrial por produto a partir dos custos de materiais/componentes alimentados pelo usuário; não acrescentar impostos nem formar preço de venda automaticamente. O usuário também declarou não desejar integração com a aplicação CRM.
+- A aba `CUSTOS VARIÁVEIS` deve ser entendida como biblioteca central organizada em categorias configuráveis de componentes/recursos, cujos itens são selecionados na árvore do produto (matéria-prima, pintura, eletrônica e outros).
+- Placa/Fonte foi aprovada como item de montagem na posição H18 da ficha referida (e I18 para a variante INOX, a conferir na planilha), contabilizada uma única vez.
+- Atualização automática global foi escolhida: alteração salva de custo central recalcula produtos e subconjuntos dependentes. O ajuste manual deve ocorrer no custo vigente de itens cadastrados; não permite sobrescrever manualmente custo calculado de item composto.
+- **Conflito a preservar:** uma conversa menciona canais comerciais configuráveis por produto, mas também delimita o aplicativo como cálculo de custo industrial, sem formação de preço de venda. Não incluir canais/margens/markup sem nova confirmação explícita.
+- Detalhamento por conversa e contexto está em `docs/AUDITORIA-CONVERSAS-PROJETO-2026-11-09.md`.
