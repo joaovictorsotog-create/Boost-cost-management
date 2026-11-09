@@ -1484,3 +1484,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Registrar falha, justificativa, risco, controles compensatórios, escopo/versão, solicitante, aprovadores, horários, validade, plano de resolução e renovação.
 - Exceção não muda classificação P0, não apaga achado e não dispensa contenção, correção e reteste.
 - Pendências: fluxo, indisponibilidade do segundo Administrador, conflitos, notificações, revogação antecipada e critérios de risco residual.
+
+
+### Indisponibilidade do segundo Administrador em exceções P0 — decisão aprovada (09/11/2026)
+- Sem segundo Administrador distinto disponível, não conceder exceção P0 com uma única aprovação; manter a versão bloqueada até a segunda aprovação.
+- Urgência/indisponibilidade não permite autoaprovação nem flexibiliza dupla aprovação.
+- Enquanto aguarda, manter contenção, preservação de evidências e resposta ao incidente; isso não autoriza liberação.
+- Registrar indisponibilidade, tentativas de convocação, responsáveis, horários e contenção adotada.
+- Pendência: definir canais de convocação/escalonamento e continuidade operacional sem flexibilizar a dupla aprovação.
