@@ -1533,3 +1533,10 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Os indicadores devem considerar somente ocorrências identificadas e registradas conforme as regras de correlação e reincidência; não presumir reincidência por mera semelhança de sintomas.
 - Permitir análise por período e preservar rastreabilidade até as ocorrências/falhas de origem, respeitando permissões e proteção das evidências.
 - Pendências: definir janelas e filtros de período, fórmula do tempo médio, tratamento de múltiplas reincidências por falha, agrupamentos por componente/tipo, critérios de dados incompletos e visualizações/exportações.
+
+### Acesso aos indicadores gerenciais de reincidência — decisão aprovada (09/11/2026)
+- Administradores têm acesso completo aos indicadores, detalhes e recursos de análise, sempre respeitando as restrições de acesso a evidências e dados sensíveis.
+- Editores podem consultar os indicadores gerenciais, mas não podem acessar evidências restritas nem detalhes de segurança protegidos.
+- Visualizadores podem consultar somente indicadores consolidados, sem identificação de responsáveis ou exposição de informações restritas.
+- A autorização deve ser aplicada no backend/API e refletida na interface; ocultar elementos visuais não substitui controle de acesso. Consultas e exportações devem respeitar o mesmo escopo de permissão.
+- Pendências: definir quais dimensões e níveis de agregação são consolidados, limites contra reidentificação por filtros/pequenos grupos, campos considerados detalhes de segurança, auditoria de consultas e regras de exportação.
