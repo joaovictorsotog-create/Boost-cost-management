@@ -301,3 +301,13 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - O sistema deve impedir a gravação de IDs duplicados.
 - O ID será utilizado como critério de pesquisa.
 - Alterações de ID seguem a confirmação global e o registro de auditoria.
+
+
+## 11. Decisão incremental — descrição não exclusiva (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Descrições iguais são permitidas para itens diferentes.
+- Cada item continua identificado por seu ID numérico obrigatório e exclusivo.
+- A descrição é utilizada para identificação e pesquisa, mas não funciona como chave única.
+- Resultados de pesquisa com descrições iguais devem ser distinguíveis pelo ID e pela família, além dos demais dados pertinentes.
