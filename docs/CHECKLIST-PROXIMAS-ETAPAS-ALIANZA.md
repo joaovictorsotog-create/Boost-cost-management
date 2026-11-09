@@ -321,3 +321,9 @@ Legenda:
 - [x] Preservar integralmente a edição ao escolher permanecer; ao descartar e sair, preservar filtros e resultados anteriormente aplicados.
 - [x] Cobrir navegação interna, voltar/avançar do navegador e recarregamento; usar aviso nativo do navegador para fechamento de aba/janela quando disponível.
 - [ ] Definir comportamento sem histórico, responsividade, compatibilidade de atalhos e critérios técnicos/testes de aceite.
+
+### Estado dos botões de navegação sem histórico disponível
+
+- [x] Desabilitar **Voltar** quando não houver tela anterior no histórico.
+- [x] Desabilitar **Avançar** quando não houver tela posterior no histórico.
+- [x] Não executar navegação artificial; refletir o histórico real.
