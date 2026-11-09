@@ -483,3 +483,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Esclarecer que a reativação não cria nem restaura vínculos automaticamente.
 - Permitir confirmar ou cancelar; não alterar nada antes da confirmação explícita.
 - Preservar a identidade e o histórico do registro original e aplicar a validação de unicidade do nome já aprovada.
+
+## 29. Conflito de nome ao reativar família (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Validar a unicidade do nome antes de reativar, considerando também diferenças de capitalização e grafias equivalentes conforme a regra aprovada.
+- Se outra família ativa já utilizar nome conflitante, bloquear a reativação e informar o nome em conflito e, quando possível, qual família ativa o utiliza.
+- O administrador deverá resolver o conflito e tentar novamente. Nenhuma renomeação automática, sobrescrita ou criação de vínculo será permitida.
+- Após a resolução, exigir nova validação bem-sucedida e confirmação explícita para reativar.
