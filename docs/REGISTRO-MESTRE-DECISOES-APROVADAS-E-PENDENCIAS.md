@@ -1474,3 +1474,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Preservar identificação, classificação, responsável, prazo, justificativas, contenção/correção, reteste e encerramento.
 - Prorrogações exigem justificativa e autorização registradas; preservar prazo original e histórico. Prazo não posterga contenção de risco ativo.
 - Pendências: marco inicial, calendário/fuso/feriados, pausas, alertas/escalonamento e autoridade para prorrogar.
+
+
+### Aprovação de exceções para falhas P0 — decisão aprovada (09/11/2026)
+- Exceção para liberar versão com P0 requer aprovação explícita de dois Administradores distintos.
+- Solicitante/responsável pela correção não aprova sozinho a própria exceção; separar solicitação e aprovação.
+- Validade máxima de 7 dias corridos; ao expirar, a exceção perde validade e o bloqueio de liberação retorna automaticamente.
+- Renovação exige nova justificativa, reavaliação do risco residual e duas novas aprovações explícitas; sem renovação automática.
+- Registrar falha, justificativa, risco, controles compensatórios, escopo/versão, solicitante, aprovadores, horários, validade, plano de resolução e renovação.
+- Exceção não muda classificação P0, não apaga achado e não dispensa contenção, correção e reteste.
+- Pendências: fluxo, indisponibilidade do segundo Administrador, conflitos, notificações, revogação antecipada e critérios de risco residual.
