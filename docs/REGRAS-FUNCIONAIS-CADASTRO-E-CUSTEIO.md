@@ -1556,3 +1556,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Exportações Excel/PDF devem respeitar exatamente o mesmo escopo de consulta autorizado para cada perfil, validado pelo backend; não podem ampliar o acesso aos dados.
 - Toda consulta e exportação deve respeitar autorização no backend e registrar os eventos relevantes de acesso/exportação na auditoria/Log de Atividades, evitando registrar recursivamente cada leitura de forma indiscriminada.
 - Permanecem pendentes: definição de quais eventos são considerados relacionados às próprias ações do Editor, campos mascarados por perfil, acesso excepcional e critérios de teste.
+
+
+### Integridade e proteção contra adulteração da auditoria — decisão aprovada (09/11/2026)
+- Registros de auditoria não podem ser alterados ou apagados por usuários, inclusive Administradores, por meio da interface.
+- Cada evento deve possuir identificador único, data/hora, responsável/ator, operação e resultado; incluir referência ao recurso afetado quando aplicável e contexto suficiente para rastreabilidade.
+- Implementar mecanismos técnicos no backend e no armazenamento para detectar adulteração, alteração indevida, exclusão ou quebra de integridade dos registros.
+- Tentativas de violação ou manipulação devem gerar eventos de segurança próprios, preservados em trilha protegida e sujeitos a alerta conforme criticidade.
+- A proteção deve abranger armazenamento e caminhos administrativos/técnicos, não apenas controles visuais da interface; acessos privilegiados à infraestrutura também precisam de rastreabilidade.
+- Correções excepcionais não sobrescrevem eventos originais: devem ser registradas como novos eventos vinculados, com autor, motivo, data/hora e referência ao registro relacionado.
+- Permanecem pendentes: tecnologia de integridade (ex.: encadeamento criptográfico/assinaturas ou armazenamento imutável), gestão de chaves, segregação de funções, retenção, monitoramento/alertas, cópias de segurança e testes periódicos de verificação.
