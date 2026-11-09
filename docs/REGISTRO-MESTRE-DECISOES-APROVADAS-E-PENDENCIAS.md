@@ -1364,3 +1364,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Manter o painel separado do histórico de notificações e do histórico de solicitações.
 - Paginação e ordenação controladas pelo backend, preservando filtros entre páginas.
 - Pendências: perfis/escopo de acesso, catálogo e campos dos eventos, retenção, paginação/ordenação, limites e processamento de exportações, mascaramento e testes.
+
+
+### Permissões do painel central de auditoria — decisão aprovada (09/11/2026)
+- Administrador: acesso completo ao painel e aos eventos, sem exposição em claro de segredos ou dados protegidos.
+- Editor: consulta somente dos eventos relacionados às próprias ações; sem consulta de eventos de terceiros ou ações administrativas sobre registros.
+- Visualizador: sem acesso ao painel administrativo de auditoria.
+- Exportações Excel/PDF respeitam exatamente o mesmo escopo de consulta de cada perfil e são validadas pelo backend.
+- Consultas e exportações respeitam autorização backend; acessos/exportações relevantes são registrados sem auditoria recursiva indiscriminada de cada leitura.
+- Pendências: critérios de eventos próprios, mascaramento por perfil, acesso excepcional e testes.
