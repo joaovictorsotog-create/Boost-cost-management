@@ -511,3 +511,15 @@ Legenda:
 - [x] Retornar o alerta reaberto ao estado **Aguardando reconhecimento**.
 - [x] Exigir novo reconhecimento por Administrador autorizado a cada reabertura.
 - [x] Preservar o reconhecimento anterior apenas como histórico, sem aproveitá-lo no novo ciclo.
+
+### Lembretes de alertas críticos sem reconhecimento — decisão aprovada (09/11/2026)
+
+- [x] Enviar primeiro lembrete após 30 minutos em Aguardando reconhecimento.
+- [x] Repetir a cada 30 minutos enquanto não reconhecido, limitado a três lembretes por ciclo.
+- [x] Destinar lembretes aos Administradores autorizados a visualizar o alerta.
+- [x] Interromper lembretes do ciclo após reconhecimento válido.
+- [x] Reiniciar contagem a cada reabertura, preservando ciclos anteriores.
+- [x] Cessar lembretes automáticos após o terceiro envio efetivo, sem ação automática sobre o alerta.
+- [x] Não transferir titularidade, reconhecer, resolver ou encerrar automaticamente após o limite.
+- [x] Contabilizar somente envios efetivos e manter agendamento/contagem sob controle do backend.
+- [x] Registrar lembretes, resultados, datas/horários e ciclo na linha do tempo/auditoria.
