@@ -802,3 +802,11 @@ Legenda:
 - [x] Consultar e validar o estado atual no backend antes de indicar os dados como atualizados.
 - [x] Impedir que desconexão/reconexão altere, reinicie, cancele ou duplique a exportação.
 - [x] Controlar tentativas de reconexão para evitar excesso.
+
+### Atualização dos detalhes quando a tela não estiver ativa — decisão aprovada (09/11/2026)
+
+- [x] Suspender ou reduzir consultas automáticas quando o usuário sair da tela ou ela deixar de estar ativa/em primeiro plano.
+- [x] Consultar imediatamente o estado atual no backend quando o usuário retornar ou reativar a tela.
+- [x] Identificar os dados anteriores como última atualização confirmada até validar a nova consulta.
+- [x] Impedir que a suspensão/redução das consultas pause, reinicie, cancele ou altere a exportação.
+- [ ] Definir mecanismo técnico e limites de frequência para telas ativas e inativas.
