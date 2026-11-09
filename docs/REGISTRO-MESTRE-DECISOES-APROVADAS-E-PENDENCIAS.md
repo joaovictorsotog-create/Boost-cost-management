@@ -644,3 +644,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Ações com impacto direto em estruturas, custos de produtos dependentes, vínculos ou integridade histórica são exclusivas do **Administrador**.
 - A autorização deve ser imposta no backend; controles visuais não substituem a validação de servidor.
 - A lista exata de campos e operações editáveis sem impacto direto será detalhada na matriz de permissões antes da implementação. Dúvidas sobre impacto não autorizam liberação implícita ao Editor.
+
+
+## 43. Campos editáveis por Editor e Administrador no Cadastro Central (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O **Editor** pode alterar somente a descrição principal e a descrição complementar do item, respeitando validações e auditoria.
+- Alterar a **família** é operação exclusiva do **Administrador**, mesmo sem impacto direto no custo, por ser uma mudança de classificação e organização do cadastro.
+- Unidade, tipo do item, custo manual, estrutura de composição, exclusão, reativação e demais operações com impacto em custeio, vínculos, estruturas ou histórico são exclusivas do Administrador.
+- As restrições valem também para importações, operações em massa, APIs e demais caminhos de alteração; o backend deve impor as permissões.
+- Até a conclusão da matriz geral de permissões, o Editor só pode alterar os dois campos expressamente autorizados nesta decisão.
