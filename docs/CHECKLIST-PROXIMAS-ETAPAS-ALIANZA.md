@@ -705,3 +705,11 @@ Legenda:
 - [x] Manter o histórico operacional separado do Log de Atividades.
 - [x] Preservar no Log de Atividades os eventos de auditoria previstos.
 - [x] Manter identidade e permissões validadas pelo backend, sem concessão de privilégios pelo acesso de menu.
+
+### Retenção do histórico de exportações — decisão aprovada (09/11/2026)
+
+- [x] Manter o histórico operacional das solicitações de exportação disponível por 15 meses.
+- [x] Permitir consulta e obtenção de relatórios referentes a períodos dentro dessa janela.
+- [x] Manter separada a retenção do histórico e a expiração de 30 minutos dos links dos arquivos exportados.
+- [x] Manter política de retenção do Log de Atividades independente.
+- [ ] Definir critérios técnicos de expurgo após o prazo, preservando obrigações de auditoria e integridade.
