@@ -239,3 +239,12 @@ A precisão interna usada para armazenar e calcular valores antes da apresentaç
 - A numeração é organizada e definida manualmente pelo administrador; o sistema deve validar a unicidade antes de salvar.
 - O ID é um critério de pesquisa e localização do item.
 - Alterações de ID seguem a confirmação global e devem ser registradas na auditoria.
+
+
+## 22. Descrição não exclusiva dos itens — decisão aprovada em 09/11/2026
+
+- A descrição/nome do item não precisa ser exclusiva.
+- Podem existir itens diferentes com a mesma descrição, desde que cada registro possua seu próprio ID numérico obrigatório e exclusivo.
+- O ID é a identidade única do cadastro; a descrição é informação de identificação e pesquisa, não uma chave única.
+- A pesquisa deve permitir distinguir resultados com descrições iguais exibindo, no mínimo, ID e família, além dos demais dados relevantes já definidos.
+- Esta regra não altera a obrigatoriedade de família única, unidade única ou validação de ID duplicado.
