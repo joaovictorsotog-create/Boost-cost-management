@@ -188,3 +188,12 @@ Legenda:
 - [x] Registrar cada assunção como novo ciclo, com responsável e data/hora próprios.
 - [x] Preservar ciclos anteriores no histórico/auditoria.
 - [ ] Definir critérios técnicos e testes de aceite para histórico de múltiplos ciclos e concorrência na reassunção.
+
+ 
+### Perda inesperada de acesso durante análise
+
+- [x] Manter solicitação em **Em análise** e preservar titularidade após falha de conexão, sessão encerrada ou navegador fechado.
+- [x] Permitir que o Administrador titular retome a análise após autenticar-se novamente e passar pelas validações do backend.
+- [x] Impedir que outros Administradores assumam ou decidam enquanto a titularidade estiver ativa.
+- [x] Manter lembretes aprovados sem liberação automática após o terceiro lembrete.
+- [ ] Definir critérios técnicos e testes de aceite para retomada, autenticação, indisponibilidade prolongada e recuperação de falhas.
