@@ -917,3 +917,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Exemplos de categorias: registros excluídos, registros atualizados e alterações de permissão.
 - O resumo deve permitir compreender o volume e a natureza das mudanças sem exigir que o usuário abra cada aviso individualmente.
 - A apresentação por quantidade não autoriza revelar nomes, identificadores ou outros dados de registros cujo acesso tenha sido revogado; as regras de autorização e confidencialidade continuam prevalecendo.
+
+### Sino de notificações e alertas sonoros — decisão aprovada em 09/11/2026
+
+- O resumo consolidado de alterações ficará acessível pelo sino de notificações, como ponto permanente de consulta, não dependendo de uma mensagem temporária na tela.
+- O sino deve apresentar um indicador visual enquanto houver notificações não lidas.
+- Ao acionar o sino, o usuário poderá consultar o resumo consolidado por categoria.
+- O indicador visual deve permanecer até que as notificações correspondentes sejam marcadas como lidas.
+- O sistema oferecerá opções de alerta sonoro, incluindo ativar ou desativar o som.
+- Alertas sonoros devem respeitar as preferências do usuário e não podem se repetir indefinidamente nem produzir excesso de notificações.
+- O sino, o resumo e os alertas sonoros devem respeitar as permissões vigentes e não revelar dados protegidos.
+- Detalhes de configuração, seleção de sons, volume, regras de disparo, agrupamento, frequência e sincronização entre dispositivos permanecem pendentes.
