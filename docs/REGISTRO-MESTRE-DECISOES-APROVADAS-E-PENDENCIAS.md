@@ -1373,3 +1373,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Exportações Excel/PDF respeitam exatamente o mesmo escopo de consulta de cada perfil e são validadas pelo backend.
 - Consultas e exportações respeitam autorização backend; acessos/exportações relevantes são registrados sem auditoria recursiva indiscriminada de cada leitura.
 - Pendências: critérios de eventos próprios, mascaramento por perfil, acesso excepcional e testes.
+
+
+### Integridade e proteção contra adulteração da auditoria — decisão aprovada (09/11/2026)
+- Registros de auditoria não podem ser alterados ou apagados por usuários, inclusive Administradores, pela interface.
+- Cada evento possui identificador único, data/hora, ator/responsável, operação e resultado, com referência ao recurso afetado quando aplicável.
+- Backend e armazenamento devem detectar adulteração, alteração indevida, exclusão ou quebra de integridade.
+- Tentativas de violação geram eventos de segurança próprios, preservados em trilha protegida e alertados conforme criticidade.
+- Proteção deve abranger armazenamento e caminhos administrativos/técnicos, incluindo rastreabilidade de acessos privilegiados.
+- Correções excepcionais são novos eventos vinculados; nunca sobrescrever o original. Registrar autor, motivo, data/hora e referência.
+- Pendências: mecanismo técnico de integridade, gestão de chaves, segregação de funções, retenção, monitoramento/alertas, backups e testes periódicos.
