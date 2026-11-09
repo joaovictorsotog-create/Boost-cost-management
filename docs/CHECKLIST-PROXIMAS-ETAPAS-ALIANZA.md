@@ -360,3 +360,14 @@ Legenda:
 - [x] Permitir compreender volume e natureza das mudanças sem abrir cada aviso individualmente.
 - [x] Impedir que contagens ou detalhes do resumo revelem dados de registros cujo acesso foi revogado.
 - [ ] Definir textos finais, apresentação visual, critérios de classificação/contagem e critérios técnicos/testes de aceite.
+
+### Sino de notificações e alertas sonoros — decisão aprovada
+
+- [x] Manter o resumo consolidado permanentemente acessível pelo sino de notificações.
+- [x] Exibir indicador visual enquanto houver notificações não lidas.
+- [x] Permitir consultar o resumo por categoria ao acionar o sino.
+- [x] Manter o indicador até as notificações serem marcadas como lidas.
+- [x] Oferecer opções de alerta sonoro, incluindo ativar/desativar o som.
+- [x] Evitar repetição sonora indefinida e excesso de notificações.
+- [x] Respeitar permissões e confidencialidade nos avisos.
+- [ ] Definir configuração detalhada, seleção de sons, volume, disparo, frequência, agrupamento e sincronização entre dispositivos.
