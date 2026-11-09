@@ -787,3 +787,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Informar qual Administrador assumiu e apresentar a justificativa registrada.
 - Vincular a notificação à solicitação e respeitar permissões de acesso.
 - Registrar o envio/resultado de forma rastreável; a notificação não restaura titularidade nem concede poder de decisão ao titular anterior.
+
+
+## 54. Notificação ao novo titular após transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após a transferência persistida, notificar o novo Administrador de que assumiu a solicitação.
+- A notificação identifica a solicitação e oferece acesso direto à análise e ao histórico anterior, conforme permissões.
+- O novo titular recebe o contexto necessário para continuar a análise; ciclos e registros anteriores são preservados.
+- O envio/resultado da notificação deve ser rastreável.
