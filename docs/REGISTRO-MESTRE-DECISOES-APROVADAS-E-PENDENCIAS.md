@@ -1171,3 +1171,7 @@ Cada solicitação do histórico poderá ser aberta em uma visualização indivi
 ### Consulta dos detalhes durante o processamento — APROVADO (09/11/2026)
 
 Os detalhes da solicitação poderão ser consultados em qualquer estado, inclusive enquanto aguardam processamento, estão em processamento ou aguardam confirmação de cancelamento. A tela mostrará somente informações e eventos já disponíveis e confirmados pelo backend; dados finais ainda indisponíveis não serão presumidos. A consulta e sua atualização serão somente leitura e não interferirão na tarefa nem solicitarão cancelamento. O backend valida identidade, permissões, estado e conteúdo apresentado.
+
+### Atualização automática dos detalhes da exportação — APROVADO (09/11/2026)
+
+Com a tela de detalhes aberta, os dados da solicitação serão atualizados automaticamente, sem exigir atualização manual. Serão apresentados somente estados, dados e eventos confirmados pelo backend. O mecanismo deverá evitar consultas excessivas, tráfego desnecessário e sobrecarga; a atualização será somente leitura e não poderá interferir no processamento nem solicitar cancelamento. **PENDENTE:** definir frequência, mecanismo técnico, tratamento de perda de conexão e comportamento quando a tela não estiver ativa.
