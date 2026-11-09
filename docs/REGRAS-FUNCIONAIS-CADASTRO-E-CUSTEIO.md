@@ -1690,3 +1690,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Se o reteste falhar ou as evidências forem insuficientes, a falha permanece aberta, preservando classificação, histórico e prazos aplicáveis.
 - A decisão de encerramento, o Administrador validador, os responsáveis, datas/horários, evidências e resultado ficam registrados na auditoria.
 - Pendências: definir evidências mínimas por classe de falha, critérios de independência/competência do reteste, fluxo de validação, reabertura e critérios de aceite.
+
+### Reabertura de falhas de segurança — decisão aprovada (09/11/2026)
+- Falha encerrada deve ser reaberta quando voltar a ocorrer ou quando novas evidências demonstrarem que a correção não eliminou a causa ou que o problema permaneceu ativo.
+- A reabertura pode ocorrer automaticamente quando houver correlação técnica confiável com a falha original; quando a correlação exigir avaliação, um Administrador autorizado poderá determinar a reabertura mediante justificativa.
+- A reabertura preserva integralmente o registro de encerramento e todo o histórico anterior; não apaga nem sobrescreve aprovações, retestes, evidências ou responsáveis anteriores.
+- Registrar motivo e evidências da reabertura, origem da identificação, responsável/ator e data/hora, vinculando a nova ocorrência à falha original.
+- A falha reaberta volta ao estado aberto, mantém a classificação original até reavaliação formal e exige novo plano de correção, responsável, prazo, contenção quando aplicável e novo reteste independente.
+- A reabertura não equivale a uma nova falha sem vínculo: reincidência relacionada deve manter referência à identidade e ao histórico da falha original; ocorrências distintas devem receber identificação própria.
+- Pendências: critérios técnicos de correlação automática, autorização/perfil para reabertura manual, critérios de reclassificação, notificações e tratamento de prazos após reabertura.
