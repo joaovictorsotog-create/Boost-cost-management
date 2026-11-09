@@ -1353,3 +1353,14 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Cancelamento antecipado exige ação explícita, validação backend e auditoria.
 - Não deixar o sistema sem Administrador ativo nem contornar dupla autorização.
 - Pendências: granularidade do escopo, quantidade de substitutos, cancelamento, sobreposição, notificações, indisponibilidade e testes.
+
+
+### Painel central de auditoria administrativa — decisão aprovada (09/11/2026)
+- Criar área centralizada para consultar eventos de auditoria das operações administrativas.
+- Disponibilizar filtros combináveis por usuário responsável, período, tipo de operação e resultado; critérios só alteram os resultados após aplicação explícita.
+- Permitir consulta detalhada dos eventos conforme permissões, sem expor segredos, tokens ou dados não autorizados.
+- Permitir exportação Excel/PDF com filtros aplicados e permissões do solicitante; registrar exportações no Log de Atividades.
+- Proteger o histórico contra edição/exclusão pela interface; qualquer correção excepcional deve preservar rastreabilidade e não sobrescrever silenciosamente o registro anterior.
+- Manter o painel separado do histórico de notificações e do histórico de solicitações.
+- Paginação e ordenação controladas pelo backend, preservando filtros entre páginas.
+- Pendências: perfis/escopo de acesso, catálogo e campos dos eventos, retenção, paginação/ordenação, limites e processamento de exportações, mascaramento e testes.
