@@ -1013,3 +1013,12 @@ Legenda:
 - [x] Preservar registros originais e evidências; não executar correção automática.
 - [x] Registrar investigação e resolução com responsáveis, evidências, ações e resultado.
 - [ ] Definir mecanismo, cobertura, limiares, canal/escalonamento, responsáveis, procedimento de contenção/recuperação, metas e testes.
+
+
+### Acesso a dados sensíveis da auditoria — decisão aprovada (09/11/2026)
+- [x] Permitir ao Administrador consultar eventos/evidências necessários à investigação, respeitando autorização e finalidade.
+- [x] Proibir visualização/exportação de senhas, tokens, chaves, credenciais e segredos de infraestrutura por qualquer perfil, inclusive Administrador.
+- [x] Exigir mascaramento/omissão em consultas, detalhes, relatórios, exportações e logs auxiliares.
+- [x] Preservar contexto investigativo sem revelar valores secretos.
+- [x] Aplicar proteção no backend, APIs, armazenamento e exportações; não depender apenas da interface.
+- [ ] Definir catálogo de dados sensíveis, política de redação, tratamento de vazamentos acidentais, gestão de evidências, exceções técnicas e testes.
