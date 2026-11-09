@@ -808,3 +808,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Se houver inatividade, enviar lembretes a cada 30 minutos, no máximo três.
 - Após o terceiro lembrete efetivo do novo ciclo, a solicitação torna-se elegível para nova transferência.
 - Ciclos e lembretes anteriores permanecem preservados; o backend controla contagem, horários, elegibilidade e duplicidade.
+
+
+## 56. Histórico de justificativas de todas as transferências (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O novo Administrador titular tem acesso à justificativa da transferência atual e às justificativas de todas as transferências anteriores da solicitação.
+- Cada justificativa permanece vinculada ao evento, aos titulares/responsáveis e à data/hora correspondentes.
+- O histórico é cumulativo, preservado sem sobrescrita ou exclusão, e acessível conforme permissões administrativas.
