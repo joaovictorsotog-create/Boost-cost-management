@@ -256,3 +256,10 @@ A precisão interna usada para armazenar e calcular valores antes da apresentaç
 - A descrição complementar é informativa e pesquisável; pode ser utilizada nos resultados e filtros de pesquisa.
 - Ela não substitui nem altera a descrição principal e não precisa ser preenchida para salvar o cadastro.
 - O campo não interfere na família, unidade de medida, estrutura, origem do custo ou cálculo.
+
+## 24. Listagem do Cadastro Central — decisão aprovada em 09/11/2026
+
+- A listagem do Cadastro Central apresenta itens Simples e Compostos em uma única relação.
+- A separação por tipo e situação será feita por filtros, não por abas fixas independentes.
+- Itens inativos permanecem ocultos por padrão, conforme regra já aprovada, e podem ser localizados por filtro específico.
+- A listagem deve priorizar identificação e consulta rápida; detalhes completos ficam na tela do cadastro.
