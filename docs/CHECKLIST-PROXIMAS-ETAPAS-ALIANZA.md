@@ -143,3 +143,12 @@ Legenda:
 - [ ] Especificar prazo e mecanismo de liberação automática de análises abandonadas.
 - [ ] Especificar tecnicamente concorrência, titularidade da análise, transições de estado e critérios de auditoria.
 - [ ] Definir critérios de aceite e cenários de teste da Central de Aprovações.
+
+
+### Lembretes de solicitações em análise
+
+- [x] Enviar o primeiro lembrete após 30 minutos sem atividade.
+- [x] Repetir lembretes em intervalos de 30 minutos, com limite máximo de 3 por solicitação.
+- [x] Após o terceiro lembrete, interromper notificações e aguardar a manifestação do Administrador responsável.
+- [x] Manter a solicitação **Em análise** após o limite, sem liberação ou decisão automática.
+- [ ] Especificar implementação técnica do agendamento, registro de entrega e prevenção de duplicidade.
