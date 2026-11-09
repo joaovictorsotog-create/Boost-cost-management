@@ -939,3 +939,14 @@ Legenda:
 - [x] Registrar operação, responsável, justificativa, data/hora e resultado na auditoria.
 - [x] Confirmar conclusão na interface somente após resposta do backend.
 - [ ] Definir estados de conta, retenção/tratamento de dados pessoais, solicitações pendentes, vínculos, notificações e testes.
+
+
+### Transferência de responsabilidade administrativa — decisão aprovada (09/11/2026)
+- [x] Permitir transferência somente para outro usuário já Administrador.
+- [x] Exigir confirmação explícita do remetente e do destinatário.
+- [x] Efetivar somente após ambas as confirmações e confirmação do backend.
+- [x] Registrar envolvidos, escopo, data/hora e resultado na auditoria.
+- [x] Preservar o histórico do responsável anterior sem atribuição retroativa.
+- [x] Impedir que a transferência deixe o sistema sem Administrador ativo.
+- [x] Não alterar automaticamente permissões de outros usuários.
+- [ ] Definir escopo, pendências em análise, indisponibilidade/recusa, cancelamento e testes.
