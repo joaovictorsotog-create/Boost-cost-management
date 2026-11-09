@@ -466,3 +466,17 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A listagem da área **Arquivados** será ordenada pela data de inativação mais recente primeiro (ordem decrescente).
 - A ordenação é apenas de apresentação e não altera registros, identificadores, vínculos, datas ou histórico.
 - A pesquisa já aprovada continuará funcionando sobre a listagem correspondente, respeitando a separação entre famílias ativas e arquivadas.
+
+
+## 44. Atualização em tempo real em todo o sistema — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- A atualização em tempo real é uma regra geral do Alianza — Sistema de Custos e não se limita ao Cadastro Central, à gestão de famílias ou a uma tela específica.
+- Toda alteração de dados concluída com sucesso deve ser refletida automaticamente nas telas, listagens, consultas e sessões de usuários que exibam ou dependam dos dados afetados, sem exigir atualização manual da página.
+- A atualização deve respeitar os papéis, permissões e filtros de cada usuário. A sincronização em tempo real não concede acesso adicional nem contorna controles de autorização.
+- O backend e os dados efetivamente persistidos são a fonte de verdade. A interface só deve apresentar uma alteração como concluída depois da confirmação de sucesso da operação; falhas não podem gerar aparência de gravação bem-sucedida.
+- Alterações relacionadas e recálculos em cascata devem preservar a consistência transacional já aprovada: os usuários não devem receber um estado parcial como se fosse o resultado final de uma operação que ainda não foi concluída.
+- A sincronização deve evitar apresentar dados desatualizados após uma alteração confirmada e tratar conflitos de edições concorrentes sem sobrescrever silenciosamente alterações de outro usuário.
+- A regra abrange todos os módulos e operações de criação, edição, inativação, reativação, exclusão autorizada, vínculos e recálculos do projeto, conforme as permissões e regras específicas de cada módulo.
+- A tecnologia, o mecanismo de comunicação, a estratégia de reconexão e os objetivos mensuráveis de latência ainda serão definidos na especificação técnica. Esta decisão aprova o comportamento funcional em tempo real, não uma tecnologia específica nem uma promessa de latência numérica.
