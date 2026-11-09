@@ -513,3 +513,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A exclusão definitiva poderá ser permitida somente quando a família nunca tiver sido utilizada e não possuir vínculos atuais ou históricos.
 - Antes da exclusão permitida, o sistema deverá apresentar prévia com a identificação da família e confirmação explícita do Administrador; a operação deverá ser registrada na auditoria.
 - A verificação de uso deve considerar o histórico, e não apenas a quantidade atual de itens vinculados. A forma técnica de identificar e comprovar esse uso será definida na especificação de dados.
+
+
+## 48. Prévia de impacto ao editar o nome de uma família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Antes de confirmar a edição do nome de uma família, o sistema deve apresentar uma prévia que identifique claramente o nome atual e o novo nome proposto.
+- A prévia deve informar a quantidade de itens atualmente vinculados à família e destacar que a alteração do nome será refletida em todos esses itens e nas telas, pesquisas, filtros e consultas correspondentes.
+- A prévia deve deixar explícito que a mudança é apenas nominal/classificatória e não altera os itens vinculados, seus custos, unidades ou estruturas de composição.
+- O Administrador deve poder confirmar ou cancelar. Nenhuma alteração será efetivada antes da confirmação explícita.
+- Após a confirmação e persistência bem-sucedida, a atualização deve ser propagada em tempo real, preservando o histórico e registrando a operação na auditoria.
