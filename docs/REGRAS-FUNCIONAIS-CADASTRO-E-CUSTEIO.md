@@ -854,3 +854,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Se o Administrador cancelar ou descartar a edição, os critérios anteriormente aplicados e seus resultados permanecem vigentes, sem alteração.
 - A edição temporária dos critérios não modifica os registros históricos nem a consulta aplicada.
 - O backend continua validando permissões e executando a consulta; o estado visual de edição não é fonte de verdade para autorização ou integridade.
+
+
+## 74. Aviso ao sair com filtros ainda não aplicados (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Se houver critérios de filtro alterados em edição, ainda não aplicados, e o Administrador tentar sair da tela, o sistema deve exibir uma notificação de confirmação antes de abandonar a tela.
+- A notificação deve oferecer duas ações claras:
+  - **Descartar alterações e sair:** descarta somente os critérios temporários em edição, preservando os filtros anteriormente aplicados e os resultados correspondentes.
+  - **Permanecer na tela:** fecha a notificação e mantém a tela e os critérios temporários em edição.
+- Nenhuma alteração de filtro deve ser descartada sem a escolha explícita do Administrador.
+- Se não houver alterações temporárias pendentes, a navegação não deve ser bloqueada por esse aviso.
+- O aviso protege apenas o estado de edição dos filtros; não modifica registros históricos nem a consulta anteriormente aplicada.
