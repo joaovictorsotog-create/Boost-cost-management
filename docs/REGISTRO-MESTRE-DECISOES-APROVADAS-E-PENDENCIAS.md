@@ -1045,3 +1045,7 @@ Categorias iniciais: **Aprovações**, **Alterações de cadastro**, **Exclusõe
 ### Prioridade visual das notificações — APROVADO (09/11/2026)
 
 Quatro níveis aprovados: **Crítica**, **Alta**, **Normal** e **Baixa**. Prioridade é distinta da categoria: categoria representa o assunto; prioridade representa o grau de atenção exigido. Regras de classificação devem ficar no backend. Critérios objetivos por evento, apresentação visual/sonora, escalonamento, filtros e tratamento especial de críticas permanecem pendentes.
+
+### Critérios gerais de prioridade das notificações — APROVADO (09/11/2026)
+
+Critérios gerais aprovados: **Crítica** = risco imediato à segurança ou à integridade dos dados; **Alta** = ação administrativa importante que exige atenção rápida; **Normal** = atualizações e solicitações que precisam ser acompanhadas, sem urgência alta/crítica; **Baixa** = aviso informativo sem necessidade de ação imediata. O backend será responsável pelo enquadramento. O mapeamento de eventos concretos, exceções, apresentação visual/sonora, escalonamento e tratamento especial de críticas permanece pendente. Evitar classificar indiscriminadamente eventos como urgentes.
