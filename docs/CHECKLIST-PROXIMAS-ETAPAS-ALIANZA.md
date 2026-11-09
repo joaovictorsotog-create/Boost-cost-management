@@ -225,3 +225,12 @@ Legenda:
 - [x] Preservar ciclos e registros anteriores, respeitando permissões.
 - [x] Manter rastreabilidade do envio/resultado.
 - [ ] Definir canal, política de tentativas, falhas de entrega e critérios de aceite das notificações.
+
+ 
+### Reinício dos lembretes após transferência
+
+- [x] Iniciar novo ciclo de inatividade a partir da efetivação da transferência no backend.
+- [x] Zerar a contagem operacional de lembretes para o novo titular, sem apagar o histórico anterior.
+- [x] Enviar até três lembretes a cada 30 minutos de inatividade.
+- [x] Habilitar nova transferência somente após o terceiro lembrete efetivo do ciclo atual.
+- [ ] Definir critérios técnicos e testes de aceite para relógio, reprocessamento, duplicidade e concorrência entre transferência e lembrete.
