@@ -1093,3 +1093,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O painel não marcará notificações como lidas, reconhecidas ou resolvidas apenas por ser aberto ou fechado.
 - A apresentação visual não substituirá controles de acesso nem regras de negócio. Classificação, prioridade, estado e contagens serão definidos/validados pelo backend; o frontend apenas apresentará os dados confirmados.
 - O destaque visual deverá ser claro e consistente, sem transformar notificações não críticas em alertas urgentes. Detalhes finais de cores, ícones, acessibilidade e responsividade permanecem sujeitos à especificação visual e testes de aceite.
+
+### Alertas críticos quando Administradores estiverem desconectados — decisão aprovada (09/11/2026)
+
+- A criação e a manutenção de um alerta crítico não dependerão de haver Administrador conectado. O alerta e sua linha do tempo serão persistidos no backend normalmente.
+- Notificações e lembretes destinados aos Administradores autorizados serão registrados de forma durável no sistema de notificações do backend, mesmo quando os destinatários estiverem desconectados. Ao retornarem e sincronizarem o sistema, os usuários autorizados poderão consultar os avisos pendentes e o histórico correspondente.
+- A desconexão de todos os Administradores não pausará, reiniciará nem estenderá os prazos dos alertas ou dos ciclos de lembretes. Os prazos continuarão sendo controlados pelo backend, com base nos horários registrados.
+- O registro de cada lembrete deverá preservar o horário previsto, o resultado da persistência/entrega no sistema de notificações e o ciclo correspondente. Falhas reais de persistência/entrega continuarão sujeitas à regra já aprovada de não contabilização como envio efetivo.
+- A reconexão não poderá criar duplicatas nem disparar novamente sons de forma excessiva. Os avisos atrasados serão apresentados como notificações pendentes, respeitando a ordem e o estado atual do alerta; o histórico dos eventos não será apagado.
+- Antes de exibir o conteúdo após a reconexão, o backend deverá revalidar as permissões atuais do usuário. A desconexão não concede acesso e a revogação de permissão impede a exposição de conteúdo protegido.
+- Nenhuma ação será executada automaticamente porque os Administradores estavam desconectados: o alerta não será reconhecido, resolvido, encerrado ou transferido por esse motivo.
