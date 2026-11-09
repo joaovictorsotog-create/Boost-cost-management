@@ -985,3 +985,11 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A indicação de leitura deve refletir o estado real da notificação; abrir ou fechar o painel, por si só, não altera esse estado.
 - A consulta e o histórico devem respeitar permissões e confidencialidade.
 - Quantidade de notificações recentes, ordenação, paginação, categorias definitivas e ação para marcar como lida permanecem pendentes de detalhamento.
+
+### Quantidade de notificações recentes no painel — decisão aprovada (09/11/2026)
+
+- O painel do sino deve exibir inicialmente as **10 notificações mais recentes** para o usuário autenticado.
+- A seleção das dez notificações deve considerar a ordenação cronológica decrescente, conforme data/hora registrada pelo backend.
+- Notificações anteriores devem continuar disponíveis pelo acesso ao histórico completo.
+- A consulta deve respeitar permissões, confidencialidade e o estado real de leitura de cada notificação.
+- Critérios de paginação/carregamento do histórico e tratamento de notificações com data/hora igual permanecem pendentes de especificação técnica.
