@@ -1492,3 +1492,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Enquanto aguarda, manter contenção, preservação de evidências e resposta ao incidente; isso não autoriza liberação.
 - Registrar indisponibilidade, tentativas de convocação, responsáveis, horários e contenção adotada.
 - Pendência: definir canais de convocação/escalonamento e continuidade operacional sem flexibilizar a dupla aprovação.
+
+
+### Encerramento de falhas de segurança — decisão aprovada (09/11/2026)
+- Encerrar falha somente após correção implementada, reteste independente aprovado, evidências anexadas e resultado técnico registrado.
+- Exigir validação explícita de Administrador diferente do responsável pela correção.
+- Responsável técnico registra correção, reteste e evidências; não valida sozinho o encerramento administrativo.
+- Reteste reprovado ou evidência insuficiente mantém a falha aberta, com classificação, histórico e prazos preservados.
+- Registrar decisão, Administrador validador, responsáveis, horários, evidências e resultado.
+- Pendências: evidências mínimas, independência/competência do reteste, fluxo, reabertura e critérios de aceite.
