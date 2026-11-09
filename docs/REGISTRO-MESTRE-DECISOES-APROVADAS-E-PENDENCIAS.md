@@ -263,3 +263,20 @@ As regras abaixo foram recuperadas de confirmações explícitas nas conversas v
 - Atualização automática global foi escolhida: alteração salva de custo central recalcula produtos e subconjuntos dependentes. O ajuste manual deve ocorrer no custo vigente de itens cadastrados; não permite sobrescrever manualmente custo calculado de item composto.
 - **Conflito a preservar:** uma conversa menciona canais comerciais configuráveis por produto, mas também delimita o aplicativo como cálculo de custo industrial, sem formação de preço de venda. Não incluir canais/margens/markup sem nova confirmação explícita.
 - Detalhamento por conversa e contexto está em `docs/AUDITORIA-CONVERSAS-PROJETO-2026-11-09.md`.
+
+
+## 8. Método de continuidade adotado em 09/11/2026
+
+Por decisão do usuário, o projeto **não ficará bloqueado pela recuperação das oito conversas ainda ausentes do ZIP**. A partir desta data, o trabalho seguirá de forma incremental com base no material consolidado no GitHub.
+
+- O GitHub passa a ser a fonte central de continuidade documental.
+- Cada módulo será analisado com as regras já aprovadas; lacunas serão perguntadas quando se tornarem relevantes.
+- Novas decisões serão registradas com origem, contexto, impacto e commit.
+- Conversas ausentes poderão ser incorporadas posteriormente, sem exigir auditoria integral antes de avançar.
+- Hipóteses técnicas não são aprovações funcionais.
+- Conflitos serão isolados e resolvidos sem apagar silenciosamente decisões anteriores.
+- Não há autorização implícita para implementação, merge, deploy, migration ou mudança de infraestrutura.
+
+O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCREMENTAIS.md`.
+
+**Correção de status:** unidades (metro, kg, m² e unidade), controle de acesso (login individual, 2FA, RLS e Administrador/Editor/Visualizador), regra de arquivamento do Log de Atividades (um ano no ambiente principal e depois arquivo, sem exclusão automática) e demais decisões descritas nas seções 6.x deste documento já foram recuperadas. Menções anteriores nas seções 3 e 5 que as tratavam como pendências devem ser lidas como registros históricos superados por esta consolidação posterior.
