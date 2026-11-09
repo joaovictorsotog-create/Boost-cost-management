@@ -492,3 +492,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Se um registro deixar de atender aos critérios ativos, deve deixar de aparecer nos resultados; se passar a atendê-los, deve aparecer conforme a ordenação vigente.
 - As regras de visibilidade, permissões, escopo e separação entre registros ativos e arquivados continuam prevalecendo. A atualização em tempo real não deve revelar registros que o usuário não pode consultar.
 - Esta regra complementa a atualização global em tempo real e não define tecnologia específica nem meta numérica de latência.
+
+
+## 46. Alteração da família de um item já cadastrado — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Quando um Administrador alterar a família de um item existente, a nova classificação deverá ser refletida imediatamente no Cadastro Central e nas demais telas, consultas, pesquisas e filtros que exibam ou utilizem esse item, conforme a regra global de atualização em tempo real.
+- A alteração de família é exclusivamente classificatória: não modifica o custo unitário, a unidade de medida, o tipo do item nem sua estrutura de composição.
+- O histórico de alterações do item deve ser preservado e registrar a mudança de família, permitindo identificar a classificação anterior e a nova, o responsável e a data/hora da operação.
+- A operação deve respeitar as permissões, validações, prévia, confirmação explícita e auditoria já aprovadas para alterações cadastrais.
