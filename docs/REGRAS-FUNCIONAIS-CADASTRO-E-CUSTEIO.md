@@ -1605,3 +1605,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Preservar evidências e registrar investigação, contenção, responsável, ações e resultado, sem alterar ou apagar os registros originais.
 - Aplicar controles no backend/API; a interface não é fronteira de segurança.
 - Pendências: limiares e janelas de detecção, correlação de origens, tratamento de falsos positivos, escalonamento/notificação, retenção específica, resposta a incidentes e testes.
+
+
+### Proteção contra ataques automatizados à auditoria — decisão aprovada (09/11/2026)
+- Aplicar limitação de frequência às consultas e operações do painel de auditoria, com controles efetivos no backend/API.
+- Detectar e dificultar enumeração automatizada de registros, identificadores e recursos, sem revelar existência ou conteúdo de dados protegidos.
+- Permitir contenção temporária e proporcional de sessão, credencial técnica ou origem quando houver comportamento abusivo, com salvaguardas contra bloqueio deliberado de usuários legítimos.
+- Detectar padrões distribuídos entre múltiplas origens e correlacionar sinais de abuso, sem depender exclusivamente de endereço IP.
+- Registrar medidas de contenção, fundamento, escopo, início, término, responsável/sistema executor e resultado, preservando evidências e rastreabilidade.
+- Controles devem prever monitoramento, revisão e liberação segura de bloqueios temporários; não aplicar bloqueio permanente automático baseado apenas em sinais isolados.
+- Pendências: limites e janelas por operação/perfil, critérios de risco e correlação, duração e escalonamento de bloqueios, exceções operacionais, falsos positivos, observabilidade, resposta a incidentes e testes de carga/segurança.
