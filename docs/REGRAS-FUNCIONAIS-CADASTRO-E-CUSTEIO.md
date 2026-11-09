@@ -248,3 +248,11 @@ A precisão interna usada para armazenar e calcular valores antes da apresentaç
 - O ID é a identidade única do cadastro; a descrição é informação de identificação e pesquisa, não uma chave única.
 - A pesquisa deve permitir distinguir resultados com descrições iguais exibindo, no mínimo, ID e família, além dos demais dados relevantes já definidos.
 - Esta regra não altera a obrigatoriedade de família única, unidade única ou validação de ID duplicado.
+
+## 23. Descrição complementar — decisão aprovada em 09/11/2026
+
+- O Cadastro Central terá um campo **Descrição complementar**, opcional.
+- O campo registra características técnicas e detalhes que ajudem a diferenciar itens com descrições principais iguais ou semelhantes.
+- A descrição complementar é informativa e pesquisável; pode ser utilizada nos resultados e filtros de pesquisa.
+- Ela não substitui nem altera a descrição principal e não precisa ser preenchida para salvar o cadastro.
+- O campo não interfere na família, unidade de medida, estrutura, origem do custo ou cálculo.
