@@ -1061,3 +1061,7 @@ Um Administrador autorizado poderá declarar o alerta crítico **Resolvido**, me
 ### Reabertura de notificações críticas — APROVADO (09/11/2026)
 
 Um alerta crítico já resolvido poderá ser reaberto somente por Administrador autorizado, com justificativa obrigatória. O backend validará autorização, estado e concorrência. A reabertura será registrada na mesma linha do tempo, com responsável, data/hora, justificativa e resultado. A resolução anterior e os eventos anteriores permanecerão preservados, sem sobrescrita. Após reabertura, o alerta retorna a **Aguardando reconhecimento** e exige novo reconhecimento por Administrador autorizado. O reconhecimento anterior permanece no histórico, mas não vale para o novo ciclo.
+
+### Lembretes de alertas críticos sem reconhecimento — APROVADO (09/11/2026)
+
+Alerta crítico que permanecer **Aguardando reconhecimento** gera o primeiro lembrete após 30 minutos e, persistindo sem reconhecimento, novos lembretes a cada 30 minutos, limitados a três por ciclo. Os destinatários são Administradores autorizados a visualizar o alerta. O reconhecimento interrompe os lembretes do ciclo. Cada reabertura inicia novo ciclo e reinicia a contagem, preservando o histórico anterior. Após o terceiro lembrete efetivamente enviado, os lembretes automáticos cessam; o alerta permanece aguardando ação administrativa, sem reconhecimento, resolução, transferência ou encerramento automáticos. O backend controla agendamento, elegibilidade, contagem e envio; somente envios efetivos são contabilizados e todos os eventos são auditados.
