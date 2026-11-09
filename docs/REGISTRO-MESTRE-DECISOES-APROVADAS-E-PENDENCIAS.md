@@ -602,3 +602,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Respeitar permissões e visibilidade; se o conjunto afetado mudar com a prévia aberta, atualizar ou exigir nova validação.
 - Executar com validação no backend e auditoria. Falhas parciais não podem ser exibidas como sucesso integral; atomicidade ou retomada será especificada por operação.
 - Exemplos abrangidos: importações, alterações em lote e inativações em massa.
+
+## 40. Proteção de vínculos e dependências antes de excluir itens (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Antes de excluir um item do Cadastro Central, verificar vínculos e dependências atuais em estruturas de composição e demais registros ou módulos que o referenciem.
+- Se houver dependências, apresentar quantidade e relação consultável dos registros afetados, com código/ID e descrição ou identificadores próprios do módulo.
+- Explicar as consequências, inclusive impactos em estruturas, custos compostos, disponibilidade para novas composições, histórico e rastreabilidade.
+- Não romper vínculos automaticamente. A exclusão não pode prosseguir enquanto houver dependências que comprometam integridade referencial ou histórico; orientar a resolução segura.
+- Se a exclusão for permitida, exigir prévia atualizada, confirmação explícita de usuário autorizado e auditoria completa.
+- Aplicar validação também no backend. Se o conjunto de dependências mudar com a prévia aberta, atualizar ou exigir nova validação antes de confirmar.
+- Estados e modalidades de exclusão (lógica ou física) e a regra completa para itens com vínculos permanecem pendentes de detalhamento antes da implementação.
