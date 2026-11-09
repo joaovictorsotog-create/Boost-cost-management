@@ -831,3 +831,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Deve ser possível remover seleções individualmente e limpar todos os filtros para retornar à visão cronológica completa.
 - A seleção múltipla altera somente os critérios de consulta; não modifica, exclui ou sobrescreve eventos históricos.
 - A ordem cronológica dos eventos retornados deve ser preservada e as permissões continuam sendo aplicadas pelo backend.
+
+
+## 72. Aplicação explícita dos filtros da linha do tempo (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A seleção ou remoção de responsáveis e tipos de evento não deve atualizar imediatamente os resultados da linha do tempo.
+- O Administrador define os critérios desejados e aciona explicitamente o botão **Aplicar filtros** para executar a consulta.
+- Após a aplicação, a linha do tempo apresenta os eventos correspondentes aos critérios selecionados, preservando a ordem cronológica e as permissões aplicáveis.
+- Deve existir ação para limpar os filtros e retornar à visão cronológica completa.
+- A escolha e edição dos critérios antes de aplicar não alteram os registros históricos nem a consulta atualmente exibida.
