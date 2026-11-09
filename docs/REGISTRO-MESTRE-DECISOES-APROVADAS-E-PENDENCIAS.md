@@ -1438,3 +1438,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Bloqueio de acesso, por si só, não encerra incidente. Encerramento exige investigação, avaliação de impacto, documentação de ações/resultados e medidas corretivas/preventivas aplicáveis.
 - Registrar responsáveis, horários, classificação, decisões, notificações, evidências, contenção, investigação, impacto e fundamento do encerramento.
 - Pendências: severidade, prazos/escalonamento, responsáveis e substitutos, canais, cadeia de custódia detalhada, critérios de encerramento, comunicação externa e testes/simulações.
+
+
+### Testes periódicos de segurança — decisão aprovada (09/11/2026)
+- Periodicidade trimestral, com testes extraordinários após mudanças relevantes em autenticação, autorização, auditoria, APIs, armazenamento ou infraestrutura de segurança.
+- Cobertura mínima: acesso não autorizado; bypass de permissões via API; adulteração de auditoria; exposição de credenciais/dados sensíveis; ataques automatizados; recuperação após incidentes.
+- Produzir relatório por ciclo com escopo, data, métodos, resultados, evidências seguras, classificação de falhas, riscos e plano de correção com responsáveis/prazos.
+- Testes autorizados e controlados; testes em produção exigem autorização e salvaguardas específicas.
+- Falhas críticas recebem prioridade imediata; correções exigem reteste e evidência de encerramento.
+- Pendências: metodologia, independência, severidade, prazos, gestão de evidências, testes de terceiros, escopo de produção e critérios de aceite.
