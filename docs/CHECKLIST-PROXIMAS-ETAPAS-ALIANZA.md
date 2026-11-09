@@ -302,3 +302,13 @@ Legenda:
 - [x] Permitir descartar a edição sem alterar filtros e resultados aplicados.
 - [x] Manter backend como autoridade para permissões e execução da consulta.
 - [ ] Definir detalhes visuais dos estados de edição/cancelamento e critérios técnicos de aceite.
+
+
+### Aviso ao sair com filtros ainda não aplicados
+
+- [x] Exibir notificação ao tentar sair com critérios de filtro alterados e ainda não aplicados.
+- [x] Oferecer opção para descartar alterações e sair.
+- [x] Oferecer opção para permanecer na tela e manter a edição temporária.
+- [x] Preservar os últimos filtros aplicados e seus resultados ao descartar a edição.
+- [x] Não exibir aviso quando não houver alterações temporárias pendentes.
+- [ ] Definir detalhes visuais, cobertura de navegação e critérios técnicos de aceite.
