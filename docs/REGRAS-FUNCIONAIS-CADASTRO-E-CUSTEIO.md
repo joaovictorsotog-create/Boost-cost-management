@@ -403,3 +403,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Todos os itens já vinculados permanecerão associados ao mesmo registro após a alteração do nome. A quantidade de itens vinculados não será alterada pela simples edição do nome.
 - O novo nome deverá continuar obrigatório e respeitar a regra de unicidade já aprovada, inclusive contra variações de grafia equivalentes. Havendo conflito, a alteração será bloqueada até a correção.
 - A edição seguirá o fluxo geral de prévia, confirmação explícita e auditoria antes da gravação.
+
+## 38. Confirmação da inativação de família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Ao acionar **Inativar** em uma família, o sistema deve apresentar uma confirmação antes de executar a operação.
+- A confirmação deve identificar a família pelo nome e informar a quantidade atual de itens vinculados.
+- Se a família possuir qualquer item vinculado, a inativação será bloqueada; a interface deverá informar que os itens precisam ser reclassificados antes de tentar novamente.
+- Se não houver itens vinculados, o administrador poderá confirmar ou cancelar a inativação.
+- Nenhuma alteração será realizada antes da confirmação explícita. A operação confirmada deverá ser registrada na auditoria e a família passará para a área **Arquivados**, preservando o registro.
