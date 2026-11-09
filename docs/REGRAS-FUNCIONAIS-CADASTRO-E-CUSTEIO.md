@@ -1672,3 +1672,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Registrar falha original, justificativa, risco residual, controles compensatórios, versão/escopo afetado, solicitante, dois aprovadores, datas/horários, validade, plano de resolução e decisão de renovação.
 - A exceção não altera a classificação P0, não apaga o achado e não dispensa contenção, correção e reteste.
 - Pendências: fluxo de solicitação/decisão, indisponibilidade de segundo Administrador, impedimentos por conflito de interesse, notificações, revogação antecipada e critérios de risco residual.
+
+
+### Indisponibilidade do segundo Administrador em exceções P0 — decisão aprovada (09/11/2026)
+- Se não houver um segundo Administrador distinto disponível para aprovar, nenhuma exceção P0 poderá ser concedida com apenas uma aprovação.
+- A versão permanece bloqueada até que o segundo Administrador esteja disponível e conclua a aprovação exigida.
+- Urgência operacional ou indisponibilidade não reduz o requisito de dupla aprovação nem autoriza autoaprovação.
+- Enquanto aguarda, devem continuar as medidas de contenção do risco, preservação de evidências e resposta ao incidente; isso não equivale a autorizar a liberação.
+- Registrar a indisponibilidade, tentativas de obter a segunda aprovação, responsáveis, horários e medidas de contenção adotadas.
+- Pendências: definir canais de convocação/escalonamento e procedimentos operacionais de continuidade sem flexibilizar a dupla aprovação.
