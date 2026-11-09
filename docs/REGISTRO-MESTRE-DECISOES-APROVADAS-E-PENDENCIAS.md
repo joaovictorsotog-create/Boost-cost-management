@@ -1540,3 +1540,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Visualizadores podem consultar somente indicadores consolidados, sem identificação de responsáveis ou exposição de informações restritas.
 - A autorização deve ser aplicada no backend/API e refletida na interface; ocultar elementos visuais não substitui controle de acesso. Consultas e exportações devem respeitar o mesmo escopo de permissão.
 - Pendências: definir quais dimensões e níveis de agregação são consolidados, limites contra reidentificação por filtros/pequenos grupos, campos considerados detalhes de segurança, auditoria de consultas e regras de exportação.
+
+### Proteção contra identificação indireta nos indicadores de reincidência — decisão aprovada (09/11/2026)
+- Para Editores e Visualizadores, não exibir grupos ou resultados agregados com menos de 5 ocorrências.
+- Aplicar o limite de forma consistente a consultas, combinações de filtros, agrupamentos, detalhamentos e exportações, impedindo que filtros sucessivos ou diferenças entre consultas permitam inferir dados suprimidos.
+- Administradores mantêm acesso completo, sujeito às demais regras de proteção de evidências, dados sensíveis e auditoria.
+- A supressão deve ocorrer no backend/API; não basta ocultar resultados na interface. Consultas e exportações devem aplicar a mesma regra.
+- Quando o limite não for atendido, informar indisponibilidade por insuficiência de volume sem revelar o valor suprimido nem permitir sua dedução por comparação.
+- Pendências: definir técnica de supressão complementar, proteção contra consultas diferenciais, tratamento de totais/subtotais, filtros temporais, arredondamentos e testes de reidentificação.
