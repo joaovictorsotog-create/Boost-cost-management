@@ -307,7 +307,7 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - Descrições repetidas são permitidas. A identidade exclusiva do item continua sendo seu ID numérico.
 - A descrição principal permanece disponível para pesquisa, em conjunto com os demais critérios já definidos.
 
-## 27. Cadastro de família por seleção controlada — decisão aprovada em 09/11/2026
+## 29. Cadastro de família por seleção controlada — decisão aprovada em 09/11/2026
 
 **Status: APROVADO pelo usuário.**
 
