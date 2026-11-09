@@ -817,3 +817,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O novo Administrador titular tem acesso à justificativa da transferência atual e às justificativas de todas as transferências anteriores da solicitação.
 - Cada justificativa permanece vinculada ao evento, aos titulares/responsáveis e à data/hora correspondentes.
 - O histórico é cumulativo, preservado sem sobrescrita ou exclusão, e acessível conforme permissões administrativas.
+
+
+## 57. Histórico integral de atividades da análise na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Manter histórico cronológico e cumulativo das atividades relevantes de cada solicitação.
+- Registrar início e retomada da análise, encerramento sem decisão, lembretes enviados, transferências e justificativas, consultas/ações relevantes, aprovação e rejeição.
+- Cada evento identifica solicitação, ator/Administrador responsável, data/hora, operação e resultado, incluindo ciclo de titularidade quando aplicável.
+- Preservar todos os eventos sem sobrescrita ou exclusão pela interface.
+- Backend controla geração, integridade, ordenação e acesso ao histórico.
+- Permanecem pendentes os critérios exatos de relevância para registro de consultas, granularidade, retenção, permissões detalhadas e critérios técnicos/testes de aceite.
