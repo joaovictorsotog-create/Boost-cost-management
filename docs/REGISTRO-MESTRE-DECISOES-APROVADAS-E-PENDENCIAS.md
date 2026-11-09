@@ -399,3 +399,13 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A validação deve impedir variações de escrita que representem a mesma classificação, inclusive os exemplos “Chapas”, “CHAPAS” e “Chapa”.
 - A unicidade deve ser validada antes de salvar e também garantida no backend.
 - A regra técnica exata de normalização/comparação ainda deverá ser especificada; isso não altera o resultado funcional aprovado de impedir duplicidades por grafia.
+
+
+## 21. Decisão incremental — inativação de famílias sem itens vinculados (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Famílias sem itens vinculados poderão ser inativadas, em vez de excluídas definitivamente.
+- Não será permitida a inativação enquanto houver itens vinculados; os itens deverão ser reclassificados primeiro.
+- Famílias inativas não serão oferecidas na seleção de família do Cadastro Central.
+- O registro da família será preservado. Regras adicionais de reativação e visibilidade em consultas permanecem pendentes.
