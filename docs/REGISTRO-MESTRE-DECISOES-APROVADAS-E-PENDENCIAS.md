@@ -388,3 +388,14 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A contagem aumenta ou diminui conforme os itens são associados ou reclassificados entre famílias.
 - O número é informativo e somente leitura; não haverá preenchimento ou ajuste manual.
 - A contagem deve representar os vínculos efetivos e permanecer consistente com o Cadastro Central.
+
+
+## 20. Decisão incremental — nome obrigatório e único da família (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O nome da família é obrigatório.
+- Não podem existir famílias duplicadas no cadastro.
+- A validação deve impedir variações de escrita que representem a mesma classificação, inclusive os exemplos “Chapas”, “CHAPAS” e “Chapa”.
+- A unicidade deve ser validada antes de salvar e também garantida no backend.
+- A regra técnica exata de normalização/comparação ainda deverá ser especificada; isso não altera o resultado funcional aprovado de impedir duplicidades por grafia.
