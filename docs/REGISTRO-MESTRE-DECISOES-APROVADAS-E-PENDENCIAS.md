@@ -893,3 +893,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Oferecer **Descartar alterações e sair**, preservando os últimos filtros aplicados e seus resultados, ou **Permanecer na tela**, mantendo a edição temporária.
 - Não descartar critérios temporários sem escolha explícita.
 - Sem alterações pendentes, não exibir esse aviso.
+
+### Navegação global e proteção de filtros não aplicados — 09/11/2026
+
+**Status: APROVADO**
+
+- Cabeçalho padrão global com botões visíveis **Voltar** e **Avançar**, seguindo convenções comuns de sites e sistemas.
+- Navegação por teclado compatível, incluindo **Esc** como comando de voltar dentro do Alianza quando aplicável; Esc não é tratado como atalho universal do navegador e não deve conflitar com ações contextuais, como fechar modais.
+- Botões, atalhos e navegação do navegador respeitam a confirmação de saída quando houver filtros não aplicados ou outra edição protegida.
+- Permanecer mantém integralmente a edição; descartar e sair preserva os últimos filtros aplicados e seus resultados.
+- Cobertura inclui navegação interna, voltar/avançar do navegador e recarregamento. Fechamento de aba/janela usa aviso nativo do navegador quando disponível.
+- Detalhes responsivos, ausência de histórico, compatibilidade e critérios técnicos de aceite permanecem pendentes.
