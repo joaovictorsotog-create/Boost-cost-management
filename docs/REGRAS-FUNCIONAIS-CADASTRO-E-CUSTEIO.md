@@ -480,3 +480,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A sincronização deve evitar apresentar dados desatualizados após uma alteração confirmada e tratar conflitos de edições concorrentes sem sobrescrever silenciosamente alterações de outro usuário.
 - A regra abrange todos os módulos e operações de criação, edição, inativação, reativação, exclusão autorizada, vínculos e recálculos do projeto, conforme as permissões e regras específicas de cada módulo.
 - A tecnologia, o mecanismo de comunicação, a estratégia de reconexão e os objetivos mensuráveis de latência ainda serão definidos na especificação técnica. Esta decisão aprova o comportamento funcional em tempo real, não uma tecnologia específica nem uma promessa de latência numérica.
+
+
+## 45. Atualização em tempo real de filtros, pesquisas e ordenações — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Filtros, resultados de pesquisa e ordenações devem refletir automaticamente alterações confirmadas nos dados que afetam seus resultados, em todas as telas e módulos do sistema.
+- Quando um registro mudar de nome, classificação, situação ou outro atributo utilizado na pesquisa, filtro ou ordenação, as visualizações abertas devem ser atualizadas para refletir o estado persistido.
+- A atualização deve preservar os critérios de pesquisa, filtros e ordenação que o usuário já selecionou, recalculando os resultados conforme esses critérios; não deve limpar ou substituir as escolhas do usuário sem necessidade.
+- Se um registro deixar de atender aos critérios ativos, deve deixar de aparecer nos resultados; se passar a atendê-los, deve aparecer conforme a ordenação vigente.
+- As regras de visibilidade, permissões, escopo e separação entre registros ativos e arquivados continuam prevalecendo. A atualização em tempo real não deve revelar registros que o usuário não pode consultar.
+- Esta regra complementa a atualização global em tempo real e não define tecnologia específica nem meta numérica de latência.
