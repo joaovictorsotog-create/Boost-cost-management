@@ -1037,3 +1037,7 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Atualizar indicador e contador do sino somente após persistência confirmada pelo backend.
 - Estado de leitura individual por usuário, validado e persistido no backend; frontend não é autoridade.
 - Política de auditoria e retenção do estado de leitura ainda precisa de detalhamento.
+
+### Categorias de notificações — APROVADO (09/11/2026)
+
+Categorias iniciais: **Aprovações**, **Alterações de cadastro**, **Exclusões**, **Segurança** e **Sistema**. Devem organizar notificações no painel e no histórico. Regras de enquadramento dos eventos, subcategorias, ícones, cores, filtros e situações com possível enquadramento múltiplo permanecem pendentes. Ampliação da lista exige decisão aprovada.
