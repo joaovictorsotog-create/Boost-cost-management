@@ -1069,3 +1069,14 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A resolução anterior e todos os eventos anteriores permanecerão preservados no histórico; reabrir não apagará nem sobrescreverá a resolução anterior.
 - Após a reabertura, o alerta retornará ao estado **Aguardando reconhecimento** e exigirá novo reconhecimento por Administrador autorizado. O reconhecimento anterior permanecerá preservado no histórico, mas não satisfará o novo ciclo.
 - O backend controlará a transição de estado e a concorrência; a interface só confirmará a reabertura após persistência bem-sucedida.
+
+### Lembretes de alertas críticos sem reconhecimento — decisão aprovada (09/11/2026)
+
+- Se um alerta crítico permanecer em **Aguardando reconhecimento**, o primeiro lembrete será enviado após 30 minutos sem reconhecimento.
+- Enquanto permanecer sem reconhecimento, novos lembretes serão enviados em intervalos de 30 minutos, até o limite máximo de três lembretes por ciclo.
+- Os lembretes serão direcionados aos Administradores autorizados a visualizar o alerta.
+- Ao ocorrer reconhecimento válido, os lembretes daquele ciclo serão interrompidos.
+- Cada reabertura inicia um novo ciclo de reconhecimento e reinicia a contagem de lembretes, sem apagar os ciclos anteriores do histórico.
+- Após o envio efetivo do terceiro lembrete, não haverá novos lembretes automáticos naquele ciclo. O alerta permanecerá aguardando reconhecimento até uma ação administrativa; não haverá reconhecimento, resolução, transferência de titularidade ou encerramento automático.
+- O backend controlará agendamento, contagem, elegibilidade, envio efetivo e concorrência. Falhas de envio não poderão ser contabilizadas como lembrete efetivamente enviado.
+- Cada lembrete e resultado de envio será registrado na linha do tempo/auditoria, com data/hora e ciclo correspondente.
