@@ -1526,3 +1526,10 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Gerar alerta conforme a classificação e prioridade aplicáveis, respeitando as regras de correlação, reincidência, reconhecimento e histórico de alertas.
 - Preservar integralmente o encerramento anterior e a nova trilha de eventos, sem sobrescrita ou perda de evidências.
 - Pendências: critérios técnicos de correlação, limiares para distinguir reincidência de ocorrência semelhante independente, critérios de reabertura versus nova ocorrência e regras de alerta.
+
+### Indicadores gerenciais de reincidência — decisão aprovada (09/11/2026)
+- O Painel Gerencial deve apresentar indicadores de reincidência separados das falhas atualmente abertas, sem misturar os universos de contagem.
+- Indicadores aprovados: quantidade de reincidências por período; componentes com maior número de reincidências; tipos de falha mais recorrentes; falhas que voltaram a ocorrer após encerramento; tempo médio entre encerramento e reincidência.
+- Os indicadores devem considerar somente ocorrências identificadas e registradas conforme as regras de correlação e reincidência; não presumir reincidência por mera semelhança de sintomas.
+- Permitir análise por período e preservar rastreabilidade até as ocorrências/falhas de origem, respeitando permissões e proteção das evidências.
+- Pendências: definir janelas e filtros de período, fórmula do tempo médio, tratamento de múltiplas reincidências por falha, agrupamentos por componente/tipo, critérios de dados incompletos e visualizações/exportações.
