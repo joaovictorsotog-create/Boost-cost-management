@@ -1067,3 +1067,12 @@ Legenda:
 - [x] Preservar relatórios/resultados sem exclusão ou alteração silenciosa.
 - [x] Vincular correções e retestes ao relatório original, mantendo histórico e evidências.
 - [ ] Definir independência/conflitos de interesse, qualificação/seleção, contratação, acesso controlado, confidencialidade, comunicação e aceite.
+
+
+### Classificação de falhas de segurança — decisão aprovada (09/11/2026)
+- [x] Classificar falhas em P0 Crítica, P1 Alta, P2 Média e P3 Baixa.
+- [x] Definir tratamento geral: P0 imediata; P1 prioritária; P2 programada; P3 melhoria planejada.
+- [x] Exigir responsável, prazo, evidências, plano, estado e reteste por falha.
+- [x] Bloquear release com P0 até correção/reteste ou exceção formal autorizada e documentada.
+- [x] Exigir justificativa, risco residual, controles compensatórios, autorizador, validade e plano para exceção, sem apagar/reclassificar achado.
+- [ ] Definir critérios objetivos, prazos P1/P2/P3, autoridade/segregação de exceções P0, validade, reteste e política de release.
