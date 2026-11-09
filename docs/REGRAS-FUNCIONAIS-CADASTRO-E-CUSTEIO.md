@@ -759,3 +759,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A notificação deve identificar a solicitação e oferecer acesso direto à análise e ao histórico anterior, respeitando as permissões aplicáveis.
 - O novo titular deve conseguir consultar o contexto, as decisões e os registros anteriores necessários para dar continuidade à análise, sem apagar ou sobrescrever ciclos anteriores.
 - O envio/registro da notificação deve ser rastreável. A interface só informa a transferência como concluída após persistência no backend.
+
+
+## 66. Reinício do ciclo de lembretes após transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após uma transferência de titularidade ser persistida, inicia-se um novo ciclo de acompanhamento para o novo Administrador titular.
+- A contagem de inatividade e de lembretes do titular anterior não é herdada pelo novo titular.
+- O novo ciclo começa a partir do momento em que a transferência é efetivada no backend; o primeiro lembrete será devido após 30 minutos de inatividade do novo titular.
+- Se permanecer inativo, os lembretes seguintes serão enviados a cada 30 minutos, até o máximo de três.
+- Somente após o envio efetivo do terceiro lembrete desse novo ciclo, a solicitação ficará elegível para nova transferência por outro Administrador.
+- Os ciclos e lembretes anteriores permanecem preservados no histórico/auditoria; reiniciar a contagem não apaga registros anteriores.
+- O backend controla timestamps, contagem, elegibilidade e concorrência; notificações não podem ser duplicadas por reprocessamento.
