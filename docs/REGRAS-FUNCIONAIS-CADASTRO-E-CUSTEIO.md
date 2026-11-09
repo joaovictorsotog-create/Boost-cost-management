@@ -359,3 +359,15 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - A reativação não cria uma nova família nem altera sua identidade ou histórico; recupera o registro já existente.
 - A validação de unicidade do nome também deve ser aplicada na reativação. Se houver conflito com outra família, a reativação deverá ser bloqueada até que o conflito seja resolvido, preservando a regra de nome único.
 - A reativação não associa automaticamente itens à família; os vínculos continuam dependendo de uma operação explícita de classificação no Cadastro Central.
+
+## 34. Área isolada de famílias arquivadas em Configurações — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O gerenciamento de famílias ficará dentro do ambiente **Configurações**.
+- As famílias ativas serão apresentadas na área normal de gerenciamento de famílias.
+- As famílias inativas ficarão em uma área separada, identificada por um ícone com o texto **Arquivados**.
+- A área **Arquivados** exibirá somente famílias inativas e permitirá ao administrador consultá-las e reativá-las.
+- Famílias arquivadas não serão oferecidas na seleção do Cadastro Central.
+- Após a reativação, a família retornará à listagem normal de famílias ativas, respeitando a validação de unicidade já aprovada.
+- Esta decisão define a organização funcional da interface em Configurações; não autoriza implementação ou alteração técnica.
