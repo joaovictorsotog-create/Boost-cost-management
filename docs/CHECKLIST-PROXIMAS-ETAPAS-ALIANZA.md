@@ -629,3 +629,13 @@ Legenda:
 - [x] Preservar filtros e ordenação aplicados durante a navegação entre páginas.
 - [x] Validar paginação, permissões e escopo no backend.
 - [x] Garantir que a navegação de consulta não altere alertas ou históricos.
+### Exportação do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- [x] Permitir exportar o histórico em Excel e PDF.
+- [x] Respeitar filtros efetivamente aplicados e escopo autorizado na consulta.
+- [x] Revalidar no backend as permissões administrativas e o acesso aos registros no momento da geração.
+- [x] Incluir somente dados que o solicitante esteja autorizado a consultar.
+- [x] Registrar cada exportação no Log de Atividades/auditoria, com usuário, data/hora, formato, filtros/escopo e resultado.
+- [x] Manter exportação como operação somente leitura, sem alterar alertas ou históricos.
+- [x] Confirmar conclusão na interface somente após sucesso confirmado pelo backend.
+- [ ] Definir limites de volume, expiração/armazenamento temporário, proteção contra compartilhamento indevido e detalhes de formatação.
