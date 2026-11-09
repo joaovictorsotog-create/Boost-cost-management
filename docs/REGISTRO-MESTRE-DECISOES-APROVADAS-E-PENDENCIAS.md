@@ -566,3 +566,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Exclusão definitiva só pode ser permitida se a família nunca tiver sido utilizada e não possuir vínculos atuais ou históricos.
 - A exclusão permitida exige prévia, confirmação explícita do Administrador e registro de auditoria.
 - A verificação considera histórico de uso, não apenas a contagem atual de itens; a implementação técnica dessa verificação permanece para a especificação de dados.
+
+
+## 37. Prévia de impacto ao editar o nome de uma família (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Antes da confirmação, apresentar nome atual, novo nome proposto e quantidade de itens vinculados.
+- Destacar que o novo nome será refletido em todos os itens vinculados e nas telas, pesquisas, filtros e consultas correspondentes.
+- Informar que a alteração é nominal/classificatória e não muda custos, unidades ou estruturas de composição dos itens.
+- O Administrador pode confirmar ou cancelar; nada é alterado antes da confirmação explícita.
+- Após persistência bem-sucedida, propagar em tempo real, preservar o histórico e registrar a auditoria.
