@@ -1392,3 +1392,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Descarte excepcional exige procedimento formal, justificativa, autorização específica, escopo, responsável, data/hora e trilha auditável.
 - Compatibilizar com LGPD e normas aplicáveis; o prazo interno de 5 anos não significa que toda categoria de dado tenha obrigação legal universal de retenção por esse período.
 - Pendências: marco inicial, categorias/exceções, legal hold, minimização/anonimização, descarte seguro, responsáveis, revisão e testes.
+
+
+### Verificação periódica da integridade da auditoria — decisão aprovada (09/11/2026)
+- Verificação automática diária da integridade dos registros de auditoria.
+- Verificação adicional após operações administrativas de infraestrutura que possam afetar auditoria, armazenamento, chaves, backups ou mecanismos de integridade.
+- Divergência gera alerta crítico e identificação do trecho/período/conjunto afetado.
+- Preservar originais e evidências; vedada correção automática que possa mascarar o problema.
+- Registrar investigação e resolução, com responsáveis, datas/horários, evidências, ações e resultado.
+- Recuperação/correção somente por procedimento controlado, autorizado e rastreável.
+- Pendências: mecanismo, cobertura, limiares, canal/escalonamento, responsáveis, contenção/recuperação, metas e testes.
