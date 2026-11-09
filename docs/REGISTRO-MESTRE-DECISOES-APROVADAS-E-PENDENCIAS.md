@@ -1147,3 +1147,8 @@ O histórico operacional das solicitações de exportação ficará disponível 
 ### Filtros do histórico de exportações — APROVADO (09/11/2026)
 
 O histórico permitirá filtrar por **período** (dentro da retenção de 15 meses), **estado da exportação** (Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada), **usuário solicitante** (somente quando houver autorização para consultar solicitações de terceiros; nos demais casos, apenas as próprias solicitações) e **formato do arquivo** (Excel ou PDF). Os filtros poderão ser combinados. O backend validará identidade, permissões e escopo, sem confiar no frontend. **PENDENTE:** aplicação/limpeza dos filtros, paginação e ordenação.
+
+
+### Aplicação e limpeza dos filtros do histórico de exportações — APROVADO (09/11/2026)
+
+A edição dos filtros não dispara consultas automaticamente. O botão **Aplicar filtros** executa a pesquisa; **Limpar filtros** remove os critérios selecionados. Enquanto o usuário edita critérios ainda não aplicados, os resultados da última consulta aplicada permanecem visíveis e inalterados. Somente uma nova aplicação explícita substitui esses resultados. Validação de parâmetros, identidade, permissões e escopo continuam sob autoridade do backend.
