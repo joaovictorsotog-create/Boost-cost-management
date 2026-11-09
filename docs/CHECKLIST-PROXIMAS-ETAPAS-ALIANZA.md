@@ -669,3 +669,13 @@ Legenda:
 - [x] Permitir nova solicitação após confirmação do encerramento da tarefa anterior.
 - [x] Não contabilizar nem apresentar solicitações falhas como exportações concluídas.
 - [x] Manter o backend como autoridade sobre o estado final da tarefa.
+
+### Cancelamento de exportação em processamento — decisão aprovada (09/11/2026)
+
+- [x] Permitir ao usuário solicitante pedir o cancelamento durante o processamento.
+- [x] Não liberar a vaga de processamento no simples envio do pedido.
+- [x] Liberar a vaga somente após confirmação backend do encerramento efetivo por cancelamento.
+- [x] Manter a tarefa ocupando a vaga única enquanto o cancelamento aguarda confirmação.
+- [x] Exibir **Cancelada** somente após confirmação backend.
+- [x] Em disputa com conclusão/falha ou quando o cancelamento não for possível, apresentar o estado real confirmado pelo backend.
+- [x] Manter validação, concorrência e persistência do estado final sob autoridade do backend.
