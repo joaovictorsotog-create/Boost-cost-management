@@ -1187,3 +1187,60 @@ Quando o usuário sair da tela de detalhes ou ela deixar de estar ativa/em prime
 ### Frequência de atualização automática dos detalhes — APROVADO (09/11/2026)
 
 Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backend a cada **10 segundos**. O intervalo deverá ser tratado como referência máxima de frequência, com controle de carga, sem consultas simultâneas para a mesma tela/solicitação. Em segundo plano, aplicam-se as regras de suspensão/redução; ao retornar, haverá consulta imediata. Somente dados confirmados pelo backend serão apresentados como atuais.
+
+
+## Central de Gerenciamento de Usuários — decisões aprovadas em 09/11/2026
+
+### Proteção contra alterações de perfil
+- Somente Administrador pode alterar o perfil de outro usuário.
+- Um usuário não pode elevar as próprias permissões.
+- Toda mudança de perfil exige confirmação explícita.
+- A mudança só passa a valer após confirmação e persistência bem-sucedida pelo backend.
+- A auditoria registra perfil anterior, perfil novo, responsável e data/hora.
+- O sistema bloqueia o rebaixamento ou a suspensão da própria conta pelo último Administrador.
+- A proteção deve impedir que o sistema fique sem Administrador por qualquer fluxo administrativo equivalente.
+
+### Convites de usuários
+- Convite individual enviado por e-mail.
+- O link de convite tem validade de 24 horas.
+- O convite permanece pendente até a conclusão do cadastro.
+- Administrador pode reenviar ou cancelar convite.
+- Convite expirado não concede acesso.
+- O próprio usuário define sua senha; o Administrador não cria nem conhece a senha.
+- A ativação depende da validação do convite e da confirmação do backend.
+- O convite define o perfil inicial (Administrador, Editor ou Visualizador); o convidado não escolhe nem altera o próprio perfil durante o cadastro.
+- Link individual, vinculado ao e-mail convidado e de uso único.
+- Reenvio invalida imediatamente o link anterior.
+- Convite cancelado não pode ser recuperado; deve ser emitido outro.
+- Emissões, reenvios, cancelamentos, expirações e ativações ficam registrados na auditoria.
+
+### Unicidade de e-mail e tratamento de convites/contas existentes
+- E-mail de usuário ativo: bloquear novo convite e informar que já existe uma conta.
+- E-mail com convite pendente: permitir reenviar o convite existente, invalidando o link anterior.
+- E-mail de usuário suspenso: impedir criação de outra conta; reativação ocorre pela Central de Gerenciamento, somente por Administrador.
+- E-mail com convite expirado: permitir novo convite, preservando o histórico do convite anterior.
+- Cada e-mail identifica uma única conta no sistema; não criar duplicidades.
+
+### Suspensão de usuários e sessões
+- Após confirmação do backend, bloquear imediatamente o acesso do usuário suspenso.
+- Invalidar todas as sessões abertas, inclusive em outros dispositivos.
+- Revogar tokens de acesso e de renovação no backend.
+- Tentativas de continuar usando o sistema devem exigir novo login.
+- Registrar a suspensão e a invalidação das sessões na auditoria.
+- Não basta impedir novos logins: sessões já abertas também precisam perder validade.
+
+### Reativação de usuários
+- Somente Administrador pode reativar usuário suspenso.
+- A reativação exige confirmação explícita.
+- Recuperar o perfil que o usuário possuía antes da suspensão.
+- Não restaurar sessões ou tokens antigos.
+- Exigir novo login após a reativação.
+- Registrar responsável, data/hora e operação na auditoria.
+
+### Alteração de e-mail
+- O próprio usuário pode solicitar a alteração do e-mail.
+- O usuário informa o novo endereço e recebe nele um link de confirmação.
+- O e-mail só é alterado após a confirmação do novo endereço e a confirmação/persistência pelo backend.
+- Até a confirmação, o e-mail antigo continua válido.
+- O novo endereço não pode estar associado a outra conta, ativa ou suspensa.
+- Registrar a operação na auditoria.
