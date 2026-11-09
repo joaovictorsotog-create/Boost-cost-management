@@ -1411,3 +1411,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Evidências preservam contexto sem revelar valores secretos, usando metadados, identificadores não secretos e referências seguras.
 - Proteção obrigatória no backend, APIs, armazenamento, interface e exportações; ocultação visual isolada não atende à regra.
 - Pendências: catálogo sensível, política de redação, tratamento de vazamentos acidentais, gestão de evidências, exceções técnicas e testes.
+
+
+### Tentativas de acesso indevido à auditoria — decisão aprovada (09/11/2026)
+- Registrar tentativas de acesso fora das permissões, inclusive via API, com identidade disponível, data/hora, recurso/operação em formato seguro e resultado.
+- Não revelar existência/conteúdo de recursos protegidos nas respostas; não registrar segredos ou dados sensíveis como evidência.
+- Detectar padrões repetidos/sistemáticos; prioridade Alta para comportamento suspeito e Crítica para indícios consistentes de ataque/comprometimento.
+- Preservar evidências e documentar investigação, contenção, responsável, ações e resultado, sem sobrescrever eventos originais.
+- Controles obrigatórios no backend e APIs.
+- Pendências: limiares/janelas, correlação de origens, falsos positivos, escalonamento, retenção, resposta a incidentes e testes.
