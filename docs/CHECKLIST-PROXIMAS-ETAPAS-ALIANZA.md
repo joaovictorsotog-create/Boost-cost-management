@@ -312,3 +312,12 @@ Legenda:
 - [x] Preservar os últimos filtros aplicados e seus resultados ao descartar a edição.
 - [x] Não exibir aviso quando não houver alterações temporárias pendentes.
 - [ ] Definir detalhes visuais, cobertura de navegação e critérios técnicos de aceite.
+
+### Navegação global e proteção de filtros não aplicados
+
+- [x] Aprovar botões globais **Voltar** e **Avançar** no cabeçalho padrão do Alianza.
+- [x] Aprovar comandos de teclado compatíveis, incluindo **Esc** para voltar dentro do Alianza quando aplicável, sem conflito com ações contextuais como fechar modais.
+- [x] Exigir confirmação ao sair por botões, atalhos ou navegação do navegador quando houver filtros não aplicados ou outra edição protegida.
+- [x] Preservar integralmente a edição ao escolher permanecer; ao descartar e sair, preservar filtros e resultados anteriormente aplicados.
+- [x] Cobrir navegação interna, voltar/avançar do navegador e recarregamento; usar aviso nativo do navegador para fechamento de aba/janela quando disponível.
+- [ ] Definir comportamento sem histórico, responsividade, compatibilidade de atalhos e critérios técnicos/testes de aceite.
