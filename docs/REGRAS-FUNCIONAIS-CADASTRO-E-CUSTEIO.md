@@ -893,3 +893,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Critérios de filtro temporariamente alterados, mas ainda não aplicados, continuam sujeitos à confirmação de saída já aprovada; não devem ser confundidos com filtros aplicados.
 - Se dados tiverem mudado enquanto a tela estava fora de foco, atualizar os resultados conforme as regras de atualização em tempo real, preservando os critérios de consulta quando ainda válidos.
 - Detalhes técnicos de armazenamento/restauração do estado e comportamento diante de dados removidos ou permissões alteradas permanecem pendentes.
+
+### Atualização do contexto ao retornar à tela — decisão aprovada em 09/11/2026
+
+- Ao retornar a uma tela por **Voltar** ou **Avançar**, o sistema deve revalidar os dados e as permissões do usuário; não pode apresentar como atuais dados que tenham ficado desatualizados enquanto a tela estava fora de foco.
+- Se um registro tiver sido excluído ou se o usuário tiver perdido permissão de acesso enquanto estava fora da tela, a tela deve ser atualizada conforme o estado confirmado pelo backend e informar claramente o que mudou, sem expor dados que já não sejam autorizados.
+- A restauração de filtros e do contexto de navegação não prevalece sobre exclusões, alterações de dados ou mudanças de permissão posteriores; critérios ainda válidos podem ser preservados, mas os resultados devem refletir a situação atual.
+- O backend é a autoridade para validar existência, estado e permissões; a interface apenas apresenta o resultado confirmado.
