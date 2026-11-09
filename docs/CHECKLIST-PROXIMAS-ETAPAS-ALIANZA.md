@@ -1172,3 +1172,12 @@ Legenda:
 - [x] Manter o limite vigente até aprovação formal de nova política; vedar ajustes pontuais para revelar grupos menores.
 - [x] Preservar o acesso completo dos Administradores conforme regras próprias, sem alterar o limite dos demais perfis.
 - [ ] Definir rito de revisão, avaliação independente, critérios de risco, aprovação e comunicação.
+
+### Auditoria de consultas aos indicadores de reincidência — decisão aprovada (09/11/2026)
+- [x] Registrar usuário/ator, data/hora, perfil de acesso e filtros aplicados.
+- [x] Registrar exportação, formato quando aplicável e resultado da operação.
+- [x] Auditar consultas pela interface e APIs no backend.
+- [x] Minimizar dados registrados, sem persistir desnecessariamente dados sensíveis ou valores suprimidos.
+- [x] Preservar capacidade de investigar abuso e tentativas de inferência por consultas sucessivas.
+- [x] Não permitir que a trilha exponha dados protegidos a perfis sem autorização.
+- [ ] Definir granularidade, retenção, acesso, correlação de consultas, alertas e testes.
