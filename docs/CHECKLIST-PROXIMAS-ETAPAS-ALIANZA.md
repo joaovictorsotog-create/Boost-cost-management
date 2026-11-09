@@ -292,3 +292,13 @@ Legenda:
 - [x] Permitir limpar os filtros e retornar à visão cronológica completa.
 - [x] Preservar cronologia, permissões e integridade do histórico após a aplicação.
 - [ ] Definir detalhes visuais, estados do botão e critérios técnicos de aceite.
+
+
+### Preservação dos resultados durante edição dos filtros
+
+- [x] Distinguir critérios aplicados de critérios temporariamente em edição.
+- [x] Manter a última consulta aplicada visível durante a edição.
+- [x] Atualizar resultados somente após novo clique em **Aplicar filtros**.
+- [x] Permitir descartar a edição sem alterar filtros e resultados aplicados.
+- [x] Manter backend como autoridade para permissões e execução da consulta.
+- [ ] Definir detalhes visuais dos estados de edição/cancelamento e critérios técnicos de aceite.
