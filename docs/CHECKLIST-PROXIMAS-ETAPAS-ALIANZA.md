@@ -560,3 +560,14 @@ Legenda:
 - [x] Manter cada ocorrência identificável no painel e com histórico próprio.
 - [x] Concentrar persistência, autorização, concorrência, contagens e transições no backend.
 - [x] Não autorizar agrupamento que esconda identidades nem operações em lote/resolução conjunta sem decisão específica.
+
+
+### Limite de alertas críticos exibidos simultaneamente — decisão aprovada (09/11/2026)
+
+- [x] Limitar a cinco a quantidade de alertas críticos exibidos simultaneamente na visualização inicial do painel.
+- [x] Manter ocorrências excedentes persistidas e acessíveis por paginação ou **Ver todos**.
+- [x] Ordenar a visualização inicial da ocorrência mais recente para a mais antiga.
+- [x] Manter o contador do sino correspondente ao total de alertas críticos distintos em **Aguardando reconhecimento**, não apenas aos cinco exibidos.
+- [x] Definir o limite como regra de apresentação, sem limitar registros ou alertas pendentes.
+- [x] Preservar identidade, ciclo de vida e histórico independentes de cada alerta.
+- [x] Manter dados, contagens e permissões sob autoridade do backend.
