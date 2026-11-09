@@ -608,3 +608,14 @@ Legenda:
 - [x] Manter a consulta histórica sem alterar estados ou executar ações em lote.
 - [x] Manter relações, dados, auditoria e autorização sob controle do backend.
 - [x] Respeitar permissões e impedir exposição de informações protegidas por meio das relações históricas.
+
+
+### Filtros do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- [x] Disponibilizar filtros por período, tipo de ocorrência, estado do alerta e identificação do registro/recurso afetado.
+- [x] Respeitar permissões e escopo autorizado em todas as consultas.
+- [x] Executar consulta somente após ação explícita em **Aplicar filtros**.
+- [x] Preservar resultados da última consulta aplicada durante edição de critérios.
+- [x] Permitir descartar critérios em edição sem alterar filtros/resultados aplicados.
+- [x] Validar parâmetros e autorização no backend.
+- [x] Manter consulta somente leitura, sem alterar alertas ou histórico.
