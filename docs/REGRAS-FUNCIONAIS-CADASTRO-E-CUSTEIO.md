@@ -1240,3 +1240,20 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O registro deverá distinguir claramente o pedido de cancelamento da confirmação de cancelamento efetivo.
 - A auditoria será persistida e protegida pelo backend, sem possibilidade de edição ou exclusão pela interface.
 - A interface só apresentará o resultado final após confirmação do backend.
+
+### Acompanhamento e histórico das exportações — decisão aprovada (09/11/2026)
+
+- O sistema deverá disponibilizar uma área para o usuário acompanhar as solicitações de exportação feitas por ele e consultar seu histórico.
+- Cada solicitação deverá apresentar seu estado, conforme persistido e confirmado pelo backend.
+- Estados de acompanhamento:
+  - **Aguardando processamento**
+  - **Em processamento**
+  - **Cancelamento solicitado**
+  - **Concluída**
+  - **Falhou**
+  - **Cancelada**
+- A solicitação de cancelamento não será apresentada como cancelamento concluído; o estado **Cancelamento solicitado** permanecerá até o backend confirmar o resultado final.
+- A área deverá refletir as mudanças de estado conforme as atualizações confirmadas pelo backend, sem antecipar resultados.
+- Quando a exportação for concluída, a disponibilidade do arquivo e do link de download deverá respeitar as regras já aprovadas de proteção, vínculo individual e expiração de 30 minutos.
+- O usuário só poderá consultar solicitações às quais tenha autorização; o backend validará identidade e permissões e não permitirá acesso aos registros de outros usuários sem autorização específica.
+- Critérios de retenção do histórico, filtros, paginação e detalhamento visual permanecem pendentes de definição.
