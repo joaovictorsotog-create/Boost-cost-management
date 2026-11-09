@@ -1585,3 +1585,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A investigação e a resolução devem ser formalmente registradas, com responsáveis, datas/horários, evidências, ações tomadas e resultado.
 - A recuperação/correção deve ocorrer por procedimento controlado, autorizado e rastreável, preservando evidências e os registros originais sempre que tecnicamente possível.
 - Pendências: definir mecanismo de verificação, cobertura e granularidade, limiares, canal e escalonamento do alerta, responsáveis pela resposta, procedimento de contenção/recuperação, metas de detecção e testes de falha.
+
+
+### Acesso a dados sensíveis da auditoria — decisão aprovada (09/11/2026)
+- Administradores podem consultar eventos e evidências necessários à investigação, conforme autorização e finalidade operacional.
+- Nenhum perfil, inclusive Administrador, pode visualizar ou exportar segredos de infraestrutura, incluindo senhas, tokens, chaves criptográficas, credenciais e valores equivalentes.
+- A auditoria e seus relatórios devem aplicar mascaramento/omissão desses segredos na origem, preferencialmente antes de persistência ou apresentação, evitando que apareçam em consultas, detalhes, exportações ou logs auxiliares.
+- Evidências técnicas devem preservar contexto investigativo sem revelar o valor secreto; quando necessário, usar identificadores não secretos, metadados e referências seguras.
+- A proteção deve ser aplicada e validada no backend, APIs, armazenamento, interface e rotinas de exportação; ocultar apenas visualmente não é suficiente.
+- Acesso a evidências continua sujeito a permissões, escopo e rastreabilidade; consultas e exportações não podem ampliar privilégios nem contornar o mascaramento.
+- Pendências: catálogo de dados sensíveis, política de mascaramento/redação, tratamento de segredos acidentalmente registrados, gestão de evidências, exceções técnicas e testes de segurança.
