@@ -619,3 +619,13 @@ Legenda:
 - [x] Permitir descartar critérios em edição sem alterar filtros/resultados aplicados.
 - [x] Validar parâmetros e autorização no backend.
 - [x] Manter consulta somente leitura, sem alterar alertas ou histórico.
+
+
+### Paginação do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- [x] Definir 20 registros por página como padrão.
+- [x] Oferecer opções de 20, 50 e 100 registros por página.
+- [x] Evitar carregamento integral do histórico; backend retorna somente a página solicitada.
+- [x] Preservar filtros e ordenação aplicados durante a navegação entre páginas.
+- [x] Validar paginação, permissões e escopo no backend.
+- [x] Garantir que a navegação de consulta não altere alertas ou históricos.
