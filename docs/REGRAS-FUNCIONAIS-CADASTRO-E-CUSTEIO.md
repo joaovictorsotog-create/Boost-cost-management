@@ -1257,3 +1257,11 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Quando a exportação for concluída, a disponibilidade do arquivo e do link de download deverá respeitar as regras já aprovadas de proteção, vínculo individual e expiração de 30 minutos.
 - O usuário só poderá consultar solicitações às quais tenha autorização; o backend validará identidade e permissões e não permitirá acesso aos registros de outros usuários sem autorização específica.
 - Critérios de retenção do histórico, filtros, paginação e detalhamento visual permanecem pendentes de definição.
+
+### Localização da área de exportações — decisão aprovada (09/11/2026)
+
+- A área de acompanhamento e histórico de exportações ficará em **Configurações → Exportações**.
+- Haverá também um acesso permanente pelo menu do usuário, direcionando para a mesma área, sem criar uma segunda área ou histórico independente.
+- O histórico operacional de exportações permanecerá separado do **Log de Atividades**: o primeiro serve para acompanhar solicitações e seus estados; o segundo mantém os registros de auditoria das operações.
+- A separação visual não elimina nem duplica os registros de auditoria. Eventos relevantes da exportação continuarão registrados no Log de Atividades conforme as regras aprovadas.
+- O backend continuará validando identidade e permissões para consulta e acesso aos arquivos; a localização no menu não concede privilégios adicionais.
