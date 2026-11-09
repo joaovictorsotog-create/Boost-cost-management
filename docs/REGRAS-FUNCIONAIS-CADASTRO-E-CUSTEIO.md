@@ -1203,3 +1203,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O backend controlará geração, armazenamento temporário, vínculo do link ao usuário, expiração e autorização de download.
 - A interface não poderá confirmar disponibilidade ou download antes da confirmação correspondente do backend.
 - A implementação deverá impedir que o compartilhamento do link, por si só, conceda acesso a outro usuário.
+
+### Limites de processamento e volume da exportação — decisão aprovada (09/11/2026)
+
+- Cada usuário poderá manter no máximo **1 exportação em processamento** por vez.
+- Se o usuário solicitar outra exportação enquanto já houver uma em processamento, o sistema deverá informar que existe uma solicitação em andamento e não iniciar uma segunda simultaneamente.
+- Cada arquivo de exportação poderá conter no máximo **10.000 registros**.
+- Consultas com mais de 10.000 registros deverão ser divididas em arquivos menores, cada um respeitando o limite máximo; não será permitido gerar um único arquivo acima desse limite.
+- Os limites serão impostos e validados pelo backend; não poderão depender exclusivamente de controles ou validações do frontend.
+- A interface informará o estado da solicitação com base no retorno confirmado pelo backend, sem indicar conclusão antecipada.
+- Regras técnicas de contagem, concorrência entre solicitações simultâneas, retomada após falha e experiência de divisão de consultas permanecem pendentes de especificação.
