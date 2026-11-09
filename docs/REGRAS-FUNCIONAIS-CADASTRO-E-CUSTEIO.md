@@ -298,3 +298,11 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - Após cada cadastro, a sugestão seguinte é recalculada considerando todos os IDs já utilizados. Exemplo: se o ID 10 já existe e os IDs 5 a 9 estão livres, a sugestão será 5; depois que 5 a 9 forem ocupados, a sugestão passa a 11.
 - IDs de itens inativados permanecem reservados e não podem ser reutilizados.
 - A regra é uma conveniência de preenchimento e organização; não altera o caráter obrigatório e exclusivo do ID nem retira do administrador a possibilidade de escolher outro número livre.
+
+
+## 28. Descrição principal do item — decisão aprovada em 09/11/2026
+
+- A descrição principal é obrigatória para salvar o cadastro.
+- O campo aceita letras, números e caracteres especiais; não será imposto um padrão rígido de nomenclatura.
+- Descrições repetidas são permitidas. A identidade exclusiva do item continua sendo seu ID numérico.
+- A descrição principal permanece disponível para pesquisa, em conjunto com os demais critérios já definidos.
