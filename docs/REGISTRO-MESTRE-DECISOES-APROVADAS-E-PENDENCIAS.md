@@ -1555,3 +1555,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Até eventual aprovação formal de nova política, permanece obrigatório o limite de 5 ocorrências, inclusive em filtros, consultas sucessivas, detalhamentos e exportações.
 - Administradores mantêm o acesso completo previsto nas regras, sem que isso configure alteração do limite aplicável aos demais perfis.
 - Pendências: definir rito de revisão formal, responsáveis pela avaliação independente, critérios de risco, aprovação e comunicação de eventual mudança.
+
+### Auditoria de consultas aos indicadores de reincidência — decisão aprovada (09/11/2026)
+
+- [x] Registrar ator/usuário, data/hora, perfil de acesso e filtros/parâmetros aplicados em cada consulta.
+- [x] Registrar se houve exportação, formato quando aplicável e resultado operacional da operação.
+- [x] Abranger consultas pela interface, APIs e demais caminhos, com autorização e auditoria no backend.
+- [x] Minimizar os dados registrados; não persistir desnecessariamente dados sensíveis, evidências restritas ou valores suprimidos.
+- [x] Permitir investigação de uso indevido e tentativas de contornar a supressão mínima de 5 ocorrências ou inferir dados por consultas sucessivas.
+- [x] Impedir que a própria trilha revele valores/grupos protegidos a perfis sem autorização.
+- [ ] Definir granularidade dos filtros, correlação de consultas sucessivas, retenção, acesso à trilha, alertas, mascaramento e testes.
