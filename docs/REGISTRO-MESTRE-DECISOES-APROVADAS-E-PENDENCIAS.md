@@ -608,7 +608,7 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 **Status: APROVADO pelo usuário.**
 
 - Todo item poderá ser excluído, mesmo que possua vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos não bloqueia, por si só, a exclusão.
-- Antes da confirmação, verificar dependências e apresentar aviso/prévia com quantidade e relação consultável dos registros afetados, identificados por código/ID e descrição ou identificadores próprios do módulo.
+- Antes da confirmação, verificar dependências e apresentar prévia resumida com a quantidade total de estruturas/registros afetados e os tipos de impacto relevantes. Não abrir nem listar individualmente cada estrutura ou seus componentes na prévia, evitando poluição visual.
 - Explicar os impactos, incluindo estruturas afetadas e recálculo dos custos dos produtos compostos dependentes.
 - Após confirmação explícita de usuário autorizado, remover automaticamente as referências atuais ao item nas estruturas e registros dependentes e recalcular todos os compostos afetados, direta e indiretamente, até os produtos finais.
 - Executar com validação no backend, consistência transacional e auditoria completa. Não deixar vínculos quebrados nem apresentar falha parcial como sucesso integral.
