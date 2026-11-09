@@ -558,7 +558,7 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Todo item do Cadastro Central poderá ser excluído, inclusive quando possuir vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos, por si só, não impede a exclusão.
 - Antes da confirmação, o sistema deve verificar dependências e apresentar uma prévia resumida de impacto, informando a quantidade total de estruturas/registros afetados e os tipos de impacto relevantes. A prévia não deve abrir nem listar individualmente cada estrutura ou seus componentes, para evitar excesso de informação e poluição visual.
 - A prévia deve explicar as consequências concretas, incluindo quais estruturas serão afetadas e que os custos dos produtos compostos dependentes serão recalculados após a exclusão.
-- Após a confirmação explícita do usuário autorizado, o sistema deverá remover automaticamente as referências atuais ao item excluído nas estruturas e registros dependentes, conforme as regras do módulo, e recalcular os custos de todos os compostos afetados, direta ou indiretamente, propagando o recálculo até os produtos finais.
+- Somente o papel Administrador poderá autorizar e confirmar a exclusão. Após a confirmação explícita do Administrador, o sistema deverá remover automaticamente as referências atuais ao item excluído nas estruturas e registros dependentes, conforme as regras do módulo, e recalcular os custos de todos os compostos afetados, direta ou indiretamente, propagando o recálculo até os produtos finais.
 - A exclusão e o tratamento dos vínculos devem ser executados com validação no backend, consistência transacional e registro completo na auditoria. A interface só poderá indicar conclusão após confirmação do backend; falhas não podem deixar vínculos quebrados nem ser apresentadas como sucesso integral.
 - Se o conjunto de dependências mudar enquanto a prévia estiver aberta, o sistema deverá atualizar a prévia ou exigir nova validação e confirmação antes de executar.
 - A exclusão deve deixar de permitir que o item seja selecionado em novas estruturas. A operação não deve apagar o registro de auditoria da exclusão.
@@ -568,3 +568,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Após a exclusão lógica, o item não poderá ser selecionado em novas estruturas; suas referências operacionais atuais serão tratadas conforme a regra de remoção automática aprovada, enquanto as fotografias históricas imutáveis continuarão consultáveis.
 - A interface normal não deverá oferecer o item excluído como opção ativa. Eventual consulta administrativa de registros excluídos deverá ocorrer em ambiente separado e controlado, com permissões apropriadas.
 - Detalhes técnicos de modelagem, retenção e consulta desse registro preservado permanecem pendentes de especificação antes da implementação.
+
+
+## 52. Reativação de itens excluídos logicamente e autoridade para ações de impacto direto — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Somente usuários com papel **Administrador** poderão reativar itens excluídos logicamente.
+- A reativação recuperará o registro original, preservando seu ID e os dados cadastrais/históricos; não criará um novo item.
+- Após a reativação, o item voltará a aparecer no Cadastro Central ativo e poderá ser utilizado novamente, respeitadas as validações cadastrais vigentes.
+- A reativação não restaurará automaticamente vínculos antigos em estruturas. Qualquer novo vínculo dependerá de ação explícita e das permissões aplicáveis.
+- Como regra geral, decisões e operações que provoquem impacto direto nos dados, classificações, estruturas, custos, vínculos ou integridade histórica deverão ser de competência exclusiva do papel **Administrador**.
+- Essa competência exclusiva inclui, no mínimo, exclusão e reativação de itens, além das operações de manutenção de famílias já restritas ao Administrador. A autorização deve ser validada no backend, com prévia de impacto quando aplicável e auditoria.
+- A matriz completa de permissões deverá identificar, operação por operação, quais ações são de impacto direto e quais atividades rotineiras podem permanecer com o papel Editor. Não ampliar permissões por interpretação implícita.
