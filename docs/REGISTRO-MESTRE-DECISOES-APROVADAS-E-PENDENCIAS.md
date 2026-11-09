@@ -237,3 +237,15 @@ As regras abaixo foram recuperadas de confirmações explícitas nas conversas v
 5. Painel discreto de Informações do Sistema deve mostrar status real do banco, autenticação, serviços internos e horário da última verificação.
 6. A frequência de backup e os procedimentos/cadência de teste de restauração não foram especificados nas mensagens auditadas; não inventar.
 
+
+
+### 6.10 Diretrizes técnicas já informadas
+
+1. O Sistema de Custos será uma aplicação separada do CRM.
+2. O banco definido para o projeto é Supabase separado do banco/ambiente do CRM.
+3. Estimativa inicial informada: 1 a 10 usuários simultâneos.
+4. Domínio planejado informado: `sistema.trique-brasil.io`.
+5. VPS existente informada para dimensionamento: Hostinger KVM2, 2 vCPU, 8 GB de RAM e 100 GB de disco. Isso não significa que o sistema esteja implantado nessa VPS.
+6. O usuário exigiu diretrizes rigorosas para execução no Manus: frontend não confiável, validações críticas no backend, proteção de segredos e arquivos `.env`, sem exposição de chaves, tokens, senhas ou credenciais.
+7. A stack específica do Sistema de Custos **não foi aprovada** nas conversas auditadas. Não copiar automaticamente a stack do CRM.
+8. A Ordem Mestra e a especificação técnica de segurança são fontes de precedência e devem ser consultadas antes de qualquer implementação.
