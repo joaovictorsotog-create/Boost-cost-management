@@ -283,3 +283,12 @@ Legenda:
 - [x] Permitir remover seleções individualmente e limpar todos os filtros.
 - [x] Preservar a cronologia e manter filtros sem efeito sobre os registros originais.
 - [ ] Definir detalhes visuais e critérios técnicos de aceite.
+
+
+### Aplicação explícita dos filtros da linha do tempo
+
+- [x] Exigir ação explícita pelo botão **Aplicar filtros** para atualizar os resultados.
+- [x] Não atualizar a linha do tempo a cada seleção ou remoção de critério.
+- [x] Permitir limpar os filtros e retornar à visão cronológica completa.
+- [x] Preservar cronologia, permissões e integridade do histórico após a aplicação.
+- [ ] Definir detalhes visuais, estados do botão e critérios técnicos de aceite.
