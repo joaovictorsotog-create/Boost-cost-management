@@ -1127,3 +1127,7 @@ Falhas de exportação serão registradas no Log de Atividades. Arquivos incompl
 ### Cancelamento de exportação em processamento — APROVADO (09/11/2026)
 
 O usuário solicitante poderá pedir o cancelamento de uma exportação enquanto ela estiver em processamento. O pedido não libera a vaga imediatamente: isso só ocorrerá após o backend confirmar o encerramento efetivo por cancelamento. Até lá, a tarefa continua ocupando a vaga única. A interface só exibirá **Cancelada** após confirmação; se a tarefa já tiver terminado ou não puder mais ser cancelada, deverá apresentar o estado real retornado pelo backend. O backend controla validação, concorrência com conclusão/falha e persistência do estado final.
+
+### Auditoria do cancelamento de exportação — APROVADO (09/11/2026)
+
+Todo pedido de cancelamento será registrado no Log de Atividades com identificação da exportação, usuário e data/hora do pedido. O resultado final será registrado separadamente, com data/hora e estado efetivamente confirmado pelo backend. O log distinguirá pedido de cancelamento de cancelamento efetivo e será protegido contra edição/exclusão pela interface. A interface só apresentará o resultado após confirmação backend.
