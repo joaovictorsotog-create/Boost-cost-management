@@ -1651,3 +1651,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Falhas P0 impedem a liberação de nova versão até correção e reteste satisfatório, ou tratamento formal por exceção de risco autorizada e documentada.
 - Exceções não podem ser silenciosas: devem registrar justificativa, risco residual, controles compensatórios, responsável autorizador, prazo de validade e plano de resolução. A autorização não apaga nem reclassifica o achado original.
 - Pendências: critérios objetivos por nível, prazos máximos de P1/P2/P3, autoridade e segregação para exceções P0, validade/renovação, critérios de reteste e política de bloqueio de release.
+
+
+### Prazos de correção de falhas de segurança — decisão aprovada (09/11/2026)
+- P0 Crítica: contenção imediata, com prazo máximo de 4 horas para a primeira medida de contenção; a correção definitiva segue a avaliação do incidente e não se considera concluída apenas pela contenção.
+- P1 Alta: prazo de correção de até 2 dias úteis.
+- P2 Média: prazo de correção de até 15 dias úteis.
+- P3 Baixa: prazo de correção de até 60 dias úteis.
+- O sistema deve acompanhar prazos, alertar antes/no vencimento e escalonar atrasos aos Administradores.
+- O acompanhamento deve preservar data de identificação, classificação, responsável, prazo, alterações justificadas, contenção/correção, reteste e encerramento.
+- Prazos não autorizam postergar contenção de risco ativo; mudança de prazo exige justificativa e autorização registrada, sem apagar o prazo original ou o histórico.
+- Pendências: marco inicial de contagem, calendário/fuso e feriados, regra de pausa (se houver), antecedência/frequência dos alertas, níveis de escalonamento e autoridade para prorrogações.
