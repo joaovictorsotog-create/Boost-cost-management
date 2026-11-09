@@ -545,3 +545,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Registros que deixarem de atender aos critérios ativos saem dos resultados; registros que passarem a atendê-los entram conforme a ordenação vigente.
 - Permissões, escopo e regras de visibilidade continuam prevalecendo; a sincronização não pode expor registros indevidos.
 - Esta decisão complementa a regra global de atualização em tempo real e não escolhe tecnologia nem meta numérica de latência.
+
+
+## 35. Alteração da família de um item já cadastrado (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Ao alterar a família de um item existente, a nova classificação deve aparecer imediatamente no Cadastro Central e nas demais telas, pesquisas, consultas e filtros afetados.
+- A mudança é exclusivamente classificatória: não altera custo unitário, unidade de medida, tipo ou estrutura de composição.
+- O histórico do item deve preservar a família anterior e a nova, o responsável e a data/hora da alteração.
+- Aplicam-se permissões, validações, prévia, confirmação explícita e auditoria já aprovadas.
