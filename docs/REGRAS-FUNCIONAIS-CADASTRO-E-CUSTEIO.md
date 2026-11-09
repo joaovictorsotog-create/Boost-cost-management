@@ -1125,3 +1125,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O limite de cinco é exclusivamente de apresentação simultânea; não limita a quantidade de alertas que o sistema pode registrar ou manter pendentes.
 - A identidade, o reconhecimento, a resolução, a reabertura, os lembretes e a linha do tempo de cada alerta continuarão independentes.
 - O backend fornecerá os dados, a contagem e as permissões; o frontend aplicará o limite de apresentação sem alterar o estado dos alertas.
+
+
+### Reincidência de manifestações em alertas críticos — decisão aprovada (09/11/2026)
+
+- Quando uma nova manifestação corresponder à mesma ocorrência crítica que já possui alerta aberto/não resolvido, o sistema não criará um segundo alerta para duplicar a ocorrência.
+- A nova manifestação será registrada na linha do tempo do alerta original, preservando data/hora, origem e informações necessárias para auditoria e acompanhamento.
+- Problemas efetivamente distintos deverão gerar alertas independentes, cada um com identidade, estado, reconhecimento, resolução, lembretes e linha do tempo próprios.
+- A correlação entre uma nova manifestação e uma ocorrência já aberta deverá ser validada pelo backend; o frontend não poderá decidir sozinho que dois eventos são iguais.
+- Os critérios técnicos para identificar equivalência entre ocorrências, tratar falsos agrupamentos e distinguir reincidência de um problema novo permanecem pendentes de especificação antes da implementação.
+- A inclusão de uma manifestação em alerta existente não poderá apagar, substituir ou reiniciar silenciosamente o histórico, o reconhecimento ou os prazos do alerta original.
