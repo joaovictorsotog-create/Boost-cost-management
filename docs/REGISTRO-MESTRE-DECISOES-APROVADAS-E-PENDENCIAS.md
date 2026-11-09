@@ -521,3 +521,16 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Famílias inativas em **Arquivados**: data de inativação mais recente primeiro (ordem decrescente).
 - A ordenação é somente de apresentação; não altera registros, IDs, vínculos ou histórico.
 - A pesquisa permanece restrita à listagem correspondente: ativas na área normal e inativas em Arquivados.
+
+
+## 33. Atualização em tempo real em todo o projeto (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Atualizações em tempo real são uma regra global do Alianza — Sistema de Custos, aplicável a todos os módulos e não apenas às telas de famílias.
+- Após uma alteração ser persistida com sucesso, telas, listagens, consultas e sessões de usuários que dependam dos dados afetados devem refletir automaticamente o novo estado, sem atualização manual da página.
+- A sincronização respeita permissões e filtros de cada usuário e não concede acesso adicional.
+- O backend/dado persistido é a fonte de verdade; a interface não pode indicar sucesso antes da confirmação da operação.
+- Operações relacionadas e recálculos em cascata devem manter consistência transacional, sem expor estados parciais como definitivos.
+- Edições concorrentes devem ser tratadas sem sobrescrita silenciosa de alterações de outro usuário.
+- A decisão aprova o comportamento funcional em tempo real. Tecnologia, reconexão e metas mensuráveis de latência permanecem como definições técnicas pendentes.
