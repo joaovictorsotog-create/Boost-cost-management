@@ -3,7 +3,7 @@
 **Atualizado:** 09/11/2026  
 **Base:** auditoria documental de 19 conversas do projeto localizadas no ZIP (8 de 27 ainda ausentes) e decisões registradas nos documentos funcionais.  
 **Branch:** `docs/regras-custeio-cadastro-central`  
-**Objetivo:** acompanhar o que falta esclarecer, validar e só depois implementar. Este checklist não transforma pendências em decisões aprovadas.
+**Objetivo:** acompanhar o avanço incremental por módulo. As oito conversas ausentes não bloqueiam o trabalho; lacunas serão resolvidas quando forem relevantes. Este checklist não transforma pendências em decisões aprovadas.
 
 Legenda:
 - [x] concluído/documentado
@@ -32,11 +32,9 @@ Legenda:
 - [x] Revisar as duas conversas omitidas dos 17 links iniciais: “Desenvolver Tabela Automatizada” e “Pesquisa sobre criação no Manus (1)”.
 - [x] Registrar as decisões e limites de escopo dessas duas conversas no documento de auditoria e no Registro Mestre.
 - [x] Confirmar que “Desenvolver Tabela Automatizada” pertence ao mesmo projeto Alianza, mas descreve aplicação separada do CRM.
-- [ ] Localizar as 8 conversas restantes das 27 mencionadas pelo usuário, ausentes do ZIP atual.
-- [ ] Obter/exportar o conteúdo das 8 conversas restantes.
-- [ ] Auditar cada conversa restante, separando aprovação explícita, proposta, pendência, conflito e assunto de outro projeto.
-- [ ] Registrar origem (título, data e identificador) de cada nova decisão.
-- [ ] Atualizar Registro Mestre e documento de auditoria após a conferência.
+- [~] As 8 conversas restantes não estão no ZIP atual; recuperar oportunisticamente quando forem disponibilizadas ou necessárias para resolver um ponto concreto.
+- [x] Adotar continuidade incremental com o GitHub como fonte central de documentação.
+- [x] Criar protocolo para classificar decisões, hipóteses, pendências e conflitos.
 - [ ] Fazer conferência cruzada final com `BOOST-COST-MANAGEMENT-ORDEM-MESTRA.md` e a especificação funcional original de 381 linhas.
 - [ ] Resolver e documentar divergências entre as fontes oficiais, sem escolher uma versão silenciosamente.
 
@@ -107,12 +105,13 @@ Legenda:
 
 ## 7. Ordem recomendada de trabalho
 
-1. **Completar o inventário das 27 conversas** — para não perder aprovações antigas.
-2. **Fechar as decisões funcionais pendentes** — exclusão de item em uso, quantidade-base, precisão e aproveitamento.
-3. **Conferir documentos oficiais** — Ordem Mestra e especificação de 381 linhas.
-4. **Fechar arquitetura e segurança** — stack, backup, autenticação, RLS e implantação.
-5. **Produzir especificação e critérios de aceite** — com rastreabilidade de cada decisão.
-6. **Só então iniciar implementação**, mediante autorização explícita.
+1. **Trabalhar por módulo**, começando pelo Cadastro Central e depois Estrutura do Produto.
+2. Recuperar decisões já documentadas e identificar apenas as lacunas do módulo atual.
+3. Resolver cada pendência quando ela bloquear a especificação daquele fluxo.
+4. Consultar a Ordem Mestra e a especificação de 381 linhas quando forem necessárias para precedência ou validação.
+5. Produzir especificação e critérios de aceite incrementalmente.
+6. Incorporar conversas ausentes oportunisticamente, sem bloquear o projeto.
+7. Só iniciar implementação mediante autorização explícita.
 
 ## 8. Regra de atualização deste checklist
 
@@ -121,3 +120,12 @@ Legenda:
 - Sugestões do assistente não são decisões aprovadas.
 - Pendências não devem ser resolvidas por suposição.
 - Atualizar este arquivo e o Registro Mestre juntos quando uma decisão for fechada.
+
+
+## 9. Protocolo de continuidade
+
+- [x] Criar `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCREMENTAIS.md`.
+- [x] Definir o GitHub como fonte central de continuidade documental.
+- [x] Definir classificação de aprovado, base documental, pendente, hipótese técnica, conflito e fora de escopo.
+- [x] Definir fluxo de trabalho por módulo, com decisões registradas após confirmação.
+- [ ] Iniciar especificação incremental do Cadastro Central.
