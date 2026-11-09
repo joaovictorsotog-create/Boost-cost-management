@@ -1041,3 +1041,12 @@ Legenda:
 - [x] Registrar fundamento, escopo, início/fim, executor e resultado das medidas, preservando evidências.
 - [x] Prever revisão/liberação segura; não bloquear permanentemente de forma automática com base em sinais isolados.
 - [ ] Definir limites/janelas, critérios de risco/correlação, duração/escalonamento, exceções, falsos positivos, observabilidade, resposta a incidentes e testes.
+
+
+### Plano de resposta a incidentes de integridade e acesso à auditoria — decisão aprovada (09/11/2026)
+- [x] Definir procedimento obrigatório de detecção/classificação, preservação de evidências, contenção, notificação dos Administradores, investigação e documentação de resolução/prevenção.
+- [x] Preservar integridade, origem, cronologia e cadeia de custódia sem sobrescrever registros originais.
+- [x] Exigir contenção proporcional que não destrua evidências nem mascare impacto.
+- [x] Determinar que bloqueio de acesso isolado não encerra incidente; exigir investigação, avaliação de impacto, registro de ações/resultados e medidas corretivas/preventivas aplicáveis.
+- [x] Registrar responsáveis, horários, classificação, decisões, notificações, evidências, contenção, investigação, impacto e fundamento do encerramento.
+- [ ] Definir severidade, prazos/escalonamento, responsáveis/substitutos, canais, cadeia de custódia detalhada, critérios de encerramento, comunicação externa e testes/simulações.
