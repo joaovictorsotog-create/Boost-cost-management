@@ -537,3 +537,15 @@ Legenda:
 - [x] Não alterar leitura, reconhecimento ou resolução ao abrir/fechar o painel.
 - [x] Manter classificação, estado e contagem sob autoridade do backend.
 - [ ] Especificar cores, ícones, acessibilidade, responsividade e testes de aceite.
+
+### Alertas críticos com Administradores desconectados — decisão aprovada (09/11/2026)
+
+- [x] Não condicionar criação/persistência de alertas críticos à presença de Administradores conectados.
+- [x] Persistir notificações e lembretes destinados aos Administradores autorizados para consulta posterior.
+- [x] Disponibilizar avisos pendentes e histórico quando o usuário autorizado retornar e sincronizar o sistema.
+- [x] Manter prazos e ciclos de lembretes sob controle do backend, sem pausa ou reinício por desconexão.
+- [x] Registrar horários previstos, resultados de persistência/entrega e ciclos.
+- [x] Não contabilizar falhas reais de persistência/entrega como envio efetivo.
+- [x] Evitar duplicatas e repetição sonora excessiva na reconexão.
+- [x] Revalidar permissões antes de exibir conteúdo após reconexão.
+- [x] Não executar reconhecimento, resolução, encerramento ou transferência automáticos por ausência de Administradores.
