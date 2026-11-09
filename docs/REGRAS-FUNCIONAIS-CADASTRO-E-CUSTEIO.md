@@ -1213,3 +1213,12 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Os limites serão impostos e validados pelo backend; não poderão depender exclusivamente de controles ou validações do frontend.
 - A interface informará o estado da solicitação com base no retorno confirmado pelo backend, sem indicar conclusão antecipada.
 - Regras técnicas de contagem, concorrência entre solicitações simultâneas, retomada após falha e experiência de divisão de consultas permanecem pendentes de especificação.
+
+### Tratamento de falha na exportação — decisão aprovada (09/11/2026)
+
+- Toda falha de exportação deverá ser registrada no Log de Atividades, com identificação da solicitação, usuário, data/hora e resultado da operação.
+- Arquivos incompletos ou cuja integridade não tenha sido confirmada não poderão ser disponibilizados para download.
+- A vaga de processamento do usuário somente será liberada após o backend confirmar o encerramento da tarefa, inclusive em caso de falha.
+- Após a confirmação do encerramento, o usuário poderá solicitar novamente a exportação.
+- Uma solicitação que falhou não será contabilizada nem apresentada como exportação concluída.
+- O backend será responsável por determinar e persistir o estado final da tarefa; a interface apenas refletirá o resultado confirmado.
