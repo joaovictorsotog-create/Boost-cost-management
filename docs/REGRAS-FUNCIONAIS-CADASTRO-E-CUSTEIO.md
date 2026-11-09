@@ -688,3 +688,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Se dois ou mais Administradores tentarem iniciar a análise simultaneamente, o backend deverá aceitar atomicamente apenas uma operação. As demais tentativas recebem o estado atualizado e a identificação do responsável, sem criar titularidades concorrentes.
 - A exclusividade é regra de backend e não pode depender de bloqueio visual, estado local do navegador ou sincronização exclusivamente no frontend.
 - Esta decisão consolida o comportamento funcional de exclusividade. Os mecanismos técnicos de concorrência, recuperação de falhas e liberação de análises abandonadas continuam sujeitos à especificação técnica, sem alterar as regras aprovadas.
+
+
+## 60. Encerramento voluntário da análise sem decisão (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O Administrador responsável poderá encerrar formalmente sua análise sem aprovar ou rejeitar a solicitação, por meio da ação **Encerrar análise sem decisão**.
+- A ação exigirá confirmação explícita antes de ser efetivada.
+- Após confirmação e persistência pelo backend, a solicitação retornará ao estado **Pendente**, perderá a titularidade anterior e ficará disponível para outro Administrador.
+- O encerramento voluntário deverá ser registrado na auditoria, identificando responsável, data/hora e solicitação.
+- Fechar o navegador, sair do sistema ou permanecer inativo não equivale a encerramento voluntário: nesses casos a solicitação permanece **Em análise**, sob a titularidade atual.
+- O limite de três lembretes por inatividade permanece válido e não provoca liberação automática.
+- A transição de estado, liberação da titularidade e auditoria devem ocorrer de forma consistente no backend; a interface só informa sucesso após confirmação.
