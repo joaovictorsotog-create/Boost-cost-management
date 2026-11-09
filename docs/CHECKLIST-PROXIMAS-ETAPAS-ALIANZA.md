@@ -161,3 +161,12 @@ Legenda:
 - [x] Impedir que chamadas diretas a APIs, manipulação do frontend, importações ou operações em massa contornem regras.
 - [x] Exigir que o frontend só informe sucesso após confirmação do backend.
 - [ ] Detalhar controles técnicos, testes de segurança e critérios de aceite por módulo antes da implementação.
+
+ 
+### Exclusividade de análise entre Administradores
+
+- [x] Definir que o primeiro Administrador cuja operação for aceita pelo backend assume a solicitação.
+- [x] Permitir consulta aos demais Administradores, sem permitir que assumam, aprovem ou rejeitem enquanto houver titular.
+- [x] Exibir quem está conduzindo a análise e impedir tomada de controle forçada.
+- [x] Definir que tentativas simultâneas serão resolvidas pelo backend, aceitando apenas uma titularidade.
+- [ ] Especificar mecanismo técnico atômico de concorrência, recuperação de falhas e liberação de análises abandonadas.
