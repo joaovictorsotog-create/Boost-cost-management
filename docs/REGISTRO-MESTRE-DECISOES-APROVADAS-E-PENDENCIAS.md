@@ -1135,3 +1135,7 @@ Todo pedido de cancelamento será registrado no Log de Atividades com identifica
 ### Acompanhamento e histórico das exportações — APROVADO (09/11/2026)
 
 O usuário terá uma área para acompanhar suas próprias solicitações de exportação e consultar o histórico. Cada solicitação exibirá o estado confirmado pelo backend: **Aguardando processamento**, **Em processamento**, **Cancelamento solicitado**, **Concluída**, **Falhou** ou **Cancelada**. O pedido de cancelamento permanecerá distinto do cancelamento efetivo. Atualizações não poderão antecipar resultados do backend. Para exportações concluídas, disponibilidade e download respeitarão a proteção já aprovada: link individual, acesso autorizado e expiração em 30 minutos. O backend validará identidade e permissões, impedindo acesso não autorizado a solicitações de terceiros. **PENDENTE:** retenção do histórico, filtros, paginação e detalhamento visual.
+
+### Localização da área de exportações — APROVADO (09/11/2026)
+
+A área ficará em **Configurações → Exportações**, com acesso permanente pelo menu do usuário apontando para a mesma área. O histórico operacional ficará separado do Log de Atividades: o primeiro é para acompanhamento das solicitações; o segundo permanece como trilha de auditoria. A separação não elimina registros de auditoria, e a localização no menu não concede privilégios: o backend valida identidade e permissões.
