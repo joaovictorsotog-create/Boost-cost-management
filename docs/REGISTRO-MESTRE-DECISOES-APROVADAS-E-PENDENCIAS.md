@@ -1311,3 +1311,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - O encerramento só deve ser apresentado como concluído após confirmação do backend; revogar a validade da sessão/token correspondente.
 - Registrar encerramentos individuais e em lote na auditoria.
 - Não expor identificadores secretos de sessão ou tokens na interface.
+
+
+### Proteção contra tentativas de login — decisão aprovada (09/11/2026)
+- Após 5 tentativas consecutivas de senha incorreta para uma conta, bloquear temporariamente novas tentativas de autenticação dessa conta por 15 minutos.
+- Em caso de repetição, aumentar progressivamente a duração dos bloqueios, conforme política técnica definida e documentada; não aplicar bloqueio permanente da conta exclusivamente por tentativas incorretas.
+- Aplicar controles adicionais contra automação e abuso (limitação de taxa e avaliação de sinais de origem/dispositivo), sem depender exclusivamente do bloqueio por conta.
+- Registrar tentativas relevantes, bloqueios e eventos de proteção na auditoria de segurança, sem armazenar senhas ou segredos de autenticação.
+- A implementação deve evitar que terceiros provoquem indisponibilidade prolongada de uma conta por meio de tentativas deliberadas; calibrar controles para reduzir falsos bloqueios e permitir recuperação segura.
+- Permanecem pendentes: progressão e limites máximos dos bloqueios, janela de contagem, critérios de reinício, tratamento de origens compartilhadas, desafios adicionais, retenção dos eventos e critérios de aceite/teste.
