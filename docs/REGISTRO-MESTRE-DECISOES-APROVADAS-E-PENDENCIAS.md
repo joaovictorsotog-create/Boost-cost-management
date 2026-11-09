@@ -701,3 +701,10 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Aprovação/rejeição só se conclui após validação e persistência confirmadas pelo backend.
 - O backend deve controlar concorrência e titularidade da análise, impedindo decisões simultâneas e bloqueios indevidos.
 - Prazo para considerar uma análise abandonada e mecanismo técnico de liberação automática permanecem pendentes.
+
+
+### Lembretes limitados por inatividade
+
+- Enviar lembrete ao Administrador responsável após 30 minutos sem atividade; se persistir a inatividade, repetir em intervalos de 30 minutos, até o máximo de 3 lembretes por solicitação.
+- Depois do terceiro lembrete, interromper os envios e aguardar a resposta do Administrador. A solicitação permanece **Em análise**, sem liberação, aprovação, rejeição ou transferência automática.
+- Contagem e agendamento individualizados por solicitação, com prevenção de notificações duplicadas e ciclos infinitos.
