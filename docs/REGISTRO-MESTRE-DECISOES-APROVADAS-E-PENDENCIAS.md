@@ -1143,3 +1143,7 @@ A área ficará em **Configurações → Exportações**, com acesso permanente 
 ### Retenção do histórico de exportações — APROVADO (09/11/2026)
 
 O histórico operacional das solicitações de exportação ficará disponível para consulta por **15 meses**, permitindo consultar e obter relatórios referentes a períodos anteriores dentro dessa janela. Esse prazo se aplica aos registros e metadados do histórico, não aos arquivos exportados: permanecem válidas as regras de arquivos temporários e links individuais com expiração de 30 minutos. O Log de Atividades mantém política de retenção própria, ainda não definida. O backend controlará retenção e autorização; critérios de expurgo após o prazo deverão preservar obrigações de auditoria e integridade.
+
+### Filtros do histórico de exportações — APROVADO (09/11/2026)
+
+O histórico permitirá filtrar por **período** (dentro da retenção de 15 meses), **estado da exportação** (Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada), **usuário solicitante** (somente quando houver autorização para consultar solicitações de terceiros; nos demais casos, apenas as próprias solicitações) e **formato do arquivo** (Excel ou PDF). Os filtros poderão ser combinados. O backend validará identidade, permissões e escopo, sem confiar no frontend. **PENDENTE:** aplicação/limpeza dos filtros, paginação e ordenação.
