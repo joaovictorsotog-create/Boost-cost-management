@@ -1261,3 +1261,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - A resposta da solicitação deve ser genérica, sem revelar se o endereço informado possui ou não uma conta.
 - Após redefinição bem-sucedida da senha, invalidar todas as sessões anteriores do usuário.
 - Registrar a solicitação e o resultado da recuperação na auditoria, sem registrar senha ou token em texto aberto.
+
+
+### Política de senha — decisão aprovada (09/11/2026)
+- Comprimento mínimo de 12 caracteres.
+- Aceitar frases-senha e espaços.
+- Não exigir troca periódica obrigatória de senha.
+- Bloquear senhas conhecidas por vazamentos ou muito comuns, usando mecanismo de verificação adequado.
+- Permitir uso de gerenciadores de senha e colagem no campo de senha.
+- Não impor regras artificiais obrigatórias de combinação de maiúsculas, números e símbolos.
