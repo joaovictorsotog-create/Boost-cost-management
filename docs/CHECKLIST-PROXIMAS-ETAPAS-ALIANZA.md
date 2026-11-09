@@ -598,3 +598,13 @@ Legenda:
 - [x] Não transferir automaticamente reconhecimento, responsável, lembretes ou prazos.
 - [x] Validar e persistir a relação no backend, respeitando permissões de consulta.
 - [x] Submeter o novo alerta ao fluxo normal de classificação, reconhecimento, lembretes, resolução e auditoria.
+
+
+### Histórico de reincidências de alertas críticos — decisão aprovada (09/11/2026)
+
+- [x] Criar visualização administrativa própria para **Histórico de reincidências**, separada dos alertas pendentes.
+- [x] Permitir consultar alertas relacionados à mesma ocorrência sem fundir registros independentes.
+- [x] Exibir, conforme permissões, identificadores, datas de criação/resolução, estados e quantidade de alertas relacionados.
+- [x] Manter a consulta histórica sem alterar estados ou executar ações em lote.
+- [x] Manter relações, dados, auditoria e autorização sob controle do backend.
+- [x] Respeitar permissões e impedir exposição de informações protegidas por meio das relações históricas.
