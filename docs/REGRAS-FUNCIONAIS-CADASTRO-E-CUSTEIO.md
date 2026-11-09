@@ -1362,3 +1362,11 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Os dados anteriores permanecerão identificados como última atualização confirmada até que a nova consulta seja validada pelo backend.
 - A suspensão ou redução das consultas não poderá pausar, reiniciar, cancelar ou alterar a solicitação de exportação.
 - O mecanismo técnico e os limites de frequência para a tela ativa e inativa permanecem pendentes de definição.
+
+### Frequência de atualização automática dos detalhes — decisão aprovada (09/11/2026)
+
+- Enquanto a tela de detalhes estiver ativa e em primeiro plano, o sistema consultará o backend em intervalos de **10 segundos** para obter atualizações da solicitação.
+- O intervalo é uma referência máxima de frequência; o mecanismo deverá evitar chamadas simultâneas, aplicar controle de carga e respeitar limites, falhas e capacidade do backend.
+- Se uma consulta ainda estiver em andamento, não deverá ser iniciada outra consulta concorrente para a mesma tela/solicitação.
+- Ao deixar a tela inativa ou em segundo plano, aplicam-se as regras aprovadas de suspensão ou redução das consultas; ao retornar, deverá ocorrer consulta imediata para validar o estado atual.
+- O intervalo não altera a regra de que somente dados confirmados pelo backend podem ser apresentados como atuais.
