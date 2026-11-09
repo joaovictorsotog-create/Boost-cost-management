@@ -927,3 +927,15 @@ Legenda:
 - [x] Registrar tentativas relevantes e bloqueios na auditoria, sem armazenar senhas ou segredos.
 - [x] Evitar que terceiros provoquem indisponibilidade prolongada da conta por tentativas deliberadas.
 - [ ] Definir progressão e limite máximo, janela de contagem, reinício, origens compartilhadas, desafios adicionais, retenção e critérios de teste.
+
+
+### Encerramento de conta — decisão aprovada (09/11/2026)
+- [x] Restringir encerramento a Administrador.
+- [x] Exigir justificativa e confirmação explícita.
+- [x] Invalidar todas as sessões e tokens e impedir novos logins após confirmação backend.
+- [x] Preservar auditoria, histórico e registros necessários à integridade.
+- [x] Não liberar automaticamente o e-mail para outra conta.
+- [x] Permitir reativação somente administrativa, preservando histórico e exigindo novo login.
+- [x] Registrar operação, responsável, justificativa, data/hora e resultado na auditoria.
+- [x] Confirmar conclusão na interface somente após resposta do backend.
+- [ ] Definir estados de conta, retenção/tratamento de dados pessoais, solicitações pendentes, vínculos, notificações e testes.
