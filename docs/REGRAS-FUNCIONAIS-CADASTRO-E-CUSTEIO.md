@@ -502,3 +502,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A alteração de família é exclusivamente classificatória: não modifica o custo unitário, a unidade de medida, o tipo do item nem sua estrutura de composição.
 - O histórico de alterações do item deve ser preservado e registrar a mudança de família, permitindo identificar a classificação anterior e a nova, o responsável e a data/hora da operação.
 - A operação deve respeitar as permissões, validações, prévia, confirmação explícita e auditoria já aprovadas para alterações cadastrais.
+
+
+## 47. Exclusão definitiva de famílias — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Uma família que já tenha sido utilizada em qualquer vínculo ou registro histórico não poderá ser excluída definitivamente, mesmo que atualmente não possua itens vinculados.
+- Famílias já utilizadas devem ser preservadas para manter a integridade referencial, a rastreabilidade e o histórico. Quando aplicável, sua gestão deverá ocorrer por inativação e arquivamento, conforme as regras aprovadas.
+- A exclusão definitiva poderá ser permitida somente quando a família nunca tiver sido utilizada e não possuir vínculos atuais ou históricos.
+- Antes da exclusão permitida, o sistema deverá apresentar prévia com a identificação da família e confirmação explícita do Administrador; a operação deverá ser registrada na auditoria.
+- A verificação de uso deve considerar o histórico, e não apenas a quantidade atual de itens vinculados. A forma técnica de identificar e comprovar esse uso será definida na especificação de dados.
