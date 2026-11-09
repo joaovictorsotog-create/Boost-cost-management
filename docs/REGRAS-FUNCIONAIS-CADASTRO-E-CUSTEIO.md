@@ -1080,3 +1080,16 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Após o envio efetivo do terceiro lembrete, não haverá novos lembretes automáticos naquele ciclo. O alerta permanecerá aguardando reconhecimento até uma ação administrativa; não haverá reconhecimento, resolução, transferência de titularidade ou encerramento automático.
 - O backend controlará agendamento, contagem, elegibilidade, envio efetivo e concorrência. Falhas de envio não poderão ser contabilizadas como lembrete efetivamente enviado.
 - Cada lembrete e resultado de envio será registrado na linha do tempo/auditoria, com data/hora e ciclo correspondente.
+
+### Apresentação visual de alertas críticos — decisão aprovada (09/11/2026)
+
+- O sino global exibirá indicador visual vermelho e quantidade de alertas críticos em **Aguardando reconhecimento**. O indicador/contagem será atualizado somente com estado confirmado pelo backend e deixará de incluir cada alerta após seu reconhecimento válido.
+- O painel aberto pelo sino dará destaque visual próprio aos alertas críticos ainda não reconhecidos, com prioridade visual sobre notificações não críticas.
+- Entre alertas críticos, será preservada a ordem cronológica, do mais recente para o mais antigo. As demais notificações serão apresentadas depois, também em ordem cronológica.
+- Cada alerta crítico exibirá sua prioridade e estado operacional de forma textual, sem depender exclusivamente de cor ou som.
+- Alertas críticos reconhecidos continuarão identificados como críticos, mas com apresentação distinta do estado **Aguardando reconhecimento**.
+- Alertas resolvidos deixarão a lista de pendências ativas, mas permanecerão disponíveis no histórico completo.
+- Alertas reabertos voltarão a receber o destaque de **Aguardando reconhecimento** e serão contabilizados novamente no sino, conforme o novo ciclo.
+- O painel não marcará notificações como lidas, reconhecidas ou resolvidas apenas por ser aberto ou fechado.
+- A apresentação visual não substituirá controles de acesso nem regras de negócio. Classificação, prioridade, estado e contagens serão definidos/validados pelo backend; o frontend apenas apresentará os dados confirmados.
+- O destaque visual deverá ser claro e consistente, sem transformar notificações não críticas em alertas urgentes. Detalhes finais de cores, ícones, acessibilidade e responsividade permanecem sujeitos à especificação visual e testes de aceite.
