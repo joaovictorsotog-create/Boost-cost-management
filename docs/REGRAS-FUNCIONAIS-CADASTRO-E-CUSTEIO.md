@@ -1536,3 +1536,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Cancelamento antecipado deve ser uma ação explícita, auditada e validada pelo backend; não pode apagar o histórico do período exercido.
 - A substituição não pode deixar o sistema sem Administrador ativo nem ser usada para contornar controles de dupla autorização já definidos.
 - Permanecem pendentes: granularidade do escopo, possibilidade de mais de um substituto, regras de cancelamento antecipado, sobreposição de períodos, notificações, indisponibilidade do substituto e critérios de teste.
+
+
+### Painel central de auditoria administrativa — decisão aprovada (09/11/2026)
+- Disponibilizar área centralizada para consulta dos eventos de auditoria das operações administrativas.
+- Oferecer filtros combináveis por usuário responsável, período, tipo de operação e resultado; manter critérios de consulta separados dos resultados até aplicação explícita, seguindo o padrão de filtros já definido para o sistema.
+- Permitir abrir os detalhes de cada evento, respeitando permissões e sem expor segredos, tokens ou dados que o perfil não esteja autorizado a consultar.
+- Permitir exportação em Excel e PDF, respeitando os filtros aplicados e as permissões do solicitante; registrar cada exportação no Log de Atividades.
+- Manter o histórico protegido contra edição ou exclusão pela interface; correções técnicas excepcionais devem preservar rastreabilidade, autoria e integridade, sem sobrescrever silenciosamente eventos anteriores.
+- Manter este painel distinto do histórico de notificações e do histórico de solicitações, ainda que consulte eventos relacionados.
+- Aplicar paginação e ordenação controladas pelo backend, preservando filtros e critérios entre páginas.
+- Permanecem pendentes: perfis autorizados e escopo de visualização, catálogo de eventos, campos exibidos por evento, retenção, paginação/ordenação específicas, limites e processamento das exportações, mascaramento de dados e critérios de aceite/teste.
