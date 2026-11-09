@@ -133,6 +133,8 @@ Não assumir decisões para os pontos abaixo sem confirmação:
 - Unidades aprovadas: **metro, quilograma (kg), metro quadrado (m²) e unidade**.
 - Cada item utiliza uma única unidade. Não há unidades alternativas nem conversão automática.
 - O ID interno é numérico e sua organização será definida manualmente pelo administrador; serve para busca e organização.
+- Cada item deve pertencer a **uma única família específica e obrigatória**. A família é parte da classificação principal do item e orienta sua localização/pesquisa; não é uma etiqueta opcional nem admite múltiplas famílias para o mesmo item.
+- Cada item deve pertencer a **uma única família específica e obrigatória**, utilizada como classificação principal e critério de localização/pesquisa. Não atribuir múltiplas famílias ao mesmo item.
 - Famílias/classificações são cadastráveis e editáveis. A família não determina a unidade de medida.
 - Busca de itens pode utilizar ID, descrição ou família.
 - Uma categoria/família só pode ser excluída se não houver itens vinculados; se houver, os itens devem ser reclassificados primeiro.
