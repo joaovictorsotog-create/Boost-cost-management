@@ -409,3 +409,14 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - Não será permitida a inativação enquanto houver itens vinculados; os itens deverão ser reclassificados primeiro.
 - Famílias inativas não serão oferecidas na seleção de família do Cadastro Central.
 - O registro da família será preservado. Regras adicionais de reativação e visibilidade em consultas permanecem pendentes.
+
+
+## 22. Decisão incremental — reativação de famílias inativas (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O administrador poderá reativar uma família que tenha sido inativada anteriormente.
+- A família reativada volta a aparecer como opção no campo Família do Cadastro Central.
+- A operação recupera o registro existente; não cria uma nova família nem altera sua identidade ou histórico.
+- A unicidade do nome também será validada na reativação. Havendo conflito com outra família, a operação fica bloqueada até a resolução do conflito.
+- Reativar uma família não vincula itens automaticamente; a classificação dos itens continua sendo explícita.
