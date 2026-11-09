@@ -1192,3 +1192,14 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A exportação é uma operação de consulta: não altera alertas, relações históricas, estados ou registros de origem.
 - A geração e a disponibilização do arquivo só serão apresentadas como concluídas após confirmação do backend; falhas ou interrupções não poderão ser indicadas como sucesso.
 - Limites de volume, expiração/armazenamento temporário dos arquivos, proteção contra compartilhamento indevido e critérios de formatação permanecem pendentes de especificação técnica.
+
+### Proteção dos arquivos exportados do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- Os arquivos exportados serão temporários e não terão armazenamento permanente automático.
+- O acesso será disponibilizado por link individual, vinculado ao usuário autorizado que solicitou a exportação.
+- O link expirará automaticamente após **30 minutos**.
+- Os arquivos não poderão ser disponibilizados por endereço público ou acesso anônimo.
+- No momento do download, o backend deverá revalidar a identidade, a autorização e as permissões atuais do usuário.
+- O backend controlará geração, armazenamento temporário, vínculo do link ao usuário, expiração e autorização de download.
+- A interface não poderá confirmar disponibilidade ou download antes da confirmação correspondente do backend.
+- A implementação deverá impedir que o compartilhamento do link, por si só, conceda acesso a outro usuário.
