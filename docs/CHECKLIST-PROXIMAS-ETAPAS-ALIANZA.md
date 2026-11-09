@@ -679,3 +679,11 @@ Legenda:
 - [x] Exibir **Cancelada** somente após confirmação backend.
 - [x] Em disputa com conclusão/falha ou quando o cancelamento não for possível, apresentar o estado real confirmado pelo backend.
 - [x] Manter validação, concorrência e persistência do estado final sob autoridade do backend.
+
+### Auditoria do cancelamento de exportação — decisão aprovada (09/11/2026)
+
+- [x] Registrar pedido de cancelamento no Log de Atividades com exportação, usuário e data/hora.
+- [x] Registrar separadamente o resultado final confirmado pelo backend, com data/hora.
+- [x] Distinguir pedido de cancelamento de cancelamento efetivo.
+- [x] Proteger os registros de auditoria contra edição/exclusão pela interface.
+- [x] Exibir o resultado final somente após confirmação do backend.
