@@ -697,3 +697,11 @@ Legenda:
 - [x] Respeitar as regras aprovadas de proteção, vínculo individual e expiração de 30 minutos para downloads.
 - [x] Validar identidade e permissões no backend, impedindo acesso não autorizado a solicitações de terceiros.
 - [ ] Definir retenção do histórico, filtros, paginação e detalhamento visual.
+
+### Localização da área de exportações — decisão aprovada (09/11/2026)
+
+- [x] Posicionar a área em Configurações → Exportações.
+- [x] Disponibilizar acesso permanente pelo menu do usuário para a mesma área.
+- [x] Manter o histórico operacional separado do Log de Atividades.
+- [x] Preservar no Log de Atividades os eventos de auditoria previstos.
+- [x] Manter identidade e permissões validadas pelo backend, sem concessão de privilégios pelo acesso de menu.
