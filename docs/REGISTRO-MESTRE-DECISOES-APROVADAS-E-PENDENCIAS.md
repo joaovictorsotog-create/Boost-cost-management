@@ -951,3 +951,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O usuário deve compreender o volume e a natureza das mudanças sem precisar abrir cada aviso individualmente.
 - A contagem por categoria não pode revelar dados de registros cujo acesso foi revogado; permissões e confidencialidade prevalecem.
 - Permanecem pendentes os textos finais, apresentação visual, critérios de classificação/contagem e critérios técnicos/testes de aceite.
+
+### Sino de notificações e alertas sonoros — 09/11/2026
+
+**Status: APROVADO**
+
+- O resumo consolidado ficará permanentemente acessível pelo sino de notificações.
+- O sino mantém indicador visual enquanto houver notificações não lidas; o indicador deixa de sinalizar após serem marcadas como lidas.
+- O usuário poderá abrir o sino e consultar o resumo por categoria.
+- Haverá opções de alerta sonoro, incluindo ativar/desativar o som; os alertas não podem se repetir indefinidamente nem gerar excesso de notificações.
+- Permissões e confidencialidade continuam prevalecendo em todos os avisos.
+- Permanecem pendentes detalhes de configuração, seleção de sons, volume, disparo, frequência, agrupamento e sincronização entre dispositivos.
