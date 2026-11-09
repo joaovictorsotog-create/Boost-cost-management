@@ -842,3 +842,12 @@ Legenda:
 - [x] Manter e-mail antigo válido até a confirmação; bloquear endereço já associado a outra conta.
 - [x] Registrar eventos administrativos e de convite na auditoria.
 - [ ] Especificar detalhes técnicos de entrega de e-mail, armazenamento/hash de tokens, limitação de tentativas, proteção contra enumeração de contas, recuperação de acesso e critérios de aceite/testes.
+
+
+### Proteções adicionais para alteração de e-mail — decisão aprovada (09/11/2026)
+- [x] Exigir autenticação recente antes da solicitação.
+- [x] Avisar o endereço antigo sobre a tentativa de alteração.
+- [x] Permitir contestação de solicitação não reconhecida.
+- [x] Bloquear a alteração pendente quando houver contestação válida, mantendo o e-mail atual.
+- [x] Registrar tentativas, avisos, contestações, bloqueios e resultados na auditoria.
+- [ ] Definir tecnicamente janela de autenticação recente, canal/fluxo de contestação, tratamento de disputa e critérios de aceite/testes.
