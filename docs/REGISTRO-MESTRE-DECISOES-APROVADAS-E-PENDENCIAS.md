@@ -1003,3 +1003,11 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Fechar não marca notificações como lidas nem altera seu estado.
 - Ações de fechamento preservam a tela e o contexto atuais.
 - Acessibilidade, gerenciamento de foco e compatibilidade técnica permanecem pendentes.
+
+### Largura e adaptação do painel de notificações — APROVADO (09/11/2026)
+
+- A largura será adaptável ao espaço disponível, sem largura fixa universal.
+- O painel respeitará os limites da área visível e não poderá ficar cortado ou inacessível.
+- Em telas grandes, manter formato compacto alinhado ao sino; em telas menores, adaptar a largura para leitura e interação.
+- Preservar a tela atual e as regras de abertura/fechamento aprovadas.
+- Larguras exatas, margens e pontos de quebra permanecem pendentes.
