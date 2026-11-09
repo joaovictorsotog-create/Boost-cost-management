@@ -1022,3 +1022,12 @@ Legenda:
 - [x] Preservar contexto investigativo sem revelar valores secretos.
 - [x] Aplicar proteção no backend, APIs, armazenamento e exportações; não depender apenas da interface.
 - [ ] Definir catálogo de dados sensíveis, política de redação, tratamento de vazamentos acidentais, gestão de evidências, exceções técnicas e testes.
+
+
+### Tentativas de acesso indevido à auditoria — decisão aprovada (09/11/2026)
+- [x] Registrar tentativas fora das permissões, inclusive via API, com identidade disponível, data/hora, recurso/operação segura e resultado.
+- [x] Não revelar existência/conteúdo de recursos protegidos nem registrar segredos nos eventos de segurança.
+- [x] Detectar padrões repetidos/sistemáticos e classificar alertas Alta ou Crítica conforme risco.
+- [x] Preservar evidências e registrar investigação, contenção, responsável, ações e resultado.
+- [x] Aplicar controles no backend/API, não apenas na interface.
+- [ ] Definir limiares/janelas, correlação de origens, falsos positivos, escalonamento, retenção, resposta a incidentes e testes.
