@@ -731,3 +731,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Em tentativas simultâneas, somente uma operação de início de análise pode ser aceita pelo backend; as demais recebem o estado atualizado e a identificação do responsável.
 - A exclusividade deve ser garantida no backend por controle atômico de concorrência, nunca apenas pela interface.
 - Detalhes técnicos de concorrência, recuperação de falhas e liberação de análises abandonadas permanecem pendentes de especificação.
+
+
+## 49. Encerramento voluntário da análise sem decisão (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O Administrador responsável pode usar a ação **Encerrar análise sem decisão**, mediante confirmação explícita.
+- Confirmado e persistido pelo backend, o pedido retorna a **Pendente**, perde a titularidade anterior e fica disponível a outro Administrador.
+- A operação é auditada com responsável, data/hora e solicitação.
+- Fechar navegador, sair do sistema ou ficar inativo não encerra a análise: ela permanece **Em análise**.
+- Os três lembretes por inatividade não liberam automaticamente a solicitação.
+- Estado, titularidade e auditoria são atualizados consistentemente no backend.
