@@ -1314,3 +1314,18 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A ordenação escolhida deverá ser preservada durante a navegação entre páginas.
 - Quando duas ou mais solicitações tiverem a mesma data e horário, o identificador único da solicitação será utilizado como critério adicional de desempate, garantindo uma ordem estável.
 - A ordenação, os critérios e a paginação serão validados e executados pelo backend.
+
+
+### Tela de detalhes da solicitação de exportação — decisão aprovada (09/11/2026)
+
+Ao selecionar uma solicitação no histórico, o usuário poderá abrir uma visualização individual, somente leitura, com os seguintes dados, conforme disponibilidade e autorização:
+
+- **Identificação:** identificador único da solicitação e usuário solicitante.
+- **Solicitação:** data e horário da solicitação, formato do arquivo (Excel ou PDF) e filtros efetivamente utilizados.
+- **Processamento:** estado atual confirmado pelo backend e datas/horários de início e encerramento, quando disponíveis.
+- **Resultado:** quantidade de registros exportados e resultado final confirmado.
+- **Cancelamentos e falhas:** motivo, quando aplicável, e respectivos registros de data e horário.
+- **Download:** acesso ao arquivo somente quando a exportação estiver concluída, o usuário estiver autorizado e o link ainda estiver dentro do prazo de validade de 30 minutos.
+- **Auditoria:** histórico dos eventos relevantes da solicitação, sem possibilidade de edição ou exclusão pela interface.
+
+A consulta não altera a solicitação nem seus registros. O backend valida identidade, permissões e dados apresentados; a interface não poderá antecipar estados ou resultados não confirmados.
