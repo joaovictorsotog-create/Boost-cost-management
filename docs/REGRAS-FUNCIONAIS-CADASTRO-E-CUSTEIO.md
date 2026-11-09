@@ -556,7 +556,7 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 **Status: APROVADO pelo usuário.**
 
 - Todo item do Cadastro Central poderá ser excluído, inclusive quando possuir vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos, por si só, não impede a exclusão.
-- Antes da confirmação, o sistema deve verificar dependências e apresentar aviso/prévia de impacto, informando a quantidade de registros afetados e permitindo consultar a relação por código/ID e descrição ou pelos identificadores próprios do módulo.
+- Antes da confirmação, o sistema deve verificar dependências e apresentar uma prévia resumida de impacto, informando a quantidade total de estruturas/registros afetados e os tipos de impacto relevantes. A prévia não deve abrir nem listar individualmente cada estrutura ou seus componentes, para evitar excesso de informação e poluição visual.
 - A prévia deve explicar as consequências concretas, incluindo quais estruturas serão afetadas e que os custos dos produtos compostos dependentes serão recalculados após a exclusão.
 - Após a confirmação explícita do usuário autorizado, o sistema deverá remover automaticamente as referências atuais ao item excluído nas estruturas e registros dependentes, conforme as regras do módulo, e recalcular os custos de todos os compostos afetados, direta ou indiretamente, propagando o recálculo até os produtos finais.
 - A exclusão e o tratamento dos vínculos devem ser executados com validação no backend, consistência transacional e registro completo na auditoria. A interface só poderá indicar conclusão após confirmação do backend; falhas não podem deixar vínculos quebrados nem ser apresentadas como sucesso integral.
