@@ -1706,3 +1706,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A reclassificação não pode ser usada para reduzir artificialmente a prioridade, evitar prazos, contornar bloqueios ou dispensar contenção, correção e reteste aplicáveis.
 - Registrar classificação anterior e nova, justificativa, evidências, Administrador responsável e data/hora, preservando o histórico completo.
 - Pendências: definir critérios objetivos de reclassificação, evidências mínimas, fluxo de aprovação e efeitos sobre prazos e escalonamentos.
+
+### Tratamento de reincidência após correção — decisão aprovada (09/11/2026)
+- Quando uma falha corrigida voltar a ocorrer, o sistema deve identificar e registrar a reincidência, vinculando-a à falha original quando houver evidência técnica suficiente de relação.
+- Registrar data/hora, evidências, origem da identificação, recurso/componente afetado e impacto observado na nova ocorrência.
+- Reavaliar o risco e o impacto atuais; a classificação original permanece até reavaliação formal conforme as regras de reclassificação aprovadas.
+- Conforme a natureza e a correlação da ocorrência, reabrir a falha original ou criar uma nova ocorrência com vínculo explícito à falha anterior; não fundir ocorrências distintas nem presumir identidade apenas por semelhança superficial.
+- Gerar alerta conforme a classificação e prioridade aplicáveis, respeitando as regras de correlação, reincidência, reconhecimento e histórico de alertas.
+- Preservar integralmente o encerramento anterior e a nova trilha de eventos, sem sobrescrita ou perda de evidências.
+- Pendências: critérios técnicos de correlação, limiares para distinguir reincidência de ocorrência semelhante independente, critérios de reabertura versus nova ocorrência e regras de alerta.
