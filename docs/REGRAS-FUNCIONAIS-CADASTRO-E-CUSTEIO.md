@@ -795,3 +795,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O backend é a fonte de verdade para geração, ordenação, integridade e autorização de acesso aos registros. O frontend não pode criar, alterar ou apagar eventos históricos por conta própria.
 - O registro de consultas deve se limitar a consultas/ações relevantes para a rastreabilidade da análise; critérios exatos de relevância, granularidade, retenção e acesso permanecem pendentes de especificação técnica.
 - A aprovação desta regra não define tecnologia, esquema de dados, endpoints, retenção legal ou implementação.
+
+
+## 69. Linha do tempo única da solicitação na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O histórico de cada solicitação deve ser apresentado em uma única linha do tempo cronológica, reunindo os eventos relevantes do ciclo de vida da solicitação.
+- A linha do tempo deve integrar, conforme aplicável: início e retomada de análise, encerramento sem decisão, lembretes, transferências de titularidade e justificativas, consultas/ações relevantes, aprovação e rejeição.
+- Cada evento deve apresentar as informações de identificação já aprovadas: ator responsável, data/hora, tipo de operação e resultado; incluir justificativa e ciclo de titularidade quando aplicável.
+- A ordem deve refletir a sequência temporal real dos eventos, inclusive entre diferentes ciclos e titulares.
+- A linha do tempo é uma forma unificada de consulta; não substitui nem altera os registros de auditoria mantidos pelo backend.
+- Permissões de visualização continuam sendo aplicadas pelo backend. Critérios de filtros, paginação, agrupamento visual e detalhes de apresentação permanecem pendentes.
