@@ -782,3 +782,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - As justificativas integram o histórico permanente da solicitação, vinculadas a cada evento de transferência e aos respectivos titulares, responsáveis pela operação e datas/horários.
 - O histórico deve permitir compreender a sequência de titularidades e os motivos informados, sem sobrescrita ou exclusão de justificativas anteriores.
 - O acesso respeita as permissões administrativas aplicáveis; o novo titular recebe acesso ao histórico necessário para continuar a análise.
+
+
+## 68. Histórico integral de atividades da análise na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Cada solicitação da Central de Aprovações deve manter histórico cronológico, cumulativo e individual de suas atividades relevantes.
+- Registrar, no mínimo: início formal da análise; retomada da análise após novo acesso; encerramento sem decisão; lembretes enviados, com ciclo, data/hora e resultado; transferências de titularidade e justificativas; aprovações e rejeições; consultas e demais ações relevantes realizadas durante a análise.
+- Cada evento deve identificar a solicitação, o Administrador/ator responsável, data/hora, tipo de operação e resultado. Quando aplicável, registrar também o ciclo de titularidade e os dados necessários para compreender o contexto da ação.
+- O histórico deve preservar a sequência dos acontecimentos, inclusive ciclos anteriores, sem sobrescrita ou exclusão pela interface.
+- O backend é a fonte de verdade para geração, ordenação, integridade e autorização de acesso aos registros. O frontend não pode criar, alterar ou apagar eventos históricos por conta própria.
+- O registro de consultas deve se limitar a consultas/ações relevantes para a rastreabilidade da análise; critérios exatos de relevância, granularidade, retenção e acesso permanecem pendentes de especificação técnica.
+- A aprovação desta regra não define tecnologia, esquema de dados, endpoints, retenção legal ou implementação.
