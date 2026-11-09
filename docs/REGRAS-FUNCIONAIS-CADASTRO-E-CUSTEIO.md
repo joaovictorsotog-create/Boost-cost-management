@@ -701,3 +701,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Fechar o navegador, sair do sistema ou permanecer inativo não equivale a encerramento voluntário: nesses casos a solicitação permanece **Em análise**, sob a titularidade atual.
 - O limite de três lembretes por inatividade permanece válido e não provoca liberação automática.
 - A transição de estado, liberação da titularidade e auditoria devem ocorrer de forma consistente no backend; a interface só informa sucesso após confirmação.
+
+
+## 61. Nova assunção de solicitação após encerramento voluntário (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após encerrar voluntariamente uma análise sem decisão, a solicitação retorna a **Pendente** e fica disponível para qualquer Administrador autorizado, inclusive para o mesmo Administrador que encerrou a análise anterior.
+- Não haverá impedimento ou período de espera específico para que o mesmo Administrador assuma novamente a solicitação.
+- Cada nova assunção inicia um novo ciclo de análise, com novo registro de responsável e data/hora de início, preservando integralmente os ciclos anteriores no histórico/auditoria.
+- A nova assunção continua sujeita ao controle de titularidade exclusiva e à validação atômica do backend.
