@@ -1615,3 +1615,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Registrar medidas de contenção, fundamento, escopo, início, término, responsável/sistema executor e resultado, preservando evidências e rastreabilidade.
 - Controles devem prever monitoramento, revisão e liberação segura de bloqueios temporários; não aplicar bloqueio permanente automático baseado apenas em sinais isolados.
 - Pendências: limites e janelas por operação/perfil, critérios de risco e correlação, duração e escalonamento de bloqueios, exceções operacionais, falsos positivos, observabilidade, resposta a incidentes e testes de carga/segurança.
+
+
+### Plano de resposta a incidentes de integridade e acesso à auditoria — decisão aprovada (09/11/2026)
+- Diante de suspeita ou confirmação de violação, iniciar procedimento formal de resposta: detectar e classificar o incidente; preservar evidências imediatamente; conter o acesso ou componente comprometido; notificar os Administradores responsáveis; investigar causa, alcance e registros afetados; documentar resolução e medidas preventivas.
+- Preservação de evidências deve manter integridade, origem, cronologia e cadeia de custódia, sem sobrescrever os registros originais.
+- Contenção deve ser proporcional e não pode destruir evidências nem mascarar a extensão do incidente.
+- Bloquear o acesso comprometido, isoladamente, não caracteriza resolução. O incidente só pode ser encerrado após investigação, avaliação do impacto, registro das ações e resultados e definição/execução das medidas corretivas e preventivas aplicáveis.
+- Registrar responsáveis, datas/horários, classificação, decisões, notificações, evidências, ações de contenção, investigação, impacto e fundamento do encerramento.
+- Pendências: níveis e critérios de severidade, prazos de resposta/escalonamento, responsáveis titulares e substitutos, canais de notificação, cadeia de custódia detalhada, critérios formais de encerramento, comunicação externa e testes/simulações.
