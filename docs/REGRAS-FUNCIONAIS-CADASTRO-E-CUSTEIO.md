@@ -1624,3 +1624,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Bloquear o acesso comprometido, isoladamente, não caracteriza resolução. O incidente só pode ser encerrado após investigação, avaliação do impacto, registro das ações e resultados e definição/execução das medidas corretivas e preventivas aplicáveis.
 - Registrar responsáveis, datas/horários, classificação, decisões, notificações, evidências, ações de contenção, investigação, impacto e fundamento do encerramento.
 - Pendências: níveis e critérios de severidade, prazos de resposta/escalonamento, responsáveis titulares e substitutos, canais de notificação, cadeia de custódia detalhada, critérios formais de encerramento, comunicação externa e testes/simulações.
+
+
+### Testes periódicos de segurança — decisão aprovada (09/11/2026)
+- Executar testes de segurança trimestrais e testes extraordinários após mudanças relevantes que afetem autenticação, autorização, auditoria, APIs, armazenamento ou infraestrutura de segurança.
+- Cobrir, no mínimo: acesso não autorizado; bypass de permissões via API; alteração/adulteração de registros de auditoria; exposição de credenciais e dados sensíveis; resistência a ataques automatizados; recuperação após incidentes.
+- Cada ciclo deve produzir relatório com escopo, ambiente, data, métodos, resultados, evidências seguras, classificação de falhas, riscos e plano de correção com responsáveis e prazos.
+- Testes devem ser autorizados, controlados e executados em ambiente/escopo apropriado, sem comprometer dados de produção ou disponibilidade; qualquer teste em produção exige autorização e salvaguardas específicas.
+- Falhas críticas devem ser tratadas com prioridade imediata e submetidas ao processo de resposta a incidentes quando aplicável; correções precisam de reteste e evidência de encerramento.
+- Pendências: metodologia e padrões de teste, independência dos executores, critérios de severidade, prazos de correção, evidências/relatórios, testes de terceiros, escopo de produção e critérios de aceite.
