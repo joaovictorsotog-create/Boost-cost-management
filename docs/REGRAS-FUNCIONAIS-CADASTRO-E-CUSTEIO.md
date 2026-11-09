@@ -1285,3 +1285,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O backend deverá validar identidade, permissões e escopo de cada consulta, inclusive o filtro por usuário solicitante. O frontend não poderá ampliar o conjunto de registros acessíveis.
 - Os resultados deverão respeitar também a retenção de 15 meses e as regras de acesso individual aos arquivos exportados.
 - Comportamento de aplicação/limpeza dos filtros, paginação e ordenação dos resultados permanece pendente de definição.
+
+
+### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
+
+- A seleção ou edição dos critérios não executará consulta automaticamente.
+- O botão **Aplicar filtros** executará a consulta com os critérios selecionados.
+- O botão **Limpar filtros** removerá os critérios selecionados.
+- Enquanto o usuário editar critérios ainda não aplicados, os resultados da última consulta aplicada permanecerão visíveis e inalterados.
+- Somente uma nova ação explícita em **Aplicar filtros** substituirá os resultados pela consulta correspondente aos novos critérios.
+- A execução, validação de parâmetros, identidade, permissões e escopo permanecerão sob autoridade do backend.
