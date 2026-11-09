@@ -440,3 +440,17 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A listagem **Configurações → Famílias → Arquivados** também exibirá a data em que cada família foi inativada.
 - Deve ser mostrada a data da inativação mais recente. Caso a família seja reativada e inativada novamente, a data será atualizada.
 - A informação é destinada à consulta e rastreabilidade e não altera as demais regras funcionais de famílias.
+
+## 25. Listagem de famílias ativas — colunas e ações (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+A listagem normal em **Configurações → Famílias** exibirá:
+
+- Nome da família;
+- Quantidade de itens vinculados, calculada automaticamente e somente para consulta;
+- Data de criação;
+- Última atualização;
+- Situação.
+
+A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a regra aprovada de que uma família com itens vinculados não pode ser inativada. Famílias inativas permanecem na área separada **Arquivados**, com data da inativação mais recente e opção de reativação pelo administrador.
