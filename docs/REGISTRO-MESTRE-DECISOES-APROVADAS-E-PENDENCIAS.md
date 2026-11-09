@@ -1131,3 +1131,7 @@ O usuário solicitante poderá pedir o cancelamento de uma exportação enquanto
 ### Auditoria do cancelamento de exportação — APROVADO (09/11/2026)
 
 Todo pedido de cancelamento será registrado no Log de Atividades com identificação da exportação, usuário e data/hora do pedido. O resultado final será registrado separadamente, com data/hora e estado efetivamente confirmado pelo backend. O log distinguirá pedido de cancelamento de cancelamento efetivo e será protegido contra edição/exclusão pela interface. A interface só apresentará o resultado após confirmação backend.
+
+### Acompanhamento e histórico das exportações — APROVADO (09/11/2026)
+
+O usuário terá uma área para acompanhar suas próprias solicitações de exportação e consultar o histórico. Cada solicitação exibirá o estado confirmado pelo backend: **Aguardando processamento**, **Em processamento**, **Cancelamento solicitado**, **Concluída**, **Falhou** ou **Cancelada**. O pedido de cancelamento permanecerá distinto do cancelamento efetivo. Atualizações não poderão antecipar resultados do backend. Para exportações concluídas, disponibilidade e download respeitarão a proteção já aprovada: link individual, acesso autorizado e expiração em 30 minutos. O backend validará identidade e permissões, impedindo acesso não autorizado a solicitações de terceiros. **PENDENTE:** retenção do histórico, filtros, paginação e detalhamento visual.
