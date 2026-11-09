@@ -995,3 +995,11 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O painel é flutuante e mantém o usuário na tela/módulo atual; não redireciona para outra página.
 - Consulta sujeita às permissões e regras de confidencialidade existentes.
 - Dimensões, responsividade, fechamento e detalhes visuais permanecem pendentes.
+
+### Fechamento do painel do sino de notificações — APROVADO (09/11/2026)
+
+- Fechar ao clicar novamente no sino, ao clicar fora do painel ou ao pressionar **Esc**.
+- A tecla Esc fecha o painel contextual, sem executar navegação.
+- Fechar não marca notificações como lidas nem altera seu estado.
+- Ações de fechamento preservam a tela e o contexto atuais.
+- Acessibilidade, gerenciamento de foco e compatibilidade técnica permanecem pendentes.
