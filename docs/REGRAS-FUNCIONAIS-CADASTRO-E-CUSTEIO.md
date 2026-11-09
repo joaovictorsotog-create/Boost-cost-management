@@ -1182,3 +1182,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A troca de página ou de quantidade por página não poderá alterar os alertas nem seus históricos; trata-se apenas de navegação de consulta.
 - A paginação deverá manter os filtros aplicados e a ordenação vigente enquanto o usuário navega entre páginas.
 - O backend validará os parâmetros de paginação e evitará exposição de registros fora do escopo autorizado.
+### Exportação do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- O Histórico de reincidências permitirá exportar os resultados em **Excel** e **PDF**.
+- A exportação respeitará os filtros e o escopo da consulta efetivamente aplicados; critérios apenas editados e ainda não aplicados não poderão alterar silenciosamente o conteúdo exportado.
+- O backend validará a autorização do usuário, inclusive as permissões administrativas aplicáveis, no momento da solicitação e da geração do arquivo.
+- A exportação conterá somente registros e campos que o solicitante esteja autorizado a consultar, sem ampliar acesso por meio do arquivo gerado.
+- Cada operação de exportação será registrada no Log de Atividades/auditoria, com usuário, data/hora, formato solicitado, filtros/escopo aplicados e resultado da operação, sem registrar conteúdo sensível desnecessário.
+- A exportação é uma operação de consulta: não altera alertas, relações históricas, estados ou registros de origem.
+- A geração e a disponibilização do arquivo só serão apresentadas como concluídas após confirmação do backend; falhas ou interrupções não poderão ser indicadas como sucesso.
+- Limites de volume, expiração/armazenamento temporário dos arquivos, proteção contra compartilhamento indevido e critérios de formatação permanecem pendentes de especificação técnica.
