@@ -713,3 +713,13 @@ Legenda:
 - [x] Manter separada a retenção do histórico e a expiração de 30 minutos dos links dos arquivos exportados.
 - [x] Manter política de retenção do Log de Atividades independente.
 - [ ] Definir critérios técnicos de expurgo após o prazo, preservando obrigações de auditoria e integridade.
+
+### Filtros do histórico de exportações — decisão aprovada (09/11/2026)
+
+- [x] Filtrar por período, respeitando a retenção de 15 meses.
+- [x] Filtrar por estado: Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada.
+- [x] Filtrar por usuário solicitante somente conforme permissões; usuários sem autorização consultam apenas as próprias solicitações.
+- [x] Filtrar por formato do arquivo: Excel ou PDF.
+- [x] Permitir combinação dos filtros.
+- [x] Validar identidade, permissões e escopo da consulta no backend.
+- [ ] Definir aplicação/limpeza dos filtros, paginação e ordenação dos resultados.
