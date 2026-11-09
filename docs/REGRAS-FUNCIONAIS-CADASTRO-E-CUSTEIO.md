@@ -1141,3 +1141,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A chave e a decisão de correlação não poderão ser fornecidas ou impostas pelo frontend. O backend controlará geração, validação, concorrência e vinculação de forma auditável.
 - A definição da estrutura técnica da chave e dos atributos específicos por tipo de ocorrência permanece pendente de especificação técnica antes da implementação.
 - A inclusão de uma manifestação em alerta existente não poderá apagar, substituir ou reiniciar silenciosamente o histórico, o reconhecimento ou os prazos do alerta original.
+
+
+### Nova ocorrência após resolução de alerta crítico — decisão aprovada (09/11/2026)
+
+- Se um problema voltar a se manifestar após o alerta anterior ter sido formalmente resolvido, o sistema criará um novo alerta, com identificador e ciclo de vida próprios.
+- O novo alerta manterá uma referência histórica ao alerta anterior relacionado, sem alterar o estado **Resolvido** do alerta anterior.
+- A relação histórica não significa reabertura, continuidade automática ou transferência de reconhecimento, responsável, lembretes ou prazos.
+- O novo alerta seguirá o fluxo normal de classificação, reconhecimento, lembretes, resolução e auditoria.
+- A relação entre os alertas será validada e persistida pelo backend; o frontend apenas apresentará a referência autorizada.
+- A referência histórica não poderá expor informações de alertas anteriores a usuários sem permissão para consultá-los.
