@@ -587,3 +587,14 @@ Legenda:
 - [x] Na ausência de evidência suficiente ou diante de divergência, criar alerta independente; na dúvida, não agrupar.
 - [x] Impedir que o frontend defina ou imponha a correlação.
 - [ ] Especificar estrutura técnica da chave e atributos específicos por tipo de ocorrência.
+
+
+### Nova ocorrência após resolução de alerta crítico — decisão aprovada (09/11/2026)
+
+- [x] Criar novo alerta quando o problema voltar após a resolução formal do anterior.
+- [x] Atribuir ao novo alerta identidade e ciclo de vida próprios.
+- [x] Manter referência histórica ao alerta anterior relacionado.
+- [x] Não reabrir nem alterar o estado resolvido do alerta anterior.
+- [x] Não transferir automaticamente reconhecimento, responsável, lembretes ou prazos.
+- [x] Validar e persistir a relação no backend, respeitando permissões de consulta.
+- [x] Submeter o novo alerta ao fluxo normal de classificação, reconhecimento, lembretes, resolução e auditoria.
