@@ -40,10 +40,12 @@ Legenda:
 
 ## 3. Fechar pendências funcionais — decisões do usuário
 
-### 3.1 Exclusão de item que está em uso
-- [ ] [!] Decidir se um item vinculado a estruturas pode ser excluído após exibir os impactos e receber confirmação explícita.
-- [ ] [!] Ou decidir se o sistema deve bloquear a exclusão enquanto houver vínculos, exigindo substituição/remoção prévia nas estruturas.
-- [ ] Definir o comportamento para item histórico que já foi utilizado em custos anteriores, preservando integridade e rastreabilidade.
+### 3.1 Exclusão e reativação de item em uso
+- [x] Aprovar exclusão lógica mesmo quando houver vínculos atuais, com prévia resumida de impacto e confirmação exclusiva do Administrador.
+- [x] Aprovar remoção automática das referências operacionais atuais e recálculo em cascata dos compostos dependentes após confirmação.
+- [x] Aprovar preservação de fotografias históricas imutáveis de composição e custos anteriores à exclusão.
+- [x] Aprovar preservação do registro original por exclusão lógica e reativação exclusiva pelo Administrador, sem restaurar vínculos antigos automaticamente.
+- [ ] Especificar modelagem técnica, retenção e consulta administrativa dos registros excluídos e fotografias históricas.
 
 ### 3.2 Quantidade-base da estrutura
 - [ ] [!] Definir se toda estrutura representa sempre uma unidade do produto ou se pode representar um lote com quantidade-base configurável.
@@ -129,3 +131,15 @@ Legenda:
 - [x] Definir classificação de aprovado, base documental, pendente, hipótese técnica, conflito e fora de escopo.
 - [x] Definir fluxo de trabalho por módulo, com decisões registradas após confirmação.
 - [ ] Iniciar especificação incremental do Cadastro Central.
+
+
+## 10. Atualização após aprovação da Central de Aprovações (09/11/2026)
+
+- [x] Aprovar organização visual e funcional da Central de Aprovações, com área administrativa própria, contador, filtros, comparação de valores, impacto, histórico, notificações e acompanhamento pelo Editor.
+- [x] Aprovar estados **Pendente** e **Em análise**, com identificação do Administrador responsável pela análise.
+- [x] Definir que abrir para consulta não assume a análise nem altera o estado.
+- [x] Impedir decisões simultâneas: enquanto uma solicitação estiver em análise, outros Administradores podem consultar, mas não aprovar/rejeitar.
+- [x] Prever retorno a **Pendente** quando a análise for abandonada ou encerrada sem decisão.
+- [ ] Especificar prazo e mecanismo de liberação automática de análises abandonadas.
+- [ ] Especificar tecnicamente concorrência, titularidade da análise, transições de estado e critérios de auditoria.
+- [ ] Definir critérios de aceite e cenários de teste da Central de Aprovações.
