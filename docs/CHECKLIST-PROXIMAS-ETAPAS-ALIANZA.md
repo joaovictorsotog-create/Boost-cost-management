@@ -254,3 +254,12 @@ Legenda:
 - [x] Preservar histórico cumulativo, sem sobrescrita ou exclusão pela interface; backend como fonte de verdade.
 - [ ] Definir critérios de relevância e granularidade para registro de consultas e ações.
 - [ ] Definir retenção, permissões detalhadas, integridade técnica e critérios de aceite/testes do histórico.
+
+
+### Linha do tempo única da solicitação
+
+- [x] Aprovar uma linha do tempo cronológica única por solicitação.
+- [x] Reunir nela eventos de análise, retomada, encerramento, lembretes, transferências, justificativas, ações relevantes e decisão final.
+- [x] Exibir responsável, data/hora, operação e resultado, com contexto aplicável.
+- [x] Preservar sequência temporal entre ciclos e titulares; usar registros do backend como fonte de verdade.
+- [ ] Definir filtros, paginação, agrupamento visual e critérios de apresentação.
