@@ -378,3 +378,13 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A família permanece obrigatória e única por item.
 - A seleção referencia uma família já cadastrada, evitando duplicidade e inconsistência de nomenclatura.
 - Famílias vinculadas a itens não poderão ser excluídas até que os itens sejam reclassificados.
+
+
+## 19. Decisão incremental — contagem automática de itens vinculados à família (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A quantidade de itens vinculados a cada família será calculada automaticamente a partir dos vínculos existentes no Cadastro Central.
+- A contagem aumenta ou diminui conforme os itens são associados ou reclassificados entre famílias.
+- O número é informativo e somente leitura; não haverá preenchimento ou ajuste manual.
+- A contagem deve representar os vínculos efetivos e permanecer consistente com o Cadastro Central.
