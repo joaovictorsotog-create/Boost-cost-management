@@ -429,3 +429,11 @@ Legenda:
 - [x] Preservar o estado de leitura ao abrir ou fechar o painel.
 - [x] Aplicar permissões e confidencialidade ao painel e ao histórico.
 - [ ] Definir quantidade de recentes, ordenação, paginação, categorias definitivas e ação de marcar como lida.
+
+### Quantidade de notificações recentes no painel — decisão aprovada (09/11/2026)
+
+- [x] Exibir inicialmente as 10 notificações mais recentes.
+- [x] Ordenar da mais recente para a mais antiga, conforme data/hora do backend.
+- [x] Manter notificações anteriores no histórico completo.
+- [x] Respeitar permissões, confidencialidade e estado de leitura.
+- [ ] Definir paginação/carregamento do histórico e desempate de datas iguais.
