@@ -660,3 +660,12 @@ Legenda:
 - [x] Validar os limites no backend, sem confiar exclusivamente no frontend.
 - [x] Apresentar o estado da solicitação somente conforme retorno confirmado pelo backend.
 - [ ] Detalhar contagem, concorrência entre solicitações simultâneas, retomada após falha e experiência de divisão da consulta.
+
+### Tratamento de falha na exportação — decisão aprovada (09/11/2026)
+
+- [x] Registrar falhas de exportação no Log de Atividades.
+- [x] Impedir disponibilização de arquivos incompletos ou sem integridade confirmada.
+- [x] Liberar a vaga de processamento somente após confirmação backend do encerramento da tarefa.
+- [x] Permitir nova solicitação após confirmação do encerramento da tarefa anterior.
+- [x] Não contabilizar nem apresentar solicitações falhas como exportações concluídas.
+- [x] Manter o backend como autoridade sobre o estado final da tarefa.
