@@ -1463,3 +1463,14 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - P0 bloqueia nova versão até correção e reteste satisfatório ou exceção formal de risco, autorizada e documentada.
 - Exceção registra justificativa, risco residual, controles compensatórios, autorizador, validade e plano de resolução; não apaga nem reclassifica o achado original.
 - Pendências: critérios objetivos, prazos P1/P2/P3, autoridade/segregação para exceções P0, validade/renovação, reteste e bloqueio de release.
+
+
+### Prazos de correção de falhas de segurança — decisão aprovada (09/11/2026)
+- P0 Crítica: contenção imediata, primeira medida em até 4 horas; contenção não equivale à correção definitiva nem ao encerramento.
+- P1 Alta: correção em até 2 dias úteis.
+- P2 Média: correção em até 15 dias úteis.
+- P3 Baixa: correção em até 60 dias úteis.
+- Sistema acompanha prazos, alerta antes/no vencimento e escalona atrasos aos Administradores.
+- Preservar identificação, classificação, responsável, prazo, justificativas, contenção/correção, reteste e encerramento.
+- Prorrogações exigem justificativa e autorização registradas; preservar prazo original e histórico. Prazo não posterga contenção de risco ativo.
+- Pendências: marco inicial, calendário/fuso/feriados, pausas, alertas/escalonamento e autoridade para prorrogar.
