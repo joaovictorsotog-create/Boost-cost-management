@@ -765,3 +765,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Outros Administradores podem consultar, mas não assumir, decidir ou tomar o controle enquanto a titularidade estiver ativa.
 - Estado e titularidade são persistidos no backend, nunca dependentes da sessão ou do frontend.
 - Permanecem os lembretes já aprovados (30 minutos, repetição a cada 30 minutos, máximo de 3), sem liberação automática após os lembretes.
+
+
+## 52. Transferência após o terceiro lembrete (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após o envio efetivo do terceiro lembrete por inatividade, outro Administrador pode transferir a titularidade da solicitação para si.
+- A transferência depende de ação explícita e justificativa obrigatória; não ocorre automaticamente.
+- O backend valida autorização, titularidade e envio do terceiro lembrete, com controle atômico contra concorrência.
+- Persistida a transferência, o novo Administrador torna-se o único titular e o anterior perde a titularidade.
+- Registrar titular anterior e novo, justificativa, responsável pela operação e data/hora, preservando histórico e lembretes anteriores.
+- A transferência não decide a solicitação nem apaga seu histórico.
