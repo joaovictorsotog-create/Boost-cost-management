@@ -818,3 +818,27 @@ Legenda:
 - [x] Impedir consultas simultâneas para a mesma tela/solicitação.
 - [x] Aplicar suspensão/redução em segundo plano e consulta imediata ao retornar.
 - [x] Apresentar como atuais somente dados confirmados pelo backend.
+
+
+### Central de Gerenciamento de Usuários — decisões aprovadas (09/11/2026)
+- [x] Restringir alterações de perfil a Administradores.
+- [x] Impedir aut elevação de permissões pelo próprio usuário.
+- [x] Exigir confirmação explícita e efetivação somente após confirmação do backend.
+- [x] Auditar perfil anterior, perfil novo, responsável e data/hora.
+- [x] Impedir que o último Administrador rebaixe ou suspenda a própria conta e impedir que o sistema fique sem Administrador.
+- [x] Definir convite individual por e-mail com validade de 24 horas.
+- [x] Manter convite pendente até conclusão do cadastro.
+- [x] Permitir ao Administrador reenviar ou cancelar convite.
+- [x] Fazer o usuário definir a própria senha.
+- [x] Vincular convite ao e-mail, usar link de uso único e invalidar link anterior em reenvio.
+- [x] Exigir novo convite após cancelamento; convite expirado não concede acesso.
+- [x] Definir perfil inicial no convite (Administrador, Editor ou Visualizador), sem escolha/alteração pelo convidado.
+- [x] Bloquear convite duplicado para e-mail de conta ativa.
+- [x] Reenviar convite pendente existente; permitir novo convite após expiração preservando histórico.
+- [x] Impedir nova conta para e-mail de usuário suspenso.
+- [x] Suspender imediatamente e invalidar todas as sessões/tokens após confirmação backend.
+- [x] Reativar somente por Administrador, recuperar perfil anterior e exigir novo login.
+- [x] Permitir solicitação de alteração de e-mail pelo usuário com confirmação enviada ao novo endereço.
+- [x] Manter e-mail antigo válido até a confirmação; bloquear endereço já associado a outra conta.
+- [x] Registrar eventos administrativos e de convite na auditoria.
+- [ ] Especificar detalhes técnicos de entrega de e-mail, armazenamento/hash de tokens, limitação de tentativas, proteção contra enumeração de contas, recuperação de acesso e critérios de aceite/testes.
