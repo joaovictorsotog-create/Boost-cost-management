@@ -950,3 +950,15 @@ Legenda:
 - [x] Impedir que a transferência deixe o sistema sem Administrador ativo.
 - [x] Não alterar automaticamente permissões de outros usuários.
 - [ ] Definir escopo, pendências em análise, indisponibilidade/recusa, cancelamento e testes.
+
+
+### Substituição temporária de Administrador — decisão aprovada (09/11/2026)
+- [x] Permitir indicação de substituto temporário que já seja Administrador.
+- [x] Exigir período de início/término, escopo delimitado e confirmação dos dois envolvidos.
+- [x] Ativar somente após confirmação do backend.
+- [x] Não alterar perfil/titularidade permanentemente nem ampliar poderes além do perfil.
+- [x] Preservar autoria das ações, histórico e auditoria.
+- [x] Encerrar automaticamente ao término aprovado, com confirmação backend.
+- [x] Exigir ação explícita e auditada para cancelamento antecipado.
+- [x] Impedir ausência de Administrador ativo e contorno de dupla autorização.
+- [ ] Definir granularidade do escopo, quantidade de substitutos, sobreposição, notificações, indisponibilidade e testes.
