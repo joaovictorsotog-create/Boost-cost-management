@@ -1402,3 +1402,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Registrar investigação e resolução, com responsáveis, datas/horários, evidências, ações e resultado.
 - Recuperação/correção somente por procedimento controlado, autorizado e rastreável.
 - Pendências: mecanismo, cobertura, limiares, canal/escalonamento, responsáveis, contenção/recuperação, metas e testes.
+
+
+### Acesso a dados sensíveis da auditoria — decisão aprovada (09/11/2026)
+- Administradores consultam eventos e evidências necessários à investigação, dentro das permissões e finalidades autorizadas.
+- Nenhum perfil, inclusive Administrador, visualiza ou exporta senhas, tokens, chaves criptográficas, credenciais ou outros segredos de infraestrutura.
+- Mascarar/omitir segredos em consultas, detalhes, relatórios, exportações e logs auxiliares; preferir impedir sua persistência na auditoria.
+- Evidências preservam contexto sem revelar valores secretos, usando metadados, identificadores não secretos e referências seguras.
+- Proteção obrigatória no backend, APIs, armazenamento, interface e exportações; ocultação visual isolada não atende à regra.
+- Pendências: catálogo sensível, política de redação, tratamento de vazamentos acidentais, gestão de evidências, exceções técnicas e testes.
