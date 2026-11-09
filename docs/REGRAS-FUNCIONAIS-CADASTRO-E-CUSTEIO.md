@@ -1525,3 +1525,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A transferência de responsabilidade não altera automaticamente perfis ou permissões de outros usuários.
 - A interface só deve apresentar a transferência como concluída após confirmação do backend.
 - Permanecem pendentes: definição do escopo exato da responsabilidade transferível, tratamento de pendências em análise, indisponibilidade/recusa do destinatário, cancelamento e critérios de teste.
+
+
+### Substituição temporária de Administrador — decisão aprovada (09/11/2026)
+- Permitir que um Administrador indique previamente outro usuário que já possua perfil de Administrador para substituição temporária durante ausência ou afastamento.
+- Exigir definição explícita do período de início e término e confirmação dos dois envolvidos; a substituição só se torna ativa após ambas as confirmações e persistência no backend.
+- Delimitar previamente as responsabilidades e o escopo da substituição; não conceder poderes além dos já associados ao perfil de Administrador nem alterar permanentemente perfis ou titularidade.
+- Preservar a identificação de quem praticou cada ação durante a substituição, mantendo histórico e auditoria íntegros.
+- Encerrar automaticamente a substituição ao término do período aprovado; a interface só deve indicar ativação ou encerramento após confirmação do backend.
+- Cancelamento antecipado deve ser uma ação explícita, auditada e validada pelo backend; não pode apagar o histórico do período exercido.
+- A substituição não pode deixar o sistema sem Administrador ativo nem ser usada para contornar controles de dupla autorização já definidos.
+- Permanecem pendentes: granularidade do escopo, possibilidade de mais de um substituto, regras de cancelamento antecipado, sobreposição de períodos, notificações, indisponibilidade do substituto e critérios de teste.
