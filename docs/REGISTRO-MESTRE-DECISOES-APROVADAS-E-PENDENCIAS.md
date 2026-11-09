@@ -988,3 +988,10 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O sino de notificações ficará sempre visível no cabeçalho global padrão do Alianza, independentemente do módulo/tela acessado pelo usuário.
 - Deve permitir consultar o resumo consolidado e identificar notificações não lidas em toda a navegação autenticada, sempre respeitando permissões e confidencialidade.
 - A visibilidade permanente do sino não força a ativação de alertas sonoros; continuam valendo as preferências individuais de cada usuário.
+
+### Abertura do painel do sino de notificações — APROVADO (09/11/2026)
+
+- Ao clicar no sino global, o painel abre logo abaixo dele, alinhado ao canto superior direito.
+- O painel é flutuante e mantém o usuário na tela/módulo atual; não redireciona para outra página.
+- Consulta sujeita às permissões e regras de confidencialidade existentes.
+- Dimensões, responsividade, fechamento e detalhes visuais permanecem pendentes.
