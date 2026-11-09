@@ -1133,5 +1133,11 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A nova manifestação será registrada na linha do tempo do alerta original, preservando data/hora, origem e informações necessárias para auditoria e acompanhamento.
 - Problemas efetivamente distintos deverão gerar alertas independentes, cada um com identidade, estado, reconhecimento, resolução, lembretes e linha do tempo próprios.
 - A correlação entre uma nova manifestação e uma ocorrência já aberta deverá ser validada pelo backend; o frontend não poderá decidir sozinho que dois eventos são iguais.
-- Os critérios técnicos para identificar equivalência entre ocorrências, tratar falsos agrupamentos e distinguir reincidência de um problema novo permanecem pendentes de especificação antes da implementação.
+- A identificação da mesma ocorrência utilizará uma chave de correlação gerada e validada exclusivamente pelo backend.
+- Para vincular uma nova manifestação a um alerta existente, o backend deverá confirmar, no mínimo: mesma origem/módulo, mesmo tipo de falha ou regra crítica, mesmo registro/recurso/entidade afetada e mesma chave de correlação.
+- A vinculação só poderá ocorrer enquanto o alerta original estiver aberto e não resolvido. Um alerta reconhecido, mas ainda não resolvido, continua elegível; reconhecimento não equivale a resolução.
+- Se o alerta anterior já estiver resolvido, uma manifestação posterior será tratada como nova ocorrência e gerará novo alerta.
+- Se a manifestação afetar outro registro/recurso, corresponder a outro tipo de falha ou não houver evidência suficiente para confirmar equivalência, o backend deverá criar alerta independente. Na dúvida, não agrupar.
+- A chave e a decisão de correlação não poderão ser fornecidas ou impostas pelo frontend. O backend controlará geração, validação, concorrência e vinculação de forma auditável.
+- A definição da estrutura técnica da chave e dos atributos específicos por tipo de ocorrência permanece pendente de especificação técnica antes da implementação.
 - A inclusão de uma manifestação em alerta existente não poderá apagar, substituir ou reiniciar silenciosamente o histórico, o reconhecimento ou os prazos do alerta original.
