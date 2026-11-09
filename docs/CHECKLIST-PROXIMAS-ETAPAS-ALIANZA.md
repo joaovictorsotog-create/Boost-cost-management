@@ -907,3 +907,14 @@ Legenda:
 - [x] Manter avisos informativos, sem senhas, códigos, tokens ou links sensíveis.
 - [x] Registrar envio e resultado das notificações relevantes na auditoria, sem armazenar conteúdo secreto.
 - [ ] Definir tecnicamente identificação de novo dispositivo, tratamento de falha de envio, retentativas, prevenção de duplicidade e critérios de aceite.
+
+
+### Dispositivos e sessões do usuário — decisão aprovada (09/11/2026)
+- [x] Criar área do usuário para consultar dispositivos e sessões ativas.
+- [x] Exibir dispositivo, último acesso, navegador e sistema operacional quando identificáveis.
+- [x] Exibir localização apenas aproximada e quando disponível, sem alegação de precisão.
+- [x] Permitir encerrar uma sessão individual.
+- [x] Permitir encerrar todas as outras sessões, preservando a sessão atual.
+- [x] Confirmar encerramento somente após resposta do backend e revogar a sessão/token correspondente.
+- [x] Registrar encerramentos na auditoria e não expor tokens/identificadores secretos.
+- [ ] Definir tecnicamente identificação de dispositivo, retenção dos metadados, atualização em tempo real, tratamento de sessões expiradas e critérios de teste.
