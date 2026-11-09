@@ -633,3 +633,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Decisões e operações com impacto direto em dados, classificações, estruturas, custos, vínculos ou integridade histórica são de competência exclusiva do **Administrador**.
 - A regra inclui, no mínimo, exclusão e reativação de itens e as operações de manutenção de famílias já restritas ao Administrador. A autorização deve ser imposta no backend, com prévia de impacto quando aplicável e auditoria.
 - A matriz completa de permissões deverá classificar cada operação, distinguindo ações de impacto direto das atividades rotineiras que poderão permanecer com o papel Editor. Não presumir permissões ainda não definidas.
+
+## 42. Permissões do Editor no Cadastro Central (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O **Editor** pode cadastrar novos itens e editar dados cadastrais permitidos de itens existentes.
+- O Editor não pode excluir logicamente nem reativar itens excluídos.
+- O Editor não pode alterar diretamente estruturas de composição nem executar operações que alterem/recalculem custos de outros produtos.
+- Ações com impacto direto em estruturas, custos de produtos dependentes, vínculos ou integridade histórica são exclusivas do **Administrador**.
+- A autorização deve ser imposta no backend; controles visuais não substituem a validação de servidor.
+- A lista exata de campos e operações editáveis sem impacto direto será detalhada na matriz de permissões antes da implementação. Dúvidas sobre impacto não autorizam liberação implícita ao Editor.
