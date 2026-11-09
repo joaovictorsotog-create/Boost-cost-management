@@ -534,3 +534,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Operações relacionadas e recálculos em cascata devem manter consistência transacional, sem expor estados parciais como definitivos.
 - Edições concorrentes devem ser tratadas sem sobrescrita silenciosa de alterações de outro usuário.
 - A decisão aprova o comportamento funcional em tempo real. Tecnologia, reconexão e metas mensuráveis de latência permanecem como definições técnicas pendentes.
+
+
+## 34. Atualização em tempo real de filtros, pesquisas e ordenações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Filtros, pesquisas e ordenações devem refletir automaticamente alterações confirmadas nos dados que afetam seus resultados, em todos os módulos.
+- As telas abertas devem recalcular os resultados quando atributos relevantes mudarem, preservando os critérios escolhidos pelo usuário.
+- Registros que deixarem de atender aos critérios ativos saem dos resultados; registros que passarem a atendê-los entram conforme a ordenação vigente.
+- Permissões, escopo e regras de visibilidade continuam prevalecendo; a sincronização não pode expor registros indevidos.
+- Esta decisão complementa a regra global de atualização em tempo real e não escolhe tecnologia nem meta numérica de latência.
