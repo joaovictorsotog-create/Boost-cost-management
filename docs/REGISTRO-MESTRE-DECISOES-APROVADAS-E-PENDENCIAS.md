@@ -1098,3 +1098,8 @@ Se o mesmo problema voltar após a resolução formal do alerta anterior, será 
 ### Histórico de reincidências de alertas críticos — APROVADO (09/11/2026)
 
 O painel administrativo terá uma visualização própria de **Histórico de reincidências**, separada dos alertas pendentes. Ela permitirá consultar alertas relacionados à mesma ocorrência ao longo do tempo, sem fundir seus registros independentes. A consulta apresentará, conforme permissões, identificadores, datas de criação/resolução, estados e quantidade de alertas relacionados. Não altera estados nem executa ações em lote. O backend controla relações, dados, auditoria e autorização; o frontend apenas apresenta informações autorizadas. Dados protegidos não poderão ser expostos por meio das relações históricas.
+
+
+### Filtros do histórico de reincidências — APROVADO (09/11/2026)
+
+O histórico permitirá filtrar por período, tipo de ocorrência, estado do alerta e identificação do registro/recurso afetado, sempre respeitando permissões. A consulta só será executada após ação explícita em **Aplicar filtros**. Durante a edição, resultados da última consulta aplicada permanecem visíveis; descartar a edição preserva os critérios e resultados já aplicados. O backend valida parâmetros, autorização e escopo. A consulta é somente leitura e não altera alertas nem histórico.
