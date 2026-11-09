@@ -500,3 +500,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Apenas o papel **Administrador** pode criar, editar, inativar ou reativar famílias.
 - Os papéis **Editor** e **Visualizador** podem consultar, sem permissão para essas operações.
 - A autorização deve ser imposta no backend, e não somente pela interface. Tentativas não autorizadas não podem alterar dados.
+
+
+## 31. Pesquisa de famílias por nome (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A listagem normal de famílias em Configurações permite pesquisar pelo nome.
+- A busca aceita correspondência parcial e não diferencia maiúsculas de minúsculas.
+- A listagem normal pesquisa somente famílias ativas.
+- Famílias inativas são consultadas na área isolada **Arquivados**, não nos resultados da listagem normal.
+- A pesquisa não altera registros, vínculos, permissões ou a regra de unicidade dos nomes.
