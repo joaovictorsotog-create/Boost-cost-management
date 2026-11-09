@@ -945,3 +945,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Integrar essa configuração ao sino de notificações, que permanece como ponto de acesso aos avisos e indicador de notificações não lidas.
 - Desativar o som não desativa nem oculta notificações visuais.
 - Persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio permanecem pendentes de especificação técnica.
+
+
+## Sino de notificações no cabeçalho global — decisão aprovada em 09/11/2026
+
+- O sino de notificações deve permanecer visível no cabeçalho global padrão do Alianza, independentemente do módulo ou tela em que o usuário esteja.
+- O sino mantém acesso ao resumo consolidado e ao indicador de notificações não lidas em toda a navegação autenticada, respeitando permissões e confidencialidade.
+- A presença global do sino não altera as preferências individuais de alertas sonoros nem implica que o som esteja sempre ativado.
