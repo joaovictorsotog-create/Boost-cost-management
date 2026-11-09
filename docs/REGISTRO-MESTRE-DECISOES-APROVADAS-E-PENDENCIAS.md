@@ -454,3 +454,13 @@ A listagem normal em **Configurações → Famílias** exibirá:
 - Situação.
 
 A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a regra aprovada de que uma família com itens vinculados não pode ser inativada. Famílias inativas permanecem na área separada **Arquivados**, com data da inativação mais recente e opção de reativação pelo administrador.
+
+## 26. Edição de família — alteração do nome sem romper vínculos (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A ação **Editar** permite alterar o nome da família existente.
+- A operação atualiza o registro original, sem criar outra família ou trocar sua identidade.
+- Os itens vinculados permanecem associados à mesma família; a contagem de vínculos não muda pela edição do nome.
+- O novo nome é obrigatório e deve passar pela validação de unicidade já aprovada, inclusive para variações de grafia equivalentes. Conflitos impedem a gravação até serem resolvidos.
+- A edição obedece à prévia, confirmação explícita e registro de auditoria previstos nas regras gerais.
