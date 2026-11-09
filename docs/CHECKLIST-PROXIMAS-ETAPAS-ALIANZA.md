@@ -871,3 +871,11 @@ Legenda:
 - [x] Permitir gerenciadores de senha e colagem.
 - [x] Não exigir combinações artificiais de maiúsculas, números e símbolos.
 - [ ] Definir implementação técnica de verificação de senhas comprometidas, armazenamento seguro, limites de tentativas e critérios de teste.
+
+
+### Autenticação em dois fatores (2FA) — decisão aprovada (09/11/2026)
+- [x] Exigir 2FA para Administradores.
+- [x] Permitir ativação voluntária para Editores e Visualizadores.
+- [x] Definir aplicativo autenticador como método principal.
+- [x] Prever códigos de recuperação de uso único.
+- [ ] Especificar com segurança o cadastro e a troca de dispositivo, armazenamento/validação dos segredos, emissão e invalidação dos códigos, recuperação assistida e testes.
