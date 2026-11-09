@@ -900,3 +900,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Se um registro tiver sido excluído ou se o usuário tiver perdido permissão de acesso enquanto estava fora da tela, a tela deve ser atualizada conforme o estado confirmado pelo backend e informar claramente o que mudou, sem expor dados que já não sejam autorizados.
 - A restauração de filtros e do contexto de navegação não prevalece sobre exclusões, alterações de dados ou mudanças de permissão posteriores; critérios ainda válidos podem ser preservados, mas os resultados devem refletir a situação atual.
 - O backend é a autoridade para validar existência, estado e permissões; a interface apenas apresenta o resultado confirmado.
+
+### Comunicação das alterações ao retornar à tela — decisão aprovada em 09/11/2026
+
+- Ao retornar a uma tela, o sistema deve comunicar alterações relevantes encontradas desde a última visualização por meio de avisos objetivos e não intrusivos.
+- Registro excluído: informar que o registro foi excluído e removê-lo dos resultados atuais.
+- Permissão revogada: informar que o acesso ao registro foi alterado e impedir sua visualização; a mensagem não pode revelar dados do registro ou qualquer informação protegida.
+- Dados modificados: atualizar as informações e indicar que houve atualização desde a última visita.
+- Quando houver várias alterações, apresentar um único resumo consolidado, evitando notificações consecutivas e repetitivas.
+- Quando não houver alterações relevantes, retornar normalmente, sem exibir aviso.
+- O conteúdo das mensagens deve respeitar as permissões vigentes e não pode expor dados que o usuário deixou de estar autorizado a consultar.
