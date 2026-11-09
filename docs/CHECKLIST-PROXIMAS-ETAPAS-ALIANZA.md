@@ -197,3 +197,13 @@ Legenda:
 - [x] Impedir que outros Administradores assumam ou decidam enquanto a titularidade estiver ativa.
 - [x] Manter lembretes aprovados sem liberação automática após o terceiro lembrete.
 - [ ] Definir critérios técnicos e testes de aceite para retomada, autenticação, indisponibilidade prolongada e recuperação de falhas.
+
+ 
+### Transferência de titularidade após o terceiro lembrete
+
+- [x] Habilitar transferência para outro Administrador somente após o envio efetivo do terceiro lembrete.
+- [x] Exigir ação explícita e justificativa obrigatória do Administrador que assumirá.
+- [x] Validar elegibilidade, autorização e titularidade no backend, com operação atômica contra concorrência.
+- [x] Registrar titular anterior, novo titular, justificativa, responsável e data/hora.
+- [x] Preservar histórico, lembretes e ciclos anteriores; não decidir automaticamente a solicitação.
+- [ ] Definir critérios técnicos e testes de aceite para elegibilidade, concorrência, notificações e auditoria da transferência.
