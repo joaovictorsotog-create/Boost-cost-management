@@ -338,3 +338,13 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - O sistema deve impedir classificações duplicadas decorrentes de variações de escrita, incluindo os exemplos “Chapas”, “CHAPAS” e “Chapa”.
 - A validação de unicidade deve ocorrer antes de salvar, inclusive no backend.
 - A regra de comparação/normalização que identificará variações equivalentes de escrita deverá ser definida tecnicamente, sem enfraquecer o resultado funcional aprovado: não permitir famílias duplicadas por variação de grafia.
+
+
+## 32. Inativação de famílias sem itens vinculados — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Uma família sem itens vinculados poderá ser inativada em Configurações, em vez de ser excluída definitivamente.
+- A inativação deve ser impedida enquanto houver qualquer item vinculado à família; primeiro será necessário reclassificar os itens.
+- Famílias inativas não devem aparecer como opção na seleção de família durante o cadastro ou edição de itens.
+- A família inativada permanece registrada, preservando sua existência no sistema. Regras adicionais de reativação e visibilidade em consultas ainda não foram definidas.
