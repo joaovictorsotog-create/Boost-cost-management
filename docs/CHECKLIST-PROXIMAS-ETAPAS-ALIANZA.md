@@ -1059,3 +1059,11 @@ Legenda:
 - [x] Exigir autorização e controle dos testes; produção requer salvaguardas específicas.
 - [x] Priorizar falhas críticas e exigir reteste/evidência para encerramento.
 - [ ] Definir metodologia, independência dos executores, severidade, prazos, gestão de evidências, testes de terceiros, escopo de produção e critérios de aceite.
+
+
+### Independência das auditorias de segurança — decisão aprovada (09/11/2026)
+- [x] Exigir pessoa/equipe independente da operação avaliada para conduzir testes de segurança; não aceitar execução exclusivamente pelo responsável operacional.
+- [x] Garantir acompanhamento dos Administradores e comunicação de falhas críticas.
+- [x] Preservar relatórios/resultados sem exclusão ou alteração silenciosa.
+- [x] Vincular correções e retestes ao relatório original, mantendo histórico e evidências.
+- [ ] Definir independência/conflitos de interesse, qualificação/seleção, contratação, acesso controlado, confidencialidade, comunicação e aceite.
