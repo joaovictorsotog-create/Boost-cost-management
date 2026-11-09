@@ -603,14 +603,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Executar com validação no backend e auditoria. Falhas parciais não podem ser exibidas como sucesso integral; atomicidade ou retomada será especificada por operação.
 - Exemplos abrangidos: importações, alterações em lote e inativações em massa.
 
-## 40. Proteção de vínculos e dependências antes de excluir itens (09/11/2026)
+## 40. Exclusão de itens com prévia de impacto e tratamento automático dos vínculos (09/11/2026)
 
 **Status: APROVADO pelo usuário.**
 
-- Antes de excluir um item do Cadastro Central, verificar vínculos e dependências atuais em estruturas de composição e demais registros ou módulos que o referenciem.
-- Se houver dependências, apresentar quantidade e relação consultável dos registros afetados, com código/ID e descrição ou identificadores próprios do módulo.
-- Explicar as consequências, inclusive impactos em estruturas, custos compostos, disponibilidade para novas composições, histórico e rastreabilidade.
-- Não romper vínculos automaticamente. A exclusão não pode prosseguir enquanto houver dependências que comprometam integridade referencial ou histórico; orientar a resolução segura.
-- Se a exclusão for permitida, exigir prévia atualizada, confirmação explícita de usuário autorizado e auditoria completa.
-- Aplicar validação também no backend. Se o conjunto de dependências mudar com a prévia aberta, atualizar ou exigir nova validação antes de confirmar.
-- Estados e modalidades de exclusão (lógica ou física) e a regra completa para itens com vínculos permanecem pendentes de detalhamento antes da implementação.
+- Todo item poderá ser excluído, mesmo que possua vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos não bloqueia, por si só, a exclusão.
+- Antes da confirmação, verificar dependências e apresentar aviso/prévia com quantidade e relação consultável dos registros afetados, identificados por código/ID e descrição ou identificadores próprios do módulo.
+- Explicar os impactos, incluindo estruturas afetadas e recálculo dos custos dos produtos compostos dependentes.
+- Após confirmação explícita de usuário autorizado, remover automaticamente as referências atuais ao item nas estruturas e registros dependentes e recalcular todos os compostos afetados, direta e indiretamente, até os produtos finais.
+- Executar com validação no backend, consistência transacional e auditoria completa. Não deixar vínculos quebrados nem apresentar falha parcial como sucesso integral.
+- Se as dependências mudarem enquanto a prévia estiver aberta, atualizar a prévia ou exigir nova validação e confirmação.
+- O item excluído não poderá ser selecionado em novas estruturas. O registro de auditoria da exclusão deve permanecer.
+- A modalidade técnica de exclusão e a preservação da consulta de custos históricos anteriores à exclusão permanecem pendentes de especificação antes da implementação.
