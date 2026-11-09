@@ -446,3 +446,10 @@ Legenda:
 - [x] Atualizar indicadores somente após confirmação do backend.
 - [x] Persistir o estado por usuário e validar a operação no backend.
 - [ ] Detalhar auditoria e retenção do estado de leitura.
+
+### Categorias de notificações — decisão aprovada (09/11/2026)
+
+- [x] Definir categorias iniciais: Aprovações, Alterações de cadastro, Exclusões, Segurança e Sistema.
+- [ ] Definir critérios de enquadramento de cada evento.
+- [ ] Avaliar subcategorias e casos com possível enquadramento múltiplo.
+- [ ] Definir ícones, cores e filtros por categoria.
