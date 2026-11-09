@@ -1477,3 +1477,9 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A contingência não concede acesso imediato: a liberação só ocorre após cumprir as verificações e o prazo de segurança definidos no procedimento.
 - Preservar a exigência de separação entre solicitante e autorizador; a contingência não pode ser usada para contornar essa proteção.
 - Quantidade de verificadores independentes, duração do prazo, canal de validação, critérios de evidência, notificações e tratamento de emergência permanecem pendentes de definição técnica e operacional.
+
+
+### Notificações de segurança ao usuário — decisão aprovada (09/11/2026)
+- Enviar aviso ao usuário por e-mail quando ocorrer: login em novo dispositivo; alteração de senha; alteração de e-mail; ativação ou desativação do 2FA; recuperação de acesso; suspensão ou reativação da conta.
+- As notificações são informativas e não devem conter senhas, códigos de autenticação, tokens ou links sensíveis.
+- O envio e o resultado das notificações relevantes devem ser registrados para fins de auditoria, sem armazenar conteúdo secreto.
