@@ -1383,3 +1383,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Proteção deve abranger armazenamento e caminhos administrativos/técnicos, incluindo rastreabilidade de acessos privilegiados.
 - Correções excepcionais são novos eventos vinculados; nunca sobrescrever o original. Registrar autor, motivo, data/hora e referência.
 - Pendências: mecanismo técnico de integridade, gestão de chaves, segregação de funções, retenção, monitoramento/alertas, backups e testes periódicos.
+
+
+### Política de retenção dos registros de auditoria — decisão aprovada (09/11/2026)
+- Retenção mínima aprovada: 5 anos.
+- Não descartar automaticamente registros ligados a investigação, incidente, contestação, obrigação legal ou pendência não encerrada.
+- Ao fim do prazo, avaliar obrigações legais/regulatórias e necessidade operacional antes de qualquer descarte.
+- Descarte excepcional exige procedimento formal, justificativa, autorização específica, escopo, responsável, data/hora e trilha auditável.
+- Compatibilizar com LGPD e normas aplicáveis; o prazo interno de 5 anos não significa que toda categoria de dado tenha obrigação legal universal de retenção por esse período.
+- Pendências: marco inicial, categorias/exceções, legal hold, minimização/anonimização, descarte seguro, responsáveis, revisão e testes.
