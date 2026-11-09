@@ -652,3 +652,12 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Aprovação ou rejeição somente será efetivada após validação e persistência confirmadas pelo backend. A interface não poderá indicar decisão concluída antes dessa confirmação.
 - O controle de concorrência e de titularidade da análise deverá ser imposto no backend, evitando decisões simultâneas, bloqueios indevidos e alterações silenciosas.
 - A decisão aprova o comportamento funcional; prazo de expiração de uma análise abandonada, mecanismo de liberação automática e detalhes técnicos permanecem pendentes de especificação.
+
+
+### Lembretes por inatividade durante a análise
+
+- Após 30 minutos sem atividade na solicitação em análise, o sistema envia um lembrete ao Administrador responsável.
+- Persistindo a ausência de atividade, novos lembretes são enviados em intervalos de 30 minutos, respeitando o limite máximo de **3 lembretes por solicitação**.
+- Após o terceiro lembrete, o sistema interrompe novos envios e aguarda a manifestação do Administrador responsável. Não haverá repetição indefinida de notificações.
+- Atingir o limite de lembretes não altera o estado **Em análise**, não transfere a titularidade e não aprova, rejeita ou libera a solicitação automaticamente.
+- O controle de quantidade e agendamento dos lembretes deve ser individual por solicitação e protegido contra disparos duplicados ou ciclos de notificações.
