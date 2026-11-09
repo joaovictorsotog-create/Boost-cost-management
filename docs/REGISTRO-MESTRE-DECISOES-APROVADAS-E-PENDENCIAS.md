@@ -339,3 +339,9 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - A descrição complementar não aparece como coluna na listagem principal.
 - A descrição complementar permanece visível no cadastro e pesquisável.
 - A escolha busca manter a listagem objetiva sem perder a capacidade de localizar itens por detalhes técnicos.
+
+## 15. Decisão incremental — organização da tela de cadastro (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+O formulário será uma única tela com quatro blocos verticais: Identificação; Características; Custeio; Controle. Não haverá abas separadas para esses blocos. A decisão é de apresentação e não modifica as regras funcionais já aprovadas.
