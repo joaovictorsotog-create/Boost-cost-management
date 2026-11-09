@@ -1662,3 +1662,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - O acompanhamento deve preservar data de identificação, classificação, responsável, prazo, alterações justificadas, contenção/correção, reteste e encerramento.
 - Prazos não autorizam postergar contenção de risco ativo; mudança de prazo exige justificativa e autorização registrada, sem apagar o prazo original ou o histórico.
 - Pendências: marco inicial de contagem, calendário/fuso e feriados, regra de pausa (se houver), antecedência/frequência dos alertas, níveis de escalonamento e autoridade para prorrogações.
+
+
+### Aprovação de exceções para falhas P0 — decisão aprovada (09/11/2026)
+- Qualquer exceção que permita liberar versão com falha P0 exige aprovação explícita de dois Administradores distintos.
+- O responsável pela correção ou pela solicitação da exceção não pode aprová-la sozinho; deve haver segregação entre solicitante/responsável e aprovadores.
+- Cada exceção tem validade máxima de 7 dias corridos. Ao vencer, a exceção perde validade automaticamente e o bloqueio de liberação volta a valer.
+- Renovação exige nova justificativa, reavaliação do risco residual e duas novas aprovações explícitas; não há renovação automática.
+- Registrar falha original, justificativa, risco residual, controles compensatórios, versão/escopo afetado, solicitante, dois aprovadores, datas/horários, validade, plano de resolução e decisão de renovação.
+- A exceção não altera a classificação P0, não apaga o achado e não dispensa contenção, correção e reteste.
+- Pendências: fluxo de solicitação/decisão, indisponibilidade de segundo Administrador, impedimentos por conflito de interesse, notificações, revogação antecipada e critérios de risco residual.
