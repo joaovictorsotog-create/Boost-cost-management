@@ -1345,3 +1345,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - O mecanismo deverá ser controlado para evitar consultas excessivas, tráfego desnecessário e sobrecarga do sistema.
 - A atualização automática será apenas de consulta: não poderá alterar a solicitação, interferir no processamento ou solicitar cancelamento.
 - A frequência, o mecanismo técnico, o comportamento em caso de perda de conexão e a suspensão/redução de atualizações quando a tela não estiver ativa permanecem pendentes de especificação técnica.
+
+### Perda e recuperação de conexão na atualização dos detalhes — decisão aprovada (09/11/2026)
+
+- Se a conexão for perdida enquanto a tela de detalhes estiver aberta, o sistema deverá preservar na tela os últimos dados recebidos e confirmados pelo backend.
+- A interface deverá informar claramente que está sem conexão e que os dados exibidos correspondem à última atualização confirmada, evitando apresentá-los como atuais.
+- O sistema deverá tentar restabelecer a conexão e retomar a atualização automática quando a conectividade voltar.
+- Após a reconexão, deverá buscar e validar o estado atual no backend antes de apresentar os dados como atualizados.
+- A perda ou recuperação da conexão não poderá alterar, reiniciar, cancelar ou duplicar a solicitação de exportação.
+- O comportamento deverá respeitar as permissões vigentes e evitar tentativas de reconexão excessivas.
