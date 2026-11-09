@@ -807,3 +807,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A ordem deve refletir a sequência temporal real dos eventos, inclusive entre diferentes ciclos e titulares.
 - A linha do tempo é uma forma unificada de consulta; não substitui nem altera os registros de auditoria mantidos pelo backend.
 - Permissões de visualização continuam sendo aplicadas pelo backend. Critérios de filtros, paginação, agrupamento visual e detalhes de apresentação permanecem pendentes.
+
+
+## 70. Filtros da linha do tempo da Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A linha do tempo única de cada solicitação deve permitir filtrar os eventos por **responsável** e por **tipo de evento**.
+- Os filtros são recursos de consulta e não alteram, excluem, sobrescrevem ou modificam os registros históricos originais.
+- A aplicação de filtros não deve comprometer a integridade nem a sequência cronológica dos eventos correspondentes ao resultado filtrado.
+- Deve permanecer disponível a visão cronológica completa, sem filtros, reunindo todos os eventos aos quais o Administrador tenha permissão de acesso.
+- O backend continua sendo a fonte de verdade e deve aplicar as permissões de acesso aos eventos e responsáveis; o frontend não pode ampliar a visibilidade por meio dos filtros.
+- A aprovação define o comportamento funcional dos filtros, mas não define componentes visuais, paginação, tecnologia ou implementação técnica.
