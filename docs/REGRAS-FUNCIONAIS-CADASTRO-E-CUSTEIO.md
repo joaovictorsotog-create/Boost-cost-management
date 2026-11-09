@@ -619,3 +619,23 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Alterações exclusivamente descritivas, como descrição principal ou complementar, atualizam o cadastro e a auditoria após aprovação, mas **não** provocam recálculo de custos.
 - Esta aprovação não amplia as permissões de edição do Editor: até nova decisão expressa, ele continua podendo propor alterações somente na descrição principal e na descrição complementar. Família, unidade, tipo, custo manual, estrutura, exclusão, reativação e demais operações restritas continuam sob competência exclusiva do Administrador.
 - A interface deverá apresentar ao Editor o estado da solicitação e o resultado da decisão, respeitando as permissões de acesso. Toda tentativa de contornar o fluxo por importação, edição em massa ou API deverá ser bloqueada pelo backend.
+
+
+## 56. Organização visual e funcional da Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A **Central de Aprovações** será uma área própria e permanente no menu administrativo, separada do Cadastro Central e não escondida dentro de Configurações.
+- O acesso deverá exibir um contador de solicitações pendentes, para que o Administrador identifique demandas que aguardam decisão.
+- A tela principal terá cabeçalho próprio e resumo das quantidades de solicitações pendentes, aprovadas e rejeitadas.
+- A consulta poderá ser filtrada por situação, com visualizações de **Pendentes**, **Aprovadas**, **Rejeitadas** e **Todas**.
+- A listagem apresentará informações suficientes para identificar e avaliar cada solicitação: identificador da solicitação, item, tipo/campo da alteração, solicitante, data/hora, situação, comparação entre valor atual e valor proposto e indicação resumida do impacto previsto.
+- A solicitação poderá ser aberta em uma visualização de detalhes para análise da identificação, dos valores comparados, do impacto e das ações disponíveis.
+- Somente o Administrador poderá executar as ações **Aprovar** ou **Rejeitar**, respeitando as validações de backend e as regras de autorização já aprovadas. A decisão deverá ficar registrada no histórico.
+- A Central manterá consulta ao histórico das decisões, incluindo solicitações aprovadas e rejeitadas.
+- O Administrador deverá receber uma notificação quando uma nova solicitação chegar à Central de Aprovações.
+- O Editor poderá acompanhar o estado e o resultado das próprias solicitações, sem receber permissão para aprová-las ou alterar diretamente o cadastro oficial.
+- Antes de efetivar uma aprovação, o backend deverá revalidar os dados de referência. Se houver alteração concorrente ou impacto diferente do apresentado, a aprovação não poderá aplicar silenciosamente uma solicitação desatualizada; deverá exigir revisão/atualização.
+- O impacto e a necessidade de recálculo serão avaliados conforme a natureza real da alteração. Mudanças exclusivamente descritivas não provocam recálculo; se uma alteração aprovada afetar efetivamente custeio, estruturas ou vínculos, os dependentes deverão ser recalculados em cascata.
+- Exemplos de solicitações e valores exibidos em wireframes são meramente ilustrativos, não representam registros reais.
+- Esta decisão aprova a organização visual e o comportamento funcional da Central. Não define tecnologia, modelo de dados, endpoints ou implementação, nem autoriza alterações de banco, infraestrutura ou deploy.
