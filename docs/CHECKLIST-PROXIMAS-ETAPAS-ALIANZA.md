@@ -580,4 +580,10 @@ Legenda:
 - [x] Manter alertas independentes para problemas efetivamente distintos.
 - [x] Exigir correlação validada pelo backend; frontend não decide equivalência por conta própria.
 - [x] Preservar histórico, reconhecimento e prazos do alerta original ao anexar manifestação.
-- [ ] Especificar critérios técnicos de equivalência, prevenção de falsos agrupamentos e distinção entre reincidência e problema novo.
+- [x] Definir chave de correlação gerada e validada exclusivamente pelo backend.
+- [x] Exigir correspondência de origem/módulo, tipo de falha/regra crítica e registro/recurso/entidade afetada para vincular manifestações.
+- [x] Permitir anexar manifestações a alertas reconhecidos, mas ainda não resolvidos.
+- [x] Após resolução, tratar manifestação posterior como nova ocorrência e gerar novo alerta.
+- [x] Na ausência de evidência suficiente ou diante de divergência, criar alerta independente; na dúvida, não agrupar.
+- [x] Impedir que o frontend defina ou imponha a correlação.
+- [ ] Especificar estrutura técnica da chave e atributos específicos por tipo de ocorrência.
