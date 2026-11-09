@@ -420,3 +420,12 @@ Legenda:
 - [x] Manter formato compacto junto ao sino em telas maiores e adaptar a largura em telas menores.
 - [x] Preservar a tela atual e as regras de abertura/fechamento.
 - [ ] Definir medidas exatas, margens e pontos de quebra na especificação visual/técnica.
+
+### Conteúdo inicial do painel de notificações — decisão aprovada (09/11/2026)
+
+- [x] Exibir notificações recentes no painel.
+- [x] Mostrar data, horário, categoria e indicação de leitura/não leitura em cada notificação.
+- [x] Disponibilizar acesso ao histórico completo.
+- [x] Preservar o estado de leitura ao abrir ou fechar o painel.
+- [x] Aplicar permissões e confidencialidade ao painel e ao histórico.
+- [ ] Definir quantidade de recentes, ordenação, paginação, categorias definitivas e ação de marcar como lida.
