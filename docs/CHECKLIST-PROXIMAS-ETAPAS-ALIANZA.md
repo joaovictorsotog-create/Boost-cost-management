@@ -896,3 +896,14 @@ Legenda:
 - [x] Exigir período de segurança antes da liberação, sem acesso imediato.
 - [x] Registrar integralmente o procedimento na auditoria e preservar separação entre solicitante e autorizador.
 - [ ] Definir verificadores independentes, prazo, canal, evidências, notificações e critérios de emergência.
+
+
+### Notificações de segurança ao usuário — decisão aprovada (09/11/2026)
+- [x] Notificar por e-mail login em novo dispositivo.
+- [x] Notificar por e-mail alteração de senha e de e-mail.
+- [x] Notificar por e-mail ativação ou desativação do 2FA.
+- [x] Notificar por e-mail recuperação de acesso.
+- [x] Notificar por e-mail suspensão ou reativação da conta.
+- [x] Manter avisos informativos, sem senhas, códigos, tokens ou links sensíveis.
+- [x] Registrar envio e resultado das notificações relevantes na auditoria, sem armazenar conteúdo secreto.
+- [ ] Definir tecnicamente identificação de novo dispositivo, tratamento de falha de envio, retentativas, prevenção de duplicidade e critérios de aceite.
