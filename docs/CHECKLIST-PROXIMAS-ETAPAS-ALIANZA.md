@@ -335,3 +335,11 @@ Legenda:
 - [x] Respeitar permissões e validade atual dos dados durante a restauração.
 - [x] Manter a proteção já aprovada para filtros temporários não aplicados.
 - [ ] Definir implementação técnica e critérios de aceite para dados alterados/removidos ou permissões modificadas enquanto a tela estava fora de foco.
+
+### Revalidação ao retornar à tela — decisão aprovada
+
+- [x] Revalidar dados e permissões ao retornar por Voltar/Avançar; backend como autoridade.
+- [x] Atualizar a tela se registros tiverem sido excluídos ou permissões tiverem sido revogadas enquanto ela estava fora de foco.
+- [x] Informar claramente o que mudou, sem expor dados que o usuário não esteja mais autorizado a acessar.
+- [x] Preservar apenas critérios de consulta ainda válidos e atualizar os resultados conforme o estado atual.
+- [ ] Definir apresentação das mensagens, tratamento de múltiplas alterações e critérios técnicos/testes de aceite.
