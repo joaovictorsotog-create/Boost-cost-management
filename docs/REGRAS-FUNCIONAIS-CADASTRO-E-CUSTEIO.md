@@ -993,3 +993,12 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Notificações anteriores devem continuar disponíveis pelo acesso ao histórico completo.
 - A consulta deve respeitar permissões, confidencialidade e o estado real de leitura de cada notificação.
 - Critérios de paginação/carregamento do histórico e tratamento de notificações com data/hora igual permanecem pendentes de especificação técnica.
+
+### Marcação de notificações como lidas — decisão aprovada (09/11/2026)
+
+- O usuário deve poder marcar cada notificação individualmente como **lida**.
+- O painel deve oferecer também a ação **Marcar todas como lidas**, aplicável às notificações que o usuário tem autorização para visualizar e que estejam não lidas no momento da execução.
+- A marcação de leitura deve ser uma ação explícita; abrir ou fechar o painel não altera o estado de leitura.
+- Após confirmação de persistência pelo backend, atualizar os indicadores de leitura das notificações e o contador de não lidas no sino.
+- A operação deve ser vinculada ao usuário autenticado, respeitar permissões e ser persistida no backend; o frontend não pode ser autoridade nem declarar sucesso antes da confirmação.
+- Registrar a alteração de estado de leitura conforme a política de auditoria/notificações a ser detalhada; retenção e histórico específico de leitura permanecem pendentes.
