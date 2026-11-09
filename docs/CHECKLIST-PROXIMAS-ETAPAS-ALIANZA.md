@@ -390,3 +390,10 @@ Legenda:
 - [x] Manter preferências independentes por usuário, sem efeito sobre os demais.
 - [x] Preservar notificações visuais e o funcionamento do sino mesmo quando o som estiver desativado.
 - [ ] Detalhar persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
+
+
+### Sino de notificações no cabeçalho global — decisão aprovada (09/11/2026)
+
+- [x] Manter o sino de notificações sempre visível no cabeçalho global, independentemente do módulo/tela.
+- [x] Permitir acesso ao resumo consolidado e ao indicador de notificações não lidas em toda a navegação autenticada.
+- [x] Respeitar permissões e confidencialidade; a visibilidade do sino não ativa som automaticamente nem altera preferências individuais.
