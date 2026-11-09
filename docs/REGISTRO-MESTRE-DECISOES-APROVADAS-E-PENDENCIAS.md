@@ -655,3 +655,17 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Unidade, tipo do item, custo manual, estrutura de composição, exclusão, reativação e demais operações com impacto em custeio, vínculos, estruturas ou histórico são exclusivas do Administrador.
 - As restrições valem também para importações, operações em massa, APIs e demais caminhos de alteração; o backend deve impor as permissões.
 - Até a conclusão da matriz geral de permissões, o Editor só pode alterar os dois campos expressamente autorizados nesta decisão.
+
+
+## 44. Solicitações de edição do Editor sujeitas à aprovação administrativa (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Toda edição proposta pelo Editor nos campos atualmente permitidos (descrição principal e complementar) gera solicitação no backend; nenhum dado oficial muda antes da aprovação explícita do Administrador.
+- O backend registra item, campo, valor atual e proposto, solicitante, data/hora e estado da solicitação. A Central de Aprovações apresenta pendências e comparação entre valores.
+- O Administrador pode aprovar ou rejeitar. Rejeição mantém os dados oficiais inalterados e é auditada. Aprovação é validada e aplicada pelo backend; a interface só confirma após persistência.
+- Antes de aplicar, validar se o registro/valores de referência continuam atuais. Mudança concorrente exige revisão/atualização da solicitação, sem sobrescrita silenciosa.
+- Recálculo é obrigatório somente se a alteração aprovada afetar efetivamente dados de custeio, estruturas ou vínculos de produtos dependentes; nesse caso, recalcular em cascata os dependentes diretos e indiretos.
+- Alterações apenas descritivas não provocam recálculo, embora sejam aplicadas e auditadas após aprovação.
+- O fluxo não amplia as permissões do Editor: permanecem autorizadas somente propostas de alteração da descrição principal e complementar. Campos e operações restritos continuam exclusivos do Administrador.
+- Tentativas de contorno por importação, edição em massa ou API devem ser impedidas pelo backend; o Editor deve poder acompanhar o estado e o resultado da solicitação conforme suas permissões.
