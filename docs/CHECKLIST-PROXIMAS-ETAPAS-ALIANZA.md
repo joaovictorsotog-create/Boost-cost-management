@@ -962,3 +962,16 @@ Legenda:
 - [x] Exigir ação explícita e auditada para cancelamento antecipado.
 - [x] Impedir ausência de Administrador ativo e contorno de dupla autorização.
 - [ ] Definir granularidade do escopo, quantidade de substitutos, sobreposição, notificações, indisponibilidade e testes.
+
+
+### Painel central de auditoria administrativa — decisão aprovada (09/11/2026)
+- [x] Criar área centralizada para consulta de auditoria administrativa.
+- [x] Disponibilizar filtros combináveis por responsável, período, tipo de operação e resultado.
+- [x] Exigir aplicação explícita dos filtros para atualizar resultados.
+- [x] Permitir consulta detalhada respeitando permissões e sem expor segredos/tokens.
+- [x] Permitir exportação Excel/PDF com filtros e permissões aplicados.
+- [x] Registrar exportações no Log de Atividades.
+- [x] Proteger histórico contra edição/exclusão pela interface e preservar rastreabilidade de correções excepcionais.
+- [x] Manter painel separado dos históricos de notificações e solicitações.
+- [x] Prever paginação e ordenação controladas pelo backend.
+- [ ] Definir perfis/escopo de acesso, catálogo/campos, retenção, paginação/ordenação, limites/exportações, mascaramento e testes.
