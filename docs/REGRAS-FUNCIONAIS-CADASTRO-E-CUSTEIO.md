@@ -347,7 +347,7 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - Uma família sem itens vinculados poderá ser inativada em Configurações, em vez de ser excluída definitivamente.
 - A inativação deve ser impedida enquanto houver qualquer item vinculado à família; primeiro será necessário reclassificar os itens.
 - Famílias inativas não devem aparecer como opção na seleção de família durante o cadastro ou edição de itens.
-- A família inativada permanece registrada, preservando sua existência no sistema. Regras adicionais de reativação e visibilidade em consultas ainda não foram definidas.
+- A família inativada permanece registrada, preservando sua existência no sistema. A reativação foi aprovada e está detalhada na seção 33.
 
 
 ## 33. Reativação de famílias inativas — decisão aprovada em 09/11/2026
