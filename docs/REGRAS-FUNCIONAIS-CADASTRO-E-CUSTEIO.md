@@ -1002,3 +1002,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Após confirmação de persistência pelo backend, atualizar os indicadores de leitura das notificações e o contador de não lidas no sino.
 - A operação deve ser vinculada ao usuário autenticado, respeitar permissões e ser persistida no backend; o frontend não pode ser autoridade nem declarar sucesso antes da confirmação.
 - Registrar a alteração de estado de leitura conforme a política de auditoria/notificações a ser detalhada; retenção e histórico específico de leitura permanecem pendentes.
+
+### Categorias de notificações — decisão aprovada (09/11/2026)
+
+O sistema utilizará inicialmente as seguintes categorias para organizar as notificações:
+
+- **Aprovações**
+- **Alterações de cadastro**
+- **Exclusões**
+- **Segurança**
+- **Sistema**
+
+As categorias devem ser apresentadas de forma clara no painel e no histórico de notificações. A classificação de cada evento, eventuais subcategorias, ícones, cores, filtros e regras para eventos que possam se enquadrar em mais de uma categoria permanecem pendentes de detalhamento. A lista poderá ser ampliada mediante decisão aprovada, sem criar categorias automaticamente por iniciativa do frontend.
