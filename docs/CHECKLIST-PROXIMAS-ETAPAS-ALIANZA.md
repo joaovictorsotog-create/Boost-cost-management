@@ -1087,3 +1087,13 @@ Legenda:
 - [x] Preservar histórico de identificação, classificação, responsável, prazo, justificativas, contenção/correção, reteste e encerramento.
 - [x] Exigir justificativa e autorização para prorrogações, preservando prazo original; não postergar contenção de risco ativo.
 - [ ] Definir marco inicial, calendário/fuso/feriados, pausas, alertas/escalonamento e autoridade para prorrogar.
+
+
+### Aprovação de exceções para falhas P0 — decisão aprovada (09/11/2026)
+- [x] Exigir dois Administradores distintos para aprovar exceção de liberação com P0.
+- [x] Impedir que solicitante/responsável pela correção aprove sozinho a própria exceção.
+- [x] Limitar validade a 7 dias corridos; expiração restaura automaticamente o bloqueio de liberação.
+- [x] Exigir nova justificativa, avaliação de risco residual e duas novas aprovações para renovação.
+- [x] Preservar falha original, justificativa, risco, controles, escopo, solicitante, aprovadores, horários, validade e plano de resolução.
+- [x] Manter classificação P0 e exigir contenção, correção e reteste.
+- [ ] Definir fluxo, indisponibilidade do segundo Administrador, conflitos, notificações, revogação antecipada e critérios de risco residual.
