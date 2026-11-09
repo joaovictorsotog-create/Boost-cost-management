@@ -928,3 +928,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Alertas sonoros devem respeitar as preferências do usuário e não podem se repetir indefinidamente nem produzir excesso de notificações.
 - O sino, o resumo e os alertas sonoros devem respeitar as permissões vigentes e não revelar dados protegidos.
 - Detalhes de configuração, seleção de sons, volume, regras de disparo, agrupamento, frequência e sincronização entre dispositivos permanecem pendentes.
+
+### Preferências individuais de alertas sonoros — decisão aprovada em 09/11/2026
+
+- As preferências de alerta sonoro serão individuais por usuário, não uma configuração global imposta a toda a empresa.
+- Cada usuário poderá ativar ou desativar o som, escolher entre diferentes opções de sons, ajustar o volume e testar o som antes de salvar suas preferências.
+- As preferências salvas devem ser aplicadas aos alertas daquele usuário, respeitando as regras gerais de notificações e os limites contra repetição excessiva.
+- Detalhes de persistência, disponibilidade de sons, compatibilidade dos dispositivos e comportamento quando o navegador/sistema bloquear áudio permanecem pendentes.
