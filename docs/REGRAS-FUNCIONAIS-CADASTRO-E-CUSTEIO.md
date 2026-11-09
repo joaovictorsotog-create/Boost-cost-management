@@ -317,3 +317,13 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - A família continua obrigatória e única por item.
 - A seleção deve referenciar o registro da família existente, evitando variações de grafia e classificações duplicadas por digitação.
 - A regra de exclusão permanece: uma família vinculada a itens não pode ser excluída até que os itens sejam reclassificados.
+
+
+## 30. Contagem automática de itens vinculados à família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A quantidade de itens vinculados será calculada automaticamente pelo sistema com base nos vínculos existentes entre itens do Cadastro Central e cada família.
+- O contador aumenta quando um item é associado à família e diminui quando o item é reclassificado para outra família ou deixa de estar vinculado, conforme operação permitida.
+- A quantidade é somente informativa e não pode ser preenchida ou editada manualmente.
+- A contagem deve refletir os vínculos efetivos, sem exigir manutenção manual pelo usuário.
