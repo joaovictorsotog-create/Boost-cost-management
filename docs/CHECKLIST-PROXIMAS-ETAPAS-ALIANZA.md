@@ -723,7 +723,11 @@ Legenda:
 - [x] Permitir combinação dos filtros.
 - [x] Validar identidade, permissões e escopo da consulta no backend.
 - [x] Definir aplicação/limpeza explícita dos filtros e preservação dos resultados aplicados.
-- [ ] Definir paginação e ordenação dos resultados.
+- [x] Definir paginação: 20 registros por padrão, com opções de 20, 50 e 100.
+- [x] Retornar somente a página solicitada pelo backend, sem carregar todo o histórico.
+- [x] Preservar filtros aplicados durante a navegação entre páginas.
+- [x] Validar paginação e escopo no backend.
+- [ ] Definir ordenação dos resultados.
 
 
 ### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
@@ -735,3 +739,13 @@ Legenda:
 - [x] Substituir os resultados somente após nova aplicação explícita dos filtros.
 - [x] Manter validação de parâmetros, identidade, permissões e escopo sob autoridade do backend.
 - [ ] Definir paginação e ordenação dos resultados.
+
+
+### Paginação do histórico de exportações — decisão aprovada (09/11/2026)
+
+- [x] Definir 20 registros por página como padrão.
+- [x] Oferecer opções de 20, 50 e 100 registros por página.
+- [x] Fazer o backend retornar somente a página solicitada, sem carregar todo o histórico.
+- [x] Preservar filtros aplicados durante a navegação entre páginas.
+- [x] Validar parâmetros de paginação e escopo no backend.
+- [ ] Definir ordenação dos resultados.
