@@ -1157,3 +1157,11 @@ Legenda:
 - [x] Visualizador: somente indicadores consolidados, sem identificação de responsáveis ou informações restritas.
 - [x] Aplicar permissões no backend/API e na interface; consultas e exportações respeitam o mesmo escopo.
 - [ ] Definir dimensões/agregações, proteção contra reidentificação, detalhes de segurança, auditoria de consultas e exportações.
+
+### Proteção contra identificação indireta nos indicadores de reincidência — decisão aprovada (09/11/2026)
+- [x] Suprimir para Editores e Visualizadores grupos/resultados agregados com menos de 5 ocorrências.
+- [x] Aplicar o limite a filtros combinados, agrupamentos, detalhamentos, consultas sucessivas e exportações.
+- [x] Impedir inferência de resultados suprimidos por comparação entre consultas.
+- [x] Manter acesso completo dos Administradores, respeitando as demais regras de proteção e auditoria.
+- [x] Aplicar a supressão no backend/API, não apenas na interface.
+- [ ] Definir supressão complementar, consultas diferenciais, totais/subtotais, filtros temporais, arredondamentos e testes de reidentificação.
