@@ -879,3 +879,12 @@ Legenda:
 - [x] Definir aplicativo autenticador como método principal.
 - [x] Prever códigos de recuperação de uso único.
 - [ ] Especificar com segurança o cadastro e a troca de dispositivo, armazenamento/validação dos segredos, emissão e invalidação dos códigos, recuperação assistida e testes.
+
+
+### Recuperação administrativa do 2FA — decisão aprovada (09/11/2026)
+- [x] Permitir recuperação administrativa quando o usuário perder o dispositivo e não tiver códigos válidos.
+- [x] Exigir verificação de identidade.
+- [x] Exigir autorização de um segundo Administrador, diferente do titular da conta.
+- [x] Registrar solicitação, verificações, participantes, decisão e resultado na auditoria.
+- [x] Não restaurar sessões ou tokens anteriores; exigir nova autenticação e configuração do 2FA.
+- [ ] Definir procedimento de verificação de identidade, controles contra abuso/conluio, contingência se não houver segundo Administrador e testes.
