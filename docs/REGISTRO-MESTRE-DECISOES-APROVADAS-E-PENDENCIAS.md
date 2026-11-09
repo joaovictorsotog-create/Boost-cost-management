@@ -1119,3 +1119,7 @@ Arquivos exportados serão temporários, sem armazenamento permanente automátic
 ### Limites de processamento e volume da exportação — APROVADO (09/11/2026)
 
 Cada usuário poderá ter no máximo **1 exportação em processamento**. Uma nova solicitação enquanto houver outra em andamento não iniciará processamento paralelo e deverá informar o usuário sobre a solicitação existente. Cada arquivo poderá conter até **10.000 registros**; consultas maiores deverão ser divididas em arquivos menores, sem gerar arquivo individual acima do limite. O backend impõe e valida os limites; o frontend não é autoridade. **PENDENTE:** detalhar contagem, concorrência de solicitações simultâneas, retomada após falha e experiência de divisão da consulta.
+
+### Tratamento de falha na exportação — APROVADO (09/11/2026)
+
+Falhas de exportação serão registradas no Log de Atividades. Arquivos incompletos ou sem integridade confirmada não serão disponibilizados. A vaga de processamento só será liberada após o backend confirmar o encerramento da tarefa. Depois disso, o usuário poderá solicitar nova exportação. Uma solicitação falha não será apresentada nem contabilizada como concluída; o estado final será determinado e persistido pelo backend.
