@@ -614,4 +614,6 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Executar com validação no backend, consistência transacional e auditoria completa. Não deixar vínculos quebrados nem apresentar falha parcial como sucesso integral.
 - Se as dependências mudarem enquanto a prévia estiver aberta, atualizar a prévia ou exigir nova validação e confirmação.
 - O item excluído não poderá ser selecionado em novas estruturas. O registro de auditoria da exclusão deve permanecer.
-- A modalidade técnica de exclusão e a preservação da consulta de custos históricos anteriores à exclusão permanecem pendentes de especificação antes da implementação.
+- A exclusão não poderá apagar nem reescrever o passado: preservar fotografia histórica imutável das composições e dos custos vigentes antes da exclusão, para permitir consultar como cada produto era composto e custeado naquele momento, mesmo após a remoção do item do Cadastro Central.
+- A fotografia deve manter dados suficientes para rastrear a composição e os valores usados no cálculo, sem depender da existência do cadastro ativo do item excluído.
+- A modalidade técnica de exclusão e os detalhes de modelagem, retenção e consulta das fotografias históricas permanecem pendentes de especificação antes da implementação.
