@@ -367,3 +367,14 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - Aceita letras, números e caracteres especiais, sem padrão rígido de nomenclatura.
 - Descrições iguais são permitidas para itens diferentes.
 - O ID numérico exclusivo permanece como identificador único do cadastro.
+
+## 18. Decisão incremental — seleção controlada de família (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- No cadastro do item, Família será selecionada em uma lista alimentada pelas famílias cadastradas em Configurações.
+- Não haverá digitação livre nem criação de família diretamente no formulário do item.
+- Cadastro e edição de famílias ocorrerão em Configurações, sob permissão administrativa.
+- A família permanece obrigatória e única por item.
+- A seleção referencia uma família já cadastrada, evitando duplicidade e inconsistência de nomenclatura.
+- Famílias vinculadas a itens não poderão ser excluídas até que os itens sejam reclassificados.
