@@ -1331,3 +1331,14 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Auditar responsável, justificativa, data/hora, confirmação, invalidação e eventual reativação.
 - Exibir conclusão somente após confirmação do backend.
 - Pendências: estados de conta, retenção e tratamento de dados pessoais, solicitações pendentes, vínculos operacionais, notificações e critérios de teste.
+
+
+### Transferência de responsabilidade administrativa — decisão aprovada (09/11/2026)
+- Transferência somente entre usuários que já sejam Administradores.
+- Exigir confirmação explícita do Administrador remetente e do destinatário; efetivar somente após ambas as confirmações e persistência backend.
+- Registrar envolvidos, escopo, data/hora e resultado na auditoria.
+- Preservar o histórico do responsável anterior sem atribuição retroativa ao sucessor.
+- Nunca permitir que a operação deixe o sistema sem Administrador ativo.
+- Não alterar automaticamente perfis ou permissões de terceiros.
+- Confirmar a conclusão na interface somente após resposta do backend.
+- Pendências: escopo transferível, pendências em análise, indisponibilidade/recusa, cancelamento e critérios de teste.
