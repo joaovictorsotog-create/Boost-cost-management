@@ -1179,3 +1179,7 @@ Com a tela de detalhes aberta, os dados da solicitação serão atualizados auto
 ### Perda e recuperação de conexão na atualização dos detalhes — APROVADO (09/11/2026)
 
 Se a conexão cair com a tela aberta, os últimos dados recebidos e confirmados pelo backend permanecerão visíveis. A interface informará claramente a desconexão e que os dados exibidos são da última atualização confirmada, sem sugerir que estejam atuais. O sistema tentará reconectar e retomará a atualização automática; após reconectar, consultará e validará o estado atual no backend antes de indicar dados atualizados. Desconexão/reconexão não poderá alterar, reiniciar, cancelar ou duplicar a exportação, e as tentativas de reconexão deverão ser controladas para evitar excesso.
+
+### Atualização dos detalhes quando a tela não estiver ativa — APROVADO (09/11/2026)
+
+Quando o usuário sair da tela de detalhes ou ela deixar de estar ativa/em primeiro plano, as consultas automáticas serão suspensas ou reduzidas. Ao retornar ou reativar a tela, o sistema consultará imediatamente o estado atual no backend, respeitando permissões. Os dados anteriores permanecerão identificados como última atualização confirmada até a validação da nova consulta. Essa política não poderá pausar, reiniciar, cancelar ou alterar a exportação. **PENDENTE:** definir mecanismo técnico e limites de frequência para telas ativas e inativas.
