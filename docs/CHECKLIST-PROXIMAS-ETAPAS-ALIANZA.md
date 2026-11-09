@@ -453,3 +453,11 @@ Legenda:
 - [ ] Definir critérios de enquadramento de cada evento.
 - [ ] Avaliar subcategorias e casos com possível enquadramento múltiplo.
 - [ ] Definir ícones, cores e filtros por categoria.
+
+### Prioridade visual das notificações — decisão aprovada (09/11/2026)
+
+- [x] Definir níveis: Crítica, Alta, Normal e Baixa.
+- [x] Separar prioridade da categoria temática.
+- [x] Estabelecer classificação como regra de backend.
+- [ ] Definir critérios objetivos de prioridade por evento.
+- [ ] Definir apresentação visual/sonora, escalonamento, filtros e tratamento de críticas.
