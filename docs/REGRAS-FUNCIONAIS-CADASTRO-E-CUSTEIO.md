@@ -749,3 +749,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A notificação deve referenciar a solicitação correspondente e não pode expor informações além das permitidas pelas regras de acesso.
 - O envio/registro da notificação deve ser rastreável. A interface não pode informar que a transferência foi concluída antes da confirmação do backend.
 - A notificação não restaura titularidade nem concede poder de decisão ao Administrador anterior.
+
+
+## 65. Notificação ao novo titular após transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após a persistência bem-sucedida da transferência de titularidade, o novo Administrador responsável também deve receber uma notificação de que assumiu a solicitação.
+- A notificação deve identificar a solicitação e oferecer acesso direto à análise e ao histórico anterior, respeitando as permissões aplicáveis.
+- O novo titular deve conseguir consultar o contexto, as decisões e os registros anteriores necessários para dar continuidade à análise, sem apagar ou sobrescrever ciclos anteriores.
+- O envio/registro da notificação deve ser rastreável. A interface só informa a transferência como concluída após persistência no backend.
