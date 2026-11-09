@@ -918,3 +918,12 @@ Legenda:
 - [x] Confirmar encerramento somente após resposta do backend e revogar a sessão/token correspondente.
 - [x] Registrar encerramentos na auditoria e não expor tokens/identificadores secretos.
 - [ ] Definir tecnicamente identificação de dispositivo, retenção dos metadados, atualização em tempo real, tratamento de sessões expiradas e critérios de teste.
+
+
+### Proteção contra tentativas de login — decisão aprovada (09/11/2026)
+- [x] Bloquear novas tentativas por 15 minutos após 5 tentativas consecutivas de senha incorreta.
+- [x] Aumentar progressivamente o bloqueio quando houver repetição, sem bloqueio permanente exclusivamente por tentativas incorretas.
+- [x] Prever proteção contra automação e abuso, além do bloqueio por conta.
+- [x] Registrar tentativas relevantes e bloqueios na auditoria, sem armazenar senhas ou segredos.
+- [x] Evitar que terceiros provoquem indisponibilidade prolongada da conta por tentativas deliberadas.
+- [ ] Definir progressão e limite máximo, janela de contagem, reinício, origens compartilhadas, desafios adicionais, retenção e critérios de teste.
