@@ -381,3 +381,12 @@ Legenda:
 - [x] Permitir testar o som antes de salvar.
 - [x] Aplicar as preferências individuais sem impor configuração global à empresa.
 - [ ] Definir persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
+
+
+### Localização das preferências individuais de notificações — decisão aprovada (09/11/2026)
+
+- [x] Criar área própria em **Configurações → Notificações**.
+- [x] Centralizar nessa área as preferências individuais de som: ativar/desativar, escolher som, ajustar volume e testar antes de salvar.
+- [x] Manter preferências independentes por usuário, sem efeito sobre os demais.
+- [x] Preservar notificações visuais e o funcionamento do sino mesmo quando o som estiver desativado.
+- [ ] Detalhar persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
