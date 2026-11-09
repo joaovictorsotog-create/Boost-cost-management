@@ -524,3 +524,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A prévia deve deixar explícito que a mudança é apenas nominal/classificatória e não altera os itens vinculados, seus custos, unidades ou estruturas de composição.
 - O Administrador deve poder confirmar ou cancelar. Nenhuma alteração será efetivada antes da confirmação explícita.
 - Após a confirmação e persistência bem-sucedida, a atualização deve ser propagada em tempo real, preservando o histórico e registrando a operação na auditoria.
+
+
+## 49. Relação detalhada de itens afetados na prévia de alteração de família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- A prévia de edição de uma família deve permitir consultar a relação dos itens atualmente vinculados que serão afetados pela mudança de nome.
+- A relação deve identificar cada item, no mínimo, por seu código/ID e descrição principal, e apresentar a quantidade total de itens afetados.
+- A relação deve permitir ao Administrador avaliar o impacto concreto da ação antes de confirmar ou cancelar a alteração.
+- A consulta dos itens afetados é somente informativa: não permite alterar, remover ou reclassificar os itens dentro da prévia.
+- A listagem deve respeitar permissões e regras de visibilidade do Cadastro Central. Se a relação for extensa, deverá ser apresentada de forma consultável e paginada ou equivalente, sem omitir silenciosamente itens do total informado.
+- A prévia deve refletir os vínculos existentes no momento da confirmação; se os vínculos mudarem enquanto a prévia estiver aberta, o sistema deve atualizar a relação ou exigir nova validação da prévia antes de permitir confirmar, evitando confirmar com impacto desatualizado.
