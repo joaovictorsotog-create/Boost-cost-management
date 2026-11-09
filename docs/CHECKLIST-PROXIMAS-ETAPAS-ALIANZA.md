@@ -1150,3 +1150,10 @@ Legenda:
 - [x] Apresentar tempo médio entre encerramento e reincidência.
 - [x] Basear indicadores em ocorrências registradas com correlação suficiente e preservar rastreabilidade/permissões.
 - [ ] Definir janelas/filtros, fórmula da média, múltiplas reincidências, agrupamentos, dados incompletos e visualizações/exportações.
+
+### Acesso aos indicadores gerenciais de reincidência — decisão aprovada (09/11/2026)
+- [x] Administrador: acesso completo aos indicadores e análises, respeitando proteção de evidências e dados sensíveis.
+- [x] Editor: consulta gerencial sem acesso a evidências restritas ou detalhes de segurança protegidos.
+- [x] Visualizador: somente indicadores consolidados, sem identificação de responsáveis ou informações restritas.
+- [x] Aplicar permissões no backend/API e na interface; consultas e exportações respeitam o mesmo escopo.
+- [ ] Definir dimensões/agregações, proteção contra reidentificação, detalhes de segurança, auditoria de consultas e exportações.
