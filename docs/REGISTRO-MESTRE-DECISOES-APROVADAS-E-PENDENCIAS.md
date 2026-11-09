@@ -904,3 +904,11 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Permanecer mantém integralmente a edição; descartar e sair preserva os últimos filtros aplicados e seus resultados.
 - Cobertura inclui navegação interna, voltar/avançar do navegador e recarregamento. Fechamento de aba/janela usa aviso nativo do navegador quando disponível.
 - Detalhes responsivos, ausência de histórico, compatibilidade e critérios técnicos de aceite permanecem pendentes.
+
+### Estado dos botões de navegação sem histórico disponível — 09/11/2026
+
+**Status: APROVADO**
+
+- Sem tela anterior disponível, **Voltar** fica desabilitado.
+- Sem tela posterior disponível, **Avançar** fica desabilitado.
+- Não executar navegação artificial; refletir o histórico real.
