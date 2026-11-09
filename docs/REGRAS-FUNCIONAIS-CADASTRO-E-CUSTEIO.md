@@ -413,3 +413,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Se a família possuir qualquer item vinculado, a inativação será bloqueada; a interface deverá informar que os itens precisam ser reclassificados antes de tentar novamente.
 - Se não houver itens vinculados, o administrador poderá confirmar ou cancelar a inativação.
 - Nenhuma alteração será realizada antes da confirmação explícita. A operação confirmada deverá ser registrada na auditoria e a família passará para a área **Arquivados**, preservando o registro.
+
+## 39. Confirmação da reativação de família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Ao solicitar a reativação de uma família arquivada, o sistema deve apresentar uma confirmação antes de executar a operação.
+- A confirmação deve exibir o nome da família e a data de sua última inativação.
+- Deve informar que, após a reativação, a família voltará a aparecer como opção na seleção de família do Cadastro Central.
+- A reativação não restabelece nem cria vínculos automaticamente: itens não serão associados à família por efeito da reativação.
+- O administrador poderá confirmar ou cancelar. Nenhuma alteração ocorrerá antes da confirmação explícita.
+- A reativação preserva a identidade e o histórico do registro original, respeitando a validação de unicidade do nome já aprovada.
