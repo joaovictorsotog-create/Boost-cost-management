@@ -231,3 +231,11 @@ A precisão interna usada para armazenar e calcular valores antes da apresentaç
 - Frontend deve ser tratado como não confiável; validações críticas no backend; segredos, tokens, credenciais e arquivos `.env` nunca podem ser expostos.
 - A stack do CRM não deve ser copiada para este projeto. A stack específica do Sistema de Custos ainda não foi aprovada nas conversas auditadas.
 - A Ordem Mestra e a especificação técnica de segurança são documentos de precedência e devem ser cruzados antes de implementação.
+
+## 21. Identificação única dos itens — decisão aprovada em 09/11/2026
+
+- Todo item deve possuir um ID numérico obrigatório e exclusivo.
+- Não pode haver dois itens diferentes com o mesmo ID.
+- A numeração é organizada e definida manualmente pelo administrador; o sistema deve validar a unicidade antes de salvar.
+- O ID é um critério de pesquisa e localização do item.
+- Alterações de ID seguem a confirmação global e devem ser registradas na auditoria.
