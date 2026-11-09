@@ -432,3 +432,11 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - Famílias arquivadas não aparecem na seleção do Cadastro Central.
 - Ao reativar, a família retorna à listagem normal de famílias ativas, preservando o registro e respeitando a unicidade do nome.
 - A decisão especifica a organização funcional da interface; não representa autorização para implementar ou alterar banco/infraestrutura.
+
+## 24. Data de inativação na área Arquivados (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A listagem **Configurações → Famílias → Arquivados** também exibirá a data em que cada família foi inativada.
+- Deve ser mostrada a data da inativação mais recente. Caso a família seja reativada e inativada novamente, a data será atualizada.
+- A informação é destinada à consulta e rastreabilidade e não altera as demais regras funcionais de famílias.
