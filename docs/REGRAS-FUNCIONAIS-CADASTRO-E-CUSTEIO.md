@@ -1483,3 +1483,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Enviar aviso ao usuário por e-mail quando ocorrer: login em novo dispositivo; alteração de senha; alteração de e-mail; ativação ou desativação do 2FA; recuperação de acesso; suspensão ou reativação da conta.
 - As notificações são informativas e não devem conter senhas, códigos de autenticação, tokens ou links sensíveis.
 - O envio e o resultado das notificações relevantes devem ser registrados para fins de auditoria, sem armazenar conteúdo secreto.
+
+
+### Dispositivos e sessões do usuário — decisão aprovada (09/11/2026)
+- Disponibilizar ao usuário uma área "Dispositivos e sessões" para consultar sessões ativas.
+- Exibir, quando disponíveis: dispositivo, data e horário do último acesso, navegador e sistema operacional.
+- Exibir localização apenas aproximada, quando disponível, deixando claro que não identifica com precisão a pessoa ou o local.
+- Permitir encerrar uma sessão individual.
+- Permitir encerrar todas as outras sessões, preservando a sessão atual que executou a ação.
+- O encerramento só deve ser apresentado como concluído após confirmação do backend; revogar a validade da sessão/token correspondente.
+- Registrar encerramentos individuais e em lote na auditoria.
+- Não expor identificadores secretos de sessão ou tokens na interface.
