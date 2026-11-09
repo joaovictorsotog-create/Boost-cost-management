@@ -1162,3 +1162,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Alertas pendentes continuarão na área de pendências; a visualização histórica não os substituirá nem os ocultará.
 - O backend será responsável por manter as relações, quantidades e dados apresentados, validar permissões e preservar a trilha de auditoria. O frontend apenas exibirá os dados autorizados.
 - A consulta deverá respeitar as permissões de acesso aos alertas relacionados, sem revelar dados protegidos de ocorrências ou registros não autorizados.
+
+
+### Filtros do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- O Histórico de reincidências permitirá filtrar por período, tipo de ocorrência, estado do alerta e identificação do registro/recurso afetado, respeitando as permissões do usuário.
+- Os filtros serão editados sem disparar consultas automaticamente. A consulta somente será executada quando o usuário acionar explicitamente **Aplicar filtros**.
+- Enquanto os critérios estiverem sendo editados, os resultados da última consulta aplicada permanecerão visíveis e inalterados.
+- O usuário poderá descartar a edição dos critérios sem alterar os filtros e resultados anteriormente aplicados.
+- A aplicação dos filtros será processada pelo backend, que validará parâmetros, autorização e escopo dos dados antes de retornar resultados.
+- A consulta não alterará alertas, relações históricas, estados ou registros de auditoria; será somente leitura, sem ações em lote.
