@@ -1011,3 +1011,12 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Em telas grandes, manter formato compacto alinhado ao sino; em telas menores, adaptar a largura para leitura e interação.
 - Preservar a tela atual e as regras de abertura/fechamento aprovadas.
 - Larguras exatas, margens e pontos de quebra permanecem pendentes.
+
+### Conteúdo inicial do painel de notificações — APROVADO (09/11/2026)
+
+- Exibir notificações recentes no painel.
+- Cada registro apresenta data, horário, categoria e indicador de lida/não lida.
+- Disponibilizar acesso ao histórico completo de notificações.
+- Abrir/fechar o painel não marca notificações como lidas.
+- Aplicar permissões e confidencialidade também na consulta ao histórico.
+- Quantidade exibida, ordenação, paginação, categorias definitivas e ação de marcar como lida permanecem pendentes.
