@@ -353,3 +353,10 @@ Legenda:
 - [x] Consolidar múltiplas alterações em um único resumo, evitando notificações repetitivas.
 - [x] Não exibir aviso quando não houver alterações relevantes.
 - [ ] Definir textos finais, apresentação visual, classificação de relevância e critérios técnicos/testes de aceite.
+
+### Conteúdo do resumo consolidado de alterações — decisão aprovada
+
+- [x] Apresentar quantidade de alterações separada por categoria (exclusões, atualizações e alterações de permissão, por exemplo).
+- [x] Permitir compreender volume e natureza das mudanças sem abrir cada aviso individualmente.
+- [x] Impedir que contagens ou detalhes do resumo revelem dados de registros cujo acesso foi revogado.
+- [ ] Definir textos finais, apresentação visual, critérios de classificação/contagem e critérios técnicos/testes de aceite.
