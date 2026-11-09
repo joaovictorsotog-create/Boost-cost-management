@@ -777,3 +777,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Persistida a transferência, o novo Administrador torna-se o único titular e o anterior perde a titularidade.
 - Registrar titular anterior e novo, justificativa, responsável pela operação e data/hora, preservando histórico e lembretes anteriores.
 - A transferência não decide a solicitação nem apaga seu histórico.
+
+
+## 53. Notificação ao titular anterior após transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Após a transferência persistida, notificar o Administrador anterior de que perdeu a titularidade.
+- Informar qual Administrador assumiu e apresentar a justificativa registrada.
+- Vincular a notificação à solicitação e respeitar permissões de acesso.
+- Registrar o envio/resultado de forma rastreável; a notificação não restaura titularidade nem concede poder de decisão ao titular anterior.
