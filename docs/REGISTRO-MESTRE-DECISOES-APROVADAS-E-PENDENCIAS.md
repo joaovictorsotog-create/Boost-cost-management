@@ -1123,3 +1123,7 @@ Cada usuário poderá ter no máximo **1 exportação em processamento**. Uma no
 ### Tratamento de falha na exportação — APROVADO (09/11/2026)
 
 Falhas de exportação serão registradas no Log de Atividades. Arquivos incompletos ou sem integridade confirmada não serão disponibilizados. A vaga de processamento só será liberada após o backend confirmar o encerramento da tarefa. Depois disso, o usuário poderá solicitar nova exportação. Uma solicitação falha não será apresentada nem contabilizada como concluída; o estado final será determinado e persistido pelo backend.
+
+### Cancelamento de exportação em processamento — APROVADO (09/11/2026)
+
+O usuário solicitante poderá pedir o cancelamento de uma exportação enquanto ela estiver em processamento. O pedido não libera a vaga imediatamente: isso só ocorrerá após o backend confirmar o encerramento efetivo por cancelamento. Até lá, a tarefa continua ocupando a vaga única. A interface só exibirá **Cancelada** após confirmação; se a tarefa já tiver terminado ou não puder mais ser cancelada, deverá apresentar o estado real retornado pelo backend. O backend controla validação, concorrência com conclusão/falha e persistência do estado final.
