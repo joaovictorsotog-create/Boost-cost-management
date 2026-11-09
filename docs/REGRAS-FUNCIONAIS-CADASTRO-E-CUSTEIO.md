@@ -348,3 +348,14 @@ Não serão usadas abas separadas para esses quatro blocos. A decisão trata da 
 - A inativação deve ser impedida enquanto houver qualquer item vinculado à família; primeiro será necessário reclassificar os itens.
 - Famílias inativas não devem aparecer como opção na seleção de família durante o cadastro ou edição de itens.
 - A família inativada permanece registrada, preservando sua existência no sistema. Regras adicionais de reativação e visibilidade em consultas ainda não foram definidas.
+
+
+## 33. Reativação de famílias inativas — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O administrador poderá reativar uma família anteriormente inativada.
+- Ao reativar, a família volta a ter situação ativa e fica novamente disponível na lista de seleção do campo Família no Cadastro Central.
+- A reativação não cria uma nova família nem altera sua identidade ou histórico; recupera o registro já existente.
+- A validação de unicidade do nome também deve ser aplicada na reativação. Se houver conflito com outra família, a reativação deverá ser bloqueada até que o conflito seja resolvido, preservando a regra de nome único.
+- A reativação não associa automaticamente itens à família; os vínculos continuam dependendo de uma operação explícita de classificação no Cadastro Central.
