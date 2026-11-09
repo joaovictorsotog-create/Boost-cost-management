@@ -639,3 +639,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O impacto e a necessidade de recálculo serão avaliados conforme a natureza real da alteração. Mudanças exclusivamente descritivas não provocam recálculo; se uma alteração aprovada afetar efetivamente custeio, estruturas ou vínculos, os dependentes deverão ser recalculados em cascata.
 - Exemplos de solicitações e valores exibidos em wireframes são meramente ilustrativos, não representam registros reais.
 - Esta decisão aprova a organização visual e o comportamento funcional da Central. Não define tecnologia, modelo de dados, endpoints ou implementação, nem autoriza alterações de banco, infraestrutura ou deploy.
+
+
+## 57. Estado de análise e prevenção de decisões simultâneas na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Apenas abrir uma solicitação para consulta não altera seu estado: ela permanece **Pendente**.
+- Quando um Administrador iniciar formalmente a análise, a solicitação passa para **Em análise**, com identificação do Administrador responsável.
+- Enquanto estiver em análise por um Administrador, outros Administradores poderão consultar a solicitação, mas não poderão aprovar ou rejeitar aquela solicitação em paralelo.
+- Se a análise for abandonada ou encerrada sem decisão, a solicitação deverá ser liberada e retornar ao estado **Pendente**, disponível para outro Administrador.
+- Aprovação ou rejeição somente será efetivada após validação e persistência confirmadas pelo backend. A interface não poderá indicar decisão concluída antes dessa confirmação.
+- O controle de concorrência e de titularidade da análise deverá ser imposto no backend, evitando decisões simultâneas, bloqueios indevidos e alterações silenciosas.
+- A decisão aprova o comportamento funcional; prazo de expiração de uma análise abandonada, mecanismo de liberação automática e detalhes técnicos permanecem pendentes de especificação.
