@@ -793,3 +793,12 @@ Legenda:
 - [ ] Definir frequência e mecanismo técnico de atualização.
 - [ ] Definir comportamento em caso de perda de conexão.
 - [ ] Definir suspensão ou redução das atualizações quando a tela não estiver ativa.
+
+### Perda e recuperação de conexão na atualização dos detalhes — decisão aprovada (09/11/2026)
+
+- [x] Preservar os últimos dados recebidos e confirmados pelo backend durante a desconexão.
+- [x] Informar claramente que a tela está sem conexão e que os dados exibidos são da última atualização confirmada.
+- [x] Tentar restabelecer a conexão e retomar a atualização automática após a recuperação.
+- [x] Consultar e validar o estado atual no backend antes de indicar os dados como atualizados.
+- [x] Impedir que desconexão/reconexão altere, reinicie, cancele ou duplique a exportação.
+- [x] Controlar tentativas de reconexão para evitar excesso.
