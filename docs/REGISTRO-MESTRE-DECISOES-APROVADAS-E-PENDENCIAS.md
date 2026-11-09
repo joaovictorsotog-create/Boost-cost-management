@@ -330,3 +330,12 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - Usar filtros para distinguir tipo e situação, em vez de abas fixas separadas.
 - Manter inativos ocultos por padrão e acessíveis por filtro específico, conforme decisão anterior.
 - Priorizar uma listagem objetiva para localização rápida; informações completas serão vistas no cadastro do item.
+
+## 14. Decisão incremental — colunas da listagem do Cadastro Central (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Colunas: ID, descrição principal, família, unidade, tipo, custo unitário vigente e situação.
+- A descrição complementar não aparece como coluna na listagem principal.
+- A descrição complementar permanece visível no cadastro e pesquisável.
+- A escolha busca manter a listagem objetiva sem perder a capacidade de localizar itens por detalhes técnicos.
