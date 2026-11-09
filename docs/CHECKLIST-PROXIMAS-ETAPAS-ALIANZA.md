@@ -975,3 +975,13 @@ Legenda:
 - [x] Manter painel separado dos históricos de notificações e solicitações.
 - [x] Prever paginação e ordenação controladas pelo backend.
 - [ ] Definir perfis/escopo de acesso, catálogo/campos, retenção, paginação/ordenação, limites/exportações, mascaramento e testes.
+
+
+### Permissões do painel central de auditoria — decisão aprovada (09/11/2026)
+- [x] Administrador com acesso completo ao painel e eventos, preservando segredos/dados protegidos.
+- [x] Editor limitado à consulta dos eventos relacionados às próprias ações.
+- [x] Editor sem acesso a eventos de terceiros ou ações administrativas sobre registros.
+- [x] Visualizador sem acesso ao painel administrativo de auditoria.
+- [x] Exportações Excel/PDF limitadas ao mesmo escopo de consulta autorizado e validadas pelo backend.
+- [x] Consultas/exportações sujeitas a autorização backend e registro de acessos relevantes.
+- [ ] Definir eventos próprios do Editor, mascaramento por perfil, acesso excepcional e testes.
