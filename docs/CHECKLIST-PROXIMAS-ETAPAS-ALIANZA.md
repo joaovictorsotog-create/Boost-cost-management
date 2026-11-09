@@ -273,3 +273,13 @@ Legenda:
 - [x] Preservar a ordem cronológica e disponibilizar a visão completa sem filtros.
 - [x] Aplicar permissões no backend também aos resultados filtrados.
 - [ ] Definir detalhes visuais, paginação e critérios técnicos de aceite.
+
+
+### Seleção múltipla nos filtros da linha do tempo
+
+- [x] Permitir múltiplos responsáveis selecionados simultaneamente.
+- [x] Permitir múltiplos tipos de evento selecionados simultaneamente.
+- [x] Permitir combinar os filtros de responsável e tipo de evento.
+- [x] Permitir remover seleções individualmente e limpar todos os filtros.
+- [x] Preservar a cronologia e manter filtros sem efeito sobre os registros originais.
+- [ ] Definir detalhes visuais e critérios técnicos de aceite.
