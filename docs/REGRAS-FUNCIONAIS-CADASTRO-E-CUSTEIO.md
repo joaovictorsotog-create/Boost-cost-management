@@ -1514,3 +1514,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Registrar solicitante/administrador responsável, justificativa, data/hora, confirmação, invalidação de sessões/tokens e eventual reativação na auditoria.
 - A interface só apresenta encerramento ou reativação como concluídos após confirmação do backend.
 - Permanecem pendentes: definição dos estados de conta, tratamento de dados pessoais e prazos legais de retenção/eliminação, efeitos sobre solicitações pendentes e vínculos operacionais, notificações e critérios de teste.
+
+
+### Transferência de responsabilidade administrativa — decisão aprovada (09/11/2026)
+- Permitir a transferência da responsabilidade administrativa de um Administrador para outro usuário que já possua perfil de Administrador.
+- Exigir confirmação explícita tanto do Administrador que transfere quanto do Administrador que recebe; a transferência só se efetiva após ambas as confirmações e persistência no backend.
+- Registrar os dois envolvidos, data/hora, escopo da responsabilidade transferida e resultado na auditoria.
+- Preservar integralmente o histórico de ações e decisões do responsável anterior, sem atribuí-las retroativamente ao novo responsável.
+- Impedir qualquer transferência que deixe o sistema sem ao menos um Administrador ativo.
+- A transferência de responsabilidade não altera automaticamente perfis ou permissões de outros usuários.
+- A interface só deve apresentar a transferência como concluída após confirmação do backend.
+- Permanecem pendentes: definição do escopo exato da responsabilidade transferível, tratamento de pendências em análise, indisponibilidade/recusa do destinatário, cancelamento e critérios de teste.
