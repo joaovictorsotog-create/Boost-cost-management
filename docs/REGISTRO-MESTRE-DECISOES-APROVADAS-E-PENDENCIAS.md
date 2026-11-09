@@ -1115,3 +1115,7 @@ O Histórico de reincidências poderá ser exportado em **Excel** e **PDF**. A e
 ### Proteção dos arquivos exportados do histórico de reincidências — APROVADO (09/11/2026)
 
 Arquivos exportados serão temporários, sem armazenamento permanente automático. O acesso ocorrerá por link individual vinculado ao usuário autorizado solicitante, com expiração automática após **30 minutos**. Não haverá endereço público nem acesso anônimo. No download, o backend revalidará identidade, autorização e permissões atuais; compartilhar o link não poderá conceder acesso a terceiros. Geração, armazenamento temporário, vínculo, expiração e autorização ficam sob controle do backend. A interface só informará disponibilidade/download após confirmação do backend.
+
+### Limites de processamento e volume da exportação — APROVADO (09/11/2026)
+
+Cada usuário poderá ter no máximo **1 exportação em processamento**. Uma nova solicitação enquanto houver outra em andamento não iniciará processamento paralelo e deverá informar o usuário sobre a solicitação existente. Cada arquivo poderá conter até **10.000 registros**; consultas maiores deverão ser divididas em arquivos menores, sem gerar arquivo individual acima do limite. O backend impõe e valida os limites; o frontend não é autoridade. **PENDENTE:** detalhar contagem, concorrência de solicitações simultâneas, retomada após falha e experiência de divisão da consulta.
