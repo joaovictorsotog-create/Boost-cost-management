@@ -1172,3 +1172,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O usuário poderá descartar a edição dos critérios sem alterar os filtros e resultados anteriormente aplicados.
 - A aplicação dos filtros será processada pelo backend, que validará parâmetros, autorização e escopo dos dados antes de retornar resultados.
 - A consulta não alterará alertas, relações históricas, estados ou registros de auditoria; será somente leitura, sem ações em lote.
+
+
+### Paginação do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- A paginação do Histórico de reincidências terá **20 registros por página** como padrão.
+- O usuário poderá selecionar 20, 50 ou 100 registros por página.
+- O sistema não carregará todo o histórico de uma só vez; o backend retornará apenas a página solicitada, respeitando filtros, ordenação, permissões e escopo autorizado.
+- A troca de página ou de quantidade por página não poderá alterar os alertas nem seus históricos; trata-se apenas de navegação de consulta.
+- A paginação deverá manter os filtros aplicados e a ordenação vigente enquanto o usuário navega entre páginas.
+- O backend validará os parâmetros de paginação e evitará exposição de registros fora do escopo autorizado.
