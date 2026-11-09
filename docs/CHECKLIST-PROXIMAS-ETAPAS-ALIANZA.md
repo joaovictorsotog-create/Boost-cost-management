@@ -1,7 +1,7 @@
 # Checklist de próximas etapas — Alianza Sistema de Custos
 
 **Atualizado:** 09/11/2026  
-**Base:** auditoria documental de 17 conversas vinculadas e decisões registradas nos documentos funcionais.  
+**Base:** auditoria documental de 19 conversas do projeto localizadas no ZIP (8 de 27 ainda ausentes) e decisões registradas nos documentos funcionais.  
 **Branch:** `docs/regras-custeio-cadastro-central`  
 **Objetivo:** acompanhar o que falta esclarecer, validar e só depois implementar. Este checklist não transforma pendências em decisões aprovadas.
 
@@ -28,13 +28,15 @@ Legenda:
 
 ## 2. Completar a auditoria histórica
 
-- [ ] Identificar quais são exatamente as 27 conversas do projeto que o usuário mencionou.
-- [ ] Cruzar os 17 links já auditados com a lista completa e marcar quais conversas ainda faltam.
-- [ ] Obter/exportar o conteúdo das conversas restantes que não estejam no ZIP atual.
+- [x] Identificar pelo metadado de projeto as 19 conversas do Alianza presentes no ZIP (36 conversas totais; 17 sem vínculo com este projeto).
+- [x] Revisar as duas conversas omitidas dos 17 links iniciais: “Desenvolver Tabela Automatizada” e “Pesquisa sobre criação no Manus (1)”.
+- [x] Registrar as decisões e limites de escopo dessas duas conversas no documento de auditoria e no Registro Mestre.
+- [x] Confirmar que “Desenvolver Tabela Automatizada” pertence ao mesmo projeto Alianza, mas descreve aplicação separada do CRM.
+- [ ] Localizar as 8 conversas restantes das 27 mencionadas pelo usuário, ausentes do ZIP atual.
+- [ ] Obter/exportar o conteúdo das 8 conversas restantes.
 - [ ] Auditar cada conversa restante, separando aprovação explícita, proposta, pendência, conflito e assunto de outro projeto.
 - [ ] Registrar origem (título, data e identificador) de cada nova decisão.
 - [ ] Atualizar Registro Mestre e documento de auditoria após a conferência.
-- [ ] Confirmar se “Desenvolver Tabela Automatizada” pertence ao Alianza Sistema de Custos ou é outro projeto.
 - [ ] Fazer conferência cruzada final com `BOOST-COST-MANAGEMENT-ORDEM-MESTRA.md` e a especificação funcional original de 381 linhas.
 - [ ] Resolver e documentar divergências entre as fontes oficiais, sem escolher uma versão silenciosamente.
 
