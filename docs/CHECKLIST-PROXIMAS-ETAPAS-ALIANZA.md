@@ -488,3 +488,15 @@ Legenda:
 - [x] Evitar repetição sonora indefinida e respeitar preferências individuais.
 - [ ] Definir responsáveis, critérios e evidências para resolução, reabertura e escalonamento.
 - [ ] Definir detalhes visuais/sonoros e critérios técnicos/testes de aceite.
+
+### Resolução de notificações críticas — decisão aprovada (09/11/2026)
+
+- [x] Permitir que Administrador autorizado declare o alerta crítico como Resolvido.
+- [x] Exigir justificativa obrigatória para a resolução.
+- [x] Validar autorização, estado atual e concorrência no backend.
+- [x] Registrar responsável, data/hora, justificativa e resultado na auditoria.
+- [x] Preservar ocorrência original, reconhecimento e linha do tempo após resolução.
+- [x] Manter resolução distinta de leitura e reconhecimento.
+- [ ] Definir critérios objetivos de resolução por tipo de ocorrência.
+- [ ] Definir quando evidências/documentos serão exigidos.
+- [ ] Definir regras de reabertura e escalonamento.
