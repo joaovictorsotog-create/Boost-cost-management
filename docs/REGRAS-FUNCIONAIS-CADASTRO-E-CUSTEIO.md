@@ -263,3 +263,17 @@ A precisão interna usada para armazenar e calcular valores antes da apresentaç
 - A separação por tipo e situação será feita por filtros, não por abas fixas independentes.
 - Itens inativos permanecem ocultos por padrão, conforme regra já aprovada, e podem ser localizados por filtro específico.
 - A listagem deve priorizar identificação e consulta rápida; detalhes completos ficam na tela do cadastro.
+
+## 25. Colunas da listagem do Cadastro Central — decisão aprovada em 09/11/2026
+
+A listagem principal deve apresentar as seguintes colunas:
+
+- ID numérico;
+- Descrição principal;
+- Família;
+- Unidade de medida;
+- Tipo (Simples ou Composto);
+- Custo unitário vigente;
+- Situação (Ativo ou Inativo, quando o filtro de inativos estiver habilitado).
+
+A **Descrição complementar** não será exibida como coluna na listagem principal, para manter a tabela objetiva. Ela continuará disponível na tela do cadastro e será considerada na pesquisa.
