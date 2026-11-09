@@ -357,3 +357,13 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A cada cadastro, a sugestão é recalculada considerando todos os IDs já utilizados. Exemplo: com o ID 10 ocupado e os IDs 5 a 9 livres, o sistema sugere 5; depois que 5 a 9 forem ocupados, sugere 11.
 - IDs de itens inativados continuam reservados e não podem ser reutilizados.
 - Essa regra complementa a decisão anterior de ID numérico obrigatório e exclusivo, sem alterar a autonomia do administrador para escolher outro número livre.
+
+
+## 17. Decisão incremental — descrição principal obrigatória e sem padrão rígido (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- A descrição principal é obrigatória.
+- Aceita letras, números e caracteres especiais, sem padrão rígido de nomenclatura.
+- Descrições iguais são permitidas para itens diferentes.
+- O ID numérico exclusivo permanece como identificador único do cadastro.
