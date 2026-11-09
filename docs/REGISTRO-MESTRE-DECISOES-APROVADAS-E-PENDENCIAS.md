@@ -1429,3 +1429,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Registrar fundamento, escopo, início/fim, executor e resultado de cada medida; preservar evidências.
 - Prever revisão e liberação segura; não aplicar bloqueio permanente automático com base em sinais isolados.
 - Pendências: limites/janelas, critérios de risco/correlação, duração/escalonamento, exceções, falsos positivos, observabilidade, resposta a incidentes e testes.
+
+
+### Plano de resposta a incidentes de integridade e acesso à auditoria — decisão aprovada (09/11/2026)
+- Procedimento obrigatório: detectar/classificar; preservar evidências; conter acesso/componente comprometido; notificar Administradores; investigar causa, alcance e registros afetados; documentar resolução e prevenção.
+- Preservar integridade, origem, cronologia e cadeia de custódia; não sobrescrever registros originais.
+- Contenção proporcional, sem destruir evidências ou mascarar o impacto.
+- Bloqueio de acesso, por si só, não encerra incidente. Encerramento exige investigação, avaliação de impacto, documentação de ações/resultados e medidas corretivas/preventivas aplicáveis.
+- Registrar responsáveis, horários, classificação, decisões, notificações, evidências, contenção, investigação, impacto e fundamento do encerramento.
+- Pendências: severidade, prazos/escalonamento, responsáveis e substitutos, canais, cadeia de custódia detalhada, critérios de encerramento, comunicação externa e testes/simulações.
