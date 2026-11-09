@@ -152,3 +152,12 @@ Legenda:
 - [x] Após o terceiro lembrete, interromper notificações e aguardar a manifestação do Administrador responsável.
 - [x] Manter a solicitação **Em análise** após o limite, sem liberação ou decisão automática.
 - [ ] Especificar implementação técnica do agendamento, registro de entrega e prevenção de duplicidade.
+
+
+### Princípio obrigatório: backend como autoridade
+
+- [x] Aprovar backend como autoridade exclusiva para validação e execução de todas as regras de negócio.
+- [x] Exigir validação no backend para permissões, estados, custeio, recálculos, aprovações, exclusões, reativações, limites e agendamentos.
+- [x] Impedir que chamadas diretas a APIs, manipulação do frontend, importações ou operações em massa contornem regras.
+- [x] Exigir que o frontend só informe sucesso após confirmação do backend.
+- [ ] Detalhar controles técnicos, testes de segurança e critérios de aceite por módulo antes da implementação.
