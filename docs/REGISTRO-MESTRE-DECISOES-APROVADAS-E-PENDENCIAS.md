@@ -981,3 +981,10 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Desativar áudio mantém notificações visuais e o sino funcionando normalmente.
 - O sino continua exibindo o indicador de notificações não lidas e permitindo consultar o resumo consolidado.
 - Persistência, catálogo, compatibilidade e bloqueios de áudio pelo navegador/sistema permanecem pendentes de detalhamento técnico.
+
+
+### Sino permanente no cabeçalho global — APROVADO (09/11/2026)
+
+- O sino de notificações ficará sempre visível no cabeçalho global padrão do Alianza, independentemente do módulo/tela acessado pelo usuário.
+- Deve permitir consultar o resumo consolidado e identificar notificações não lidas em toda a navegação autenticada, sempre respeitando permissões e confidencialidade.
+- A visibilidade permanente do sino não força a ativação de alertas sonoros; continuam valendo as preferências individuais de cada usuário.
