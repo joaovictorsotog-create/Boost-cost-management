@@ -935,3 +935,13 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Cada usuário poderá ativar ou desativar o som, escolher entre diferentes opções de sons, ajustar o volume e testar o som antes de salvar suas preferências.
 - As preferências salvas devem ser aplicadas aos alertas daquele usuário, respeitando as regras gerais de notificações e os limites contra repetição excessiva.
 - Detalhes de persistência, disponibilidade de sons, compatibilidade dos dispositivos e comportamento quando o navegador/sistema bloquear áudio permanecem pendentes.
+
+
+## Configurações individuais de notificações — localização aprovada em 09/11/2026
+
+- Disponibilizar uma área própria em **Configurações → Notificações**.
+- Centralizar nessa área as preferências individuais de alertas sonoros já aprovadas: ativar/desativar, escolher som, ajustar volume e testar antes de salvar.
+- Manter as preferências individualizadas por usuário, sem impor a configuração de uma pessoa aos demais usuários ou à empresa.
+- Integrar essa configuração ao sino de notificações, que permanece como ponto de acesso aos avisos e indicador de notificações não lidas.
+- Desativar o som não desativa nem oculta notificações visuais.
+- Persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio permanecem pendentes de especificação técnica.
