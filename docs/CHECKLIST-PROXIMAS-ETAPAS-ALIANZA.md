@@ -371,3 +371,13 @@ Legenda:
 - [x] Evitar repetição sonora indefinida e excesso de notificações.
 - [x] Respeitar permissões e confidencialidade nos avisos.
 - [ ] Definir configuração detalhada, seleção de sons, volume, disparo, frequência, agrupamento e sincronização entre dispositivos.
+
+### Preferências individuais de alertas sonoros — decisão aprovada
+
+- [x] Manter preferências de alertas sonoros individuais por usuário.
+- [x] Permitir ligar/desligar o som.
+- [x] Permitir escolher entre diferentes sons.
+- [x] Permitir ajustar o volume.
+- [x] Permitir testar o som antes de salvar.
+- [x] Aplicar as preferências individuais sem impor configuração global à empresa.
+- [ ] Definir persistência, catálogo de sons, compatibilidade e tratamento de bloqueios de áudio pelo navegador/sistema.
