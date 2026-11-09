@@ -719,3 +719,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Validação visual no frontend não substitui validação no servidor. APIs diretas, manipulação de requisições, importações e operações em massa não podem contornar regras.
 - O frontend apenas apresenta dados, recebe comandos e exibe resultados após confirmação do backend.
 - Estados e contadores que precisam persistir entre sessões ou reinicializações são controlados e persistidos no backend. Regra global para todos os módulos.
+
+
+## 48. Exclusividade de titularidade da análise entre Administradores (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O primeiro Administrador cuja solicitação de início de análise for aceita pelo backend assume a titularidade; o backend registra responsável e horário.
+- Outros Administradores podem consultar a solicitação, mas não podem assumir, aprovar ou rejeitar enquanto ela estiver **Em análise**.
+- A interface identifica o responsável atual. Não é permitida tomada de controle forçada.
+- Em tentativas simultâneas, somente uma operação de início de análise pode ser aceita pelo backend; as demais recebem o estado atualizado e a identificação do responsável.
+- A exclusividade deve ser garantida no backend por controle atômico de concorrência, nunca apenas pela interface.
+- Detalhes técnicos de concorrência, recuperação de falhas e liberação de análises abandonadas permanecem pendentes de especificação.
