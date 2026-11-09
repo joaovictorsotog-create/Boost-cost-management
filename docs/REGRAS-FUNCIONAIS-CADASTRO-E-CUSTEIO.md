@@ -1284,7 +1284,7 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Os filtros poderão ser combinados para refinar os resultados.
 - O backend deverá validar identidade, permissões e escopo de cada consulta, inclusive o filtro por usuário solicitante. O frontend não poderá ampliar o conjunto de registros acessíveis.
 - Os resultados deverão respeitar também a retenção de 15 meses e as regras de acesso individual aos arquivos exportados.
-- A aplicação/limpeza dos filtros e a paginação estão definidas; a ordenação dos resultados permanece pendente.
+- A aplicação/limpeza dos filtros, a paginação e a ordenação dos resultados estão definidas.
 
 
 ### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
@@ -1304,4 +1304,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O backend retornará somente os registros da página solicitada, sem exigir o carregamento integral do histórico.
 - Os filtros efetivamente aplicados deverão ser preservados durante a navegação entre páginas.
 - A paginação, seus parâmetros e o escopo dos resultados serão validados pelo backend.
-- A ordenação dos resultados permanece pendente de definição.
+- A ordenação padrão será pela data e horário da solicitação, da mais recente para a mais antiga; o usuário poderá alternar para a ordem da mais antiga para a mais recente. A ordenação escolhida será preservada durante a navegação entre páginas. Quando duas ou mais solicitações tiverem a mesma data e horário, o identificador único da solicitação será usado como critério adicional de desempate, garantindo uma ordem estável.
+
+
+### Ordenação do histórico de exportações — decisão aprovada (09/11/2026)
+
+- A ordenação padrão será pela data e horário da solicitação, da mais recente para a mais antiga.
+- O usuário poderá alternar para a ordem da mais antiga para a mais recente.
+- A ordenação escolhida deverá ser preservada durante a navegação entre páginas.
+- Quando duas ou mais solicitações tiverem a mesma data e horário, o identificador único da solicitação será utilizado como critério adicional de desempate, garantindo uma ordem estável.
+- A ordenação, os critérios e a paginação serão validados e executados pelo backend.
