@@ -995,3 +995,12 @@ Legenda:
 - [x] Abranger caminhos administrativos/técnicos e rastrear acessos privilegiados.
 - [x] Registrar correções como novos eventos vinculados, sem sobrescrever originais.
 - [ ] Definir mecanismo técnico, gestão de chaves, segregação, retenção, monitoramento, backups e testes periódicos.
+
+
+### Política de retenção dos registros de auditoria — decisão aprovada (09/11/2026)
+- [x] Definir retenção mínima interna de 5 anos para registros de auditoria.
+- [x] Impedir descarte automático enquanto houver investigação, incidente, contestação, obrigação legal ou pendência não encerrada.
+- [x] Exigir avaliação legal/regulatória e operacional antes de descarte após o prazo mínimo.
+- [x] Exigir procedimento formal e trilha auditável para descarte excepcional.
+- [x] Compatibilizar retenção com LGPD e normas aplicáveis.
+- [ ] Definir marco inicial, categorias/exceções, legal hold, minimização/anonimização, descarte seguro, responsáveis, revisão periódica e testes.
