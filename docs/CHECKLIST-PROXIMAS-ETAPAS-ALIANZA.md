@@ -783,3 +783,13 @@ Legenda:
 - [x] Não presumir horários, quantidades ou resultados finais ainda indisponíveis.
 - [x] Manter a consulta e sua atualização em modo somente leitura, sem interferir na tarefa.
 - [x] Validar identidade, permissões, estado e conteúdo no backend.
+
+### Atualização automática dos detalhes da exportação — decisão aprovada (09/11/2026)
+
+- [x] Atualizar automaticamente os detalhes enquanto a tela estiver aberta, sem exigir atualização manual.
+- [x] Exibir somente dados, estados e eventos confirmados pelo backend.
+- [x] Controlar as atualizações para evitar consultas excessivas e sobrecarga.
+- [x] Garantir que a atualização seja somente leitura e não interfira no processamento nem solicite cancelamento.
+- [ ] Definir frequência e mecanismo técnico de atualização.
+- [ ] Definir comportamento em caso de perda de conexão.
+- [ ] Definir suspensão ou redução das atualizações quando a tela não estiver ativa.
