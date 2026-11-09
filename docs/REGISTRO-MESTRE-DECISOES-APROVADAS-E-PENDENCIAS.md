@@ -1108,3 +1108,6 @@ O histórico permitirá filtrar por período, tipo de ocorrência, estado do ale
 ### Paginação do histórico de reincidências — APROVADO (09/11/2026)
 
 A consulta terá 20 registros por página por padrão, com opções de 20, 50 e 100. O histórico completo não será carregado de uma só vez: o backend retornará apenas a página solicitada, respeitando filtros, ordenação e permissões. Navegar ou alterar a quantidade por página não modifica alertas ou históricos e preserva os filtros e a ordenação aplicados.
+### Exportação do histórico de reincidências — APROVADO (09/11/2026)
+
+O Histórico de reincidências poderá ser exportado em **Excel** e **PDF**. A exportação respeitará os filtros efetivamente aplicados e o escopo autorizado do solicitante; o backend revalidará permissões administrativas e acesso aos registros no momento da geração. O arquivo conterá somente dados que o usuário pode consultar. Cada exportação será registrada no Log de Atividades/auditoria, incluindo usuário, data/hora, formato, filtros/escopo e resultado, sem armazenar conteúdo sensível desnecessário. A operação é somente leitura e não altera alertas ou históricos. A interface só confirmará a conclusão após retorno bem-sucedido do backend. **PENDENTE:** limites de volume, expiração/armazenamento temporário, proteção de arquivos e detalhes de formatação.
