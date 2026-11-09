@@ -959,3 +959,12 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O painel deve funcionar como elemento flutuante/suspenso, mantendo o usuário na tela e no módulo atuais, sem navegação para outra página.
 - O painel deve permitir consultar o resumo e as notificações respeitando as permissões e regras de confidencialidade já aprovadas.
 - Esta decisão define o comportamento funcional e a posição do painel; dimensões, responsividade, interação de fechamento e detalhes visuais permanecem pendentes.
+
+### Fechamento do painel do sino de notificações — decisão aprovada (09/11/2026)
+
+- O painel deve fechar ao clicar novamente no sino que o abriu.
+- O painel deve fechar ao clicar fora de sua área.
+- Enquanto o painel estiver aberto, a tecla **Esc** deve fechá-lo, sem navegar para outra tela.
+- O fechamento do painel não marca notificações como lidas nem altera seu conteúdo ou estado; a leitura deve seguir ação própria já definida.
+- Os três comportamentos são formas equivalentes de dispensar o painel e não devem provocar perda de contexto da tela atual.
+- Detalhes de acessibilidade, foco de teclado e compatibilidade permanecem sujeitos à especificação técnica.
