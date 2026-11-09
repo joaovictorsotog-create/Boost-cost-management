@@ -829,3 +829,15 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Preservar todos os eventos sem sobrescrita ou exclusão pela interface.
 - Backend controla geração, integridade, ordenação e acesso ao histórico.
 - Permanecem pendentes os critérios exatos de relevância para registro de consultas, granularidade, retenção, permissões detalhadas e critérios técnicos/testes de aceite.
+
+
+## 58. Linha do tempo única da solicitação na Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Apresentar o histórico de cada solicitação em uma única linha do tempo cronológica.
+- Reunir eventos relevantes: início/retomada e encerramento de análise, lembretes, transferências e justificativas, consultas/ações relevantes, aprovação e rejeição.
+- Exibir ator responsável, data/hora, operação e resultado, incluindo justificativa e ciclo de titularidade quando aplicável.
+- Manter a sequência real dos acontecimentos entre ciclos e titulares.
+- A linha do tempo é uma visualização unificada dos registros do backend, não substitui a auditoria.
+- Permanecem pendentes detalhes de filtros, paginação, agrupamento visual e apresentação.
