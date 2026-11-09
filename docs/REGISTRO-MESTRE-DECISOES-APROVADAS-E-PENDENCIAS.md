@@ -291,3 +291,13 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - A família é obrigatória e integra a classificação principal do item; não é apenas uma etiqueta opcional.
 - A classificação por família é necessária para localizar/pesquisar os itens de forma organizada.
 - Mantêm-se as regras anteriores: famílias são configuráveis, não determinam unidade de medida e só podem ser excluídas quando não houver itens vinculados.
+
+## 10. Decisão incremental — ID numérico único e obrigatório (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Todo item terá ID numérico obrigatório e exclusivo.
+- O administrador organiza e define a numeração manualmente.
+- O sistema deve impedir a gravação de IDs duplicados.
+- O ID será utilizado como critério de pesquisa.
+- Alterações de ID seguem a confirmação global e o registro de auditoria.
