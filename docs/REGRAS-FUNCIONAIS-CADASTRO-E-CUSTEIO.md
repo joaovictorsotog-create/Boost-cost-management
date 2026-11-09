@@ -1232,3 +1232,11 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A interface só apresentará o estado **Cancelada** após confirmação do backend; enquanto aguarda, deverá indicar que o cancelamento está em processamento/aguardando confirmação.
 - Se a tarefa já tiver terminado ou não puder mais ser cancelada quando o pedido for processado, o backend retornará o estado real, sem a interface declarar cancelamento concluído.
 - O backend será responsável por validar a solicitação, controlar concorrência com conclusão/falha e persistir o estado final.
+
+### Auditoria do cancelamento de exportação — decisão aprovada (09/11/2026)
+
+- Todo pedido de cancelamento deverá gerar registro no Log de Atividades, identificando a solicitação de exportação, o usuário solicitante e a data/hora do pedido.
+- O resultado final deverá ser registrado separadamente, com data/hora e estado confirmado pelo backend: cancelada, concluída, falha ou cancelamento não efetivado conforme o estado real da tarefa.
+- O registro deverá distinguir claramente o pedido de cancelamento da confirmação de cancelamento efetivo.
+- A auditoria será persistida e protegida pelo backend, sem possibilidade de edição ou exclusão pela interface.
+- A interface só apresentará o resultado final após confirmação do backend.
