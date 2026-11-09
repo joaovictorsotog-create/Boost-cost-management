@@ -207,3 +207,12 @@ Legenda:
 - [x] Registrar titular anterior, novo titular, justificativa, responsável e data/hora.
 - [x] Preservar histórico, lembretes e ciclos anteriores; não decidir automaticamente a solicitação.
 - [ ] Definir critérios técnicos e testes de aceite para elegibilidade, concorrência, notificações e auditoria da transferência.
+
+ 
+### Notificação após transferência de titularidade
+
+- [x] Notificar o Administrador anterior após a transferência ser persistida.
+- [x] Informar novo titular e justificativa registrada.
+- [x] Vincular a notificação à solicitação e respeitar permissões.
+- [x] Manter rastreabilidade do envio/resultado sem restaurar poderes ao titular anterior.
+- [ ] Definir canal, política de tentativas, falhas de entrega e critérios de aceite das notificações.
