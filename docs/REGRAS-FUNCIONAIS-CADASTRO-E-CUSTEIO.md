@@ -2,7 +2,7 @@
 
 **Projeto:** Alianza — Sistema de Custos  
 **Repositório:** Boost Cost Management  
-**Status:** decisões funcionais consolidadas em 06/11/2026  
+**Status:** decisões funcionais consolidadas em 09/11/2026  
 **Escopo deste documento:** registrar regras confirmadas em conversa. Não representa implementação, decisão de stack ou autorização para migrations/deploy.
 
 ## 1. Princípio do Cadastro Central
@@ -94,7 +94,8 @@ Regras:
 - Alterações no preço de um item simples devem refletir nos custos de todos os itens compostos dependentes.
 - O recálculo não deve depender de o usuário abrir e salvar manualmente cada estrutura.
 - O mecanismo precisa preservar a consistência entre o custo dos componentes e o custo calculado dos compostos.
-- Histórico de preços e custos é desejável e consta do escopo em discussão, mas campos, vigência, autoria, retenção e forma de consulta ainda precisam ser especificados antes da implementação.
+- Histórico de custos deve preservar os valores anteriores e permitir visualizar evolução; detalhes de armazenamento técnico e precisão interna ainda precisam ser especificados.
+- A retenção de um ano e arquivamento se aplicam ao Log de Atividades, não à exclusão automática do histórico de custos.
 
 ## 8. Exemplo de comportamento da interface
 
@@ -109,15 +110,14 @@ A interface deve deixar evidente quando o custo é manual e quando é calculado,
 
 Não assumir decisões para os pontos abaixo sem confirmação:
 
-1. Recuperar a lista exata de unidades de medida já aprovada nas conversas anteriores. Não criar unidades alternativas nem conversões automáticas.
-2. Quantidade-base da estrutura (sempre uma unidade ou lote de produção configurável).
-3. Regras universais de aproveitamento de barras/tubos e arredondamento de compras.
-4. Precisão interna, arredondamento e apresentação monetária.
-5. Se e como o histórico armazenará preços anteriores, custos calculados, data/hora e usuário responsável.
-6. Como tratar alterações em estruturas já utilizadas, versões e custos históricos.
-7. Tratamento específico do fator Gama, ainda pendente de esclarecimento.
-8. Se haverá preço por fornecedor, múltiplas tabelas ou apenas um preço vigente por item.
-9. Comportamento para itens inativos, sem preço, ou com estrutura incompleta.
+1. Quantidade-base da estrutura (sempre uma unidade ou lote de produção configurável).
+2. Regras universais de aproveitamento de barras/tubos e arredondamento de compras.
+3. Precisão interna de armazenamento e cálculo além do arredondamento de apresentação por item já aprovado.
+4. Como tratar versões de estruturas e custos históricos em alterações futuras.
+5. Se haverá preço por fornecedor, múltiplas tabelas ou apenas um preço vigente por item.
+6. Comportamento para itens sem preço ou com estrutura incompleta.
+7. Regra de exclusão de item que ainda esteja vinculado a estruturas: foi aprovado mostrar impacto e exigir confirmação, mas não foi fechado se a exclusão pode prosseguir com vínculos ou se exige remoção prévia.
+8. Frequência, retenção e teste de restauração dos backups.
 
 ## 10. Limites deste registro
 
@@ -126,3 +126,107 @@ Não assumir decisões para os pontos abaixo sem confirmação:
 - A planilha de preços é referência para exemplos e entendimento, não deve impor sozinha a lógica do sistema.
 - A referência ao Omie é inspiração para cadastro e reutilização de itens/estruturas, não para copiar regras fiscais ou funcionalidades não solicitadas.
 - Em caso de conflito com a Ordem Mestra ou com a especificação funcional original, registrar a divergência e resolver antes de implementar; não substituir silenciosamente documentos oficiais.
+
+
+## 11. Unidades, IDs e famílias — decisões recuperadas
+
+- Unidades aprovadas: **metro, quilograma (kg), metro quadrado (m²) e unidade**.
+- Cada item utiliza uma única unidade. Não há unidades alternativas nem conversão automática.
+- O ID interno é numérico e sua organização será definida manualmente pelo administrador; serve para busca e organização.
+- Famílias/classificações são cadastráveis e editáveis. A família não determina a unidade de medida.
+- Busca de itens pode utilizar ID, descrição ou família.
+- Uma categoria/família só pode ser excluída se não houver itens vinculados; se houver, os itens devem ser reclassificados primeiro.
+
+## 12. Regras complementares de custo industrial
+
+1. Matérias-primas são cadastradas com custo pela unidade correspondente: chapa por kg, tubo por metro, etc.
+2. O custo da linha é quantidade utilizada × custo unitário cadastrado.
+3. Os custos/pesos fornecidos já incorporam o desperdício calculado pelo usuário; não adicionar uma segunda margem de desperdício.
+4. O sistema apura custo industrial. Não adiciona impostos separadamente nem realiza formação de preço de venda.
+5. Gama é fator de correção associado ao inox e pode ser aplicado manualmente quando necessário. Não é automático nem obrigatório. O valor 1,20 da planilha é referência, não constante global.
+6. Pintura é um serviço/item com custo unitário próprio, ativável no produto ou subconjunto. Quando ativada, entra na composição e propaga seu custo aos produtos-pai.
+7. Usinagem externa pode ser cadastrada como item/serviço com custo unitário.
+8. A categoria “corte a laser” não adiciona por si só um custo automático. O custo do material utilizado é calculado pelo peso e custo da matéria-prima informado.
+9. Não aplicar Alpha/Beta ou multiplicadores de preço comercial ao motor de custo sem decisão específica.
+
+## 13. Arredondamento aprovado
+
+A regra de apresentação é aplicada **individualmente por item**, não somente sobre a soma final:
+
+- Terceira casa decimal de 0 a 5: arredondar para baixo.
+- Terceira casa decimal acima de 5: arredondar para cima.
+- Exemplos aprovados: R$ 1,543 → R$ 1,54; R$ 1,546 → R$ 1,55.
+
+A precisão interna usada para armazenar e calcular valores antes da apresentação ainda precisa ser definida tecnicamente.
+
+## 14. Estruturas, famílias e prevenção de dupla contagem
+
+- Um mesmo componente pode aparecer diretamente no produto e dentro de um subconjunto; cada ocorrência deve ser contabilizada conforme sua posição e quantidade na árvore.
+- O sistema não deve bloquear componentes repetidos só por serem iguais.
+- Quando um subconjunto composto é inserido no produto-pai, o resumo por família do pai considera a família principal do subconjunto e seu custo consolidado. Não deve somar novamente as famílias internas já incorporadas no custo do subconjunto.
+- O resumo de custos por família apresenta quantidades e custos acumulados sem dupla contagem.
+- Duplicar um produto cria uma cópia independente, permitindo adaptar descrição e estrutura para variantes como aço carbono e inox.
+
+## 15. Itens inativos e custos zerados
+
+- Itens inativos ficam em aba própria.
+- Item inativo não aparece na árvore de composição e não participa do custeamento.
+- Inativar/remover componente reduz o custo; substituir componente recalcula o custo correspondente.
+- R$ 0,00 pode ser salvo/exibido, mas não é considerado primeiro valor válido para a evolução histórica. O sistema deve sinalizar/notificar o item para revisão.
+- Itens inativos ficam ocultos por padrão na pesquisa global, mas podem ser encontrados com filtro específico.
+
+## 16. Revisão semestral, histórico e alertas
+
+1. A revisão de custos dos materiais deve ser estimulada a cada seis meses.
+2. Se não houver revisão nem alteração durante o ciclo de seis meses, emitir lembrete.
+3. Quando o usuário alterar o custo e salvar, reiniciar a contagem do ciclo.
+4. O sistema só reconhece uma alteração depois que o cadastro for salvo.
+5. Não calcular média entre preço antigo e novo; utilizar o custo vigente real informado.
+6. O primeiro custo válido (maior que zero) é a base de comparação; os registros seguintes mostram aumentos e quedas.
+7. A evolução pode ser apresentada em gráfico, alternando entre valores em reais e percentuais.
+8. Limites de variação podem ser configurados no ambiente do produto.
+9. Alterações da estrutura vigente não apagam o histórico anterior. Apenas a estrutura atual e seus custos derivados são atualizados.
+10. Relatórios são gerados sob demanda; PDF pode ser solicitado manualmente.
+
+## 17. Importação e atualização em lote
+
+- Disponibilizar planilha Excel padronizada para download, preenchimento e reenvio.
+- A prévia deve mostrar apenas os dados/linhas que sofreram alteração.
+- Erros devem ser destacados por linha/campo.
+- Linhas válidas podem ser aprovadas mesmo quando outras linhas da mesma planilha apresentam erros.
+- Aplicar a mesma proteção de prévia e aprovação tanto na importação quanto na atualização em lote.
+- Nenhuma linha será gravada antes da aprovação do usuário.
+
+## 18. Interface, pesquisa e operação
+
+- Painel Geral é a tela inicial.
+- Sidebar recolhível, com opção de permanecer fixa.
+- Sino com contador de notificações e painel flutuante expansível.
+- Pesquisa global compacta por ID/descrição, apresentando ID, descrição, família, tipo e custo vigente.
+- Ao abrir um cadastro pela pesquisa global, preservar o contexto de navegação anterior no retorno.
+- Pesquisa global respeita permissões e oculta inativos por padrão, oferecendo filtro para localizá-los.
+- Atalhos aprovados: Esc fecha modal; Enter confirma pesquisa; Ctrl+K abre pesquisa global; Alt+← retorna à tela anterior.
+- Se o usuário tentar sair com alterações não salvas, perguntar se deseja sair. Se confirmar, descartar sem gravar e sem criar histórico.
+- Desktop recebe experiência completa; notebook/tablet adaptam os componentes; celular prioriza consultas, notificações, histórico e relatórios. Edição complexa de estruturas tem prioridade no desktop.
+- Tabelas extensas devem carregar progressivamente; gráficos, históricos e relatórios sob demanda; recálculos não devem bloquear a navegação.
+
+## 19. Log de atividades, acesso e continuidade
+
+1. Log de Atividades deve mostrar quem fez e o que fez.
+2. Registros permanecem no ambiente principal durante o primeiro ano; após um ano vão para o Arquivamento.
+3. O administrador decide explicitamente se e quando excluir registros arquivados; não há exclusão automática.
+4. Essa retenção não autoriza apagar automaticamente histórico de custos, estruturas antigas ou memórias de cálculo.
+5. Login individual, 2FA integrado e RLS no banco de dados.
+6. Níveis de acesso aprovados: Administrador, Editor e Visualizador.
+7. Backup automático periódico aprovado; frequência, retenção e teste de restauração ainda não especificados.
+8. Operações interrompidas não podem ser apresentadas como concluídas; evitar duplicidade em tentativas repetidas e preservar integridade.
+9. Painel discreto de Informações do Sistema mostra estado real do banco, autenticação, serviços internos e horário da última verificação.
+
+## 20. Limites de escopo e arquitetura técnica
+
+- O sistema é de apuração de custo industrial; não deve incorporar CRM, estoque, fiscal, clientes, condições comerciais ou formação de preço de venda.
+- O projeto é separado do CRM, com Supabase separado.
+- O usuário informou domínio planejado `sistema.trique-brasil.io` e VPS KVM2 existente (2 vCPU, 8 GB RAM, 100 GB disco); isso não significa que o sistema esteja implantado.
+- Frontend deve ser tratado como não confiável; validações críticas no backend; segredos, tokens, credenciais e arquivos `.env` nunca podem ser expostos.
+- A stack do CRM não deve ser copiada para este projeto. A stack específica do Sistema de Custos ainda não foi aprovada nas conversas auditadas.
+- A Ordem Mestra e a especificação técnica de segurança são documentos de precedência e devem ser cruzados antes de implementação.
