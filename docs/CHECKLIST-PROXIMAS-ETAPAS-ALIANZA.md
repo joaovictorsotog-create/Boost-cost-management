@@ -397,3 +397,10 @@ Legenda:
 - [x] Manter o sino de notificações sempre visível no cabeçalho global, independentemente do módulo/tela.
 - [x] Permitir acesso ao resumo consolidado e ao indicador de notificações não lidas em toda a navegação autenticada.
 - [x] Respeitar permissões e confidencialidade; a visibilidade do sino não ativa som automaticamente nem altera preferências individuais.
+
+### Abertura do painel do sino de notificações — decisão aprovada (09/11/2026)
+
+- [x] Abrir o painel ao clicar no sino, logo abaixo dele e alinhado ao canto superior direito.
+- [x] Manter o painel flutuante, sem retirar o usuário da tela ou do módulo atual.
+- [x] Respeitar permissões e confidencialidade ao apresentar notificações e resumo.
+- [ ] Definir dimensões, responsividade, comportamento de fechamento e detalhes visuais.
