@@ -288,3 +288,13 @@ O formulário de cadastro do Cadastro Central será apresentado em uma única te
 4. **Controle:** situação do item e informações de atualização.
 
 Não serão usadas abas separadas para esses quatro blocos. A decisão trata da organização visual; não altera regras de validação, permissões, confirmação ou cálculo já aprovadas.
+
+
+## 27. Sugestão sequencial de ID com escolha manual — decisão aprovada em 09/11/2026
+
+- O sistema deve sugerir automaticamente o menor número inteiro positivo ainda não utilizado como próximo ID.
+- A sugestão não é obrigatória: o administrador pode aceitá-la ou informar manualmente qualquer outro ID numérico disponível.
+- Antes de salvar, o sistema valida a unicidade do ID escolhido; IDs já utilizados não podem ser atribuídos novamente.
+- Após cada cadastro, a sugestão seguinte é recalculada considerando todos os IDs já utilizados. Exemplo: se o ID 10 já existe e os IDs 5 a 9 estão livres, a sugestão será 5; depois que 5 a 9 forem ocupados, a sugestão passa a 11.
+- IDs de itens inativados permanecem reservados e não podem ser reutilizados.
+- A regra é uma conveniência de preenchimento e organização; não altera o caráter obrigatório e exclusivo do ID nem retira do administrador a possibilidade de escolher outro número livre.
