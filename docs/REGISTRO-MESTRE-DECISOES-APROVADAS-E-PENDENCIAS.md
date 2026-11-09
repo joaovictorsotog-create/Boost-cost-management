@@ -616,4 +616,7 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O item excluído não poderá ser selecionado em novas estruturas. O registro de auditoria da exclusão deve permanecer.
 - A exclusão não poderá apagar nem reescrever o passado: preservar fotografia histórica imutável das composições e dos custos vigentes antes da exclusão, para permitir consultar como cada produto era composto e custeado naquele momento, mesmo após a remoção do item do Cadastro Central.
 - A fotografia deve manter dados suficientes para rastrear a composição e os valores usados no cálculo, sem depender da existência do cadastro ativo do item excluído.
-- A modalidade técnica de exclusão e os detalhes de modelagem, retenção e consulta das fotografias históricas permanecem pendentes de especificação antes da implementação.
+- A exclusão será lógica, não física: preservar internamente o registro original para rastreabilidade, auditoria e referência histórica, deixando-o indisponível para uso operacional e fora das consultas normais do Cadastro Central.
+- O item excluído não poderá ser selecionado em novas estruturas; as referências operacionais atuais serão tratadas conforme a remoção automática aprovada, e as fotografias históricas imutáveis continuarão consultáveis.
+- Eventual consulta administrativa dos registros excluídos deverá ocorrer em ambiente separado e controlado, com permissões apropriadas.
+- Detalhes técnicos de modelagem, retenção e consulta do registro preservado permanecem pendentes de especificação antes da implementação.
