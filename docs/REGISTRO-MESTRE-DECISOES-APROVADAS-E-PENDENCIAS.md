@@ -1020,3 +1020,11 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Abrir/fechar o painel não marca notificações como lidas.
 - Aplicar permissões e confidencialidade também na consulta ao histórico.
 - Quantidade exibida, ordenação, paginação, categorias definitivas e ação de marcar como lida permanecem pendentes.
+
+### Quantidade de notificações recentes no painel — APROVADO (09/11/2026)
+
+- Exibir inicialmente as **10 notificações mais recentes** do usuário autenticado.
+- Ordenar da mais recente para a mais antiga, usando data/hora registrada pelo backend.
+- Manter notificações anteriores acessíveis no histórico completo.
+- Respeitar permissões, confidencialidade e estado real de leitura.
+- Paginação/carregamento do histórico e desempate de datas iguais permanecem pendentes.
