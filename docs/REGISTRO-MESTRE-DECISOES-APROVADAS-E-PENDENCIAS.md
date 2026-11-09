@@ -852,3 +852,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Preservar a ordem cronológica dos eventos exibidos e manter disponível a visão completa sem filtros.
 - O backend aplica as permissões de acesso; filtros não podem expor eventos não autorizados.
 - Permanecem pendentes os detalhes visuais e técnicos, inclusive paginação e apresentação.
+
+
+## 60. Seleção múltipla nos filtros da linha do tempo (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Permitir selecionar vários responsáveis e vários tipos de evento simultaneamente.
+- Permitir combinar os filtros, remover seleções individualmente e limpar todos os filtros.
+- A consulta filtrada preserva a ordem cronológica e não altera os registros históricos.
+- Backend mantém a aplicação das permissões de acesso.
