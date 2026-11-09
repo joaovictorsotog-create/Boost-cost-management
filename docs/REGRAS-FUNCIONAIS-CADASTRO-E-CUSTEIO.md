@@ -1049,3 +1049,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O sistema evitará repetição sonora indefinida. Preferências individuais de som e permissões continuam aplicáveis.
 - Leitura, reconhecimento e resolução são estados/ações distintos e devem ser mantidos separadamente.
 - Critérios para declarar uma ocorrência resolvida, responsáveis pela resolução, evidências exigidas, eventual reabertura, escalonamento e detalhes visuais/sonoros permanecem pendentes.
+
+### Resolução de notificações críticas — decisão aprovada (09/11/2026)
+
+- Um Administrador autorizado poderá declarar uma notificação crítica como **Resolvida**.
+- A resolução exigirá justificativa obrigatória, registrada junto ao evento.
+- O backend validará autorização, estado atual e concorrência antes de efetivar a resolução; a interface só confirmará após persistência bem-sucedida.
+- A resolução será registrada na auditoria com Administrador responsável, data/hora, justificativa e resultado.
+- A resolução não apagará a ocorrência original, o reconhecimento anterior nem a linha do tempo do alerta.
+- A ação de resolver será distinta de marcar como lida e de reconhecer o alerta.
+- Critérios objetivos para considerar cada tipo de ocorrência resolvido, evidências/documentos eventualmente exigidos, reabertura e escalonamento permanecem pendentes de definição.
