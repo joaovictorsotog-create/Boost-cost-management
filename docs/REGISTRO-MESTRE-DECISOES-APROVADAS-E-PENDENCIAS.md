@@ -1146,7 +1146,7 @@ O histórico operacional das solicitações de exportação ficará disponível 
 
 ### Filtros do histórico de exportações — APROVADO (09/11/2026)
 
-O histórico permitirá filtrar por **período** (dentro da retenção de 15 meses), **estado da exportação** (Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada), **usuário solicitante** (somente quando houver autorização para consultar solicitações de terceiros; nos demais casos, apenas as próprias solicitações) e **formato do arquivo** (Excel ou PDF). Os filtros poderão ser combinados. O backend validará identidade, permissões e escopo, sem confiar no frontend. A aplicação/limpeza dos filtros e a paginação foram aprovadas; **PENDENTE:** ordenação dos resultados.
+O histórico permitirá filtrar por **período** (dentro da retenção de 15 meses), **estado da exportação** (Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada), **usuário solicitante** (somente quando houver autorização para consultar solicitações de terceiros; nos demais casos, apenas as próprias solicitações) e **formato do arquivo** (Excel ou PDF). Os filtros poderão ser combinados. O backend validará identidade, permissões e escopo, sem confiar no frontend. A aplicação/limpeza dos filtros e a paginação foram aprovadas; A ordenação padrão será pela data e horário da solicitação, da mais recente para a mais antiga, com opção de alternar para a mais antiga primeiro. A ordenação escolhida será preservada entre páginas. Em caso de empate de data/hora, o identificador único da solicitação será o critério adicional de desempate, garantindo estabilidade. O backend valida e executa ordenação e paginação.
 
 
 ### Aplicação e limpeza dos filtros do histórico de exportações — APROVADO (09/11/2026)
@@ -1157,3 +1157,8 @@ A edição dos filtros não dispara consultas automaticamente. O botão **Aplica
 ### Paginação do histórico de exportações — APROVADO (09/11/2026)
 
 A listagem utilizará **20 registros por página** como padrão, com opções de **20, 50 ou 100**. O backend retornará somente a página solicitada, sem carregar todo o histórico de uma vez. Os filtros efetivamente aplicados serão preservados durante a navegação entre páginas, e o backend validará parâmetros e escopo. **PENDENTE:** ordenação dos resultados.
+
+
+### Ordenação do histórico de exportações — APROVADO (09/11/2026)
+
+A ordenação padrão será pela data e horário da solicitação, da mais recente para a mais antiga. O usuário poderá alternar para a ordem da mais antiga para a mais recente. A ordenação escolhida será preservada durante a navegação entre páginas. Quando solicitações tiverem a mesma data e horário, o identificador único da solicitação será usado como critério adicional de desempate, garantindo uma ordem estável. O backend valida e executa a ordenação e a paginação.
