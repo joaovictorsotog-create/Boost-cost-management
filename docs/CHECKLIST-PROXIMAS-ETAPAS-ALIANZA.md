@@ -650,3 +650,13 @@ Legenda:
 - [x] Impedir que o compartilhamento do link conceda acesso a outro usuário.
 - [x] Manter geração, armazenamento temporário, vínculo, expiração e autorização sob controle do backend.
 - [x] Confirmar disponibilidade/download na interface somente após retorno do backend.
+
+### Limites de processamento e volume da exportação — decisão aprovada (09/11/2026)
+
+- [x] Limitar a uma exportação em processamento por usuário.
+- [x] Informar e não iniciar outra exportação enquanto houver uma em andamento para o mesmo usuário.
+- [x] Limitar cada arquivo a 10.000 registros.
+- [x] Exigir divisão em arquivos menores para consultas acima de 10.000 registros.
+- [x] Validar os limites no backend, sem confiar exclusivamente no frontend.
+- [x] Apresentar o estado da solicitação somente conforme retorno confirmado pelo backend.
+- [ ] Detalhar contagem, concorrência entre solicitações simultâneas, retomada após falha e experiência de divisão da consulta.
