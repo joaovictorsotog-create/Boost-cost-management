@@ -883,3 +883,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Atualizar resultados somente após novo acionamento de **Aplicar filtros**.
 - Ao cancelar/descartar a edição, preservar os critérios e resultados anteriormente aplicados.
 - A edição temporária não altera registros históricos nem substitui as validações do backend.
+
+
+## 63. Aviso ao sair com filtros ainda não aplicados (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Ao tentar sair da tela com critérios de filtro alterados e ainda não aplicados, exibir notificação de confirmação.
+- Oferecer **Descartar alterações e sair**, preservando os últimos filtros aplicados e seus resultados, ou **Permanecer na tela**, mantendo a edição temporária.
+- Não descartar critérios temporários sem escolha explícita.
+- Sem alterações pendentes, não exibir esse aviso.
