@@ -1151,3 +1151,14 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O novo alerta seguirá o fluxo normal de classificação, reconhecimento, lembretes, resolução e auditoria.
 - A relação entre os alertas será validada e persistida pelo backend; o frontend apenas apresentará a referência autorizada.
 - A referência histórica não poderá expor informações de alertas anteriores a usuários sem permissão para consultá-los.
+
+
+### Histórico de reincidências de alertas críticos — decisão aprovada (09/11/2026)
+
+- O painel administrativo terá uma visualização própria de **Histórico de reincidências**, separada da lista de alertas críticos pendentes.
+- A visualização permitirá consultar grupos de alertas relacionados à mesma ocorrência ao longo do tempo, mantendo cada alerta como registro independente.
+- Para cada relação histórica, serão apresentados, conforme permissão: identificadores dos alertas relacionados, datas de criação e resolução, estados e quantidade de ocorrências/alertas vinculados.
+- A consulta histórica não altera estado, reconhecimento, responsável, prazos ou resolução de qualquer alerta e não executa ações em lote.
+- Alertas pendentes continuarão na área de pendências; a visualização histórica não os substituirá nem os ocultará.
+- O backend será responsável por manter as relações, quantidades e dados apresentados, validar permissões e preservar a trilha de auditoria. O frontend apenas exibirá os dados autorizados.
+- A consulta deverá respeitar as permissões de acesso aos alertas relacionados, sem revelar dados protegidos de ocorrências ou registros não autorizados.
