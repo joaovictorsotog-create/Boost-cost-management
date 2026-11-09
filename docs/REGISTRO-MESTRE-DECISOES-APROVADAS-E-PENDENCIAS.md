@@ -1083,3 +1083,8 @@ Cada ocorrência crítica terá identidade, estado, reconhecimento, resolução,
 ### Limite de alertas críticos exibidos simultaneamente — APROVADO (09/11/2026)
 
 O painel exibirá no máximo **5 alertas críticos simultaneamente**. Ocorrências excedentes continuarão persistidas e acessíveis por paginação ou **Ver todos**, sem descarte ou perda de histórico. A visualização inicial será ordenada da mais recente para a mais antiga. O contador do sino continuará mostrando o total de alertas distintos em **Aguardando reconhecimento**, inclusive os que não aparecem na primeira visualização. O limite é apenas de apresentação, não de registro ou quantidade de alertas pendentes. O ciclo de vida de cada alerta permanece independente e o backend controla dados, contagens e permissões.
+
+
+### Reincidência de manifestações em alertas críticos — APROVADO (09/11/2026)
+
+Uma nova manifestação da mesma ocorrência crítica que já tenha alerta aberto/não resolvido será anexada à linha do tempo do alerta original, sem gerar alerta duplicado. Manifestações de problemas distintos gerarão alertas independentes. A correlação será responsabilidade do backend, nunca uma decisão isolada do frontend. Cada nova manifestação deverá preservar seu registro de data/hora, origem e informações de auditoria, sem apagar ou reiniciar silenciosamente o histórico, reconhecimento ou prazos do alerta existente. **PENDENTE:** definir critérios técnicos de equivalência entre ocorrências, prevenção de falsos agrupamentos e distinção entre reincidência e problema novo.
