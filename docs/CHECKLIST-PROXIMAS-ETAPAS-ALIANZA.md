@@ -761,3 +761,17 @@ Legenda:
 - [x] Preservar a ordenação escolhida durante a navegação entre páginas.
 - [x] Utilizar o identificador único da solicitação como desempate quando data/hora forem iguais.
 - [x] Manter validação e execução da ordenação e paginação sob responsabilidade do backend.
+
+
+### Tela de detalhes da solicitação de exportação — decisão aprovada (09/11/2026)
+
+- [x] Permitir abrir a visualização individual de uma solicitação a partir do histórico.
+- [x] Exibir identificador único e usuário solicitante.
+- [x] Exibir data/hora da solicitação, formato e filtros utilizados.
+- [x] Exibir estado confirmado pelo backend e horários de início/encerramento quando disponíveis.
+- [x] Exibir quantidade de registros exportados e resultado final.
+- [x] Exibir motivo e registros de data/hora de cancelamentos ou falhas, quando aplicáveis.
+- [x] Disponibilizar download somente para exportação concluída, usuário autorizado e link dentro da validade de 30 minutos.
+- [x] Exibir histórico dos eventos relevantes de auditoria em modo somente leitura.
+- [x] Impedir edição ou exclusão dos dados pela interface.
+- [x] Manter validação de identidade, permissões, dados e estados sob autoridade do backend.
