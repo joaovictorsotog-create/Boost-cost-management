@@ -1105,3 +1105,13 @@ Legenda:
 - [x] Manter contenção, preservação de evidências e resposta ao incidente enquanto aguarda; não liberar por esse motivo.
 - [x] Registrar indisponibilidade, tentativas de convocação, responsáveis, horários e medidas adotadas.
 - [ ] Definir canais de convocação/escalonamento e continuidade operacional sem flexibilizar dupla aprovação.
+
+
+### Encerramento de falhas de segurança — decisão aprovada (09/11/2026)
+- [x] Exigir correção implementada antes do encerramento.
+- [x] Exigir reteste independente aprovado e evidências anexadas.
+- [x] Exigir registro do resultado técnico.
+- [x] Exigir validação explícita por Administrador diferente do responsável pela correção.
+- [x] Manter falha aberta se reteste reprovar ou evidências forem insuficientes.
+- [x] Auditar decisão, validador, responsáveis, horários, evidências e resultado.
+- [ ] Definir evidências mínimas, independência/competência do reteste, fluxo, reabertura e critérios de aceite.
