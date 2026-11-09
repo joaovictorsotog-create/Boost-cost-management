@@ -412,3 +412,11 @@ Legenda:
 - [x] Fechar ao pressionar **Esc**, sem navegar para outra tela.
 - [x] Não marcar notificações como lidas apenas por fechar o painel.
 - [ ] Definir acessibilidade, gerenciamento de foco e compatibilidade técnica.
+
+### Largura e adaptação do painel de notificações — decisão aprovada (09/11/2026)
+
+- [x] Adotar largura adaptável ao espaço disponível, sem largura fixa universal.
+- [x] Respeitar os limites da área visível da tela, sem cortar ou tornar o painel inacessível.
+- [x] Manter formato compacto junto ao sino em telas maiores e adaptar a largura em telas menores.
+- [x] Preservar a tela atual e as regras de abertura/fechamento.
+- [ ] Definir medidas exatas, margens e pontos de quebra na especificação visual/técnica.
