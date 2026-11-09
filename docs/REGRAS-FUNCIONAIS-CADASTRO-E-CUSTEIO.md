@@ -1566,3 +1566,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A proteção deve abranger armazenamento e caminhos administrativos/técnicos, não apenas controles visuais da interface; acessos privilegiados à infraestrutura também precisam de rastreabilidade.
 - Correções excepcionais não sobrescrevem eventos originais: devem ser registradas como novos eventos vinculados, com autor, motivo, data/hora e referência ao registro relacionado.
 - Permanecem pendentes: tecnologia de integridade (ex.: encadeamento criptográfico/assinaturas ou armazenamento imutável), gestão de chaves, segregação de funções, retenção, monitoramento/alertas, cópias de segurança e testes periódicos de verificação.
+
+
+### Política de retenção dos registros de auditoria — decisão aprovada (09/11/2026)
+- Conservar os registros de auditoria por prazo mínimo de 5 anos.
+- Não executar descarte automático de registros vinculados a investigação, incidente, contestação, obrigação legal ou outra pendência ainda não encerrada.
+- Ao término do prazo mínimo, avaliar a existência de obrigação legal/regulatória, necessidade operacional legítima e eventual bloqueio de descarte antes de qualquer eliminação.
+- Qualquer descarte excepcional deve seguir procedimento formal, com justificativa, autorização específica, escopo, responsável, data/hora e registro auditável; preservar evidências sujeitas a retenção obrigatória.
+- A política deve ser compatibilizada com a LGPD e demais normas aplicáveis, evitando conservação de dados pessoais além do necessário. O prazo de 5 anos é a regra mínima interna aprovada, não uma afirmação de que esse prazo seja exigido universalmente por lei.
+- Pendências: definir marco inicial da contagem, categorias documentais e exceções legais, suspensão de descarte (legal hold), anonimização/minimização, descarte seguro, responsabilidades, revisão periódica e testes.
