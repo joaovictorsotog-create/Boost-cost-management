@@ -1167,3 +1167,7 @@ A ordenação padrão será pela data e horário da solicitação, da mais recen
 ### Tela de detalhes da solicitação de exportação — APROVADO (09/11/2026)
 
 Cada solicitação do histórico poderá ser aberta em uma visualização individual, somente leitura. A tela apresentará identificador único e solicitante; data/hora, formato e filtros utilizados; estado confirmado pelo backend e horários de início/encerramento quando disponíveis; quantidade de registros e resultado final; motivo e horários de cancelamentos/falhas quando aplicáveis; acesso ao arquivo apenas se concluído, autorizado e dentro da validade de 30 minutos do link; e histórico dos eventos relevantes de auditoria. Não será possível editar ou excluir informações pela interface. O backend valida identidade, permissões e dados; a interface apenas apresenta estados e resultados confirmados.
+
+### Consulta dos detalhes durante o processamento — APROVADO (09/11/2026)
+
+Os detalhes da solicitação poderão ser consultados em qualquer estado, inclusive enquanto aguardam processamento, estão em processamento ou aguardam confirmação de cancelamento. A tela mostrará somente informações e eventos já disponíveis e confirmados pelo backend; dados finais ainda indisponíveis não serão presumidos. A consulta e sua atualização serão somente leitura e não interferirão na tarefa nem solicitarão cancelamento. O backend valida identidade, permissões, estado e conteúdo apresentado.
