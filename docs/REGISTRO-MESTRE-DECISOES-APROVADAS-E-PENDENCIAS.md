@@ -872,3 +872,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O Administrador deve acionar o botão **Aplicar filtros** para executar a consulta.
 - Deve ser possível limpar os filtros e retornar à visão cronológica completa.
 - A consulta aplicada preserva cronologia, permissões e integridade dos registros históricos.
+
+
+## 62. Preservação dos resultados durante edição dos filtros (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Distinguir filtros aplicados dos critérios temporariamente em edição.
+- Manter os resultados da última consulta aplicada enquanto os critérios são alterados.
+- Atualizar resultados somente após novo acionamento de **Aplicar filtros**.
+- Ao cancelar/descartar a edição, preservar os critérios e resultados anteriormente aplicados.
+- A edição temporária não altera registros históricos nem substitui as validações do backend.
