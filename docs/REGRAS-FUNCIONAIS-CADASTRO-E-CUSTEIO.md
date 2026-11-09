@@ -1103,3 +1103,14 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A reconexão não poderá criar duplicatas nem disparar novamente sons de forma excessiva. Os avisos atrasados serão apresentados como notificações pendentes, respeitando a ordem e o estado atual do alerta; o histórico dos eventos não será apagado.
 - Antes de exibir o conteúdo após a reconexão, o backend deverá revalidar as permissões atuais do usuário. A desconexão não concede acesso e a revogação de permissão impede a exposição de conteúdo protegido.
 - Nenhuma ação será executada automaticamente porque os Administradores estavam desconectados: o alerta não será reconhecido, resolvido, encerrado ou transferido por esse motivo.
+
+
+### Ocorrências críticas simultâneas — decisão aprovada (09/11/2026)
+
+- Cada ocorrência crítica será tratada como alerta independente, com identificador próprio e ciclo de vida próprio.
+- Cada alerta manterá sua própria prioridade, estado, reconhecimento, resolução, eventual reabertura, lembretes e linha do tempo.
+- Reconhecer, resolver ou reabrir um alerta não alterará o estado nem os prazos dos demais alertas.
+- A contagem do sino corresponderá ao total de alertas críticos distintos em **Aguardando reconhecimento**, sem agrupar ocorrências diferentes em um único registro.
+- O painel poderá apresentar vários alertas simultaneamente, mantendo cada ocorrência identificável e seu histórico acessível.
+- O backend será responsável por persistência, identidade, autorização, concorrência, contagens e transições independentes; o frontend apenas apresentará os estados confirmados.
+- Operações em lote, agrupamento que esconda identidades ou resolução conjunta não estão autorizados por esta decisão e exigem definição específica antes de serem oferecidos.
