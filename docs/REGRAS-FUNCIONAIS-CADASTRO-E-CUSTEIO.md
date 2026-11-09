@@ -604,3 +604,18 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Também serão exclusivas do Administrador as alterações de unidade, tipo do item, custo manual, estrutura de composição, exclusão e reativação, bem como qualquer outra operação que afete diretamente custeio, vínculos, estruturas ou histórico.
 - O Editor não poderá contornar essas restrições por importação, edição em massa, API ou qualquer outro caminho; as permissões serão validadas no backend.
 - A matriz completa deverá detalhar as demais ações e campos antes da implementação. Até lá, o Editor só poderá alterar os dois campos expressamente autorizados nesta decisão.
+
+
+## 55. Solicitações de edição do Editor com aprovação do Administrador — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Toda alteração iniciada pelo papel **Editor** nos campos que lhe são permitidos — atualmente, descrição principal e descrição complementar — deverá gerar uma solicitação registrada diretamente no backend. A alteração não será aplicada ao cadastro oficial antes da aprovação explícita do Administrador.
+- O backend deverá registrar, no mínimo, o item, o campo solicitado, o valor atual, o valor proposto, o Editor solicitante e a data/hora do envio. A solicitação deverá possuir estado rastreável, como pendente, aprovada ou rejeitada, e integrar a auditoria.
+- O Administrador deverá visualizar as solicitações pendentes em uma área própria da interface, denominada **Central de Aprovações** ou equivalente, com acesso à comparação entre valor atual e valor proposto e às informações necessárias para decidir.
+- O Administrador poderá aprovar ou rejeitar a solicitação. Rejeição não altera o cadastro oficial e deverá registrar responsável, data/hora e resultado. Aprovação deverá ser validada e efetivada pelo backend; a interface só informará sucesso após a persistência confirmada.
+- Antes de aplicar uma aprovação, o backend deverá verificar se o registro e os valores de referência continuam compatíveis com aqueles apresentados ao Administrador. Se houver alteração concorrente ou mudança relevante, a solicitação deverá ser invalidada para aplicação automática e exigir atualização/revisão, evitando sobrescrita silenciosa ou aprovação de conteúdo desatualizado.
+- O recálculo não será disparado apenas porque uma solicitação foi aprovada. Será obrigatório somente quando a alteração efetivamente modificar dados que participem do custeio ou afetem estruturas/vínculos de produtos compostos; nesse caso, recalcular todos os produtos dependentes, direta e indiretamente, em cascata, com consistência no backend.
+- Alterações exclusivamente descritivas, como descrição principal ou complementar, atualizam o cadastro e a auditoria após aprovação, mas **não** provocam recálculo de custos.
+- Esta aprovação não amplia as permissões de edição do Editor: até nova decisão expressa, ele continua podendo propor alterações somente na descrição principal e na descrição complementar. Família, unidade, tipo, custo manual, estrutura, exclusão, reativação e demais operações restritas continuam sob competência exclusiva do Administrador.
+- A interface deverá apresentar ao Editor o estado da solicitação e o resultado da decisão, respeitando as permissões de acesso. Toda tentativa de contornar o fluxo por importação, edição em massa ou API deverá ser bloqueada pelo backend.
