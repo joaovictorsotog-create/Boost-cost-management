@@ -1222,3 +1222,13 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - Após a confirmação do encerramento, o usuário poderá solicitar novamente a exportação.
 - Uma solicitação que falhou não será contabilizada nem apresentada como exportação concluída.
 - O backend será responsável por determinar e persistir o estado final da tarefa; a interface apenas refletirá o resultado confirmado.
+
+### Cancelamento de exportação em processamento — decisão aprovada (09/11/2026)
+
+- O usuário que solicitou uma exportação poderá solicitar seu cancelamento enquanto ela estiver em processamento.
+- O pedido de cancelamento não libera imediatamente a vaga de processamento.
+- A vaga somente será liberada após o backend confirmar que a tarefa foi efetivamente encerrada por cancelamento.
+- Até essa confirmação, a exportação continuará ocupando a vaga única de processamento do usuário.
+- A interface só apresentará o estado **Cancelada** após confirmação do backend; enquanto aguarda, deverá indicar que o cancelamento está em processamento/aguardando confirmação.
+- Se a tarefa já tiver terminado ou não puder mais ser cancelada quando o pedido for processado, o backend retornará o estado real, sem a interface declarar cancelamento concluído.
+- O backend será responsável por validar a solicitação, controlar concorrência com conclusão/falha e persistir o estado final.
