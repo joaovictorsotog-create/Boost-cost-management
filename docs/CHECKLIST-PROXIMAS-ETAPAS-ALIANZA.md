@@ -327,3 +327,11 @@ Legenda:
 - [x] Desabilitar **Voltar** quando não houver tela anterior no histórico.
 - [x] Desabilitar **Avançar** quando não houver tela posterior no histórico.
 - [x] Não executar navegação artificial; refletir o histórico real.
+
+### Preservação do contexto na navegação Voltar/Avançar
+
+- [x] Preservar e restaurar a posição de rolagem ao voltar/avançar.
+- [x] Preservar e restaurar os filtros aplicados da tela correspondente.
+- [x] Respeitar permissões e validade atual dos dados durante a restauração.
+- [x] Manter a proteção já aprovada para filtros temporários não aplicados.
+- [ ] Definir implementação técnica e critérios de aceite para dados alterados/removidos ou permissões modificadas enquanto a tela estava fora de foco.
