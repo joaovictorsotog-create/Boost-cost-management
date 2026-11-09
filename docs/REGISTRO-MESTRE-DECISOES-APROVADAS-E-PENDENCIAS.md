@@ -743,3 +743,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Fechar navegador, sair do sistema ou ficar inativo não encerra a análise: ela permanece **Em análise**.
 - Os três lembretes por inatividade não liberam automaticamente a solicitação.
 - Estado, titularidade e auditoria são atualizados consistentemente no backend.
+
+
+## 50. Nova assunção após encerramento voluntário (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Quando uma análise é encerrada voluntariamente sem decisão, a solicitação retorna a **Pendente** e pode ser assumida por qualquer Administrador autorizado, inclusive pelo mesmo que a encerrou.
+- Não existe bloqueio ou espera específica para a reassunção pelo mesmo Administrador.
+- Cada nova assunção constitui novo ciclo, com novo responsável e data/hora registrados; ciclos anteriores permanecem no histórico/auditoria.
+- A reassunção respeita a titularidade exclusiva e o controle atômico do backend.
