@@ -841,3 +841,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Manter a sequência real dos acontecimentos entre ciclos e titulares.
 - A linha do tempo é uma visualização unificada dos registros do backend, não substitui a auditoria.
 - Permanecem pendentes detalhes de filtros, paginação, agrupamento visual e apresentação.
+
+
+## 59. Filtros da linha do tempo da Central de Aprovações (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Permitir filtrar os eventos da linha do tempo por responsável e por tipo de evento.
+- Os filtros são apenas de consulta: não alteram, excluem ou sobrescrevem os registros históricos.
+- Preservar a ordem cronológica dos eventos exibidos e manter disponível a visão completa sem filtros.
+- O backend aplica as permissões de acesso; filtros não podem expor eventos não autorizados.
+- Permanecem pendentes os detalhes visuais e técnicos, inclusive paginação e apresentação.
