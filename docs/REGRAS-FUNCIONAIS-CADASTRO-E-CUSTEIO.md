@@ -1273,3 +1273,15 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A retenção de 15 meses aplica-se aos registros e metadados do histórico operacional; não altera a regra de arquivos exportados temporários nem a expiração de **30 minutos** dos links individuais de download.
 - O prazo de retenção do histórico operacional não define nem altera a retenção do Log de Atividades, que permanece sujeito a regra própria.
 - O backend controlará o prazo de retenção e a autorização de consulta; critérios técnicos de expurgo após o prazo deverão ser definidos sem comprometer obrigações de auditoria ou integridade.
+
+### Filtros do histórico de exportações — decisão aprovada (09/11/2026)
+
+- A área de histórico deverá permitir filtrar solicitações por:
+  - **Período:** intervalo de datas, limitado à janela de retenção de 15 meses.
+  - **Estado da exportação:** Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada.
+  - **Usuário solicitante:** disponível somente para usuários que tenham autorização para consultar solicitações de outros usuários; para os demais, a consulta ficará restrita às próprias solicitações.
+  - **Formato do arquivo:** Excel ou PDF.
+- Os filtros poderão ser combinados para refinar os resultados.
+- O backend deverá validar identidade, permissões e escopo de cada consulta, inclusive o filtro por usuário solicitante. O frontend não poderá ampliar o conjunto de registros acessíveis.
+- Os resultados deverão respeitar também a retenção de 15 meses e as regras de acesso individual aos arquivos exportados.
+- Comportamento de aplicação/limpeza dos filtros, paginação e ordenação dos resultados permanece pendente de definição.
