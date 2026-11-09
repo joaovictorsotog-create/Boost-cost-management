@@ -437,3 +437,12 @@ Legenda:
 - [x] Manter notificações anteriores no histórico completo.
 - [x] Respeitar permissões, confidencialidade e estado de leitura.
 - [ ] Definir paginação/carregamento do histórico e desempate de datas iguais.
+
+### Marcação de notificações como lidas — decisão aprovada (09/11/2026)
+
+- [x] Permitir marcar uma notificação individualmente como lida.
+- [x] Disponibilizar **Marcar todas como lidas** para notificações não lidas autorizadas ao usuário.
+- [x] Não alterar leitura apenas por abrir ou fechar o painel.
+- [x] Atualizar indicadores somente após confirmação do backend.
+- [x] Persistir o estado por usuário e validar a operação no backend.
+- [ ] Detalhar auditoria e retenção do estado de leitura.
