@@ -1595,3 +1595,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A proteção deve ser aplicada e validada no backend, APIs, armazenamento, interface e rotinas de exportação; ocultar apenas visualmente não é suficiente.
 - Acesso a evidências continua sujeito a permissões, escopo e rastreabilidade; consultas e exportações não podem ampliar privilégios nem contornar o mascaramento.
 - Pendências: catálogo de dados sensíveis, política de mascaramento/redação, tratamento de segredos acidentalmente registrados, gestão de evidências, exceções técnicas e testes de segurança.
+
+
+### Tentativas de acesso indevido à auditoria — decisão aprovada (09/11/2026)
+- Registrar tentativas de acesso a eventos ou evidências fora do escopo autorizado, inclusive por APIs e outros caminhos de backend.
+- Cada ocorrência relevante registra usuário/identidade disponível, data/hora, recurso solicitado de forma segura, operação, origem técnica disponível e resultado; nunca incluir segredos ou dados protegidos na resposta ou no próprio registro.
+- Respostas a solicitações não autorizadas não devem revelar a existência, o conteúdo ou metadados sensíveis de recursos protegidos.
+- Detectar padrões repetidos ou sistemáticos e gerar alertas de segurança: prioridade Alta para comportamento repetido/suspeito e Crítica quando houver indícios consistentes de ataque ou comprometimento.
+- Preservar evidências e registrar investigação, contenção, responsável, ações e resultado, sem alterar ou apagar os registros originais.
+- Aplicar controles no backend/API; a interface não é fronteira de segurança.
+- Pendências: limiares e janelas de detecção, correlação de origens, tratamento de falsos positivos, escalonamento/notificação, retenção específica, resposta a incidentes e testes.
