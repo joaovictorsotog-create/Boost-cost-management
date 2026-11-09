@@ -1059,3 +1059,12 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - A resolução não apagará a ocorrência original, o reconhecimento anterior nem a linha do tempo do alerta.
 - A ação de resolver será distinta de marcar como lida e de reconhecer o alerta.
 - Critérios objetivos para considerar cada tipo de ocorrência resolvido, evidências/documentos eventualmente exigidos, reabertura e escalonamento permanecem pendentes de definição.
+
+### Reabertura de notificações críticas — decisão aprovada (09/11/2026)
+
+- Uma notificação crítica marcada como **Resolvida** poderá ser reaberta somente por um Administrador autorizado.
+- A reabertura exigirá justificativa obrigatória.
+- O backend validará autorização, estado atual e concorrência antes de efetivar a reabertura; a interface só confirmará após persistência bem-sucedida.
+- A reabertura será registrada na mesma linha do tempo do alerta, com Administrador responsável, data/hora, justificativa e resultado.
+- A resolução anterior e todos os eventos anteriores permanecerão preservados no histórico; reabrir não apagará nem sobrescreverá a resolução anterior.
+- O estado operacional após a reabertura e a necessidade de novo reconhecimento deverão ser especificados antes da implementação.
