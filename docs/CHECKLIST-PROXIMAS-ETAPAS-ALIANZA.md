@@ -851,3 +851,13 @@ Legenda:
 - [x] Bloquear a alteração pendente quando houver contestação válida, mantendo o e-mail atual.
 - [x] Registrar tentativas, avisos, contestações, bloqueios e resultados na auditoria.
 - [ ] Definir tecnicamente janela de autenticação recente, canal/fluxo de contestação, tratamento de disputa e critérios de aceite/testes.
+
+
+### Recuperação de senha — decisão aprovada (09/11/2026)
+- [x] Permitir solicitação de recuperação de senha por e-mail.
+- [x] Usar link individual, de uso único e válido por 30 minutos.
+- [x] Invalidar link anterior quando um novo for emitido.
+- [x] Usar resposta genérica que não revele a existência de conta para o e-mail informado.
+- [x] Invalidar todas as sessões anteriores após redefinição bem-sucedida.
+- [x] Registrar solicitação e resultado na auditoria, sem armazenar senha/token em texto aberto.
+- [ ] Definir tecnicamente armazenamento/hash de tokens, limites de tentativas, proteção contra abuso, política de senha e critérios de aceite/testes.
