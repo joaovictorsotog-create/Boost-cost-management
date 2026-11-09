@@ -842,3 +842,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Após a aplicação, a linha do tempo apresenta os eventos correspondentes aos critérios selecionados, preservando a ordem cronológica e as permissões aplicáveis.
 - Deve existir ação para limpar os filtros e retornar à visão cronológica completa.
 - A escolha e edição dos critérios antes de aplicar não alteram os registros históricos nem a consulta atualmente exibida.
+
+
+## 73. Preservação dos resultados durante edição dos filtros (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A interface deve distinguir os critérios atualmente aplicados dos critérios que o Administrador está editando.
+- Enquanto o Administrador altera seleções de responsáveis ou tipos de evento, a linha do tempo continua exibindo os resultados da última consulta aplicada.
+- Somente após acionar **Aplicar filtros** os novos critérios passam a ser aplicados e os resultados são atualizados.
+- Se o Administrador cancelar ou descartar a edição, os critérios anteriormente aplicados e seus resultados permanecem vigentes, sem alteração.
+- A edição temporária dos critérios não modifica os registros históricos nem a consulta aplicada.
+- O backend continua validando permissões e executando a consulta; o estado visual de edição não é fonte de verdade para autorização ou integridade.
