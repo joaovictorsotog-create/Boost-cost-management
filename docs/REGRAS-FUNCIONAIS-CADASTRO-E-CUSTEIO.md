@@ -1575,3 +1575,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Qualquer descarte excepcional deve seguir procedimento formal, com justificativa, autorização específica, escopo, responsável, data/hora e registro auditável; preservar evidências sujeitas a retenção obrigatória.
 - A política deve ser compatibilizada com a LGPD e demais normas aplicáveis, evitando conservação de dados pessoais além do necessário. O prazo de 5 anos é a regra mínima interna aprovada, não uma afirmação de que esse prazo seja exigido universalmente por lei.
 - Pendências: definir marco inicial da contagem, categorias documentais e exceções legais, suspensão de descarte (legal hold), anonimização/minimização, descarte seguro, responsabilidades, revisão periódica e testes.
+
+
+### Verificação periódica da integridade da auditoria — decisão aprovada (09/11/2026)
+- Executar verificação automática diária da integridade dos registros de auditoria.
+- Executar verificação adicional após operações administrativas de infraestrutura que possam afetar auditoria, armazenamento, chaves, backups ou mecanismos de integridade.
+- Ao detectar divergência, gerar alerta crítico e identificar o trecho, intervalo temporal ou conjunto de registros afetado, dentro do limite do que for tecnicamente possível.
+- Preservar registros originais, evidências técnicas e contexto; não sobrescrever, reparar ou descartar automaticamente dados potencialmente comprometidos.
+- A investigação e a resolução devem ser formalmente registradas, com responsáveis, datas/horários, evidências, ações tomadas e resultado.
+- A recuperação/correção deve ocorrer por procedimento controlado, autorizado e rastreável, preservando evidências e os registros originais sempre que tecnicamente possível.
+- Pendências: definir mecanismo de verificação, cobertura e granularidade, limiares, canal e escalonamento do alerta, responsáveis pela resposta, procedimento de contenção/recuperação, metas de detecção e testes de falha.
