@@ -1278,3 +1278,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Aplicativo autenticador é o método principal definido para o 2FA.
 - Disponibilizar códigos de recuperação de uso único para recuperação de acesso.
 - Regras técnicas de cadastro, validação, armazenamento e uso dos códigos, troca de dispositivo, recuperação assistida e critérios de aceite permanecem pendentes de especificação.
+
+
+### Recuperação administrativa do 2FA — decisão aprovada (09/11/2026)
+- Se o usuário perder o dispositivo autenticador e não possuir códigos de recuperação válidos, permitir recuperação administrativa com verificação de identidade.
+- A recuperação exige participação e autorização de um segundo Administrador, diferente do usuário que está recuperando o acesso.
+- Registrar na auditoria a solicitação, a verificação realizada, os Administradores participantes, a decisão, o resultado e as respectivas datas/horários.
+- A recuperação não deve reativar sessões ou tokens anteriores; após a conclusão, o usuário deverá configurar novamente o 2FA e autenticar-se de novo.
+- Procedimentos de verificação de identidade, controles contra conluio/abuso, tratamento de indisponibilidade de um segundo Administrador e critérios de aceite permanecem pendentes de especificação.
