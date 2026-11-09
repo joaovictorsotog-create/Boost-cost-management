@@ -588,3 +588,17 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - A relação serve para avaliar o impacto antes de confirmar ou cancelar; não permite editar, remover ou reclassificar itens dentro da prévia.
 - Respeitar permissões e visibilidade. Relações extensas devem ser consultáveis por paginação ou recurso equivalente, sem omitir itens do total.
 - Se os vínculos mudarem enquanto a prévia estiver aberta, atualizar a relação ou exigir nova validação antes da confirmação, para evitar decisão baseada em impacto desatualizado.
+
+
+## 39. Prévia de impacto para operações em massa (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Toda operação em massa que possa alterar múltiplos registros exige prévia antes da confirmação.
+- A prévia informa o total e permite consultar a relação dos registros por código/ID e descrição ou identificadores próprios do módulo.
+- Deve explicar a ação e os impactos esperados, incluindo efeitos em dados, situações, vínculos e módulos dependentes quando aplicável.
+- Usuário autorizado pode confirmar ou cancelar; nenhuma alteração ocorre antes da confirmação explícita.
+- Relações extensas devem ser consultáveis por paginação ou equivalente, sem divergência entre total e registros.
+- Respeitar permissões e visibilidade; se o conjunto afetado mudar com a prévia aberta, atualizar ou exigir nova validação.
+- Executar com validação no backend e auditoria. Falhas parciais não podem ser exibidas como sucesso integral; atomicidade ou retomada será especificada por operação.
+- Exemplos abrangidos: importações, alterações em lote e inativações em massa.
