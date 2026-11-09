@@ -985,3 +985,13 @@ Legenda:
 - [x] Exportações Excel/PDF limitadas ao mesmo escopo de consulta autorizado e validadas pelo backend.
 - [x] Consultas/exportações sujeitas a autorização backend e registro de acessos relevantes.
 - [ ] Definir eventos próprios do Editor, mascaramento por perfil, acesso excepcional e testes.
+
+
+### Integridade e proteção contra adulteração da auditoria — decisão aprovada (09/11/2026)
+- [x] Impedir alteração/exclusão de registros de auditoria pela interface, inclusive por Administradores.
+- [x] Exigir identificador único, data/hora, ator, operação e resultado em cada evento.
+- [x] Prever mecanismos backend/armazenamento para detectar adulteração e quebra de integridade.
+- [x] Registrar tentativas de violação em trilha de segurança protegida e alertar conforme criticidade.
+- [x] Abranger caminhos administrativos/técnicos e rastrear acessos privilegiados.
+- [x] Registrar correções como novos eventos vinculados, sem sobrescrever originais.
+- [ ] Definir mecanismo técnico, gestão de chaves, segregação, retenção, monitoramento, backups e testes periódicos.
