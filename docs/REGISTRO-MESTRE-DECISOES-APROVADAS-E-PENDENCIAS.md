@@ -1455,3 +1455,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Relatórios/resultados são preservados, sem exclusão ou alteração silenciosa.
 - Correções e retestes ficam vinculados ao relatório original, preservando achados, responsáveis, evidências e histórico.
 - Pendências: critérios de independência/conflitos, qualificação/seleção, contratação, acesso controlado, confidencialidade, comunicação e aceite.
+
+
+### Classificação de falhas de segurança — decisão aprovada (09/11/2026)
+- Níveis: P0 Crítica (ação imediata), P1 Alta (correção prioritária), P2 Média (correção programada), P3 Baixa (melhoria planejada).
+- Toda falha terá responsável, prazo, evidências, plano de correção, estado e reteste documentado.
+- P0 bloqueia nova versão até correção e reteste satisfatório ou exceção formal de risco, autorizada e documentada.
+- Exceção registra justificativa, risco residual, controles compensatórios, autorizador, validade e plano de resolução; não apaga nem reclassifica o achado original.
+- Pendências: critérios objetivos, prazos P1/P2/P3, autoridade/segregação para exceções P0, validade/renovação, reteste e bloqueio de release.
