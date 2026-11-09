@@ -1342,3 +1342,14 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Não alterar automaticamente perfis ou permissões de terceiros.
 - Confirmar a conclusão na interface somente após resposta do backend.
 - Pendências: escopo transferível, pendências em análise, indisponibilidade/recusa, cancelamento e critérios de teste.
+
+
+### Substituição temporária de Administrador — decisão aprovada (09/11/2026)
+- Administrador pode indicar outro usuário já Administrador como substituto temporário para ausência/afastamento.
+- Exigir período de início e término, escopo delimitado e confirmação explícita dos dois envolvidos; ativação somente após confirmação backend.
+- Não alterar permanentemente perfil ou titularidade, nem conceder poderes além dos já associados ao perfil.
+- Preservar autoria individual de todas as ações, histórico e auditoria.
+- Encerrar automaticamente ao término aprovado; ativação/encerramento só são apresentados após confirmação backend.
+- Cancelamento antecipado exige ação explícita, validação backend e auditoria.
+- Não deixar o sistema sem Administrador ativo nem contornar dupla autorização.
+- Pendências: granularidade do escopo, quantidade de substitutos, cancelamento, sobreposição, notificações, indisponibilidade e testes.
