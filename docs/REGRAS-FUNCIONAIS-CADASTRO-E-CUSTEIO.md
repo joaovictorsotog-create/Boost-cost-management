@@ -1067,4 +1067,5 @@ O enquadramento de eventos concretos será realizado por regras de negócio no b
 - O backend validará autorização, estado atual e concorrência antes de efetivar a reabertura; a interface só confirmará após persistência bem-sucedida.
 - A reabertura será registrada na mesma linha do tempo do alerta, com Administrador responsável, data/hora, justificativa e resultado.
 - A resolução anterior e todos os eventos anteriores permanecerão preservados no histórico; reabrir não apagará nem sobrescreverá a resolução anterior.
-- O estado operacional após a reabertura e a necessidade de novo reconhecimento deverão ser especificados antes da implementação.
+- Após a reabertura, o alerta retornará ao estado **Aguardando reconhecimento** e exigirá novo reconhecimento por Administrador autorizado. O reconhecimento anterior permanecerá preservado no histórico, mas não satisfará o novo ciclo.
+- O backend controlará a transição de estado e a concorrência; a interface só confirmará a reabertura após persistência bem-sucedida.
