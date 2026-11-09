@@ -1131,3 +1131,12 @@ Legenda:
 - [x] Impedir rebaixamento artificial para contornar prioridade, prazos, bloqueios, contenção, correção ou reteste.
 - [x] Auditar classificação anterior/nova, justificativa, evidências, Administrador e data/hora.
 - [ ] Definir critérios objetivos, evidências mínimas, fluxo e efeitos da reclassificação sobre prazos/escalonamentos.
+
+### Tratamento de reincidência após correção — decisão aprovada (09/11/2026)
+- [x] Identificar reincidência e vinculá-la à falha original quando houver evidência técnica suficiente.
+- [x] Registrar data/hora, evidências, origem, recurso/componente afetado e impacto da nova ocorrência.
+- [x] Reavaliar risco e impacto atuais, preservando classificação até reavaliação formal.
+- [x] Reabrir a falha original ou criar nova ocorrência vinculada, conforme a natureza e a correlação; não presumir identidade por mera semelhança.
+- [x] Gerar alerta conforme classificação/prioridade e regras de alertas.
+- [x] Preservar encerramento anterior e trilha integral da reincidência.
+- [ ] Definir correlação técnica, distinção de ocorrências semelhantes, reabertura versus nova ocorrência e regras de alerta.
