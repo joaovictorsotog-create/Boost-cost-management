@@ -687,3 +687,13 @@ Legenda:
 - [x] Distinguir pedido de cancelamento de cancelamento efetivo.
 - [x] Proteger os registros de auditoria contra edição/exclusão pela interface.
 - [x] Exibir o resultado final somente após confirmação do backend.
+
+### Acompanhamento e histórico das exportações — decisão aprovada (09/11/2026)
+
+- [x] Disponibilizar área para o usuário acompanhar suas próprias solicitações e consultar o histórico.
+- [x] Exibir os estados Aguardando processamento, Em processamento, Cancelamento solicitado, Concluída, Falhou e Cancelada.
+- [x] Manter pedido de cancelamento distinto do cancelamento efetivo confirmado.
+- [x] Atualizar os estados somente conforme confirmação do backend.
+- [x] Respeitar as regras aprovadas de proteção, vínculo individual e expiração de 30 minutos para downloads.
+- [x] Validar identidade e permissões no backend, impedindo acesso não autorizado a solicitações de terceiros.
+- [ ] Definir retenção do histórico, filtros, paginação e detalhamento visual.
