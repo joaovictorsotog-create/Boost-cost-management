@@ -910,3 +910,10 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Quando houver várias alterações, apresentar um único resumo consolidado, evitando notificações consecutivas e repetitivas.
 - Quando não houver alterações relevantes, retornar normalmente, sem exibir aviso.
 - O conteúdo das mensagens deve respeitar as permissões vigentes e não pode expor dados que o usuário deixou de estar autorizado a consultar.
+
+### Conteúdo do resumo consolidado de alterações — decisão aprovada em 09/11/2026
+
+- Quando houver alterações de categorias diferentes desde a última visualização, o resumo consolidado deve apresentar a quantidade de ocorrências por categoria, separadamente.
+- Exemplos de categorias: registros excluídos, registros atualizados e alterações de permissão.
+- O resumo deve permitir compreender o volume e a natureza das mudanças sem exigir que o usuário abra cada aviso individualmente.
+- A apresentação por quantidade não autoriza revelar nomes, identificadores ou outros dados de registros cujo acesso tenha sido revogado; as regras de autorização e confidencialidade continuam prevalecendo.
