@@ -722,4 +722,16 @@ Legenda:
 - [x] Filtrar por formato do arquivo: Excel ou PDF.
 - [x] Permitir combinação dos filtros.
 - [x] Validar identidade, permissões e escopo da consulta no backend.
-- [ ] Definir aplicação/limpeza dos filtros, paginação e ordenação dos resultados.
+- [x] Definir aplicação/limpeza explícita dos filtros e preservação dos resultados aplicados.
+- [ ] Definir paginação e ordenação dos resultados.
+
+
+### Aplicação e limpeza dos filtros do histórico de exportações — decisão aprovada (09/11/2026)
+
+- [x] Não executar consultas automaticamente durante a seleção/edição dos critérios.
+- [x] Disponibilizar **Aplicar filtros** para executar explicitamente a consulta.
+- [x] Disponibilizar **Limpar filtros** para remover os critérios selecionados.
+- [x] Preservar os resultados da última consulta aplicada enquanto os critérios são editados.
+- [x] Substituir os resultados somente após nova aplicação explícita dos filtros.
+- [x] Manter validação de parâmetros, identidade, permissões e escopo sob autoridade do backend.
+- [ ] Definir paginação e ordenação dos resultados.
