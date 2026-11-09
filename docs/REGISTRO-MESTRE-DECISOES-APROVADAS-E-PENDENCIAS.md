@@ -797,3 +797,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - A notificação identifica a solicitação e oferece acesso direto à análise e ao histórico anterior, conforme permissões.
 - O novo titular recebe o contexto necessário para continuar a análise; ciclos e registros anteriores são preservados.
 - O envio/resultado da notificação deve ser rastreável.
+
+
+## 55. Reinício do ciclo de lembretes após transferência (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A transferência persistida inicia novo ciclo de acompanhamento para o novo titular.
+- A contagem de inatividade e lembretes começa do zero a partir da efetivação da transferência; primeiro lembrete após 30 minutos de inatividade.
+- Se houver inatividade, enviar lembretes a cada 30 minutos, no máximo três.
+- Após o terceiro lembrete efetivo do novo ciclo, a solicitação torna-se elegível para nova transferência.
+- Ciclos e lembretes anteriores permanecem preservados; o backend controla contagem, horários, elegibilidade e duplicidade.
