@@ -1036,3 +1036,16 @@ A prioridade deverá refletir a urgência e o impacto do evento, segundo critér
 - **Baixa:** avisos informativos, sem necessidade de ação imediata.
 
 O enquadramento de eventos concretos será realizado por regras de negócio no backend. Estes critérios gerais não constituem, por si só, uma matriz completa de classificação: o mapeamento de cada evento, eventuais exceções, apresentação visual/sonora, escalonamento e tratamento especial de notificações críticas ainda precisam ser especificados. A prioridade não deve ser elevada indiscriminadamente, para preservar o significado dos níveis de urgência.
+
+### Reconhecimento e ciclo de vida das notificações críticas — decisão aprovada (09/11/2026)
+
+- Notificações de prioridade **Crítica** terão destaque visual próprio no painel e permanecerão identificáveis enquanto aguardarem reconhecimento.
+- O ciclo do alerta distinguirá três estados: **Aguardando reconhecimento**, **Reconhecido** e **Resolvido**. Reconhecimento e resolução são eventos diferentes; abrir ou marcar como lida não equivale a reconhecer, e reconhecer não significa que o problema foi solucionado.
+- Qualquer Administrador autorizado a visualizar o alerta poderá reconhecê-lo. O primeiro reconhecimento aceito pelo backend ficará registrado como reconhecimento responsável; os demais Administradores poderão consultar quem reconheceu e quando.
+- O backend validará autorização e concorrência atomicamente, impedindo reconhecimentos simultâneos conflitantes ou sobrescrita silenciosa do responsável.
+- O reconhecimento registrará ator, data/hora e resultado na auditoria. Não apagará nem alterará a ocorrência original, não a resolverá automaticamente e não removerá seu histórico.
+- Após reconhecido, o alerta deixará de constar como aguardando reconhecimento, mas continuará visível e acompanhável enquanto não estiver resolvido, com indicação distinta de seu estado.
+- O sino apresentará a quantidade de alertas críticos ainda não reconhecidos.
+- O sistema evitará repetição sonora indefinida. Preferências individuais de som e permissões continuam aplicáveis.
+- Leitura, reconhecimento e resolução são estados/ações distintos e devem ser mantidos separadamente.
+- Critérios para declarar uma ocorrência resolvida, responsáveis pela resolução, evidências exigidas, eventual reabertura, escalonamento e detalhes visuais/sonoros permanecem pendentes.
