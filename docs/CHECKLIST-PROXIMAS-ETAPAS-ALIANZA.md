@@ -404,3 +404,11 @@ Legenda:
 - [x] Manter o painel flutuante, sem retirar o usuário da tela ou do módulo atual.
 - [x] Respeitar permissões e confidencialidade ao apresentar notificações e resumo.
 - [ ] Definir dimensões, responsividade, comportamento de fechamento e detalhes visuais.
+
+### Fechamento do painel do sino de notificações — decisão aprovada (09/11/2026)
+
+- [x] Fechar ao clicar novamente no sino.
+- [x] Fechar ao clicar fora do painel.
+- [x] Fechar ao pressionar **Esc**, sem navegar para outra tela.
+- [x] Não marcar notificações como lidas apenas por fechar o painel.
+- [ ] Definir acessibilidade, gerenciamento de foco e compatibilidade técnica.
