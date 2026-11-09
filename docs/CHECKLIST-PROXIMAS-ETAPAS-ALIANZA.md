@@ -861,3 +861,13 @@ Legenda:
 - [x] Invalidar todas as sessões anteriores após redefinição bem-sucedida.
 - [x] Registrar solicitação e resultado na auditoria, sem armazenar senha/token em texto aberto.
 - [ ] Definir tecnicamente armazenamento/hash de tokens, limites de tentativas, proteção contra abuso, política de senha e critérios de aceite/testes.
+
+
+### Política de senha — decisão aprovada (09/11/2026)
+- [x] Exigir mínimo de 12 caracteres.
+- [x] Aceitar frases-senha e espaços.
+- [x] Não exigir troca periódica obrigatória.
+- [x] Bloquear senhas comuns ou conhecidas por vazamentos.
+- [x] Permitir gerenciadores de senha e colagem.
+- [x] Não exigir combinações artificiais de maiúsculas, números e símbolos.
+- [ ] Definir implementação técnica de verificação de senhas comprometidas, armazenamento seguro, limites de tentativas e critérios de teste.
