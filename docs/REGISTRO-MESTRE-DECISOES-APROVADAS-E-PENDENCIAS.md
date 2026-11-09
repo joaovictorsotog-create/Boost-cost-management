@@ -577,3 +577,14 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Informar que a alteração é nominal/classificatória e não muda custos, unidades ou estruturas de composição dos itens.
 - O Administrador pode confirmar ou cancelar; nada é alterado antes da confirmação explícita.
 - Após persistência bem-sucedida, propagar em tempo real, preservar o histórico e registrar a auditoria.
+
+
+## 38. Relação detalhada de itens afetados na prévia de alteração de família (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- A prévia deve permitir consultar todos os itens atualmente vinculados à família que será renomeada.
+- Identificar cada item, no mínimo, por código/ID e descrição principal, e informar o total de itens afetados.
+- A relação serve para avaliar o impacto antes de confirmar ou cancelar; não permite editar, remover ou reclassificar itens dentro da prévia.
+- Respeitar permissões e visibilidade. Relações extensas devem ser consultáveis por paginação ou recurso equivalente, sem omitir itens do total.
+- Se os vínculos mudarem enquanto a prévia estiver aberta, atualizar a relação ou exigir nova validação antes da confirmação, para evitar decisão baseada em impacto desatualizado.
