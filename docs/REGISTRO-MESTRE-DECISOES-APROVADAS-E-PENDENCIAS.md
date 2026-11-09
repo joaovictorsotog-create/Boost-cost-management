@@ -154,8 +154,9 @@ As regras abaixo foram recuperadas de confirmações explícitas nas conversas v
 1. Unidades aprovadas: **metro, quilograma (kg), metro quadrado (m²) e unidade**.
 2. Cada item possui uma única unidade de medida; não criar conversões ou unidades alternativas.
 3. O identificador interno é numérico e sua definição/organização será feita manualmente pelo administrador. Ele serve para busca e organização.
-4. Famílias/classificações são cadastráveis e editáveis. A família não determina a unidade de medida.
-5. O usuário pode localizar itens por ID, descrição ou família.
+4. Cada item pertence a **uma única família específica e obrigatória**, usada como classificação principal e para localização/pesquisa; não admite múltiplas famílias no mesmo item.
+5. Famílias/classificações são cadastráveis e editáveis. A família não determina a unidade de medida.
+6. O usuário pode localizar itens por ID, descrição ou família.
 
 ### 6.2 Precisão e arredondamento de custo
 
@@ -280,3 +281,13 @@ Por decisão do usuário, o projeto **não ficará bloqueado pela recuperação 
 O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCREMENTAIS.md`.
 
 **Correção de status:** unidades (metro, kg, m² e unidade), controle de acesso (login individual, 2FA, RLS e Administrador/Editor/Visualizador), regra de arquivamento do Log de Atividades (um ano no ambiente principal e depois arquivo, sem exclusão automática) e demais decisões descritas nas seções 6.x deste documento já foram recuperadas. Menções anteriores nas seções 3 e 5 que as tratavam como pendências devem ser lidas como registros históricos superados por esta consolidação posterior.
+
+
+## 9. Decisão incremental — família obrigatória por item (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Cada item deve ter uma família específica e única.
+- A família é obrigatória e integra a classificação principal do item; não é apenas uma etiqueta opcional.
+- A classificação por família é necessária para localizar/pesquisar os itens de forma organizada.
+- Mantêm-se as regras anteriores: famílias são configuráveis, não determinam unidade de medida e só podem ser excluídas quando não houver itens vinculados.
