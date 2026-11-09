@@ -1270,3 +1270,11 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Bloquear senhas conhecidas por vazamentos ou muito comuns, usando mecanismo de verificação adequado.
 - Permitir uso de gerenciadores de senha e colagem no campo de senha.
 - Não impor regras artificiais obrigatórias de combinação de maiúsculas, números e símbolos.
+
+
+### Autenticação em dois fatores (2FA) — decisão aprovada (09/11/2026)
+- 2FA obrigatório para usuários com perfil Administrador.
+- Usuários com perfil Editor ou Visualizador podem ativar 2FA voluntariamente.
+- Aplicativo autenticador é o método principal definido para o 2FA.
+- Disponibilizar códigos de recuperação de uso único para recuperação de acesso.
+- Regras técnicas de cadastro, validação, armazenamento e uso dos códigos, troca de dispositivo, recuperação assistida e critérios de aceite permanecem pendentes de especificação.
