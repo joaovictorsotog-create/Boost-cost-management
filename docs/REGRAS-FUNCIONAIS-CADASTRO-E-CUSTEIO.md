@@ -661,3 +661,16 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Após o terceiro lembrete, o sistema interrompe novos envios e aguarda a manifestação do Administrador responsável. Não haverá repetição indefinida de notificações.
 - Atingir o limite de lembretes não altera o estado **Em análise**, não transfere a titularidade e não aprova, rejeita ou libera a solicitação automaticamente.
 - O controle de quantidade e agendamento dos lembretes deve ser individual por solicitação e protegido contra disparos duplicados ou ciclos de notificações.
+
+
+## 58. Backend como autoridade exclusiva das regras de negócio (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O backend é a única autoridade para validar e executar regras de negócio do Alianza. O frontend nunca será considerado confiável nem fonte de verdade.
+- Regras de autorização, permissões, validações, transições de estado, custeio, recálculos, vínculos, aprovações, exclusões, reativações, limites e agendamentos devem ser impostas no backend.
+- Toda operação deve ser validada no backend mesmo quando a interface já tiver validado ou ocultado/bloqueado controles visuais.
+- Chamadas diretas a APIs, manipulação de requisições, alterações no cliente, importações, operações em massa ou caminhos alternativos não podem contornar regras de negócio ou permissões.
+- O frontend apresenta dados, coleta comandos e exibe resultados somente após confirmação de persistência/execução pelo backend; não pode declarar sucesso antecipadamente.
+- Estados, contadores e controles que precisam sobreviver a atualização de página, encerramento de sessão ou reinício de serviço devem ser persistidos e controlados no backend.
+- Esta regra é global e obrigatória para todos os módulos e fluxos do sistema.
