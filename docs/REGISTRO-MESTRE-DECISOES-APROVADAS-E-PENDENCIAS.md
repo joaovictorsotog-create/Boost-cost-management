@@ -669,3 +669,22 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Alterações apenas descritivas não provocam recálculo, embora sejam aplicadas e auditadas após aprovação.
 - O fluxo não amplia as permissões do Editor: permanecem autorizadas somente propostas de alteração da descrição principal e complementar. Campos e operações restritos continuam exclusivos do Administrador.
 - Tentativas de contorno por importação, edição em massa ou API devem ser impedidas pelo backend; o Editor deve poder acompanhar o estado e o resultado da solicitação conforme suas permissões.
+
+
+## 45. Desenho da Central de Aprovações — organização visual e funcional (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Área própria e permanente no menu administrativo, separada do Cadastro Central e de Configurações.
+- Contador de solicitações pendentes no acesso à Central.
+- Cabeçalho com resumo de pendentes, aprovadas e rejeitadas; filtros **Pendentes**, **Aprovadas**, **Rejeitadas** e **Todas**.
+- Listagem com identificador, item, tipo/campo da alteração, solicitante, data/hora, situação, valores atual e proposto e impacto resumido.
+- Detalhamento para análise da solicitação, comparação dos valores, impacto e ações disponíveis.
+- Aprovar e rejeitar são ações exclusivas do Administrador, executadas com autorização e validação no backend e registro no histórico.
+- Histórico consultável de decisões aprovadas e rejeitadas.
+- Notificação ao Administrador quando uma nova solicitação for recebida.
+- Editor acompanha o estado e o resultado de suas próprias solicitações, sem poder aprovar nem alterar diretamente o cadastro oficial.
+- Revalidar os dados de referência antes de efetivar aprovação. Alterações concorrentes ou impacto diferente exigem revisão/atualização, sem aplicação silenciosa de solicitação desatualizada.
+- Recálculo depende do impacto real da alteração: mudanças exclusivamente descritivas não recalculam custos; alterações que afetem custeio, estruturas ou vínculos exigem recálculo em cascata dos dependentes.
+- Dados usados em wireframes são exemplos fictícios e não representam solicitações reais.
+- A aprovação consolida o desenho funcional/visual, mas não escolhe tecnologia nem autoriza implementação, alteração de banco, infraestrutura ou deploy.
