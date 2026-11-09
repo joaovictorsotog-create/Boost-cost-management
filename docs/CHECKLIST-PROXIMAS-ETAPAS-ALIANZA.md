@@ -472,3 +472,19 @@ Legenda:
 - [x] Evitar banalizar os níveis de urgência com classificações excessivas.
 - [ ] Mapear eventos concretos, exceções e critérios de desempate/classificação.
 - [ ] Definir apresentação visual/sonora, escalonamento e tratamento especial das notificações críticas.
+
+### Reconhecimento e ciclo de vida das notificações críticas — decisão aprovada (09/11/2026)
+
+- [x] Dar destaque visual próprio às notificações de prioridade Crítica.
+- [x] Separar os estados **Aguardando reconhecimento**, **Reconhecido** e **Resolvido**.
+- [x] Distinguir leitura, reconhecimento e resolução como ações/estados independentes.
+- [x] Permitir reconhecimento por qualquer Administrador autorizado a visualizar o alerta.
+- [x] Registrar o primeiro reconhecimento aceito pelo backend como responsável, com ator e data/hora.
+- [x] Permitir que os demais Administradores consultem quem reconheceu e quando.
+- [x] Exigir validação de autorização e concorrência atômica no backend.
+- [x] Auditar o reconhecimento sem apagar, alterar ou resolver automaticamente a ocorrência.
+- [x] Manter alerta reconhecido visível enquanto não resolvido, com indicação distinta.
+- [x] Exibir no sino a quantidade de alertas críticos ainda não reconhecidos.
+- [x] Evitar repetição sonora indefinida e respeitar preferências individuais.
+- [ ] Definir responsáveis, critérios e evidências para resolução, reabertura e escalonamento.
+- [ ] Definir detalhes visuais/sonoros e critérios técnicos/testes de aceite.
