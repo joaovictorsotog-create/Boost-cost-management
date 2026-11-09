@@ -1420,3 +1420,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Preservar evidências e documentar investigação, contenção, responsável, ações e resultado, sem sobrescrever eventos originais.
 - Controles obrigatórios no backend e APIs.
 - Pendências: limiares/janelas, correlação de origens, falsos positivos, escalonamento, retenção, resposta a incidentes e testes.
+
+
+### Proteção contra ataques automatizados à auditoria — decisão aprovada (09/11/2026)
+- Limitar frequência de consultas/operações no backend/API e proteger contra enumeração automatizada de registros.
+- Detectar abuso distribuído entre origens; não depender exclusivamente de IP para correlacionar sinais.
+- Aplicar contenção temporária e proporcional de sessão/credencial técnica/origem, com salvaguardas contra bloqueio deliberado de usuários legítimos.
+- Registrar fundamento, escopo, início/fim, executor e resultado de cada medida; preservar evidências.
+- Prever revisão e liberação segura; não aplicar bloqueio permanente automático com base em sinais isolados.
+- Pendências: limites/janelas, critérios de risco/correlação, duração/escalonamento, exceções, falsos positivos, observabilidade, resposta a incidentes e testes.
