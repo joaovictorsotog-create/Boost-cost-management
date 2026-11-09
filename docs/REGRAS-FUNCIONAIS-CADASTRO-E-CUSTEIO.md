@@ -435,3 +435,12 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O administrador deverá resolver o conflito — por exemplo, renomeando a família arquivada ou a família ativa, respeitando as permissões e a validação de unicidade — e então tentar novamente.
 - Não renomear famílias automaticamente, não sobrescrever registros e não criar vínculos como efeito da tentativa de reativação.
 - A reativação só poderá prosseguir após nova validação bem-sucedida e confirmação explícita do administrador.
+
+## 41. Permissões para manutenção de famílias — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Somente usuários com papel **Administrador** podem criar, editar, inativar e reativar famílias.
+- Usuários com papel **Editor** ou **Visualizador** podem consultar as famílias, mas não podem executar essas operações de manutenção.
+- A restrição deve ser aplicada também no backend, não apenas ocultando ou desabilitando controles na interface.
+- Tentativas não autorizadas devem ser recusadas sem alterar dados e devem respeitar as regras gerais de auditoria e segurança do sistema.
