@@ -549,3 +549,14 @@ Legenda:
 - [x] Evitar duplicatas e repetição sonora excessiva na reconexão.
 - [x] Revalidar permissões antes de exibir conteúdo após reconexão.
 - [x] Não executar reconhecimento, resolução, encerramento ou transferência automáticos por ausência de Administradores.
+
+
+### Ocorrências críticas simultâneas — decisão aprovada (09/11/2026)
+
+- [x] Manter identidade própria para cada ocorrência crítica simultânea.
+- [x] Manter estado, reconhecimento, resolução, reabertura, lembretes e linha do tempo independentes por alerta.
+- [x] Impedir que ações em um alerta alterem os demais.
+- [x] Contabilizar no sino cada alerta distinto em **Aguardando reconhecimento**.
+- [x] Manter cada ocorrência identificável no painel e com histórico próprio.
+- [x] Concentrar persistência, autorização, concorrência, contagens e transições no backend.
+- [x] Não autorizar agrupamento que esconda identidades nem operações em lote/resolução conjunta sem decisão específica.
