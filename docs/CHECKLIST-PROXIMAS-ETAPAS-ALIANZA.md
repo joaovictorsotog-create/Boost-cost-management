@@ -234,3 +234,12 @@ Legenda:
 - [x] Enviar até três lembretes a cada 30 minutos de inatividade.
 - [x] Habilitar nova transferência somente após o terceiro lembrete efetivo do ciclo atual.
 - [ ] Definir critérios técnicos e testes de aceite para relógio, reprocessamento, duplicidade e concorrência entre transferência e lembrete.
+
+ 
+### Histórico de justificativas de transferência
+
+- [x] Disponibilizar ao novo titular a justificativa da transferência atual e todas as justificativas anteriores.
+- [x] Vincular cada justificativa ao respectivo evento, responsáveis/titulares e data/hora.
+- [x] Preservar histórico cumulativo, sem sobrescrita ou exclusão.
+- [x] Respeitar permissões de acesso ao histórico.
+- [ ] Definir critérios técnicos, retenção e testes de aceite para integridade e consulta do histórico.
