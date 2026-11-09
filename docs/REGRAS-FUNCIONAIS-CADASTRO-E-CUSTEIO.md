@@ -551,14 +551,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Após a confirmação, a operação deve ser executada com validação no backend e registrada na auditoria, com resultado identificável. Falhas parciais não podem ser apresentadas como sucesso integral; o tratamento de atomicidade ou retomada deverá ser especificado conforme cada operação.
 - A regra aplica-se, entre outras, a importações, alterações em lote e inativações em massa, sem substituir validações específicas de cada módulo.
 
-## 51. Proteção de vínculos e dependências antes de excluir itens — decisão aprovada em 09/11/2026
+## 51. Exclusão de itens com prévia de impacto e tratamento automático dos vínculos — decisão aprovada em 09/11/2026
 
 **Status: APROVADO pelo usuário.**
 
-- Antes de qualquer operação de exclusão de um item do Cadastro Central, o sistema deve verificar se existem vínculos ou dependências atuais, inclusive em estruturas de composição e em outros registros ou módulos que referenciem o item.
-- Quando houver vínculos ou dependências, a prévia deve informar a quantidade e permitir consultar a relação dos registros afetados, identificando-os por código/ID e descrição ou pelos identificadores próprios do módulo.
-- A prévia deve explicar as consequências concretas da operação, incluindo estruturas e custos compostos que possam ser afetados, perda de disponibilidade para novas composições e impactos sobre histórico ou rastreabilidade.
-- A existência de vínculos não autoriza rompimento automático. A exclusão não poderá prosseguir enquanto houver dependências que comprometam a integridade referencial ou o histórico; o sistema deverá orientar a resolução segura dessas dependências.
-- Quando a exclusão for tecnicamente e funcionalmente permitida, deverá haver prévia atualizada, confirmação explícita do usuário autorizado e registro completo na auditoria.
-- A verificação e a proteção devem ser aplicadas no backend, não apenas na interface. Se os vínculos mudarem enquanto a prévia estiver aberta, exigir atualização ou nova validação antes de confirmar.
-- Esta regra não define ainda todos os estados possíveis de exclusão (por exemplo, exclusão lógica ou física) nem substitui a decisão específica sobre exclusão de itens com vínculos, que deverá ser detalhada antes da implementação.
+- Todo item do Cadastro Central poderá ser excluído, inclusive quando possuir vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos, por si só, não impede a exclusão.
+- Antes da confirmação, o sistema deve verificar dependências e apresentar aviso/prévia de impacto, informando a quantidade de registros afetados e permitindo consultar a relação por código/ID e descrição ou pelos identificadores próprios do módulo.
+- A prévia deve explicar as consequências concretas, incluindo quais estruturas serão afetadas e que os custos dos produtos compostos dependentes serão recalculados após a exclusão.
+- Após a confirmação explícita do usuário autorizado, o sistema deverá remover automaticamente as referências atuais ao item excluído nas estruturas e registros dependentes, conforme as regras do módulo, e recalcular os custos de todos os compostos afetados, direta ou indiretamente, propagando o recálculo até os produtos finais.
+- A exclusão e o tratamento dos vínculos devem ser executados com validação no backend, consistência transacional e registro completo na auditoria. A interface só poderá indicar conclusão após confirmação do backend; falhas não podem deixar vínculos quebrados nem ser apresentadas como sucesso integral.
+- Se o conjunto de dependências mudar enquanto a prévia estiver aberta, o sistema deverá atualizar a prévia ou exigir nova validação e confirmação antes de executar.
+- A exclusão deve deixar de permitir que o item seja selecionado em novas estruturas. A operação não deve apagar o registro de auditoria da exclusão.
+- A modalidade técnica de exclusão e a forma de preservar a consulta de custos históricos anteriores à exclusão ainda deverão ser especificadas antes da implementação.
