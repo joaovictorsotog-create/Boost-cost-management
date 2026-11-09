@@ -1031,3 +1031,13 @@ Legenda:
 - [x] Preservar evidências e registrar investigação, contenção, responsável, ações e resultado.
 - [x] Aplicar controles no backend/API, não apenas na interface.
 - [ ] Definir limiares/janelas, correlação de origens, falsos positivos, escalonamento, retenção, resposta a incidentes e testes.
+
+
+### Proteção contra ataques automatizados à auditoria — decisão aprovada (09/11/2026)
+- [x] Limitar frequência de consultas/operações no backend/API.
+- [x] Proteger contra enumeração automatizada de registros e identificadores.
+- [x] Detectar padrões de abuso distribuído entre origens.
+- [x] Prever contenção temporária e proporcional, evitando bloqueio deliberado de usuários legítimos.
+- [x] Registrar fundamento, escopo, início/fim, executor e resultado das medidas, preservando evidências.
+- [x] Prever revisão/liberação segura; não bloquear permanentemente de forma automática com base em sinais isolados.
+- [ ] Definir limites/janelas, critérios de risco/correlação, duração/escalonamento, exceções, falsos positivos, observabilidade, resposta a incidentes e testes.
