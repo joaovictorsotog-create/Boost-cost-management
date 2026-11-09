@@ -1093,3 +1093,8 @@ Uma nova manifestação da mesma ocorrência crítica que já tenha alerta abert
 ### Nova ocorrência após resolução de alerta crítico — APROVADO (09/11/2026)
 
 Se o mesmo problema voltar após a resolução formal do alerta anterior, será criado um novo alerta com identidade e ciclo de vida próprios. O novo alerta manterá referência histórica ao anterior, sem reabri-lo nem transferir estado, reconhecimento, responsável, lembretes ou prazos. A referência será validada e persistida pelo backend e respeitará as permissões de consulta; o novo alerta seguirá o fluxo normal. O anterior permanece **Resolvido** e imutável quanto ao seu encerramento.
+
+
+### Histórico de reincidências de alertas críticos — APROVADO (09/11/2026)
+
+O painel administrativo terá uma visualização própria de **Histórico de reincidências**, separada dos alertas pendentes. Ela permitirá consultar alertas relacionados à mesma ocorrência ao longo do tempo, sem fundir seus registros independentes. A consulta apresentará, conforme permissões, identificadores, datas de criação/resolução, estados e quantidade de alertas relacionados. Não altera estados nem executa ações em lote. O backend controla relações, dados, auditoria e autorização; o frontend apenas apresenta informações autorizadas. Dados protegidos não poderão ser expostos por meio das relações históricas.
