@@ -1165,3 +1165,10 @@ Legenda:
 - [x] Manter acesso completo dos Administradores, respeitando as demais regras de proteção e auditoria.
 - [x] Aplicar a supressão no backend/API, não apenas na interface.
 - [ ] Definir supressão complementar, consultas diferenciais, totais/subtotais, filtros temporais, arredondamentos e testes de reidentificação.
+
+### Imutabilidade do limite mínimo de agregação — decisão aprovada (09/11/2026)
+- [x] Fixar em 5 ocorrências o limite mínimo para Editores e Visualizadores, sem configuração administrativa ou exceção operacional.
+- [x] Exigir revisão formal da política, justificativa, avaliação de risco e registro auditável para qualquer proposta de mudança.
+- [x] Manter o limite vigente até aprovação formal de nova política; vedar ajustes pontuais para revelar grupos menores.
+- [x] Preservar o acesso completo dos Administradores conforme regras próprias, sem alterar o limite dos demais perfis.
+- [ ] Definir rito de revisão, avaliação independente, critérios de risco, aprovação e comunicação.
