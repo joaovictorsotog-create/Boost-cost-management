@@ -674,3 +674,17 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - O frontend apresenta dados, coleta comandos e exibe resultados somente após confirmação de persistência/execução pelo backend; não pode declarar sucesso antecipadamente.
 - Estados, contadores e controles que precisam sobreviver a atualização de página, encerramento de sessão ou reinício de serviço devem ser persistidos e controlados no backend.
 - Esta regra é global e obrigatória para todos os módulos e fluxos do sistema.
+
+
+## 59. Exclusividade de titularidade da análise e concorrência entre Administradores (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O primeiro Administrador cuja operação de início de análise for aceita pelo backend assume a solicitação e passa a ser seu responsável.
+- O backend registra o Administrador responsável e o horário de início da titularidade.
+- Enquanto a solicitação estiver **Em análise**, os demais Administradores podem consultar seus dados, mas não podem assumir a titularidade, aprovar ou rejeitar a solicitação.
+- A interface deve informar que a solicitação está sob análise e identificar o Administrador responsável, respeitando as permissões de acesso.
+- Não haverá tomada de controle forçada por outro Administrador.
+- Se dois ou mais Administradores tentarem iniciar a análise simultaneamente, o backend deverá aceitar atomicamente apenas uma operação. As demais tentativas recebem o estado atualizado e a identificação do responsável, sem criar titularidades concorrentes.
+- A exclusividade é regra de backend e não pode depender de bloqueio visual, estado local do navegador ou sincronização exclusivamente no frontend.
+- Esta decisão consolida o comportamento funcional de exclusividade. Os mecanismos técnicos de concorrência, recuperação de falhas e liberação de análises abandonadas continuam sujeitos à especificação técnica, sem alterar as regras aprovadas.
