@@ -862,3 +862,13 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Permitir combinar os filtros, remover seleções individualmente e limpar todos os filtros.
 - A consulta filtrada preserva a ordem cronológica e não altera os registros históricos.
 - Backend mantém a aplicação das permissões de acesso.
+
+
+## 61. Aplicação explícita dos filtros da linha do tempo (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Os critérios selecionados não atualizam os resultados automaticamente.
+- O Administrador deve acionar o botão **Aplicar filtros** para executar a consulta.
+- Deve ser possível limpar os filtros e retornar à visão cronológica completa.
+- A consulta aplicada preserva cronologia, permissões e integridade dos registros históricos.
