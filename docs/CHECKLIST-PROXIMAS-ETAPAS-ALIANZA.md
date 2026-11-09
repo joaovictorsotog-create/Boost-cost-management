@@ -180,3 +180,11 @@ Legenda:
 - [x] Definir que fechar navegador, sair do sistema ou ficar inativo não encerra a análise.
 - [x] Manter o limite de três lembretes sem liberação automática.
 - [ ] Especificar critérios técnicos e testes de aceite para transição, liberação de titularidade e auditoria.
+
+ 
+### Reassunção após encerramento voluntário
+
+- [x] Permitir que qualquer Administrador autorizado, inclusive o que encerrou a análise anterior, assuma novamente a solicitação quando estiver Pendente.
+- [x] Registrar cada assunção como novo ciclo, com responsável e data/hora próprios.
+- [x] Preservar ciclos anteriores no histórico/auditoria.
+- [ ] Definir critérios técnicos e testes de aceite para histórico de múltiplos ciclos e concorrência na reassunção.
