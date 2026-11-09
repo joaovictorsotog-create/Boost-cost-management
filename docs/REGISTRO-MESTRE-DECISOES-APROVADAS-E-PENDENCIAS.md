@@ -610,7 +610,7 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - Todo item poderá ser excluído, mesmo que possua vínculos atuais em estruturas de composição ou em outros registros/módulos. A existência de vínculos não bloqueia, por si só, a exclusão.
 - Antes da confirmação, verificar dependências e apresentar prévia resumida com a quantidade total de estruturas/registros afetados e os tipos de impacto relevantes. Não abrir nem listar individualmente cada estrutura ou seus componentes na prévia, evitando poluição visual.
 - Explicar os impactos, incluindo estruturas afetadas e recálculo dos custos dos produtos compostos dependentes.
-- Após confirmação explícita de usuário autorizado, remover automaticamente as referências atuais ao item nas estruturas e registros dependentes e recalcular todos os compostos afetados, direta e indiretamente, até os produtos finais.
+- Somente o papel Administrador pode autorizar e confirmar a exclusão. Após sua confirmação explícita, remover automaticamente as referências atuais ao item nas estruturas e registros dependentes e recalcular todos os compostos afetados, direta e indiretamente, até os produtos finais.
 - Executar com validação no backend, consistência transacional e auditoria completa. Não deixar vínculos quebrados nem apresentar falha parcial como sucesso integral.
 - Se as dependências mudarem enquanto a prévia estiver aberta, atualizar a prévia ou exigir nova validação e confirmação.
 - O item excluído não poderá ser selecionado em novas estruturas. O registro de auditoria da exclusão deve permanecer.
@@ -620,3 +620,16 @@ A listagem disponibilizará as ações **Editar** e **Inativar**, respeitando a 
 - O item excluído não poderá ser selecionado em novas estruturas; as referências operacionais atuais serão tratadas conforme a remoção automática aprovada, e as fotografias históricas imutáveis continuarão consultáveis.
 - Eventual consulta administrativa dos registros excluídos deverá ocorrer em ambiente separado e controlado, com permissões apropriadas.
 - Detalhes técnicos de modelagem, retenção e consulta do registro preservado permanecem pendentes de especificação antes da implementação.
+
+
+## 41. Reativação de itens excluídos e autoridade administrativa sobre ações de impacto direto (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- Somente o papel **Administrador** pode reativar um item excluído logicamente.
+- A reativação recupera o registro original, preserva o mesmo ID e seus dados/histórico; não cria novo item.
+- O item retorna ao Cadastro Central ativo, sujeito às validações cadastrais vigentes.
+- A reativação não restaura automaticamente vínculos antigos em estruturas; novos vínculos exigem ação explícita.
+- Decisões e operações com impacto direto em dados, classificações, estruturas, custos, vínculos ou integridade histórica são de competência exclusiva do **Administrador**.
+- A regra inclui, no mínimo, exclusão e reativação de itens e as operações de manutenção de famílias já restritas ao Administrador. A autorização deve ser imposta no backend, com prévia de impacto quando aplicável e auditoria.
+- A matriz completa de permissões deverá classificar cada operação, distinguindo ações de impacto direto das atividades rotineiras que poderão permanecer com o papel Editor. Não presumir permissões ainda não definidas.
