@@ -639,3 +639,14 @@ Legenda:
 - [x] Manter exportação como operação somente leitura, sem alterar alertas ou históricos.
 - [x] Confirmar conclusão na interface somente após sucesso confirmado pelo backend.
 - [ ] Definir limites de volume, expiração/armazenamento temporário, proteção contra compartilhamento indevido e detalhes de formatação.
+
+### Proteção dos arquivos exportados do histórico de reincidências — decisão aprovada (09/11/2026)
+
+- [x] Manter arquivos exportados temporários, sem armazenamento permanente automático.
+- [x] Disponibilizar link individual vinculado ao usuário autorizado solicitante.
+- [x] Expirar automaticamente o link após 30 minutos.
+- [x] Impedir endereço público e acesso anônimo aos arquivos.
+- [x] Revalidar identidade, autorização e permissões atuais no backend no momento do download.
+- [x] Impedir que o compartilhamento do link conceda acesso a outro usuário.
+- [x] Manter geração, armazenamento temporário, vínculo, expiração e autorização sob controle do backend.
+- [x] Confirmar disponibilidade/download na interface somente após retorno do backend.
