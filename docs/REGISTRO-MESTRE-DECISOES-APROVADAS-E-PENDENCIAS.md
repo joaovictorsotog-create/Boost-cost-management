@@ -420,3 +420,15 @@ O formulário será uma única tela com quatro blocos verticais: Identificação
 - A operação recupera o registro existente; não cria uma nova família nem altera sua identidade ou histórico.
 - A unicidade do nome também será validada na reativação. Havendo conflito com outra família, a operação fica bloqueada até a resolução do conflito.
 - Reativar uma família não vincula itens automaticamente; a classificação dos itens continua sendo explícita.
+
+## 23. Área isolada de famílias arquivadas em Configurações (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O gerenciamento de famílias ficará em **Configurações**.
+- Famílias ativas permanecem na área normal de gerenciamento.
+- Famílias inativas aparecem em uma área isolada, identificada por um ícone e pelo texto **Arquivados**.
+- A área **Arquivados** lista somente famílias inativas e permite ao administrador consultar e reativar os registros.
+- Famílias arquivadas não aparecem na seleção do Cadastro Central.
+- Ao reativar, a família retorna à listagem normal de famílias ativas, preservando o registro e respeitando a unicidade do nome.
+- A decisão especifica a organização funcional da interface; não representa autorização para implementar ou alterar banco/infraestrutura.
