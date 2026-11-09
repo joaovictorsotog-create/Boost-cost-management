@@ -1140,3 +1140,13 @@ Legenda:
 - [x] Gerar alerta conforme classificação/prioridade e regras de alertas.
 - [x] Preservar encerramento anterior e trilha integral da reincidência.
 - [ ] Definir correlação técnica, distinção de ocorrências semelhantes, reabertura versus nova ocorrência e regras de alerta.
+
+### Indicadores gerenciais de reincidência — decisão aprovada (09/11/2026)
+- [x] Apresentar indicadores de reincidência no Painel Gerencial separados das falhas atualmente abertas.
+- [x] Medir quantidade de reincidências por período.
+- [x] Identificar componentes com maior número de reincidências.
+- [x] Identificar tipos de falha mais recorrentes.
+- [x] Contabilizar falhas que voltaram a ocorrer após encerramento.
+- [x] Apresentar tempo médio entre encerramento e reincidência.
+- [x] Basear indicadores em ocorrências registradas com correlação suficiente e preservar rastreabilidade/permissões.
+- [ ] Definir janelas/filtros, fórmula da média, múltiplas reincidências, agrupamentos, dados incompletos e visualizações/exportações.
