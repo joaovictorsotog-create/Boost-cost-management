@@ -888,3 +888,11 @@ Legenda:
 - [x] Registrar solicitação, verificações, participantes, decisão e resultado na auditoria.
 - [x] Não restaurar sessões ou tokens anteriores; exigir nova autenticação e configuração do 2FA.
 - [ ] Definir procedimento de verificação de identidade, controles contra abuso/conluio, contingência se não houver segundo Administrador e testes.
+
+
+### Contingência para recuperação administrativa do 2FA — decisão aprovada (09/11/2026)
+- [x] Não permitir recuperação individual simplificada de conta administrativa quando faltar segundo Administrador.
+- [x] Prever procedimento excepcional com verificação reforçada de identidade.
+- [x] Exigir período de segurança antes da liberação, sem acesso imediato.
+- [x] Registrar integralmente o procedimento na auditoria e preservar separação entre solicitante e autorizador.
+- [ ] Definir verificadores independentes, prazo, canal, evidências, notificações e critérios de emergência.
