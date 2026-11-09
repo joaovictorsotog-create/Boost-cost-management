@@ -1427,3 +1427,11 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Até a confirmação, o e-mail antigo continua válido.
 - O novo endereço não pode estar associado a outra conta, ativa ou suspensa.
 - Registrar a operação na auditoria.
+
+
+### Proteções adicionais para alteração de e-mail — decisão aprovada (09/11/2026)
+- Exigir autenticação recente do usuário antes de iniciar a solicitação de alteração.
+- Enviar aviso ao endereço de e-mail antigo informando que foi solicitada uma alteração.
+- Permitir que o usuário conteste uma solicitação que não reconheça.
+- Uma contestação válida bloqueia a alteração pendente; o e-mail cadastrado permanece inalterado até resolução.
+- Registrar tentativas, avisos, contestações, bloqueios e resultados na auditoria, com responsável/ator e data/hora.
