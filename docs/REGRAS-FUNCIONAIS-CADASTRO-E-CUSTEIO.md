@@ -819,3 +819,15 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Deve permanecer disponível a visão cronológica completa, sem filtros, reunindo todos os eventos aos quais o Administrador tenha permissão de acesso.
 - O backend continua sendo a fonte de verdade e deve aplicar as permissões de acesso aos eventos e responsáveis; o frontend não pode ampliar a visibilidade por meio dos filtros.
 - A aprovação define o comportamento funcional dos filtros, mas não define componentes visuais, paginação, tecnologia ou implementação técnica.
+
+
+## 71. Seleção múltipla nos filtros da linha do tempo (09/11/2026)
+
+**Status: APROVADO pelo usuário.**
+
+- O filtro por responsável deve permitir selecionar múltiplos responsáveis simultaneamente.
+- O filtro por tipo de evento deve permitir selecionar múltiplos tipos simultaneamente.
+- Os dois filtros podem ser combinados na mesma consulta.
+- Deve ser possível remover seleções individualmente e limpar todos os filtros para retornar à visão cronológica completa.
+- A seleção múltipla altera somente os critérios de consulta; não modifica, exclui ou sobrescreve eventos históricos.
+- A ordem cronológica dos eventos retornados deve ser preservada e as permissões continuam sendo aplicadas pelo backend.
