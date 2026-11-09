@@ -1320,3 +1320,14 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - Registrar tentativas relevantes, bloqueios e eventos de proteção na auditoria de segurança, sem armazenar senhas ou segredos de autenticação.
 - A implementação deve evitar que terceiros provoquem indisponibilidade prolongada de uma conta por meio de tentativas deliberadas; calibrar controles para reduzir falsos bloqueios e permitir recuperação segura.
 - Permanecem pendentes: progressão e limites máximos dos bloqueios, janela de contagem, critérios de reinício, tratamento de origens compartilhadas, desafios adicionais, retenção dos eventos e critérios de aceite/teste.
+
+
+### Encerramento de conta — decisão aprovada (09/11/2026)
+- Somente Administrador pode iniciar e confirmar o encerramento de uma conta, com justificativa obrigatória e confirmação explícita.
+- Confirmado pelo backend, impedir novos logins e invalidar todas as sessões e tokens, em todos os dispositivos.
+- Preservar auditoria, histórico e registros necessários à integridade; encerramento não apaga histórico.
+- Não liberar automaticamente o e-mail para uma nova conta.
+- Reativação somente administrativa, preservando a conta e seu histórico; não restaurar sessões/tokens antigos e exigir novo login.
+- Auditar responsável, justificativa, data/hora, confirmação, invalidação e eventual reativação.
+- Exibir conclusão somente após confirmação do backend.
+- Pendências: estados de conta, retenção e tratamento de dados pessoais, solicitações pendentes, vínculos operacionais, notificações e critérios de teste.
