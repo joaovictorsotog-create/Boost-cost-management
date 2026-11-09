@@ -1633,3 +1633,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Testes devem ser autorizados, controlados e executados em ambiente/escopo apropriado, sem comprometer dados de produção ou disponibilidade; qualquer teste em produção exige autorização e salvaguardas específicas.
 - Falhas críticas devem ser tratadas com prioridade imediata e submetidas ao processo de resposta a incidentes quando aplicável; correções precisam de reteste e evidência de encerramento.
 - Pendências: metodologia e padrões de teste, independência dos executores, critérios de severidade, prazos de correção, evidências/relatórios, testes de terceiros, escopo de produção e critérios de aceite.
+
+
+### Independência das auditorias de segurança — decisão aprovada (09/11/2026)
+- Testes periódicos de segurança não podem ser executados exclusivamente pelo Administrador ou pela equipe diretamente responsável pela operação avaliada.
+- A execução deve caber a pessoa/equipe independente da operação sob avaliação, com competência técnica adequada e escopo autorizado.
+- Administradores acompanham os resultados e recebem comunicação de falhas críticas.
+- Relatórios e resultados dos testes são preservados; nenhum responsável pode apagá-los ou alterá-los silenciosamente.
+- Correções e retestes devem permanecer vinculados ao relatório original, preservando achados, responsáveis, evidências e histórico de resolução.
+- Pendências: critérios de independência/conflito de interesses, qualificação e seleção do auditor, contratação/periodicidade, acesso controlado a ambientes e evidências, confidencialidade, comunicação e aceite dos relatórios.
