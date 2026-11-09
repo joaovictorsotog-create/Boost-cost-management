@@ -216,3 +216,12 @@ Legenda:
 - [x] Vincular a notificação à solicitação e respeitar permissões.
 - [x] Manter rastreabilidade do envio/resultado sem restaurar poderes ao titular anterior.
 - [ ] Definir canal, política de tentativas, falhas de entrega e critérios de aceite das notificações.
+
+ 
+### Notificação ao novo titular após transferência
+
+- [x] Notificar o novo Administrador após a transferência ser persistida.
+- [x] Identificar a solicitação e fornecer acesso direto à análise e ao histórico anterior.
+- [x] Preservar ciclos e registros anteriores, respeitando permissões.
+- [x] Manter rastreabilidade do envio/resultado.
+- [ ] Definir canal, política de tentativas, falhas de entrega e critérios de aceite das notificações.
