@@ -424,3 +424,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - A reativação não restabelece nem cria vínculos automaticamente: itens não serão associados à família por efeito da reativação.
 - O administrador poderá confirmar ou cancelar. Nenhuma alteração ocorrerá antes da confirmação explícita.
 - A reativação preserva a identidade e o histórico do registro original, respeitando a validação de unicidade do nome já aprovada.
+
+## 40. Conflito de nome na reativação de família — decisão aprovada em 09/11/2026
+
+**Status: APROVADO pelo usuário.**
+
+- Antes de reativar uma família arquivada, o sistema deve validar se o nome pretendido conflita com o nome de outra família ativa, aplicando a regra de unicidade já aprovada, inclusive para diferenças de capitalização ou grafia equivalente.
+- Se houver conflito, bloquear a reativação e informar claramente que o nome está em uso por outra família ativa.
+- A mensagem deve identificar o nome conflitante e, quando possível, a família ativa que o utiliza, para orientar a resolução.
+- O administrador deverá resolver o conflito — por exemplo, renomeando a família arquivada ou a família ativa, respeitando as permissões e a validação de unicidade — e então tentar novamente.
+- Não renomear famílias automaticamente, não sobrescrever registros e não criar vínculos como efeito da tentativa de reativação.
+- A reativação só poderá prosseguir após nova validação bem-sucedida e confirmação explícita do administrador.
