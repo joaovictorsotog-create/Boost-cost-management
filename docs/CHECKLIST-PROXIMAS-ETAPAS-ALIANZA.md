@@ -500,3 +500,12 @@ Legenda:
 - [ ] Definir critérios objetivos de resolução por tipo de ocorrência.
 - [ ] Definir quando evidências/documentos serão exigidos.
 - [ ] Definir regras de reabertura e escalonamento.
+
+### Reabertura de notificações críticas — decisão aprovada (09/11/2026)
+
+- [x] Permitir reabertura somente por Administrador autorizado.
+- [x] Exigir justificativa obrigatória para reabrir.
+- [x] Validar autorização, estado atual e concorrência no backend.
+- [x] Registrar reabertura na mesma linha do tempo, com responsável, data/hora, justificativa e resultado.
+- [x] Preservar resolução anterior e todos os eventos históricos, sem sobrescrita.
+- [ ] Definir estado operacional após reabertura e se será exigido novo reconhecimento.
