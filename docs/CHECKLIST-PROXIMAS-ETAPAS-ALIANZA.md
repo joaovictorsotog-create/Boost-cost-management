@@ -1124,3 +1124,10 @@ Legenda:
 - [x] Retornar a falha ao estado aberto e exigir novo plano, responsável, prazo, contenção aplicável e reteste independente.
 - [x] Preservar vínculo com a falha original em reincidências relacionadas; dar identidade própria a ocorrências distintas.
 - [ ] Definir correlação automática, perfil para reabertura manual, reclassificação, notificações e tratamento dos prazos.
+
+### Classificação de falhas após reabertura — decisão aprovada (09/11/2026)
+- [x] Manter a classificação anterior da falha reaberta até reavaliação formal.
+- [x] Restringir a aprovação de mudança de classificação a Administrador autorizado, com justificativa técnica registrada.
+- [x] Impedir rebaixamento artificial para contornar prioridade, prazos, bloqueios, contenção, correção ou reteste.
+- [x] Auditar classificação anterior/nova, justificativa, evidências, Administrador e data/hora.
+- [ ] Definir critérios objetivos, evidências mínimas, fluxo e efeitos da reclassificação sobre prazos/escalonamentos.
