@@ -1744,3 +1744,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Até eventual aprovação formal de nova política, permanece obrigatório o limite de 5 ocorrências, inclusive em filtros, consultas sucessivas, detalhamentos e exportações.
 - Administradores mantêm o acesso completo previsto nas regras, sem que isso configure alteração do limite aplicável aos demais perfis.
 - Pendências: definir rito de revisão formal, responsáveis pela avaliação independente, critérios de risco, aprovação e comunicação de eventual mudança.
+
+## Auditoria de consultas aos indicadores de reincidência — decisão aprovada (09/11/2026)
+
+- Registrar consultas aos indicadores com identificação do usuário/ator, data e hora, perfil de acesso e filtros/parâmetros efetivamente aplicados.
+- Registrar se a consulta resultou em exportação e, quando aplicável, o formato e o resultado operacional da exportação.
+- Registrar resultado da operação de consulta (por exemplo, concluída, negada ou falha), sem armazenar desnecessariamente dados sensíveis, evidências restritas ou valores suprimidos.
+- Aplicar a trilha de auditoria a consultas realizadas pela interface, APIs e demais caminhos de acesso, com autorização e registro no backend.
+- A auditoria deve permitir investigar uso indevido, tentativas de contornar a supressão mínima de 5 ocorrências e consultas sucessivas destinadas à reidentificação.
+- A própria trilha não pode revelar, para perfis sem autorização, valores ou grupos protegidos que foram suprimidos nos indicadores.
+- **Pendências:** definir granularidade e formato dos filtros registrados, identificação de consultas equivalentes/sucessivas, retenção específica, acesso à trilha, alertas para padrões suspeitos, mascaramento/minimização e testes de tentativa de inferência.
