@@ -1025,3 +1025,14 @@ As notificações terão quatro níveis de prioridade:
 - **Baixa**
 
 A prioridade é um atributo distinto da categoria da notificação. A categoria informa o assunto (Aprovações, Alterações de cadastro, Exclusões, Segurança ou Sistema); a prioridade indica o grau de atenção exigido. A classificação de cada evento deverá ser definida por regras de negócio no backend, não por decisão do frontend. Critérios objetivos de enquadramento, apresentação visual/sonora, escalonamento, filtros e eventual tratamento especial de notificações críticas permanecem pendentes de especificação.
+
+### Critérios gerais de prioridade das notificações — decisão aprovada (09/11/2026)
+
+A prioridade deverá refletir a urgência e o impacto do evento, segundo critérios gerais:
+
+- **Crítica:** risco imediato à segurança ou à integridade dos dados.
+- **Alta:** ação administrativa importante que exige atenção rápida.
+- **Normal:** atualizações e solicitações que precisam ser acompanhadas, sem caracterização de urgência alta ou crítica.
+- **Baixa:** avisos informativos, sem necessidade de ação imediata.
+
+O enquadramento de eventos concretos será realizado por regras de negócio no backend. Estes critérios gerais não constituem, por si só, uma matriz completa de classificação: o mapeamento de cada evento, eventuais exceções, apresentação visual/sonora, escalonamento e tratamento especial de notificações críticas ainda precisam ser especificados. A prioridade não deve ser elevada indiscriminadamente, para preservar o significado dos níveis de urgência.
