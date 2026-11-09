@@ -1115,3 +1115,12 @@ Legenda:
 - [x] Manter falha aberta se reteste reprovar ou evidências forem insuficientes.
 - [x] Auditar decisão, validador, responsáveis, horários, evidências e resultado.
 - [ ] Definir evidências mínimas, independência/competência do reteste, fluxo, reabertura e critérios de aceite.
+
+### Reabertura de falhas de segurança — decisão aprovada (09/11/2026)
+- [x] Reabrir falha encerrada se voltar a ocorrer ou se novas evidências mostrarem que a correção foi insuficiente.
+- [x] Permitir reabertura automática com correlação técnica confiável; nos casos que exigem avaliação, permitir decisão justificada de Administrador autorizado.
+- [x] Preservar integralmente encerramento e histórico anteriores.
+- [x] Registrar motivo, evidências, origem, ator/responsável e data/hora, vinculando à falha original.
+- [x] Retornar a falha ao estado aberto e exigir novo plano, responsável, prazo, contenção aplicável e reteste independente.
+- [x] Preservar vínculo com a falha original em reincidências relacionadas; dar identidade própria a ocorrências distintas.
+- [ ] Definir correlação automática, perfil para reabertura manual, reclassificação, notificações e tratamento dos prazos.
