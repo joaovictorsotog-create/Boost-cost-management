@@ -867,3 +867,14 @@ A listagem também disponibilizará as ações **Editar** e **Inativar**, respei
 - Nenhuma alteração de filtro deve ser descartada sem a escolha explícita do Administrador.
 - Se não houver alterações temporárias pendentes, a navegação não deve ser bloqueada por esse aviso.
 - O aviso protege apenas o estado de edição dos filtros; não modifica registros históricos nem a consulta anteriormente aplicada.
+
+## Navegação global e proteção de filtros não aplicados — decisão aprovada em 09/11/2026
+
+- O Alianza terá, no cabeçalho padrão global, botões visíveis **Voltar** e **Avançar**, seguindo convenções comuns de navegação de sites e sistemas.
+- Os botões estarão disponíveis de forma consistente nas telas do sistema, respeitando os limites e o histórico de navegação existente.
+- A navegação também deverá oferecer comandos de teclado compatíveis. O atalho **Esc** deverá executar a ação de voltar dentro do Alianza quando aplicável, sem presumir que seja um comando universal do navegador e sem interferir indevidamente em ações contextuais, como fechar modais.
+- A navegação por botão, teclado ou controles do navegador deverá respeitar a proteção contra perda de alterações: se houver filtros não aplicados ou outra edição protegida, solicitar confirmação antes de abandonar a tela.
+- Se o usuário optar por permanecer, manter integralmente a edição em andamento. Se optar por descartar e sair, preservar os últimos filtros aplicados e seus resultados.
+- A cobertura deverá considerar navegação interna, voltar/avançar do navegador e atualização/recarregamento; para fechamento de aba/janela, utilizar o mecanismo nativo de aviso do navegador quando disponível, sem prometer modal personalizado.
+- Regras de negócio, validação de estado e proteção contra perda de dados devem ser garantidas pelo backend quando envolverem persistência; o frontend não será autoridade.
+- Detalhes de posicionamento responsivo, comportamento quando não houver histórico e compatibilidade de atalhos permanecem sujeitos à especificação técnica e aos critérios de aceite.
