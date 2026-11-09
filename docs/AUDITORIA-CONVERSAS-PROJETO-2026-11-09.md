@@ -3,7 +3,7 @@
 **Data da auditoria:** 09/11/2026  
 **Fonte:** export ZIP enviado pelo usuário em 09/11/2026 + 17 links de conversas compartilhados na conversa.  
 **Escopo:** conversas “Pesquisa sobre criação no Manus” (principal e partes 1–15) e ramificações “Avaliar capacidade da VPS”.  
-**Resultado:** leitura das 17 conversas vinculadas; decisões classificadas como aprovadas, contexto/limite de escopo, pendências ou assuntos de outros projetos.
+**Resultado inicial:** 17 conversas ligadas por links. Em complemento, a inspeção do identificador de projeto no ZIP encontrou mais 2 conversas do mesmo projeto, totalizando 19 revisadas; 8 das 27 mencionadas pelo usuário não estão presentes no export.
 
 ## 1. Cobertura e método
 
@@ -215,3 +215,43 @@ O conteúdo normativo completo foi incorporado ao documento `REGISTRO-MESTRE-DEC
 ## 6. Regra de governança
 
 Nenhuma sugestão do assistente pode ser promovida a regra aprovada sem confirmação explícita do usuário. Quando duas fontes divergirem, registrar o conflito e não escolher silenciosamente uma versão. Atualizações de documentação devem permanecer na branch de documentação; não fazer merge, deploy, migration ou alteração de infraestrutura sem autorização específica.
+
+
+
+## 7. Complemento da auditoria — conferência direta do ZIP (09/11/2026)
+
+### 7.1 Identificação correta do conjunto de conversas
+
+A inspeção dos metadados de `conversations.json` identificou o ID de projeto/template `g-p-6ae9c560f4908191aa722657220d9362`. **19 conversas** do ZIP pertencem a esse mesmo projeto do ChatGPT. As outras 17 conversas do ZIP têm `conversation_template_id` ausente e tratam de assuntos diversos; não foram contadas como parte deste projeto.
+
+Das 19 conversas do projeto, 17 já constavam da relação de links auditada anteriormente. Foram identificadas e lidas agora as duas conversas omitidas daquela relação:
+
+| Conversa | ID | Resultado |
+|---|---|---|
+| Desenvolver Tabela Automatizada | `6ae9c59e-b148-83e9-9e66-83bd911c5aca` | Conteúdo revisado; decisões e limites de escopo consolidados abaixo |
+| Pesquisa sobre criação no Manus (1) | `6aea176d-65cc-83e9-ab2d-a8d456162f14` | Conteúdo revisado; decisões e limites de escopo consolidados abaixo |
+
+**Limite de cobertura:** o usuário informou que o projeto contém 27 conversas. O ZIP exportado em 06/11/2026 contém apenas 19 conversas com o identificador deste projeto. Portanto, 19/27 estão identificadas no export; **8 conversas ainda não aparecem neste arquivo** e precisam ser obtidas por outra exportação/listagem ou compartilhadas. Não é correto afirmar que a auditoria das 27 está concluída.
+
+### 7.2 Conversa “Desenvolver Tabela Automatizada”
+
+- O usuário esclareceu que a planilha enviada representa custos de cada produto: os custos das matérias-primas são alimentados com os valores que já utiliza e o sistema calcula o custo industrial do produto. O sistema não deve acrescentar impostos nem calcular preço de venda por conta própria.
+- O objetivo declarado foi transformar a planilha em um sistema web, com vários usuários consultando e atualizando dados, usando Manus como apoio de desenvolvimento/hospedagem. O ambiente técnico final não foi fechado nessa conversa.
+- O usuário afirmou que o projeto é da Alianza, mas não é a mesma aplicação do CRM. Em seguida, escolheu o nome **“Alianza — Sistema de Custos”**. Isso confirma que a conversa pertence ao projeto atual, mas descreve uma aplicação separada do CRM.
+- Foi solicitado que alterações de custos/valores passem por aprovação e que o histórico permita consultar tabelas/versões anteriores. Essa diretriz deve ser lida junto das regras posteriores de confirmação global e histórico; não autoriza sobrescrever registros históricos.
+- A conversa menciona configuração livre de canais por produto em um bloco chamado “definições comerciais”. Porém, o usuário também delimitou que o aplicativo em questão calcula custo industrial e não impostos/preço de venda. **Não incorporar canais, margens, markup ou formação de preço de venda ao escopo sem esclarecer essa tensão**; manter como ponto de conflito/escopo a resolver se voltar a ser relevante.
+- O usuário declarou que não deseja integração com outra aplicação. Isso reforça a separação do CRM; não significa ausência de integrações internas necessárias ao funcionamento do próprio sistema.
+
+### 7.3 Conversa “Pesquisa sobre criação no Manus (1)”
+
+- O usuário aprovou a incorporação de **Placa/Fonte** na posição/célula H18, identificada como “Itens de Montagem”, na ficha referida. O registro funcional deve classificá-la como item de montagem e contabilizá-la uma única vez no total industrial. A adaptação correspondente para a variante INOX foi discutida como I18; conferir a planilha e a fórmula exata antes de implementar.
+- Os blocos da aba `CUSTOS VARIÁVEIS` foram explicados pelo usuário como **categorias de componentes/recursos**. Por meio dessas categorias, o usuário monta a árvore do produto, combinando matéria-prima, pintura, componentes eletrônicos e outros itens. Portanto, não modelar cada bloco apenas como uma tabela isolada e desconectada: representar categorias configuráveis e itens cadastrados centralmente, selecionáveis nas estruturas.
+- O usuário confirmou que a aplicação é para a Alianza, mas separada da aplicação CRM, e escolheu o nome **Alianza — Sistema de Custos**.
+- O usuário autorizou um ambiente para ajustar valores manualmente quando necessário e explicou que os valores dos itens da árvore precisam ser atualizados periodicamente por mudanças de mercado. Interpretar isso como edição do custo vigente dos itens cadastrados, sujeita a confirmação, histórico e recálculo em cascata. **Não interpretar como autorização para sobrescrever manualmente o custo calculado de um item composto**, pois a regra posterior aprovada determina que o custo de item composto deriva da estrutura.
+- O usuário escolheu **atualização automática global**: a alteração de custo de um item central deve atualizar automaticamente todos os produtos e subconjuntos dependentes, respeitando confirmação, histórico, integridade e transação já documentados.
+
+### 7.4 Correção do status documental
+
+- A auditoria das 17 conversas originalmente ligadas foi complementada pelas duas conversas acima; o total efetivamente identificado e revisado no ZIP para este projeto passa a ser **19**.
+- A pendência de cobertura passa a ser localizar as **8 conversas ausentes** em relação ao total de 27 informado pelo usuário.
+- A conversa “Desenvolver Tabela Automatizada” não deve mais ser tratada como conversa sem vínculo com o projeto: os metadados do export a vinculam ao mesmo projeto do ChatGPT e o usuário declarou que a aplicação é da Alianza, mas separada do CRM. Seus requisitos de precificação comercial, entretanto, permanecem sujeitos ao limite de escopo registrado acima.
