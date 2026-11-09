@@ -1103,3 +1103,8 @@ O painel administrativo terá uma visualização própria de **Histórico de rei
 ### Filtros do histórico de reincidências — APROVADO (09/11/2026)
 
 O histórico permitirá filtrar por período, tipo de ocorrência, estado do alerta e identificação do registro/recurso afetado, sempre respeitando permissões. A consulta só será executada após ação explícita em **Aplicar filtros**. Durante a edição, resultados da última consulta aplicada permanecem visíveis; descartar a edição preserva os critérios e resultados já aplicados. O backend valida parâmetros, autorização e escopo. A consulta é somente leitura e não altera alertas nem histórico.
+
+
+### Paginação do histórico de reincidências — APROVADO (09/11/2026)
+
+A consulta terá 20 registros por página por padrão, com opções de 20, 50 e 100. O histórico completo não será carregado de uma só vez: o backend retornará apenas a página solicitada, respeitando filtros, ordenação e permissões. Navegar ou alterar a quantidade por página não modifica alertas ou históricos e preserva os filtros e a ordenação aplicados.
