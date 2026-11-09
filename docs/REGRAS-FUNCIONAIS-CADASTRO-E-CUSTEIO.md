@@ -1354,3 +1354,11 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Após a reconexão, deverá buscar e validar o estado atual no backend antes de apresentar os dados como atualizados.
 - A perda ou recuperação da conexão não poderá alterar, reiniciar, cancelar ou duplicar a solicitação de exportação.
 - O comportamento deverá respeitar as permissões vigentes e evitar tentativas de reconexão excessivas.
+
+### Atualização dos detalhes quando a tela não estiver ativa — decisão aprovada (09/11/2026)
+
+- Quando o usuário sair da tela de detalhes ou ela deixar de estar ativa/em primeiro plano, as consultas automáticas deverão ser suspensas ou reduzidas para evitar tráfego e consumo desnecessários.
+- Ao retornar à tela ou torná-la ativa novamente, o sistema deverá solicitar imediatamente ao backend o estado atual da solicitação, respeitando identidade e permissões vigentes.
+- Os dados anteriores permanecerão identificados como última atualização confirmada até que a nova consulta seja validada pelo backend.
+- A suspensão ou redução das consultas não poderá pausar, reiniciar, cancelar ou alterar a solicitação de exportação.
+- O mecanismo técnico e os limites de frequência para a tela ativa e inativa permanecem pendentes de definição.
