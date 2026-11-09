@@ -345,3 +345,15 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 **Status: APROVADO pelo usuário nesta conversa.**
 
 O formulário será uma única tela com quatro blocos verticais: Identificação; Características; Custeio; Controle. Não haverá abas separadas para esses blocos. A decisão é de apresentação e não modifica as regras funcionais já aprovadas.
+
+
+## 16. Decisão incremental — sugestão sequencial de ID com escolha manual (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- O sistema sugere o menor número inteiro positivo ainda não utilizado.
+- O administrador pode aceitar a sugestão ou informar qualquer outro ID numérico disponível; a sugestão não é obrigatória.
+- A unicidade é validada antes de salvar, impedindo IDs duplicados.
+- A cada cadastro, a sugestão é recalculada considerando todos os IDs já utilizados. Exemplo: com o ID 10 ocupado e os IDs 5 a 9 livres, o sistema sugere 5; depois que 5 a 9 forem ocupados, sugere 11.
+- IDs de itens inativados continuam reservados e não podem ser reutilizados.
+- Essa regra complementa a decisão anterior de ID numérico obrigatório e exclusivo, sem alterar a autonomia do administrador para escolher outro número livre.
