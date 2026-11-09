@@ -170,3 +170,13 @@ Legenda:
 - [x] Exibir quem está conduzindo a análise e impedir tomada de controle forçada.
 - [x] Definir que tentativas simultâneas serão resolvidas pelo backend, aceitando apenas uma titularidade.
 - [ ] Especificar mecanismo técnico atômico de concorrência, recuperação de falhas e liberação de análises abandonadas.
+
+ 
+### Encerramento voluntário da análise
+
+- [x] Aprovar ação **Encerrar análise sem decisão**, com confirmação explícita.
+- [x] Retornar a solicitação para **Pendente** após persistência confirmada pelo backend e liberar a titularidade.
+- [x] Auditar o encerramento voluntário.
+- [x] Definir que fechar navegador, sair do sistema ou ficar inativo não encerra a análise.
+- [x] Manter o limite de três lembretes sem liberação automática.
+- [ ] Especificar critérios técnicos e testes de aceite para transição, liberação de titularidade e auditoria.
