@@ -263,3 +263,13 @@ Legenda:
 - [x] Exibir responsável, data/hora, operação e resultado, com contexto aplicável.
 - [x] Preservar sequência temporal entre ciclos e titulares; usar registros do backend como fonte de verdade.
 - [ ] Definir filtros, paginação, agrupamento visual e critérios de apresentação.
+
+
+### Filtros da linha do tempo da solicitação
+
+- [x] Aprovar filtro por responsável.
+- [x] Aprovar filtro por tipo de evento.
+- [x] Manter filtros como recursos de consulta, sem alterar ou excluir registros históricos.
+- [x] Preservar a ordem cronológica e disponibilizar a visão completa sem filtros.
+- [x] Aplicar permissões no backend também aos resultados filtrados.
+- [ ] Definir detalhes visuais, paginação e critérios técnicos de aceite.
