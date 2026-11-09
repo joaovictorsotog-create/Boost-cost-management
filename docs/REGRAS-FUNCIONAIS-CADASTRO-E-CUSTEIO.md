@@ -1337,3 +1337,11 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Informações ainda não disponíveis, como horário de encerramento, quantidade final de registros ou resultado final, não serão presumidas nem preenchidas antecipadamente.
 - A consulta continuará sendo somente leitura; abrir ou atualizar os detalhes não altera o processamento, não solicita cancelamento e não interfere na tarefa.
 - Identidade, permissões, estado e conteúdo exibido serão validados pelo backend.
+
+### Atualização automática dos detalhes da exportação — decisão aprovada (09/11/2026)
+
+- Com a tela de detalhes aberta, as informações da solicitação deverão ser atualizadas automaticamente, sem exigir atualização manual do usuário.
+- As atualizações deverão refletir somente estados, dados e eventos confirmados pelo backend.
+- O mecanismo deverá ser controlado para evitar consultas excessivas, tráfego desnecessário e sobrecarga do sistema.
+- A atualização automática será apenas de consulta: não poderá alterar a solicitação, interferir no processamento ou solicitar cancelamento.
+- A frequência, o mecanismo técnico, o comportamento em caso de perda de conexão e a suspensão/redução de atualizações quando a tela não estiver ativa permanecem pendentes de especificação técnica.
