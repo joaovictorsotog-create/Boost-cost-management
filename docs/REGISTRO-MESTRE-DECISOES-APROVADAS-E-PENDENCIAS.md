@@ -321,3 +321,12 @@ O procedimento completo está em `docs/PROTOCOLO-DE-CONTINUIDADE-E-DECISOES-INCR
 - Permitir pesquisa e filtros por esse campo.
 - Não substituir nem alterar a descrição principal; o preenchimento não é obrigatório.
 - O campo é informativo e não interfere em família, unidade, estrutura, origem do custo ou cálculo.
+
+## 13. Decisão incremental — listagem unificada do Cadastro Central (09/11/2026)
+
+**Status: APROVADO pelo usuário nesta conversa.**
+
+- Exibir itens Simples e Compostos juntos em uma única listagem.
+- Usar filtros para distinguir tipo e situação, em vez de abas fixas separadas.
+- Manter inativos ocultos por padrão e acessíveis por filtro específico, conforme decisão anterior.
+- Priorizar uma listagem objetiva para localização rápida; informações completas serão vistas no cadastro do item.
