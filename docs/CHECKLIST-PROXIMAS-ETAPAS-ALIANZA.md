@@ -775,3 +775,11 @@ Legenda:
 - [x] Exibir histórico dos eventos relevantes de auditoria em modo somente leitura.
 - [x] Impedir edição ou exclusão dos dados pela interface.
 - [x] Manter validação de identidade, permissões, dados e estados sob autoridade do backend.
+
+### Consulta dos detalhes durante o processamento — decisão aprovada (09/11/2026)
+
+- [x] Permitir consulta dos detalhes em qualquer estado da solicitação, inclusive durante o processamento.
+- [x] Exibir somente informações e eventos já disponíveis e confirmados pelo backend.
+- [x] Não presumir horários, quantidades ou resultados finais ainda indisponíveis.
+- [x] Manter a consulta e sua atualização em modo somente leitura, sem interferir na tarefa.
+- [x] Validar identidade, permissões, estado e conteúdo no backend.
