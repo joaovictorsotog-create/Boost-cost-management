@@ -351,3 +351,45 @@ A ficha também apresenta os grupos de custo em `I10:I18`: chapa carbono, chapa 
 A regra vigente do Alianza não aplica Gama automaticamente: trata-se de correção manual, opcional e contextual. Portanto, o teste-base do motor utiliza o subtotal de tubos antes de Gama e valida R$ 1.600,6750321 (apresentação conforme a regra do Alianza: R$ 1.600,67). Se um Administrador decidir aplicar Gama àquele custo, o valor ajustado deve ser informado explicitamente; o motor não deve multiplicar todos os tubos nem todos os itens de inox por 1,2. A soma dos grupos com o valor de tubos já ajustado pela planilha resulta em R$ 1.733,8963801, diferença de R$ 0,0000001 do cache de `I19`, sem impacto na apresentação.
 
 O teste da ficha usa os valores por grupo como componentes simples de referência e valida o total decimal do motor antes de Gama. Ele não pretende reproduzir todas as fórmulas internas da planilha nem aprovar automaticamente os custos armazenados nela.
+
+
+### 13.6 Aplicação da referência funcional do Omie
+
+A referência ao Omie recuperada nos registros do projeto é **conceitual e funcional**. O material preservado não contém uma especificação de API do Omie, contrato de integração, endpoints, payloads ou uma auditoria técnica do produto. Portanto, não afirmar compatibilidade ou copiar comportamento não documentado.
+
+Os conceitos explicitamente registrados e sua aplicação no Alianza são:
+
+| Conceito observado como referência Omie | Aplicação no Alianza | Limite |
+|---|---|---|
+| Cadastro central de produtos/itens | Cadastro Central único, com ID próprio, família, unidade, tipo, status e origem de custo | Não duplicar o mesmo item em cada produto |
+| Busca de itens já cadastrados ao compor um produto | Seletor/pesquisa de itens existentes no Cadastro Central ao montar uma estrutura | A estrutura referencia o item; não cria outro cadastro |
+| Reutilização do mesmo item em diferentes estruturas | Uma identidade de item pode ser componente de vários produtos e subconjuntos | Alteração do custo simples propaga recálculo para todos os compostos dependentes |
+| Estrutura de produto em múltiplos níveis | Composição recursiva de produto, subconjunto e componentes | Ciclos são proibidos; componentes repetidos em posições distintas são contabilizados por ocorrência |
+| Quantidade de cada componente na composição | Linha de estrutura registra item e quantidade consumida, respeitando a unidade única do item | Sem conversão automática entre unidades |
+
+#### Como combinar Omie e a planilha sem misturar seus papéis
+
+- **Omie orienta a organização funcional:** como cadastrar, localizar, reutilizar e estruturar itens.
+- **A planilha orienta a investigação industrial:** quais materiais, serviços, quantidades, unidades, lotes e agrupamentos aparecem nas fichas reais.
+- **As regras aprovadas do Alianza governam o cálculo:** custo do composto é a soma das quantidades das linhas multiplicadas pelos custos unitários vigentes, dividida pela quantidade-base de unidades acabadas quando a estrutura representar um lote.
+- **O motor próprio executa a regra:** não deve reproduzir automaticamente algoritmos, arredondamentos, fiscalidade ou políticas de estoque de Omie ou da planilha.
+
+#### Consequências para UX e modelo de dados
+
+1. O fluxo de composição deve começar pela pesquisa do Cadastro Central; permitir cadastrar um item novo sem sair do contexto só se isso respeitar o fluxo de permissões e aprovação já aprovado.
+2. A linha da estrutura deve apontar para a identidade persistente do item, guardar a quantidade consumida e preservar a unidade do item. A descrição exibida é uma projeção do cadastro, não uma cópia que se torne uma segunda identidade.
+3. A tela do produto deve apresentar sua estrutura por níveis, com expansão de subconjuntos e consulta do custo consolidado, sem somar novamente os componentes internos de um subconjunto já incluído no custo do pai.
+4. O mesmo componente deve poder ser selecionado em estruturas diferentes. Alterar seu custo unitário deve localizar e recalcular todos os pais dependentes, sem exigir edição manual de cada produto.
+5. Estrutura e custo precisam de fotografia/versionamento histórico para que mudanças futuras no cadastro não reescrevam a composição usada em um cálculo anterior.
+6. O fluxo deve deixar clara a diferença entre item simples (custo manual) e item composto (custo calculado), regra específica do Alianza que prevalece sobre qualquer analogia com Omie.
+
+#### O que não importar da referência
+
+Não incluir por analogia:
+- emissão fiscal, SPED, NCM ou outras classificações fiscais;
+- estoque, compras, ordens de produção ou planejamento de materiais;
+- preço de venda, tabelas comerciais, margens e descontos;
+- MOD, GGF, perdas ou regras de custeio não aprovadas;
+- comportamento específico de telas ou APIs do Omie que não tenha sido verificado em fonte técnica.
+
+**Conclusão:** Omie e planilha são referências complementares, não concorrentes. Omie ajuda a desenhar a experiência de cadastro e composição reutilizável; a planilha ajuda a confrontar essa estrutura com a realidade de fabricação; as decisões funcionais do Alianza definem o comportamento final.
