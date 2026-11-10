@@ -52,7 +52,7 @@ Exemplo confirmado:
 
 O sistema soma os custos da estrutura e preenche automaticamente o custo unitário do Mecanismo de Torniquete com **R$ 44,00**.
 
-Se a estrutura representar mais de uma unidade produzida, será necessário dividir o custo total da estrutura pela quantidade-base produzida para chegar ao custo unitário. A definição detalhada desse campo de quantidade-base ainda precisa ser fechada.
+Se a estrutura representar mais de uma unidade produzida, o custo unitário será o custo total de todos os componentes da estrutura dividido pela quantidade-base de unidades acabadas produzidas. A quantidade-base deve ser positiva; quando não informada, considera-se 1 unidade. As quantidades das linhas representam o consumo total correspondente àquela quantidade-base. Perdas e aproveitamento já incorporados às quantidades ou aos custos não podem ser aplicados novamente.
 
 ## 4. Estruturas multinível e recálculo em cascata
 
@@ -110,7 +110,7 @@ A interface deve deixar evidente quando o custo é manual e quando é calculado,
 
 Não assumir decisões para os pontos abaixo sem confirmação:
 
-1. Quantidade-base da estrutura (sempre uma unidade ou lote de produção configurável).
+1. Definir os detalhes de interface e persistência do campo de quantidade-base, mantendo a regra funcional aprovada: padrão 1; lote divide o custo total pela quantidade de unidades acabadas.
 2. Regras universais de aproveitamento de barras/tubos e arredondamento de compras.
 3. Precisão interna de armazenamento e cálculo além do arredondamento de apresentação por item já aprovado.
 4. Como tratar versões de estruturas e custos históricos em alterações futuras.
