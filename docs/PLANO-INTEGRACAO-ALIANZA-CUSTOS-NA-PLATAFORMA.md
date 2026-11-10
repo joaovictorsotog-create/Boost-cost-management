@@ -283,3 +283,49 @@ Por decisão do projeto, **toda documentação de produto, arquitetura, auditori
 O repositório `alianza-ai-platform` será usado para código, testes e artefatos estritamente necessários à implementação. Não manter cópias divergentes de documentos de gestão nos dois repositórios.
 
 **Estado:** auditoria estática do código vivo concluída em nível inicial; implementação funcional ainda não iniciada. A branch de trabalho existe, mas não autoriza alteração de banco ou produção.
+
+
+---
+
+## 13. Auditoria da planilha de referência — 10/11/2026
+
+**Arquivo analisado:** `TABELA DE PREÇO - Atualizada (Inox 201).xlsx`  
+**Método:** leitura das fórmulas e dos valores armazenados no arquivo, sem editar nem recalcular/salvar a planilha.
+
+### 13.1 Estrutura encontrada
+
+- 143 abas, incluindo menu, tabela consolidada de preços, custos variáveis e fichas técnicas individuais de produtos/conjuntos.
+- 11.171 células com fórmulas.
+- As fichas técnicas apresentam linhas de componentes com quantidade, unidade, peso/comprimento por peça, custos por grupo e totais.
+- A aba `CUSTOS VARIÁVEIS` centraliza referências de matérias-primas e serviços: chapas/tubos por kg ou metro, vidros, pintura, usinados, fixadores, eletrônica e outros itens.
+- Existem fichas com cálculo de aproveitamento de barras comerciais por lote. Exemplo observado em `MINI TORNIQUETE - INOX`: quantidade de conjuntos configurada em 10, comprimento real calculado, comprimento comercial arredondado para múltiplos de 6 m e custo rateado por conjunto.
+- Há também custos agrupados por chaparia, tubos, usinagem, corte laser, pintura, manufatura, embalagem e itens de montagem. A planilha distingue subtotal de grupos e total da ficha.
+
+### 13.2 Evidências que não devem ser confundidas com regras aprovadas
+
+1. **Quantidade-base/lote:** algumas fichas calculam consumo e compra para 10 conjuntos e depois dividem o custo comercial pelo lote. Isso demonstra uma prática existente na planilha, mas não define se o Sistema de Custos adotará estrutura por unidade, lote configurável ou ambos. A decisão continua pendente.
+2. **Aproveitamento comercial:** há arredondamento de barras para múltiplos de 6 m em fórmulas específicas. Não generalizar para todos os tubos, materiais ou produtos sem regra operacional confirmada.
+3. **Custos por grupo:** a planilha agrega categorias de custo antes de formar totais. No Cadastro Central, materiais e serviços deverão continuar sendo itens identificáveis/reutilizáveis; os agrupamentos podem ser uma visão de relatório, não uma nova origem de custo duplicada.
+4. **Manufatura:** a observação da planilha indica que certos itens comprados podem receber processo de fabricação. Isso não autoriza criar um adicional genérico de manufatura: só deve entrar quando existir item/serviço/custo explicitamente cadastrado e aprovado.
+5. **Fatores comerciais:** a aba consolidada de preços calcula colunas de preço sem desconto, desconto de 10% e cliente final +45%, além de referências Alpha/Beta e fatores associados a canais. Isso pertence à formação de preço comercial e permanece fora do motor de custo industrial aprovado.
+6. **Gama:** valores e fórmulas aparecem em fichas de inox, mas a regra aprovada do Alianza continua sendo aplicação manual, opcional e contextual; não copiar o fator automaticamente.
+7. **Arredondamento:** as fórmulas da planilha usam funções como `ROUNDUP` e arredondamentos para compra/aproveitamento. Não substituir a regra de apresentação já aprovada no Alianza por esses arredondamentos comerciais/operacionais.
+
+### 13.3 Qualidade e integridade da fonte
+
+A leitura dos valores de erro já armazenados no arquivo encontrou **277 células com valores de erro em cache**. Destas, 234 estão na aba `TABELA DE PREÇO - PRODUTOS`; outras aparecem em fichas técnicas e na aba de custos variáveis. Um exemplo rastreável é `CUSTOS VARIÁVEIS!I65`, cuja fórmula referencia uma pasta de trabalho externa (`[1]COFRE!$K$10`) e cujo valor armazenado é `#ERROR!`; fórmulas da tabela consolidada que dependem desse valor também exibem erro.
+
+Esses valores podem refletir links externos indisponíveis, fórmulas não recalculadas ou erros reais de origem. A inspeção estática não permite determinar qual hipótese se aplica a cada célula. Portanto:
+- a planilha não deve ser importada diretamente como fonte confiável de custos vigentes;
+- uma futura importação deve usar staging, validação por linha/campo, prévia e aprovação;
+- erros de fórmula, referências externas, unidades inconsistentes e valores ausentes devem ser sinalizados, nunca convertidos silenciosamente em zero;
+- os dados importados devem ser tratados como proposta de cadastro, não como regra de cálculo executável.
+
+### 13.4 Consequências para a implementação
+
+- O motor puro implementado na branch de desenvolvimento recebe quantidades e custos unitários já normalizados, calcula estruturas multinível com decimal exato, contabiliza linhas repetidas e rejeita ciclos, itens inativos e estruturas contraditórias.
+- O motor não implementa lote de compra, arredondamento para barras comerciais, preço de venda, desconto, Alpha/Beta ou Gama automático.
+- O cálculo atual considera a quantidade da estrutura como consumo necessário para uma unidade do item composto. Essa é uma hipótese técnica mínima para testes da fundação, não o fechamento da decisão de quantidade-base/lote. Não integrar persistência nem expor esse comportamento na UI até a decisão ser fechada.
+- A escala interna monetária ainda não foi fixada: o motor usa aritmética decimal exata por strings/inteiros, sem escolher uma escala fixa de banco. A política de apresentação aprovada é aplicada separadamente.
+
+**Conclusão da auditoria:** a planilha é útil para extrair candidatos a itens, unidades, composições e práticas industriais, mas não é uma especificação limpa nem uma base confiável para migração automática. Antes de qualquer carga, será necessário mapear fichas e referências, resolver erros e validar a semântica de lote, aproveitamento e serviços com o responsável pelo processo.
