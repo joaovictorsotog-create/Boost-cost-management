@@ -1592,3 +1592,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Preservar histórico integral, sem exclusão ou encerramento automático.
 - [x] Não bloquear automaticamente o usuário; contenção exige avaliação técnica, proporcionalidade e fundamento.
 - [ ] Definir canais/entrega, prazo de reconhecimento, escalonamento, papéis autorizados, resolução/reabertura e integração com resposta a incidentes.
+
+### Escalonamento por ausência de reconhecimento de alerta crítico — decisão aprovada (10/11/2026)
+
+- [x] Primeiro lembrete após 30 minutos sem reconhecimento.
+- [x] Repetir a cada 30 minutos, máximo de três lembretes por ciclo.
+- [x] Após o terceiro lembrete, escalar por canal alternativo aos Administradores.
+- [x] Manter o alerta pendente; lembretes/escalação não reconhecem, resolvem ou encerram.
+- [x] Auditar tentativas de envio, entrega quando disponível, falhas, lembretes e escalação.
+- [ ] Definir canais alternativos, confirmação de entrega, destinatários/substitutos, falhas de canal e novo ciclo após reabertura.
