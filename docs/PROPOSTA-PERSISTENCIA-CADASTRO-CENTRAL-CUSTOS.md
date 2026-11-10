@@ -32,13 +32,14 @@ Todas as entidades pertencem a uma organização. Relações entre grupo, item, 
 - Itens simples usam custo manual; itens compostos usam uma estrutura válida. Não misturar os dois modos na mesma versão de item.
 - Linhas de composição referenciam itens existentes na mesma organização.
 - Exclusão física de itens referenciados deve ser restringida; a desativação preserva histórico.
-- Estruturas possuem versão e estado. A política de qual versão pode ser considerada vigente e a garantia de apenas uma versão ativa por item ainda precisam ser fechadas antes da migration.
+- Estruturas possuem versão e estado. O schema agora define um índice único parcial por organização/item para garantir no banco que exista no máximo uma estrutura `ACTIVE` por item; versões `DRAFT`, `SUPERSEDED` e `INACTIVE` podem coexistir. A publicação deverá ocorrer em transação: ativar a nova versão e superseder a anterior atomicamente. Estruturas publicadas devem ser imutáveis; qualquer edição cria nova versão. Essa regra transacional e a imutabilidade ainda precisam ser implementadas e testadas antes da persistência.
 - Ciclos diretos e indiretos continuam sendo rejeitados pelo domínio de cálculo; a validação transacional de gravação também deverá impedir a persistência de ciclos.
 - Gama permanece fora dos grupos e da recursão genérica. A aplicação será calculada separadamente sobre os grupos explicitamente selecionados.
 
 ## Estado da implementação
 
 - Criado o arquivo de definição Drizzle `drizzle/pg/schema.costing.ts` no branch de implementação, sem gerar ou executar migration.
+- Adicionado índice único parcial `cost_structures_one_active_per_item_idx`, limitando a uma estrutura ativa por item/organização (commit `725f9459f28cc748f37052fb5721863ca991d10c`).
 - O arquivo ainda não está conectado ao repositório de consultas nem à camada de persistência.
 - Não há migration, DDL, gravação, deploy ou alteração de banco nesta etapa.
 - A configuração padrão `drizzle.config.ts` ainda aponta para o schema MySQL. A trilha PostgreSQL/Supabase existente usa arquivos específicos em `drizzle/pg`; a configuração e o journal de migrations precisam ser reconciliados antes de qualquer geração/aplicação.
@@ -51,6 +52,7 @@ Todas as entidades pertencem a uma organização. Relações entre grupo, item, 
 3. Desenhar e revisar RLS para todas as tabelas, incluindo leitura e escrita por `app_runtime`, com isolamento por organização.
 4. Validar as constraints compostas e o comportamento de exclusão/arquivamento.
 5. Testar rollback real e concorrência antes de liberar migrations.
-6. Definir política de versão ativa, histórico/snapshot e recálculo de dependentes.
+6. Implementar publicação transacional e imutabilidade das versões publicadas.
+7. Definir snapshot suficiente para reproduzir cálculos históricos (preços manuais, versões de estruturas, quantidades, conversões e parâmetros Gama aplicáveis) e política de recálculo de dependentes.
 
 **Conclusão:** o modelo de dados está esboçado no código, mas não está pronto para uso persistente. Nenhuma tabela existe no banco por causa deste trabalho, e nenhuma gravação de custos deve ser habilitada até que os bloqueios acima sejam resolvidos.
