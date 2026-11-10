@@ -1246,3 +1246,11 @@ Legenda:
 - [x] Preservar histórico e linha do tempo.
 - [x] Não reiniciar ou suspender prazos nem alterar estado do alerta.
 - [ ] Definir indisponibilidade, transferência por terceiro, recusa/ausência e limites.
+
+### Transferência excepcional por indisponibilidade do titular — decisão aprovada (10/11/2026)
+- [x] Outro Administrador autorizado pode transferir se o titular estiver indisponível.
+- [x] Exigir justificativa e identificação do novo responsável.
+- [x] Auditar titular anterior/novo, executor, justificativa, data/hora e resultado.
+- [x] Notificar ambos quando possível; falha de notificação não reverte transferência.
+- [x] Preservar prazos e histórico.
+- [ ] Definir critérios objetivos de indisponibilidade e revisão; provisoriamente exigir avaliação justificada e auditável.
