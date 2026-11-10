@@ -116,7 +116,7 @@ Não assumir decisões para os pontos abaixo sem confirmação:
 4. Como tratar versões de estruturas e custos históricos em alterações futuras.
 5. Se haverá preço por fornecedor, múltiplas tabelas ou apenas um preço vigente por item.
 6. Comportamento para itens sem preço ou com estrutura incompleta.
-7. Regra de exclusão de item que ainda esteja vinculado a estruturas: foi aprovado mostrar impacto e exigir confirmação, mas não foi fechado se a exclusão pode prosseguir com vínculos ou se exige remoção prévia.
+7. **Resolvido posteriormente:** a exclusão lógica pode prosseguir mesmo com vínculos atuais, mediante prévia resumida de impacto e confirmação exclusiva do Administrador. O registro e as fotografias históricas devem ser preservados; a reativação não restaura vínculos automaticamente. Permanecem pendentes apenas a modelagem técnica, a retenção e a consulta administrativa dessas fotografias, conforme o Checklist.
 8. Frequência, retenção e teste de restauração dos backups.
 
 ## 10. Limites deste registro
