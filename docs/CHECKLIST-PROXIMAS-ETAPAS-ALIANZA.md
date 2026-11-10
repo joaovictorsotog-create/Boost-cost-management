@@ -1254,3 +1254,15 @@ Legenda:
 - [x] Notificar ambos quando possível; falha de notificação não reverte transferência.
 - [x] Preservar prazos e histórico.
 - [ ] Definir critérios objetivos de indisponibilidade e revisão; provisoriamente exigir avaliação justificada e auditável.
+
+
+## Entregáveis de arquitetura — consolidação documental
+
+- [x] Estudo comparativo de referências atualizado com rodadas sobre importação, concorrência e atualização em tempo real.
+- [x] Criar arquitetura técnica consolidada do Alianza (proposta, não implementação).
+- [x] Criar matriz de integridade e controles (proposta, não implementação).
+- [x] Criar plano de testes arquiteturais (plano, testes ainda não executados).
+- [ ] Resolver divergências documentais de ID, importação, exclusão com vínculos, item composto sem estrutura e quantidade-base.
+- [ ] Aprovar stack, banco, estratégia de concorrência, eventos e processamento assíncrono.
+- [ ] Revisar modelo de dados e RLS após resolução das pendências.
+- [ ] Implementar e executar testes arquiteturais em ambiente controlado.
