@@ -1189,3 +1189,11 @@ Legenda:
 - [x] Não bloquear automaticamente por suspeita isolada ou inconclusiva.
 - [x] Exigir proporcionalidade e fundamentação para medidas adicionais.
 - [ ] Definir janelas, limiares, níveis de risco, falsos positivos, revisão humana, retenção e testes.
+
+### Classificação dos alertas de tentativa de inferência — decisão aprovada (10/11/2026)
+- [x] Informativa: comportamento incomum para acompanhamento, sem risco concreto identificado.
+- [x] Alta: padrão suspeito consistente, sem evidência suficiente de intenção deliberada.
+- [x] Crítica: evidências fortes de tentativa sistemática de contornar a supressão ou reidentificar dados.
+- [x] Avaliar filtros, períodos, agrupamentos, consultas correlacionadas e capacidade de inferência, não apenas volume.
+- [x] Registrar classificação, fundamento e evidências sem expor dados suprimidos.
+- [ ] Definir critérios, limiares, falsos positivos, escalonamento, revisão, notificações e testes.
