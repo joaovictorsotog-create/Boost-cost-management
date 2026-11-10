@@ -393,3 +393,118 @@ Não incluir por analogia:
 - comportamento específico de telas ou APIs do Omie que não tenha sido verificado em fonte técnica.
 
 **Conclusão:** Omie e planilha são referências complementares, não concorrentes. Omie ajuda a desenhar a experiência de cadastro e composição reutilizável; a planilha ajuda a confrontar essa estrutura com a realidade de fabricação; as decisões funcionais do Alianza definem o comportamento final.
+
+
+### 13.7 Auditoria da documentação técnica pública do Omie — 10/11/2026
+
+**Fontes consultadas:** documentação oficial da API Omie (api.omie.com.br/docs) e artigo oficial de ajuda sobre cadastro de produto via API (ajuda.omie.com.br). A pesquisa foi feita em páginas públicas; não houve autenticação, chamada real de API, acesso a uma conta Omie nem validação prática de payloads.
+
+Fontes primárias:
+- Referência geral da API: https://api.omie.com.br/docs/apis
+- Cadastro de Produtos: https://api.omie.com.br/docs/apis/geral/produtos
+- Estrutura de produtos (ProdutosEstrutura / malha): https://api.omie.com.br/docs/apis/geral/malha
+- KIT de produtos: https://api.omie.com.br/docs/apis/geral/produtoskit
+- Famílias de Produtos: https://api.omie.com.br/docs/apis/geral/familias
+- Ajuda — Cadastrando um Produto via API: https://ajuda.omie.com.br/pt-BR/articles/6596014-cadastrando-um-produto-via-api
+
+#### 13.7.1 Descoberta principal: estrutura de produto e KIT são recursos separados
+
+A referência oficial lista serviços distintos:
+- geral/produtos: cadastro, consulta, listagem, alteração e situação do produto;
+- geral/familias: cadastro e pesquisa de famílias;
+- geral/malha: estrutura de produtos, com inclusão, alteração, exclusão, consulta e listagem;
+- geral/produtoskit: manutenção dos componentes de KIT.
+
+Isso confirma tecnicamente que não devemos modelar a composição industrial do Alianza como se fosse apenas um KIT comercial. A API de estrutura de produto é a referência mais próxima para estudar a UX e a semântica de composição multinível; o serviço de KIT é uma funcionalidade distinta. Essa separação é conceitual: não implica que o modelo de dados do Alianza deva copiar o Omie.
+
+#### 13.7.2 Campos técnicos relevantes da estrutura de produto
+
+A API geral/malha documenta, entre outros:
+- identificação do produto-pai por ID interno ou código de integração;
+- identificação do produto-filho por ID interno ou código de integração;
+- identificador próprio da linha da estrutura;
+- quantidade do componente (quantProdMalha);
+- observação por componente (obsProdMalha);
+- percentual de perda por componente (percPerdaProdMalha);
+- identificação de família, tipo e unidade do produto nas consultas;
+- observações relevantes de produção;
+- dados de inclusão/alteração e usuário associado à linha;
+- operações separadas para incluir, alterar, excluir, consultar e listar estruturas;
+- listagem paginada, com campos de página e limite de registros.
+
+A consulta de estrutura também retorna um objeto custoProducao com vGGF e vMOD. A existência desses campos na API é apenas evidência do escopo funcional do Omie; não altera a decisão expressa do projeto de deixar MOD e GGF fora do Alianza.
+
+#### 13.7.3 Campos de perda: não aplicar duas vezes
+
+A API Omie admite percPerdaProdMalha na linha da estrutura. O Alianza, porém, já possui a decisão de que perdas/aproveitamento incorporados no consumo informado não devem ser aplicados novamente pelo motor.
+
+Consequência:
+- não criar multiplicador automático de perda no motor atual;
+- não importar o campo de perda do Omie como regra ativa sem uma decisão funcional específica;
+- na importação futura, identificar se a quantidade já contém consumo bruto/perda ou se a perda está separada, e bloquear/sinalizar ambiguidades;
+- não converter silenciosamente um percentual de perda em quantidade adicional.
+
+O exemplo de barras comerciais da planilha continua sendo um ajuste operacional específico: o motor recebe a quantidade de compra/consumo já validada e não inventa arredondamento para múltiplos comerciais.
+
+#### 13.7.4 Identidade, famílias e situação dos itens
+
+A documentação de produtos distingue:
+- codigo_produto: identificador interno gerado pelo Omie e recomendado para localizar o produto via API;
+- codigo: código visível/SKU, que pode ser alterado pelo usuário;
+- codigo_produto_integracao: identificador fornecido pelo sistema integrador, usado para evitar duplicidade e relacionar os cadastros.
+
+A API também possui cadastro próprio de famílias e operações para ativar/inativar produto e família.
+
+Aplicação ao Alianza:
+- manter o ID numérico funcional próprio aprovado pelo projeto como chave do Cadastro Central;
+- não usar descrição ou código visual editável como chave de relacionamento;
+- manter chaves internas estáveis para linhas de composição e referências entre itens;
+- preservar a regra Alianza de IDs reservados após inativação/exclusão lógica;
+- manter famílias controladas pelo Administrador, conforme decisão já aprovada.
+
+Não copiar literalmente os nomes ou os formatos dos identificadores Omie; aproveitar o princípio de separar identificador estável, código de exibição e identificador de integração.
+
+#### 13.7.5 KIT: diferenças relevantes
+
+O serviço geral/produtoskit mantém componentes de um produto cujo tipo deve ser KIT. A operação documenta ações de incluir/alterar/excluir componente, ID do produto componente, quantidade e valor unitário do componente, além de possível local de estoque.
+
+Isso não corresponde integralmente ao motor de custeio industrial do Alianza. Em especial:
+- o Alianza não deve exigir que um item composto seja classificado como KIT;
+- não importar local de estoque, valor comercial do componente ou regras de estoque;
+- o custo do componente deve vir do cadastro de custo do Alianza, e não de um valor unitário comercial informado na linha;
+- a composição do Alianza precisa suportar níveis recursivos, custo derivado e recálculo em cascata conforme as regras próprias.
+
+#### 13.7.6 Contrato de API e integração: observações técnicas
+
+A documentação pública apresenta endpoints POST por serviço, operação identificada no campo call, parâmetros em param e exemplos de requisição/resposta em JSON. O cadastro de produtos documenta operações de inclusão/consulta/alteração/listagem e recomenda persistir o identificador retornado pelo Omie e utilizar código de integração para evitar duplicidade.
+
+A referência geral lista centenas de operações e disponibiliza especificação OpenAPI. Isso pode apoiar uma integração futura, mas nenhuma integração com Omie foi aprovada nesta etapa. Não armazenar App Key/App Secret no frontend; qualquer integração futura exigirá serviço backend, gestão de segredos, permissões, tratamento de erros, idempotência, limites operacionais e política de sincronização próprios.
+
+A documentação consultada não é prova de:
+- comportamento transacional entre múltiplas operações;
+- validação de ciclos de composição;
+- cálculo automático de custo recursivo ou cascata de custos;
+- compatibilidade exata entre estrutura, KIT e ordens de produção;
+- semântica de arredondamento, precisão ou conversão de unidades;
+- histórico imutável ou versionamento de composição.
+
+Esses comportamentos não devem ser presumidos a partir da existência dos endpoints/campos.
+
+#### 13.7.7 Matriz de aproveitamento para o Alianza
+
+| Recurso documentado no Omie | Decisão para o Alianza |
+|---|---|
+| Cadastro central de produtos | Aproveitar o padrão de cadastro único, mantendo modelo próprio de custos |
+| ID interno distinto do código visível | Aproveitar o princípio; manter ID numérico próprio já aprovado |
+| Cadastro de famílias | Aproveitar a separação conceitual; seguir as regras de famílias já aprovadas |
+| Estrutura de produto (malha) | Referência principal de UX/semântica para composição industrial |
+| Linha com componente e quantidade | Compatível com a estrutura aprovada do Alianza |
+| Observações por componente e produção | Avaliar como informação descritiva, sem efeito automático no cálculo |
+| Percentual de perda | Não importar como cálculo ativo; perdas já incorporadas não podem ser duplicadas |
+| Campos GGF e MOD | Explicitamente fora do escopo Alianza |
+| KIT de produto | Não confundir com composição industrial; não importar estoque/valor comercial |
+| Ativação/inativação | Conceito compatível, mas prevalecem exclusão lógica, reserva de ID e reativação do Alianza |
+| Paginação e filtros de API | Referência técnica para futuras integrações/importações; não regra de UX obrigatória |
+| OpenAPI e exemplos JSON | Material de apoio para eventual integração futura, ainda não autorizada |
+
+**Conclusão atualizada:** agora existe documentação técnica pública oficial suficiente para confirmar a separação entre cadastro, famílias, estrutura de produto e KIT no Omie e para identificar campos concretos de composição. A estrutura geral/malha é a referência técnica mais pertinente para o desenho do Cadastro Central e da composição multinível. Ainda assim, o Alianza mantém seu próprio modelo, cálculo, governança, histórico, permissões e exclusões de escopo. Nenhum contrato de integração com Omie foi implementado ou testado.
