@@ -1610,3 +1610,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Após restabelecimento do serviço, informar Administradores sobre falhas e alertas críticos pendentes.
 - [x] Auditar indisponibilidade, tentativas, resultados e recuperação.
 - [ ] Definir canais/ordem, confirmação, limites de tentativas, monitoramento e procedimento se todos falharem.
+
+### Estados da notificação de alerta crítico — decisão aprovada (10/11/2026)
+
+- [x] Enviado: sistema encaminhou; não comprova recebimento.
+- [x] Entregue: canal/provedor confirmou tecnicamente a entrega; não comprova leitura ou ciência humana.
+- [x] Reconhecido: Administrador autorizado confirmou explicitamente ciência e assumiu tratamento, com identidade e data/hora.
+- [x] Estados distintos; envio/entrega não reconhecem nem encerram alerta.
+- [x] Sem confirmação confiável do canal, não presumir entrega.
+- [ ] Definir comprovantes aceitos por canal, estados intermediários/retornos tardios e reconciliação.
