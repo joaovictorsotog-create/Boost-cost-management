@@ -417,3 +417,72 @@ O serviço de custo examinado recalcula o custo da BOM e, quando há alteração
 ### 16.8 Limitações desta rodada
 
 A análise foi direcionada aos arquivos listados e aos métodos/testes relevantes. Não foi auditada integralmente a infraestrutura de filas, a semântica de todos os endpoints em lote, as garantias do banco em cada configuração de produção nem o fluxo completo de eventos de todos os modelos. Os comportamentos descritos não devem ser generalizados para todo o sistema sem inspeção adicional.
+
+
+## 17. Quinta rodada: atualização em tempo real e notificações
+
+### 17.1 Frappe Framework — arquivos inspecionados
+
+- [Ciclo de vida dos documentos — frappe/model/document.py](https://github.com/frappe/frappe/blob/ee6633b0222053bc9c9ffa10305008949fee99f5/frappe/model/document.py)
+- [Modelo de notificações — notification_log.py](https://github.com/frappe/frappe/blob/ee6633b0222053bc9c9ffa10305008949fee99f5/frappe/desk/doctype/notification_log/notification_log.py)
+- [Publicação de eventos em tempo real — referências de uso no framework](https://github.com/frappe/frappe/search?q=publish_realtime&type=code)
+
+### 17.2 Evento em tempo real somente após confirmação
+
+O método `Document.notify_update()` publica eventos `doc_update` e `list_update` com `after_commit=True). O evento de documento leva identificador do tipo, nome e timestamp de modificação. O código também suprime a notificação em contextos de importação, patch, migração e instalação.
+
+O modelo `Notification Log` publica o evento de notificação após commit e direcionado ao usuário destinatário. O código também mantém verificações de permissão por usuário para a consulta do registro.
+
+**Padrão importante:** a notificação de atualização não deve ser enviada antes de a transação persistir. Caso contrário, a interface pode receber um aviso de mudança que depois sofre rollback e nunca existiu no estado oficial.
+
+**Aplicação ao Alianza:**
+- Persistir primeiro; publicar evento depois do commit.
+- O evento deve carregar apenas identificadores e metadados mínimos, não ser tratado como fonte da verdade.
+- Ao receber o evento, a interface consulta novamente a API, que revalida autenticação e permissões.
+- Direcionar notificações privadas ao destinatário autorizado.
+- Distinguir evento de atualização de dados de notificação persistente que exige leitura/reconhecimento.
+- Em importações e recálculos em cascata, consolidar ou agrupar eventos para evitar tempestade de mensagens, sem ocultar o resultado final nem a trilha de auditoria.
+
+### 17.3 Atualização em tempo real não substitui consistência
+
+O mecanismo observado é um canal de aviso para clientes conectados. Não prova, sozinho, entrega garantida, recuperação de eventos perdidos, ordenação global ou sincronização de clientes desconectados.
+
+Para o Alianza, a API/backend e o banco continuam sendo a fonte da verdade. A interface deve:
+- manter estado local apenas como representação temporária;
+- reconciliar dados com a API após reconexão;
+- lidar com eventos duplicados ou fora de ordem;
+- ignorar eventos que não correspondam ao contexto autorizado;
+- revalidar permissões e existência do registro ao navegar/restaurar tela;
+- apresentar conflito quando uma edição local ficou desatualizada, sem sobrescrita silenciosa.
+
+A escolha de WebSocket, SSE ou outra tecnologia permanece pendente e deve ser feita após definir escala, topologia de hospedagem, reconexão e requisitos de latência.
+
+### 17.4 Notificação persistente e acesso
+
+O modelo de notificações consultado associa destinatário, tipo, documento relacionado e aplicação de origem. A consulta é restringida por usuário, e a criação do registro dispara aviso em tempo real após a confirmação no banco.
+
+O código consultado também contém rotina de limpeza de notificações antigas com parâmetro padrão de 180 dias. Esse valor é uma configuração do projeto de referência, não recomendação para o Alianza: as regras internas já aprovadas para o Alianza definem retenções próprias para diferentes registros e essas políticas prevalecem.
+
+**Aplicação ao Alianza:** separar:
+- evento transitório para atualizar a tela;
+- notificação persistente no sino;
+- alerta crítico com reconhecimento e resolução;
+- evento de auditoria imutável.
+
+Esses objetos podem compartilhar um identificador de correlação, mas não devem compartilhar estados nem regras de retenção por conveniência.
+
+### 17.5 Matriz de decisão
+
+| Padrão observado | Direção para Alianza | Motivo |
+|---|---|---|
+| Publicar evento somente após commit | Aproveitar | Evita avisar sobre alterações revertidas |
+| Evento mínimo com identificador e timestamp | Aproveitar/adaptar | Reduz exposição e payload desnecessário |
+| Notificação privada direcionada ao destinatário | Aproveitar | Respeita isolamento de acesso |
+| API como fonte da verdade após evento | Aproveitar | Recupera estado e revalida permissões |
+| Supressão/agrupamento de eventos em operações internas | Adaptar | Evita excesso de atualizações durante lotes |
+| Canal em tempo real como garantia de entrega | Rejeitar | Canal de aviso não substitui persistência e reconciliação |
+| Retenção padrão do projeto de referência | Rejeitar | Alianza já tem políticas próprias aprovadas |
+
+### 17.6 Limitações
+
+A inspeção confirmou pontos do ciclo de vida de documentos e do modelo de notificações no Frappe. Não foi feita auditoria integral do broker, infraestrutura Socket.IO, reconexão, entrega, escalabilidade ou segurança de todos os canais. Não se conclui que o mecanismo do Frappe atenda diretamente aos requisitos do Alianza sem desenho e testes próprios.
