@@ -1197,3 +1197,11 @@ Legenda:
 - [x] Avaliar filtros, períodos, agrupamentos, consultas correlacionadas e capacidade de inferência, não apenas volume.
 - [x] Registrar classificação, fundamento e evidências sem expor dados suprimidos.
 - [ ] Definir critérios, limiares, falsos positivos, escalonamento, revisão, notificações e testes.
+
+### Tratamento de alertas críticos de tentativa de inferência — decisão aprovada (10/11/2026)
+- [x] Notificar imediatamente todos os Administradores.
+- [x] Exigir reconhecimento explícito e registrar responsável/data/hora; leitura não vale como reconhecimento.
+- [x] Manter pendente até investigação e resolução formal justificada.
+- [x] Preservar histórico, sem exclusão ou encerramento automático.
+- [x] Não bloquear automaticamente; contenção exige avaliação técnica, proporcional e fundamentada.
+- [ ] Definir canais, entrega, prazo de reconhecimento, escalonamento, papéis, resolução/reabertura e integração com resposta a incidentes.
