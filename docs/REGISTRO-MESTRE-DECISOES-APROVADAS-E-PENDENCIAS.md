@@ -1656,7 +1656,7 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Preservar precisão exata em todos os cálculos intermediários, inclusive frações periódicas e composições multinível.
 - [x] Não arredondar linhas, grupos, subconjuntos ou níveis intermediários.
 - [x] Arredondar somente o custo unitário final apresentado para no máximo três casas decimais.
-- [x] Manter a convenção aprovada: quarta casa de 0 a 5 mantém a terceira; de 6 a 9 incrementa; empate exato em 5 fica para baixo.
+- [x] Manter a convenção aprovada: observar somente o algarismo da quarta casa decimal: de 0 a 5 mantém a terceira; de 6 a 9 incrementa.
 - [x] Permitir apresentação sem zeros finais, por exemplo R$ 0,025.
 - [x] Grupos de custo criados manualmente na configuração; sem lista fixa imposta pelo motor.
 - [x] Gama como configuração própria de ativação, percentual inicial de 1,2%, com aplicação explicitamente selecionada por grupo.
