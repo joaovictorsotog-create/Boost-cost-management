@@ -1791,3 +1791,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Os lembretes e a escalação não reconhecem, resolvem nem encerram o alerta; ele permanece pendente até reconhecimento e tratamento formal.
 - Registrar cada tentativa de envio, entrega quando disponível, falha de envio, lembrete e escalação na trilha de auditoria.
 - **Pendências:** definir canais alternativos, confirmação de entrega, destinatários/substitutos, tratamento de falhas de canal e critérios para iniciar novo ciclo após reabertura.
+
+## Falha dos canais de notificação de alerta crítico — decisão aprovada (10/11/2026)
+
+- Se o canal alternativo falhar, o sistema deve tentar outro canal previamente configurado, quando disponível.
+- Registrar cada tentativa, falha e confirmação de entrega disponível; tentativa de envio não equivale a entrega confirmada.
+- Sem confirmação de entrega, a notificação permanece não confirmada e o alerta crítico continua pendente, sem reconhecimento ou resolução automática.
+- Quando o serviço de notificações for restabelecido, informar os Administradores sobre as falhas e alertas críticos ainda pendentes.
+- Preservar a trilha de auditoria de indisponibilidade, tentativas, resultados e recuperação do serviço.
+- **Pendências:** definir canais e ordem de contingência, critérios de confirmação de entrega, repetição/limites de tentativas, monitoramento de indisponibilidade e procedimento se todos os canais falharem.
