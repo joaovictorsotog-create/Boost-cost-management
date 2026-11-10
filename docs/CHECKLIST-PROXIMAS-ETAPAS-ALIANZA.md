@@ -1213,3 +1213,11 @@ Legenda:
 - [x] Alerta permanece pendente; lembretes e escalação não encerram nem reconhecem.
 - [x] Registrar tentativas, entregas disponíveis, falhas, lembretes e escalonamento.
 - [ ] Definir canais, entrega, destinatários, falhas e novo ciclo após reabertura.
+
+### Falha dos canais de notificação de alerta crítico — decisão aprovada (10/11/2026)
+- [x] Tentar outro canal previamente configurado quando o canal alternativo falhar e houver outro disponível.
+- [x] Registrar tentativas, falhas e confirmações; envio não significa entrega.
+- [x] Sem confirmação, alerta continua pendente e não reconhecido.
+- [x] Após recuperação do serviço, avisar Administradores sobre falhas e alertas pendentes.
+- [x] Preservar auditoria da indisponibilidade e recuperação.
+- [ ] Definir canais/ordem, confirmação, limites, monitoramento e contingência para falha total.
