@@ -47,19 +47,23 @@ Legenda:
 - [x] Aprovar preservação do registro original por exclusão lógica e reativação exclusiva pelo Administrador, sem restaurar vínculos antigos automaticamente.
 - [ ] Especificar modelagem técnica, retenção e consulta administrativa dos registros excluídos e fotografias históricas.
 
-### 3.2 Quantidade-base da estrutura
-- [ ] [!] Definir se toda estrutura representa sempre uma unidade do produto ou se pode representar um lote com quantidade-base configurável.
-- [ ] [!] Se houver lote, definir como converter o custo total da estrutura em custo unitário do produto.
+### 3.2 Quantidade-base da estrutura — decisão fechada em 10/11/2026
+- [x] Item composto possui quantidade-base de saída positiva; padrão 1 quando a estrutura representa uma unidade.
+- [x] Estrutura de lote informa quantas unidades acabadas são representadas pelas quantidades totais de componentes.
+- [x] Custo unitário = soma recursiva dos custos das linhas para o lote ÷ quantidade-base de saída.
+- [x] Rejeitar quantidade-base zero, negativa ou inválida.
+- [ ] Testar casos reais de lote, divisões exatas e não terminantes; a política de precisão interna continua pendente.
 
 ### 3.3 Precisão numérica
 - [ ] [!] Definir a precisão interna de armazenamento e cálculo monetário.
 - [ ] [!] Definir em qual etapa aplicar o arredondamento aprovado por item, sem perda acumulada de precisão nem dupla aplicação.
 - [ ] Validar exemplos reais da planilha com os resultados esperados.
 
-### 3.4 Aproveitamento de matéria-prima
-- [ ] [!] Definir se haverá cálculo automático de aproveitamento de barras/tubos ou se o sistema usará apenas quantidades/pesos já preparados e informados pelo usuário.
-- [ ] [!] Se houver aproveitamento automático, definir as regras, perdas, sobras reutilizáveis e unidade de cálculo antes de implementar.
-- [ ] Não transformar observações da planilha em regra universal sem aprovação.
+### 3.4 Aproveitamento de matéria-prima — decisão fechada
+- [x] Não calcular automaticamente aproveitamento de barras/tubos, múltiplos comerciais, perdas ou sobras.
+- [x] Usar as quantidades de consumo/compra já preparadas e validadas na ficha pelo usuário.
+- [x] Não aplicar novamente perdas ou fatores já incorporados à quantidade informada.
+- [x] Não transformar observações da planilha em regra universal.
 
 ### 3.5 Fornecedores e valores
 - [ ] [!] Confirmar se cada item terá apenas um custo vigente ou se haverá preços por fornecedor/tabelas diferentes.
@@ -1262,7 +1266,7 @@ Legenda:
 - [x] Criar arquitetura técnica consolidada do Alianza (proposta, não implementação).
 - [x] Criar matriz de integridade e controles (proposta, não implementação).
 - [x] Criar plano de testes arquiteturais (plano, testes ainda não executados).
-- [ ] Resolver divergências documentais de ID, importação, exclusão com vínculos, item composto sem estrutura e quantidade-base.
+- [ ] Resolver divergências documentais remanescentes de ID, importação, exclusão com vínculos e item composto sem estrutura. Quantidade-base foi decidida e retirada das pendências na seção 3.2.
 - [ ] Aprovar stack, banco, estratégia de concorrência, eventos e processamento assíncrono.
 - [ ] Revisar modelo de dados e RLS após resolução das pendências.
 - [ ] Implementar e executar testes arquiteturais em ambiente controlado.
