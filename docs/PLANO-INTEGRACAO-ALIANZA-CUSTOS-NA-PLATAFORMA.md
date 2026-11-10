@@ -295,7 +295,7 @@ O repositório `alianza-ai-platform` será usado para código, testes e artefato
 
 ### 13.1 Estrutura encontrada
 
-- 143 abas, incluindo menu, tabela consolidada de preços, custos variáveis e fichas técnicas individuais de produtos/conjuntos.
+- 145 abas, incluindo menu, tabela consolidada de preços, custos variáveis e fichas técnicas individuais de produtos/conjuntos.
 - 11.171 células com fórmulas.
 - As fichas técnicas apresentam linhas de componentes com quantidade, unidade, peso/comprimento por peça, custos por grupo e totais.
 - A aba `CUSTOS VARIÁVEIS` centraliza referências de matérias-primas e serviços: chapas/tubos por kg ou metro, vidros, pintura, usinados, fixadores, eletrônica e outros itens.
@@ -304,7 +304,7 @@ O repositório `alianza-ai-platform` será usado para código, testes e artefato
 
 ### 13.2 Evidências que não devem ser confundidas com regras aprovadas
 
-1. **Quantidade-base/lote:** algumas fichas calculam consumo e compra para 10 conjuntos e depois dividem o custo comercial pelo lote. Isso demonstra uma prática existente na planilha, mas não define se o Sistema de Custos adotará estrutura por unidade, lote configurável ou ambos. A decisão continua pendente.
+1. **Quantidade-base/lote:** a regra funcional do Alianza já está definida: o custo total da estrutura é dividido pela quantidade-base de unidades acabadas; quando omitida, a base é 1. A ficha do Mini Torniquete - Inox confirma o uso de lote de 10 conjuntos. O campo operacional e sua persistência ainda precisam ser ligados à UI/dados.
 2. **Aproveitamento comercial:** há arredondamento de barras para múltiplos de 6 m em fórmulas específicas. Não generalizar para todos os tubos, materiais ou produtos sem regra operacional confirmada.
 3. **Custos por grupo:** a planilha agrega categorias de custo antes de formar totais. No Cadastro Central, materiais e serviços deverão continuar sendo itens identificáveis/reutilizáveis; os agrupamentos podem ser uma visão de relatório, não uma nova origem de custo duplicada.
 4. **Manufatura:** a observação da planilha indica que certos itens comprados podem receber processo de fabricação. Isso não autoriza criar um adicional genérico de manufatura: só deve entrar quando existir item/serviço/custo explicitamente cadastrado e aprovado.
@@ -325,10 +325,27 @@ Esses valores podem refletir links externos indisponíveis, fórmulas não recal
 ### 13.4 Consequências para a implementação
 
 - O motor puro implementado na branch de desenvolvimento recebe quantidades e custos unitários já normalizados, calcula estruturas multinível com decimal exato, contabiliza linhas repetidas e rejeita ciclos, itens inativos e estruturas contraditórias.
-- O motor não implementa lote de compra, arredondamento para barras comerciais, preço de venda, desconto, Alpha/Beta ou Gama automático.
-- Os testes adicionados ainda não foram executados; a existência dos arquivos no GitHub não deve ser tratada como aprovação de CI.
-- A suíte inclui agora o exemplo de referência funcional do Alianza: R$ 44,00 para 1 eixo, 3 kg de chapa e 4 parafusos. Esse teste valida a fórmula aprovada, não a importação integral de fichas da planilha legada.
-- O motor aplica a regra matemática já aprovada: custo do composto = soma de (quantidade de cada componente × custo unitário vigente), com recursão para componentes compostos e sem conversões automáticas. O teste de referência aprovado (1 eixo × R$ 10 + 3 kg de chapa × R$ 10/kg + 4 parafusos × R$ 1 = R$ 44) foi acrescentado à suíte. A regra central de cálculo unitário, portanto, não está pendente. Continua pendente apenas detalhar o campo/fluxo operacional para fichas cuja estrutura represente um lote com mais de uma unidade e validar individualmente os aproveitamentos de barras observados na planilha.
+- O motor suporta quantidade-base de saída para estruturas por lote, com divisão decimal exata quando o resultado é finito; não arredonda divisões periódicas sem política de precisão aprovada.
+- A ficha do Mini Torniquete - Inox informa lote de 10 conjuntos. Para um tubo: consumo real de 11 m no lote, compra comercial de 12 m (múltiplos de 6 m), preço de R$ 44,47395/m, custo comprado de R$ 533,68740 e rateio de R$ 53,36874 por conjunto.
+- A suíte cobre o exemplo aprovado de R$ 44,00, o rateio de 12 m comprados por 10 conjuntos e a soma dos grupos de custo da ficha Mini Torniquete - Inox.
+- O motor não calcula por conta própria o arredondamento de barras comerciais; a quantidade da linha deve chegar com o aproveitamento já incorporado, evitando aplicar perda duas vezes. A regra de compra em múltiplos de 6 m permanece específica da ficha e não foi generalizada.
+- Permanecem fora do motor preço de venda, desconto, Alpha/Beta e Gama automático.
+- A execução local isolada de validação passou em 11 asserções de runtime e no TypeScript check do motor; isso não equivale à execução da suíte Vitest completa nem ao CI do repositório.
 - A escala interna monetária ainda não foi fixada: o motor usa aritmética decimal exata por strings/inteiros, sem escolher uma escala fixa de banco. A política de apresentação aprovada é aplicada separadamente.
 
 **Conclusão da auditoria:** a planilha é útil para extrair candidatos a itens, unidades, composições e práticas industriais, mas não é uma especificação limpa nem uma base confiável para migração automática. Antes de qualquer carga, será necessário mapear fichas e referências, resolver erros e validar a semântica de lote, aproveitamento e serviços com o responsável pelo processo.
+
+### 13.5 Confronto numérico com a ficha Mini Torniquete - Inox
+
+A ficha registra `T8 = 10` conjuntos. Na seção de tubos, a primeira referência calcula:
+- consumo real `V11 = 11 m` (10 conjuntos × 1,1 m);
+- compra comercial `W11 = 12 m` por arredondamento para múltiplos de 6 m;
+- preço `Z11 = R$ 44,47395/m`;
+- custo comprado `AA11 = R$ 533,68740`;
+- rateio `AB11 = R$ 53,36874/conjunto`.
+
+A implementação representa esse cálculo com quantidade-base 10 e quantidade da linha de 12 m já ajustada pelo aproveitamento: `12 × 44,47395 ÷ 10 = 53,36874`. O motor não decide que toda barra deve ser comprada em múltiplos de 6 m; apenas calcula corretamente quando a quantidade efetiva da linha já contém o ajuste operacional validado.
+
+A ficha também apresenta os grupos de custo em `I10:I18`: chapa carbono, chapa inox, tubos, usinagem, corte laser, manufatura, embalagem e itens de montagem. A soma dos valores de cache lidos por grupo é R$ 1.733,8963801, enquanto o total em cache de `I19` é R$ 1.733,89638. A diferença de R$ 0,0000001 é irrelevante na apresentação (ambos exibem R$ 1.733,90), mas evidencia por que a precisão e o ponto de arredondamento devem permanecer explícitos e testados.
+
+O teste da ficha usa os valores por grupo como componentes simples de referência e valida o total decimal do motor. Ele não pretende reproduzir todas as fórmulas internas da planilha nem aprovar automaticamente os custos armazenados nela.
