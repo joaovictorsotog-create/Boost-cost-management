@@ -14,7 +14,7 @@ Persistir o cadastro de custos em estrutura própria, separada do catálogo come
 | `cost_items` | Cadastro central de itens simples ou compostos, grupo opcional, código, nome, unidade de referência e custo manual quando simples. |
 | `cost_structures` | Versões de composição de um item, com quantidade-base de saída e estado da versão. |
 | `cost_structure_lines` | Componentes referenciados por ID, quantidade, unidade informada, ordem e observação. |
-| `cost_calculations` | Registro do resultado exato calculado, separado da estrutura e dos dados de entrada. |
+| `cost_calculations` | Registro do resultado exato calculado, separado da estrutura e dos dados de entrada, com snapshot JSON versionado e autossuficiente. |
 | `costing_gamma_settings` | Ativação e percentual da Gama por organização; percentual inicial proposto de 1,2%. |
 | `costing_gamma_groups` | Relação explícita dos grupos selecionados para receber Gama. |
 
@@ -24,6 +24,9 @@ Todas as entidades pertencem a uma organização. Relações entre grupo, item, 
 
 - Custo manual: decimal de texto/SQL com escala de três casas, sem conversão para ponto flutuante binário.
 - Resultado exato: numerador e denominador inteiros armazenados como texto, preservando frações periódicas e valores maiores que a escala de exibição.
+- Snapshot versionado (`snapshotVersion`) registra o grafo completo de itens/estruturas usado no cálculo, valores manuais, quantidades/unidades informadas, fatores de conversão expostos pelo motor, resultado detalhado, versão do motor, instante, organização e configuração Gama (ativação, percentual e IDs dos grupos selecionados).
+- O snapshot é um documento histórico imutável: não deve ser atualizado para refletir alterações posteriores no cadastro. Correções geram novo cálculo/snapshot, nunca sobrescrita do anterior.
+- Frações são persistidas normalizadas (numerador/denominador reduzidos), além da string exata retornada pelo motor e do valor final de exibição.
 - Resultado apresentado: campo decimal separado com até três casas, produzido exclusivamente pela regra de arredondamento aprovada.
 - Não usar `number` para valores monetários persistidos nem usar o campo apresentado como entrada de um cálculo posterior.
 
@@ -40,6 +43,10 @@ Todas as entidades pertencem a uma organização. Relações entre grupo, item, 
 
 - Criado o arquivo de definição Drizzle `drizzle/pg/schema.costing.ts` no branch de implementação, sem gerar ou executar migration.
 - Adicionado índice único parcial `cost_structures_one_active_per_item_idx`, limitando a uma estrutura ativa por item/organização (commit `725f9459f28cc748f37052fb5721863ca991d10c`).
+- Adicionado `snapshotVersion` e `calculationSnapshot` JSONB à definição de `cost_calculations` (commit `75dc393ab3285378698886b4a438ea1e31862e20`).
+- Criado construtor puro de snapshots em `server/domain/costing/snapshot.ts`, com versão do formato/motor, grafo de entrada, resultado, configuração Gama e racional exato normalizado (commits `13905fa`, `27df6b0`).
+- Criado planejador puro de publicação em `server/domain/costing/structure-publication.ts`, que valida versão `DRAFT` e identifica a versão `ACTIVE` a superseder (commit `04a63cb`).
+- Adicionados testes unitários para snapshot, cópia defensiva, frações recorrentes e plano de publicação (commit `68a673b`).
 - O arquivo ainda não está conectado ao repositório de consultas nem à camada de persistência.
 - Não há migration, DDL, gravação, deploy ou alteração de banco nesta etapa.
 - A configuração padrão `drizzle.config.ts` ainda aponta para o schema MySQL. A trilha PostgreSQL/Supabase existente usa arquivos específicos em `drizzle/pg`; a configuração e o journal de migrations precisam ser reconciliados antes de qualquer geração/aplicação.
@@ -55,4 +62,4 @@ Todas as entidades pertencem a uma organização. Relações entre grupo, item, 
 6. Implementar publicação transacional e imutabilidade das versões publicadas.
 7. Definir snapshot suficiente para reproduzir cálculos históricos (preços manuais, versões de estruturas, quantidades, conversões e parâmetros Gama aplicáveis) e política de recálculo de dependentes.
 
-**Conclusão:** o modelo de dados está esboçado no código, mas não está pronto para uso persistente. Nenhuma tabela existe no banco por causa deste trabalho, e nenhuma gravação de custos deve ser habilitada até que os bloqueios acima sejam resolvidos.
+**Conclusão:** o modelo e os contratos puros de snapshot/publicação estão esboçados no código, mas a transação PostgreSQL, a proteção append-only e a integração com persistência ainda não existem. Não está pronto para uso persistente. Nenhuma tabela existe no banco por causa deste trabalho, e nenhuma gravação de custos deve ser habilitada até que os bloqueios acima sejam resolvidos.
