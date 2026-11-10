@@ -1181,3 +1181,11 @@ Legenda:
 - [x] Preservar capacidade de investigar abuso e tentativas de inferência por consultas sucessivas.
 - [x] Não permitir que a trilha exponha dados protegidos a perfis sem autorização.
 - [ ] Definir granularidade, retenção, acesso, correlação de consultas, alertas e testes.
+### Detecção de tentativas de inferência nos indicadores — decisão aprovada (10/11/2026)
+- [x] Detectar consultas sucessivas suspeitas destinadas a inferir grupos/valores suprimidos.
+- [x] Correlacionar filtros, períodos, agrupamentos e consultas relacionadas com base na auditoria.
+- [x] Registrar evento sem expor valores ou grupos protegidos.
+- [x] Alertar Administradores conforme risco.
+- [x] Não bloquear automaticamente por suspeita isolada ou inconclusiva.
+- [x] Exigir proporcionalidade e fundamentação para medidas adicionais.
+- [ ] Definir janelas, limiares, níveis de risco, falsos positivos, revisão humana, retenção e testes.
