@@ -704,3 +704,34 @@ A implementação na branch `feature/alianza-costing-foundation-20261110` foi aj
 - Foi incluído teste em que as parcelas individuais seriam 1/3 e 2/3, mas o lote totaliza 3 e produz custo unitário exato 1. Também permanece teste garantindo rejeição quando o resultado unitário final é periódico.
 - A aritmética continua decimal exata com `BigInt`; nenhuma escala ou arredondamento interno novo foi introduzido.
 - **Validação pendente:** os arquivos foram conferidos após a gravação no GitHub, mas a suíte Vitest ainda não foi executada. Não declarar os testes aprovados até executá-los.
+
+
+### 13.12 Precisão de três casas, cálculo racional exato e Gama configurável — decisão aprovada (10/11/2026)
+
+Esta seção atualiza e substitui as pendências de precisão descritas nas seções 13.10 e 13.11.
+
+**Regra aprovada**
+- Custos manuais, quantidades de linhas e quantidade-base aceitam no máximo três casas decimais.
+- A aritmética intermediária preserva o valor exato, inclusive frações periódicas, em toda a composição multinível. Não arredondar linhas, grupos, subconjuntos ou itens intermediários.
+- Somente o custo unitário final apresentado é arredondado para no máximo três casas.
+- Convenção: quarta casa decimal de 0 a 5 mantém a terceira; de 6 a 9 incrementa. Empate exato em 5 fica para baixo. Exemplos: 1,2344 → 1,234; 1,2345 → 1,234; 1,2346 → 1,235.
+- A apresentação pode omitir zeros finais: R$ 10; R$ 10,2; R$ 10,025.
+- Valores racionais periódicos devem permanecer exatos internamente; não podem ser arredondados a cada nível para alimentar o próximo.
+
+**Grupos e Gama**
+- Os grupos serão criados manualmente na configuração dos custos; não existe lista fixa imposta pelo motor.
+- Gama será uma configuração/aba própria de ativação, com percentual inicial de 1,2%.
+- Gama não é grupo de custo nem fator automático global. A configuração deverá indicar explicitamente a quais grupos o percentual ativo se aplica.
+- A camada de configuração/aplicação de Gama permanece separada do motor estrutural genérico, evitando embutir regra comercial ou multiplicador indiscriminado no cálculo recursivo.
+
+**Implementação registrada**
+- Motor: `server/domain/costing/engine.ts`, commit `1ee523b0afce444420c4a571ac2e517b80a31bce`.
+- Testes: `server/domain/costing/engine.test.ts`, commit `064c93b66cecf07819c90001eb29530f2a2081ab`.
+- O motor passou a usar frações exatas com `BigInt`, valida entradas de até três casas, preserva resultados periódicos entre níveis e formata o resultado final com três casas no máximo.
+- Os testes escritos cobrem valores pequenos (0,025), recorrência 1/3, preservação exata em composição multinível, limites de entrada, arredondamento e a fixture de grupos ajustada à precisão aprovada.
+
+**Reconciliação Mini Torniquete Inox**
+A fixture passa a representar os grupos com no máximo três casas, conforme a regra nova: 61,660 + 213,058 + 666,107 + 109,805 + 0 + 30,4 + 150 + 327,034 = R$ 1.558,064. Esse total substitui a expectativa anterior de R$ 1.558,0634817 para o cenário de teste com entradas limitadas a três casas. Não se afirma que os caches antigos da planilha foram integralmente reconciliados; a diferença histórica de R$ 0,0000001 fica superada para a fixture sob a nova precisão de entrada, mas permanece registrada como diferença entre os valores originais da planilha.
+
+**Validação**
+Os arquivos foram gravados no branch de implementação e conferidos por leitura no GitHub. A suíte Vitest e o TypeScript check ainda não foram executados; portanto, não declarar testes aprovados. Nenhuma migration, alteração de banco, deploy, merge ou operação de produção foi realizada.
