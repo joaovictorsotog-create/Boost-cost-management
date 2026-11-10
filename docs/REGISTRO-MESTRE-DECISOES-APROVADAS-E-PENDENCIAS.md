@@ -1601,3 +1601,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Manter o alerta pendente; lembretes/escalação não reconhecem, resolvem ou encerram.
 - [x] Auditar tentativas de envio, entrega quando disponível, falhas, lembretes e escalação.
 - [ ] Definir canais alternativos, confirmação de entrega, destinatários/substitutos, falhas de canal e novo ciclo após reabertura.
+
+### Falha dos canais de notificação de alerta crítico — decisão aprovada (10/11/2026)
+
+- [x] Se o canal alternativo falhar, tentar outro canal previamente configurado, quando disponível.
+- [x] Registrar tentativas, falhas e confirmações de entrega disponíveis; envio não equivale a entrega.
+- [x] Sem confirmação, manter notificação não confirmada e alerta pendente, sem reconhecimento/resolução automática.
+- [x] Após restabelecimento do serviço, informar Administradores sobre falhas e alertas críticos pendentes.
+- [x] Auditar indisponibilidade, tentativas, resultados e recuperação.
+- [ ] Definir canais/ordem, confirmação, limites de tentativas, monitoramento e procedimento se todos falharem.
