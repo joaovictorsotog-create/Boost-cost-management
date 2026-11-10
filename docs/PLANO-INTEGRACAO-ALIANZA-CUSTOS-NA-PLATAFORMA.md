@@ -691,3 +691,16 @@ O estado dos testes permanece: escritos no branch, execução pendente de ambien
 5. Ampliar testes para divisões periódicas por linha com total consolidado exato, divisão periódica no total, lotes multinível e consistência da memória de cálculo.
 
 A política de precisão interna continua pendente e deverá ser aprovada antes de persistir resultados arredondados ou escolher escala monetária fixa.
+
+### 13.11 Correção do cálculo de lote — 10/11/2026
+
+A implementação na branch `feature/alianza-costing-foundation-20261110` foi ajustada para seguir a regra de lote documentada na arquitetura: calcular o custo total de cada linha (`quantidade × custo unitário`), somar todas as linhas do lote e dividir o total uma única vez pela quantidade de unidades acabadas.
+
+- Arquivo: `server/domain/costing/engine.ts`
+- Commit: `2d097381f390b79e7074ebf7f4f81be96487596d`
+- Testes: `server/domain/costing/engine.test.ts`
+- Commit: `fb82e678e3c57f90bc4e389ef7c1011b895ae908`
+- O detalhe por linha agora expõe `batchLineCost`, isto é, o custo total daquela linha no lote, sem tentar atribuir prematuramente uma parcela unitária que pode ser periódica.
+- Foi incluído teste em que as parcelas individuais seriam 1/3 e 2/3, mas o lote totaliza 3 e produz custo unitário exato 1. Também permanece teste garantindo rejeição quando o resultado unitário final é periódico.
+- A aritmética continua decimal exata com `BigInt`; nenhuma escala ou arredondamento interno novo foi introduzido.
+- **Validação pendente:** os arquivos foram conferidos após a gravação no GitHub, mas a suíte Vitest ainda não foi executada. Não declarar os testes aprovados até executá-los.
