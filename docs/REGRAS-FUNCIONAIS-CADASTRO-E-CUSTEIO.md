@@ -1773,3 +1773,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A classificação deve considerar conjuntamente a combinação e a sequência de filtros, períodos, agrupamentos, consultas relacionadas e a capacidade prática de inferência; não deve se basear apenas na quantidade de consultas.
 - A classificação, seus fundamentos e evidências técnicas devem ser registrados e auditáveis, sem incluir valores/grupos suprimidos.
 - **Pendências:** definir critérios objetivos, limiares/janelas, tratamento de falsos positivos, escalonamento, revisão humana, notificações, resposta proporcional e testes.
+
+## Tratamento de alertas críticos de tentativa de inferência — decisão aprovada (10/11/2026)
+
+- Alertas críticos devem notificar imediatamente todos os Administradores.
+- Exigir reconhecimento explícito por um Administrador autorizado, registrando responsável e data/hora; mera leitura da notificação não equivale a reconhecimento.
+- O alerta permanece pendente até investigação e resolução formal, com justificativa e registro das evidências, ações e resultado.
+- Preservar integralmente o histórico do alerta; é proibido excluir ou encerrar automaticamente o alerta.
+- Não bloquear automaticamente o usuário apenas pela geração do alerta. Eventual contenção deverá decorrer de avaliação técnica, ser proporcional e fundamentada, seguindo o plano geral de resposta a incidentes.
+- **Pendências:** definir canais e garantias de entrega das notificações, prazo operacional para reconhecimento, escalonamento se nenhum Administrador reconhecer, papéis autorizados, critérios de resolução/reabertura e integração com a resposta a incidentes.
