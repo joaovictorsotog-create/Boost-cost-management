@@ -1818,3 +1818,13 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - A interface não pode definir o titular por conta própria nem exibir sucesso antes da confirmação do backend.
 - O reconhecimento não resolve nem encerra o alerta; a investigação e resolução formal continuam obrigatórias.
 - **Pendências:** definir transferência de titularidade, substituição em caso de indisponibilidade, permissões de acompanhamento/ação e auditoria de tentativas concorrentes.
+
+## Transferência de responsabilidade por alerta crítico — decisão aprovada (10/11/2026)
+
+- O Administrador titular do atendimento pode transferir a responsabilidade para outro Administrador autorizado.
+- A transferência exige justificativa obrigatória e confirmação/persistência no backend.
+- Registrar Administrador anterior, novo responsável, justificativa, data/hora e resultado da operação.
+- Notificar o responsável anterior e o novo responsável após confirmação do backend.
+- Preservar integralmente a linha do tempo e o histórico de reconhecimentos e transferências.
+- A transferência não reinicia, suspende ou prorroga prazos do alerta, nem altera seu estado de reconhecimento/resolução.
+- **Pendências:** definir tratamento para indisponibilidade do titular, transferência por terceiro autorizado, recusa/ausência do novo responsável e limites de transferências.
