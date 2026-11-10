@@ -1565,3 +1565,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Permitir investigação de uso indevido e tentativas de contornar a supressão mínima de 5 ocorrências ou inferir dados por consultas sucessivas.
 - [x] Impedir que a própria trilha revele valores/grupos protegidos a perfis sem autorização.
 - [ ] Definir granularidade dos filtros, correlação de consultas sucessivas, retenção, acesso à trilha, alertas, mascaramento e testes.
+### Detecção de tentativas de inferência nos indicadores — decisão aprovada (10/11/2026)
+
+- [x] Detectar padrões de consultas sucessivas que possam tentar inferir grupos/valores suprimidos pela regra mínima de 5 ocorrências.
+- [x] Considerar alterações combinadas de filtros, períodos, agrupamentos e consultas relacionadas, com base na auditoria.
+- [x] Registrar evento de segurança com identidade disponível, data/hora, consultas relacionadas e critérios acionados, sem revelar dados suprimidos.
+- [x] Gerar alerta aos Administradores conforme avaliação de risco.
+- [x] Não bloquear automaticamente o usuário por suspeita isolada ou sinal inconclusivo.
+- [x] Exigir que medidas adicionais sejam proporcionais, fundamentadas e compatíveis com a resposta a incidentes.
+- [ ] Definir janelas/limiares, níveis de risco, falsos positivos, frequência de alertas, revisão humana, retenção e testes.
