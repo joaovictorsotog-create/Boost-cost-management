@@ -1,6 +1,6 @@
 # Checklist de próximas etapas — Alianza Sistema de Custos
 
-**Atualizado:** 09/11/2026  
+**Atualizado:** 10/11/2026  
 **Base:** auditoria documental de 19 conversas do projeto localizadas no ZIP (8 de 27 ainda ausentes) e decisões registradas nos documentos funcionais.  
 **Branch:** `docs/regras-custeio-cadastro-central`  
 **Objetivo:** acompanhar o avanço incremental por módulo. As oito conversas ausentes não bloqueiam o trabalho; lacunas serão resolvidas quando forem relevantes. Este checklist não transforma pendências em decisões aprovadas.
@@ -1270,3 +1270,19 @@ Legenda:
 - [ ] Aprovar stack, banco, estratégia de concorrência, eventos e processamento assíncrono.
 - [ ] Revisar modelo de dados e RLS após resolução das pendências.
 - [ ] Implementar e executar testes arquiteturais em ambiente controlado.
+
+
+## 4. Auditoria técnica inicial do motor de cálculo — 10/11/2026
+
+- [x] Ler o motor puro e a suíte de testes diretamente no branch de engenharia.
+- [x] Confirmar que o motor usa aritmética decimal por inteiros/strings e não ponto flutuante binário.
+- [x] Identificar que a implementação divide cada linha pela quantidade-base antes de somar; isso diverge da regra aprovada de somar o lote e dividir uma única vez.
+- [x] Reabrir a reconciliação do fixture Mini Torniquete - Inox: a soma dos oito grupos usados no teste é R$ 1.558,0634818, enquanto a expectativa atual é R$ 1.558,0634817.
+- [ ] Corrigir o algoritmo para agregar o lote antes da divisão e definir a semântica das linhas na memória de cálculo.
+- [ ] Explicar a diferença de R$ 0,0000001 usando as fórmulas e valores de origem, sem ajuste arbitrário.
+- [ ] Aprovar precisão interna para divisões não terminantes e persistência decimal.
+- [ ] Executar Vitest e TypeScript check com as versões fixadas pelo repositório; a leitura remota do código não conta como execução.
+- [ ] Testar lote com divisões periódicas por linha cujo total seja exato, total periódico, estruturas multinível e memória de cálculo.
+- [ ] Reconciliar integralmente a ficha Mini Torniquete - Inox antes de considerar o fixture uma referência certificada.
+
+**Limite operacional:** esta auditoria foi somente leitura. Não foram executados migrations, DDL/DML, alteração de RLS/Auth, deploy, merge ou ações em produção.
