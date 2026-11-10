@@ -637,3 +637,57 @@ O produto aprovado é um Sistema de Cadastro e Custeio Industrial por Estrutura,
 Ficam fora do módulo: PCP/OP, apontamento e execução de fábrica, estoque, compras, fornecedores, MRP, MOD, GGF, CMC de estoque, perdas automáticas, preço de venda, margem, descontos, fiscalidade e sincronização com Omie.
 
 A decisão funcional está encerrada. Permanecem tarefas de engenharia, qualidade e liberação: corrigir os fixtures de teste que estejam divergentes da planilha, aprovar a precisão interna para divisões não terminantes, completar UI/API/persistência/RLS/auditoria, executar testes e fechar os gates de ambiente. O encerramento funcional não é autorização para migration, deploy, merge ou alteração de produção.
+
+
+### 13.10 Auditoria técnica inicial do motor de cálculo — 10/11/2026
+
+**Base consultada:** branch `feature/alianza-costing-foundation-20261110`, arquivos `server/domain/costing/engine.ts`, `server/domain/costing/engine.test.ts` e `package.json`. Auditoria de leitura do código; nenhum arquivo de implementação foi alterado nesta etapa.
+
+#### 13.10.1 Defeito identificado na divisão por quantidade-base
+
+O motor atual calcula `divideExact(quantity × componentUnitCost, outputQuantity)` individualmente para cada linha e depois soma os resultados. Isso não corresponde exatamente ao contrato funcional fechado na seção 13.9, que determina somar primeiro o custo total de todas as linhas do lote e dividir uma única vez pela quantidade-base.
+
+Consequência: uma estrutura pode ter linhas individuais com quocientes decimais não terminantes, mas total do lote divisível exatamente pela quantidade-base. O motor atual rejeita esse caso antes de avaliar o total consolidado. A correção deverá calcular o total do lote antes da divisão. A memória de cálculo por linha também precisa de semântica definida para contribuições que não tenham representação decimal finita.
+
+#### 13.10.2 Divergência de R$ 0,0000001 no fixture Mini Torniquete - Inox
+
+A fixture atual em `engine.test.ts` contém os seguintes grupos antes de Gama:
+
+| Grupo | Valor (R$) |
+|---|---:|
+| Chapa carbono | 61,6601903 |
+| Chapa inox | 213,0577515 |
+| Tubos | 666,10674 |
+| Usinagem | 109,805 |
+| Corte laser | 0 |
+| Manufatura | 30,4 |
+| Embalagem | 150 |
+| Itens de montagem | 327,0338 |
+| **Soma aritmética dos grupos** | **1.558,0634818** |
+
+O teste espera `1558.0634817`. Portanto, a fixture e a expectativa divergem em R$ 0,0000001. A leitura das fórmulas/valores armazenados confirma:
+- `I17 = SUM(I10:I16)`, cache R$ 1.406,86258;
+- `I18`, cache R$ 327,0338;
+- `I19 = SUM(I17:I18)`, cache R$ 1.733,89638;
+- `I11 = AB22 × AH7`, com `AB22 = 213,0577515` e `AH7 = 1,2`;
+- `I12 = AB15 × AH7`, com `AB15 = 666,10674` e `AH7 = 1,2`.
+
+Retirando Gama dos dois grupos a partir do total consolidado em cache, chega-se a R$ 1.558,0634817. Somando diretamente os valores em cache dos oito grupos-base informados na fixture, chega-se a R$ 1.558,0634818. A diferença de R$ 0,0000001 já aparece na reconciliação entre os caches de subtotal e os valores individuais; não deve ser escondida nem corrigida arbitrariamente. A ficha ainda requer reconciliação integral, incluindo fórmulas e referências de todos os grupos.
+
+**Correção documental:** a frase anterior da seção 13.5 que menciona R$ 1.600,6750321 como base de teste está superada pela correção de escopo registrada na seção 13.8 e não deve orientar fixtures. A expectativa de R$ 1.558,0634817 também não deve ser tratada como reconciliada com a soma dos oito valores atualmente usados no teste até a diferença ser explicada.
+
+#### 13.10.3 Validação executável ainda não comprovada nesta etapa
+
+O `package.json` declara Node `>=22 <23`, pnpm e Vitest. O runtime disponível nesta sessão é Node 22.16.0, mas o repositório não está clonado no ambiente local e pnpm/dependências não estão disponíveis. Por isso, não foi possível executar agora a suíte Vitest nem o TypeScript check fixado pelo projeto. A leitura dos arquivos no GitHub não é evidência de teste aprovado.
+
+O estado dos testes permanece: escritos no branch, execução pendente de ambiente de desenvolvimento reproduzível. Não houve acesso a banco, migrations, DDL/DML, RLS, deploy ou produção.
+
+#### 13.10.4 Próximas correções técnicas
+
+1. Corrigir o algoritmo para agregar o custo de todas as linhas do lote antes de dividir pela quantidade-base.
+2. Definir a representação/precisão da memória de cálculo por linha quando a contribuição por unidade for periódica.
+3. Reconciliar a diferença de R$ 0,0000001 da fixture com as fórmulas/caches da planilha; não alterar a expectativa apenas para fazer o teste passar.
+4. Executar Vitest e TypeScript check com versões/dependências fixadas no repositório.
+5. Ampliar testes para divisões periódicas por linha com total consolidado exato, divisão periódica no total, lotes multinível e consistência da memória de cálculo.
+
+A política de precisão interna continua pendente e deverá ser aprovada antes de persistir resultados arredondados ou escolher escala monetária fixa.
