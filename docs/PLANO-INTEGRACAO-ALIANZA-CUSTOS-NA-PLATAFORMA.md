@@ -743,3 +743,27 @@ A reconciliação integral exigirá decompor os grupos nas quantidades e custos 
 
 **Validação**
 Os arquivos foram gravados no branch de implementação e conferidos por leitura no GitHub. A suíte Vitest e o TypeScript check ainda não foram executados; portanto, não declarar testes aprovados. Nenhuma migration, alteração de banco, deploy, merge ou operação de produção foi realizada.
+
+
+### 13.13 Modelo genérico de custo unitário por unidade de medida — decisão aprovada (10/11/2026)
+
+O motor não implementará fórmulas específicas por categoria (usinagem, montagem, corte laser ou outras). A plataforma recebe o custo unitário já calculado pelo usuário e aplica uma única regra matemática genérica.
+
+**Cadastro do item**
+- Cada item registra sua unidade de medida de referência e o preço correspondente, com dimensão explícita: R$/kg, R$/m, R$/un, R$/h ou outra unidade cadastrada.
+- A unidade faz parte do significado do custo unitário; não é apenas texto decorativo.
+- A quantidade consumida na composição deve usar unidade compatível com a unidade de referência do item.
+- Categorias servem para classificar/organizar itens e grupos, não para selecionar fórmulas de cálculo.
+
+**Regra matemática**
+- Custo da linha = quantidade utilizada × custo unitário correspondente.
+- Custo total da composição = soma dos custos das linhas.
+- Exemplo: 2 kg × R$ 10,000/kg = R$ 20,000; 3 m × R$ 15,500/m = R$ 46,500; 4 un × R$ 0,250/un = R$ 1,000.
+- Serviços e operações entram como itens comuns, com unidade própria e custo unitário já informado/calculado fora do motor. Não haverá fórmula especial para usinagem, montagem ou corte laser.
+- Não permitir combinação de unidades incompatíveis. Conversões entre unidades (por exemplo g para kg) só poderão ocorrer quando houver regra de conversão explícita e validada; não inferir conversões silenciosamente.
+
+**Relação com decisões anteriores**
+- Mantêm-se a precisão intermediária exata, o limite de três casas para entradas manuais e o arredondamento apenas no resultado final, conforme seção 13.12.
+- Mantêm-se os grupos criados manualmente e o Gama como configuração própria, percentual inicial de 1,2%, aplicado somente aos grupos explicitamente selecionados.
+- A engenharia reversa de fórmulas específicas da planilha Mini Torniquete deixa de ser requisito do motor. A planilha pode servir como referência de valores já calculados para alimentar itens, mas não como especificação de fórmulas industriais.
+- A implementação de validação dimensional/unidades no cadastro e na composição ainda precisa ser especificada e implementada; não afirmar que já existe no código.
