@@ -547,9 +547,9 @@ O FAQ oficial confirma que MOD e GGF são informados na aba Custo da Produção 
 
 A planilha de referência contém fichas técnicas e quantidades de lote, mas não constitui um sistema de apontamento de produção. O exemplo Mini Torniquete - Inox mostra:
 - lote de 10 conjuntos;
-- consumo técnico de tubos de 11 m na linha principal, enquanto a ficha calcula 12 m como quantidade comercial comprada;
-- preço de R$ 44,47395/m e custo de compra de 12 m de R$ 533,68740;
-- rateio da compra por 10 conjuntos: R$ 53,36874 por conjunto;
+- na linha específica do tubo Ø3", consumo de 11 m para 10 conjuntos e compra comercial de 12 m;
+- nessa linha, preço de R$ 44,47395/m, custo de compra de R$ 533,68740 e rateio de R$ 53,36874 por conjunto;
+- o grupo completo de tubos soma quatro bitolas e tem subtotal AB15 de R$ 666,10674 antes do fator Gama;
 - quantidade-base da estrutura, portanto, não pode ser presumida como sempre 1.
 
 A conferência das fórmulas também revelou um ponto importante para a validação: a planilha aplica o fator Gama 1,2 tanto ao grupo de chapas inox (AB22 = R$ 213,0577515, resultando em I11 = R$ 255,6693018) quanto ao grupo de tubos (AB15 = R$ 666,10674, resultando em I12 = R$ 799,328088). O total I19 = R$ 1.733,89638 inclui esse fator nos dois grupos. Removendo o efeito de Gama desses dois grupos, sem alterar os demais grupos, o total-base calculado é R$ 1.558,0634817, exibido como R$ 1.558,06 pela regra de apresentação aprovada. A comparação anterior que tratava apenas o grupo de tubos como afetado por Gama estava incompleta e não deve ser usada como fixture de referência.
