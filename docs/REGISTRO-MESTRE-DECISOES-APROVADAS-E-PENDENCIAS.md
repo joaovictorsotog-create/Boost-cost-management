@@ -1666,6 +1666,10 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Cada item registra unidade dimensional e preço correspondente (ex.: R$/kg, R$/m, R$/un, R$/h).
 - [x] Quantidade consumida deve ser compatível com a unidade do preço; conversões somente por regra explícita, sem inferência silenciosa.
 - [x] Usinagem, montagem e corte laser entram como itens comuns com custo unitário já calculado/informado fora do motor.
-- [ ] Especificar e implementar validação dimensional e conversões explícitas no cadastro/API/composição.
+- [x] Permitir conversão automática de quantidade entre unidades compatíveis da mesma dimensão, antes da multiplicação pelo preço unitário.
+- [x] Exemplos aprovados: 500 g = 0,5 kg; 50 cm = 0,50 m; fatores exatos e sem arredondamento intermediário.
+- [x] Preservar na memória de cálculo a unidade informada, a unidade-base do preço e o fator aplicado.
+- [x] Não permitir conversões entre dimensões diferentes nem equivalências de serviços/contagem sem cadastro explícito.
+- [ ] Especificar e implementar tabela controlada de unidades/fatores, validação dimensional e conversões no cadastro/API/composição.
 - [ ] Concluir a revisão do contrato de dados/API para persistir unidade dimensional e custo unitário sem ambiguidade.
 
