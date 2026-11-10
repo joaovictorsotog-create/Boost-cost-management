@@ -508,3 +508,104 @@ Esses comportamentos não devem ser presumidos a partir da existência dos endpo
 | OpenAPI e exemplos JSON | Material de apoio para eventual integração futura, ainda não autorizada |
 
 **Conclusão atualizada:** agora existe documentação técnica pública oficial suficiente para confirmar a separação entre cadastro, famílias, estrutura de produto e KIT no Omie e para identificar campos concretos de composição. A estrutura geral/malha é a referência técnica mais pertinente para o desenho do Cadastro Central e da composição multinível. Ainda assim, o Alianza mantém seu próprio modelo, cálculo, governança, histórico, permissões e exclusões de escopo. Nenhum contrato de integração com Omie foi implementado ou testado.
+
+
+### 13.8 Auditoria do fluxo de produção do Omie e decisão de escopo do módulo — 10/11/2026
+
+**Fontes oficiais adicionais consultadas:**
+- Ordem de Produção — API: https://api.omie.com.br/docs/apis/produtos/op
+- Cadastrando uma Ordem de Produção: https://ajuda.omie.com.br/pt-BR/articles/1432016-cadastrando-uma-ordem-de-producao
+- Visualizando e Imprimindo a OP e o Mapa de Custo: https://ajuda.omie.com.br/pt-BR/articles/9864358-visualizando-e-imprimindo-a-ordem-de-producao-e-o-mapa-de-custo
+- FAQ — Compras, Estoque e Produção: https://ajuda.omie.com.br/pt-BR/articles/6867689-perguntas-frequentes-compras-estoque-e-producao
+- Perguntas Frequentes sobre Compras, Estoque e Produção (inclui reordenação e ajustes na OP): https://ajuda.omie.com.br/pt-BR/articles/6867689-perguntas-frequentes-compras-estoque-e-producao
+
+A consulta foi documental, sem conta Omie, sem chamadas reais à API e sem integração executada.
+
+#### 13.8.1 O Omie separa ficha técnica de execução da fabricação
+
+A documentação oficial descreve dois objetos e ciclos diferentes:
+
+1. **Estrutura do produto / ficha técnica:** definição reutilizável dos itens e quantidades necessários para fabricar um produto acabado ou em processo.
+2. **Ordem de Produção (OP):** instância de uma fabricação, com produto, quantidade a produzir, previsão, datas, componentes necessários, observações e conclusão.
+
+Ao criar uma OP, o Omie preenche seus componentes a partir da estrutura cadastrada. O operador pode incluir, remover, reordenar ou alterar quantidades na OP sem modificar a estrutura mestre. Ao concluir, informa a quantidade efetivamente produzida; o processo também pode tratar produtos ruins, movimentar estoque e consumir componentes. A API expõe inclusão, alteração, consulta, listagem, conclusão, exclusão, reversão e upsert de OP.
+
+**Leitura para o Alianza:** o Cadastro Central e a estrutura de composição são dados mestres de custeio. OP, apontamento e conclusão são controle de execução produtiva. Não são a mesma funcionalidade e não devem ser misturados no módulo de custos.
+
+#### 13.8.2 Mapa de Custo do Omie e componentes de custo
+
+O Mapa de Custo apresentado pelo Omie separa:
+- MP (matéria-prima): quantidade do item na OP multiplicada pelo CMC unitário;
+- MOD (mão de obra direta): valor configurado na estrutura do produto;
+- GGF (gastos gerais de fabricação): valor configurado na estrutura do produto.
+
+O FAQ oficial confirma que MOD e GGF são informados na aba Custo da Produção e que a estrutura do produto está disponível para tipos específicos de produto em processo/acabado. Isso descreve o modelo do Omie, não uma obrigação para o Alianza.
+
+**Decisão Alianza:** manter fora do escopo MOD, GGF e CMC baseado em estoque. O Alianza calcula o custo industrial conforme as regras já aprovadas, usando itens e serviços cadastrados com custos próprios e composição multinível. Não criar campos vazios de MOD/GGF para imitar o Omie.
+
+#### 13.8.3 Confronto com a planilha industrial
+
+A planilha de referência contém fichas técnicas e quantidades de lote, mas não constitui um sistema de apontamento de produção. O exemplo Mini Torniquete - Inox mostra:
+- lote de 10 conjuntos;
+- consumo calculado de 11 m;
+- quantidade comercial comprada de 12 m, por regra de aproveitamento daquela ficha;
+- custo comprado de R$ 533,68740;
+- rateio de R$ 53,36874 por conjunto.
+
+Isso exige que a estrutura de custeio represente uma quantidade-base de saída e que o motor divida o custo total do lote por essa base. Não exige criar OP, saldo de estoque, reserva de materiais, lote/validade, apontamento de produção ou quantidade rejeitada.
+
+A planilha também contém grupos de materiais e serviços (chapas, tubos, usinagem, corte laser, pintura, manufatura, embalagem e montagem). A decisão vigente é cadastrar materiais e serviços como itens identificáveis, reutilizáveis e com unidade/custo próprios. Grupos de relatório não devem gerar custos duplicados nem virar multiplicadores genéricos. Pintura e usinagem podem ser itens/serviços com custo próprio; corte laser não cria custo automático. Perdas e aproveitamento já incorporados à quantidade informada não podem ser aplicados uma segunda vez.
+
+#### 13.8.4 Matriz final de escopo
+
+| Capacidade | Decisão final para o módulo Sistema de Custos |
+|---|---|
+| Cadastro Central único de materiais, serviços, subconjuntos e produtos | INCLUIR |
+| Famílias, unidade única por item, ID estável e status | INCLUIR |
+| Item simples com custo manual e item composto com custo derivado | INCLUIR |
+| Estruturas multinível, componentes reutilizáveis e quantidades por linha | INCLUIR |
+| Quantidade-base de saída/lote da estrutura, default 1 | INCLUIR |
+| Cálculo recursivo e recálculo em cascata de dependentes | INCLUIR |
+| Histórico, versionamento e fotografia imutável de estrutura/custo | INCLUIR |
+| Observação descritiva por linha de composição | INCLUIR como dado informativo, sem efeito matemático |
+| Custo de materiais e serviços como itens simples cadastrados | INCLUIR |
+| Ajuste manual Gama, opcional e contextual | INCLUIR conforme regra existente; nunca automático |
+| Prévia/confirmar, permissões, auditoria, aprovações e importação validada | INCLUIR conforme decisões funcionais existentes |
+| Visão/relatório de composição e memória de cálculo por componente | INCLUIR; saída consultiva/exportável, sem se tornar novo motor |
+| Ordem de Produção, etapas/Kanban e programação de fábrica | EXCLUIR do módulo atual |
+| Apontamento de início/fim, quantidade produzida e refugos | EXCLUIR do módulo atual |
+| Reserva/baixa/entrada de estoque, locais de estoque e inventário | EXCLUIR |
+| Lotes físicos, validade e rastreabilidade de matéria-prima | EXCLUIR |
+| Compras, fornecedores, pedido de compra e recebimento | EXCLUIR |
+| CMC médio de estoque e recálculo contábil retroativo | EXCLUIR |
+| MOD e GGF | EXCLUIR, decisão já aprovada |
+| Preço de venda, margem, desconto, tabelas comerciais e fiscalidade | EXCLUIR |
+| Percentual automático de perda, fator de aproveitamento ou arredondamento comercial genérico | EXCLUIR; a quantidade da linha deve refletir a regra operacional aprovada, sem dupla aplicação |
+| Integração/sincronização com Omie | NÃO IMPLEMENTAR nesta fase; pesquisa não equivale a autorização de integração |
+
+#### 13.8.5 Decisão final de produto e fronteira do módulo
+
+O módulo a finalizar é um **Sistema de Cadastro e Custeio Industrial por Estrutura**, e não um módulo de PCP/MRP, estoque ou execução de produção.
+
+Seu fluxo principal fica definido assim:
+
+1. Administrador mantém famílias, unidades e regras de cadastro.
+2. Usuário autorizado pesquisa ou cadastra uma única vez materiais, serviços, subconjuntos e produtos no Cadastro Central.
+3. Item simples recebe custo manual controlado; item composto recebe uma estrutura com referências a itens já cadastrados.
+4. A estrutura informa quantidades consumidas e quantidade-base de unidades acabadas do lote (1 por padrão).
+5. O motor calcula recursivamente o custo do lote e o custo unitário, sem ponto flutuante binário, sem dupla aplicação de perdas e sem fatores comerciais.
+6. O sistema guarda a versão da estrutura, memória do cálculo, custo vigente e histórico; mudanças em componentes propagam recálculo de forma consistente aos compostos dependentes.
+7. O usuário consulta composição e impacto, exporta relatórios e acompanha alterações/aprovações conforme permissões.
+8. A execução física da fabricação permanece fora do módulo. Se futuramente for necessária, será um módulo de Produção separado, que poderá consumir uma versão aprovada da estrutura de custos, sem alterar retroativamente o cadastro mestre.
+
+#### 13.8.6 Pendências que não devem reabrir o escopo funcional
+
+A pesquisa não identificou motivo para adicionar OP, estoque, MOD, GGF, compras ou fiscalidade ao Sistema de Custos. As pendências remanescentes são de fechamento técnico e validação, não de ampliação de produto:
+- definir e documentar a política de precisão interna para divisões periódicas, persistência decimal e apresentação; a regra de apresentação aprovada permanece a existente;
+- verificar que o motor suporta e testa quantidade-base de lote, recálculo em cascata, ciclos, itens inativos, exclusão lógica e snapshots;
+- reconciliar o exemplo da planilha com os dados de origem e separar explicitamente valores antes/depois de Gama;
+- executar a suíte do projeto com as versões de dependências fixadas e testes de integração quando o gate de ambiente não produtivo estiver liberado;
+- concluir modelagem, permissões, RLS, auditoria e transações antes de qualquer persistência;
+- não executar migrations, deploy ou alteração de produção sem os gates já registrados neste plano.
+
+**Decisão recomendada para encerramento funcional:** congelar o escopo do módulo nos itens marcados INCLUIR nesta matriz e não acrescentar funcionalidades de execução da produção. A partir deste ponto, mudanças de escopo exigem justificativa operacional e aprovação explícita; o trabalho restante é completar a implementação, validar o cálculo e fechar os gates técnicos.
