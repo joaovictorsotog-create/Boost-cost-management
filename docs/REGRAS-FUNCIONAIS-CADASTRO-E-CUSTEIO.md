@@ -1753,4 +1753,14 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Aplicar a trilha de auditoria a consultas realizadas pela interface, APIs e demais caminhos de acesso, com autorização e registro no backend.
 - A auditoria deve permitir investigar uso indevido, tentativas de contornar a supressão mínima de 5 ocorrências e consultas sucessivas destinadas à reidentificação.
 - A própria trilha não pode revelar, para perfis sem autorização, valores ou grupos protegidos que foram suprimidos nos indicadores.
-- **Pendências:** definir granularidade e formato dos filtros registrados, identificação de consultas equivalentes/sucessivas, retenção específica, acesso à trilha, alertas para padrões suspeitos, mascaramento/minimização e testes de tentativa de inferência.
+- **Pendências:** definir granularidade e formato dos filtros registrados, identificação de consultas equivalentes/sucessivas, retenção específica, acesso à trilha, alertas para padrões suspeitos, mascaramento/minimização e testes de tentativa de inferência. 
+
+## Detecção de tentativas de inferência nos indicadores — decisão aprovada (10/11/2026)
+
+- O sistema deve detectar padrões de consultas sucessivas que possam indicar tentativa de inferir grupos ou valores suprimidos pela regra mínima de 5 ocorrências.
+- A detecção deve considerar alterações combinadas de filtros, períodos, agrupamentos e consultas próximas ou relacionadas, utilizando os registros de auditoria das consultas.
+- Quando houver padrão suspeito, registrar evento de segurança com usuário/identidade disponível, data/hora, consultas relacionadas, critérios técnicos acionados e resultado da análise, sem incluir valores protegidos ou revelar dados suprimidos.
+- Gerar alerta para os Administradores conforme a avaliação de risco.
+- Uma suspeita isolada ou sinal inconclusivo não deve provocar bloqueio automático do usuário.
+- Qualquer medida adicional de contenção deverá ser proporcional, fundamentada em evidências e seguir as regras gerais de segurança e resposta a incidentes.
+- **Pendências:** definir janelas temporais, critérios/limiares de correlação, níveis de risco, controle de falsos positivos, frequência de alertas, revisão humana, retenção e testes contra inferência.
