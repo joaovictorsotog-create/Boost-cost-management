@@ -1662,4 +1662,5 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Gama como configuração própria de ativação, percentual inicial de 1,2%, com aplicação explicitamente selecionada por grupo.
 - [x] Gama não é grupo de custo nem multiplicador automático/global do motor estrutural.
 - [ ] Definir e validar a representação persistida/API para distinguir valor racional exato interno do valor final formatado, sem arredondamento prematuro.
+- [ ] Concluir reconciliação ponta a ponta da ficha Mini Torniquete Inox: decompor os valores calculados por grupo até as entradas de origem e tratar preços históricos com mais de três casas sem arredondar etapas intermediárias.
 
