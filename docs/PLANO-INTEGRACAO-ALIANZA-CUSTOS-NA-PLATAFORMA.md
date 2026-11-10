@@ -767,3 +767,22 @@ O motor não implementará fórmulas específicas por categoria (usinagem, monta
 - Mantêm-se os grupos criados manualmente e o Gama como configuração própria, percentual inicial de 1,2%, aplicado somente aos grupos explicitamente selecionados.
 - A engenharia reversa de fórmulas específicas da planilha Mini Torniquete deixa de ser requisito do motor. A planilha pode servir como referência de valores já calculados para alimentar itens, mas não como especificação de fórmulas industriais.
 - A implementação de validação dimensional/unidades no cadastro e na composição ainda precisa ser especificada e implementada; não afirmar que já existe no código.
+
+
+### 13.14 Conversão automática entre unidades compatíveis — decisão aprovada (10/11/2026)
+
+A composição poderá informar a quantidade em uma unidade diferente daquela usada no preço unitário, desde que ambas pertençam à mesma dimensão e exista fator de conversão inequívoco.
+
+**Exemplos aprovados**
+- Item cadastrado a R$/kg pode receber consumo em gramas: 500 g = 0,5 kg.
+- Item cadastrado a R$/m pode receber consumo em centímetros: 50 cm = 0,50 m.
+
+**Regras**
+- Converter a quantidade para a unidade de referência do preço antes de multiplicar pelo custo unitário.
+- Usar fatores de conversão exatos, sem arredondamento intermediário: 1 kg = 1.000 g; 1 m = 100 cm; 1 m = 1.000 mm.
+- A conversão só é permitida dentro da mesma dimensão (massa com massa, comprimento com comprimento, volume com volume etc.). Nunca converter dimensões diferentes, como kg para m.
+- Unidade de referência do preço e unidade informada no consumo devem permanecer identificáveis na memória de cálculo/auditoria.
+- A precisão máxima de três casas para entradas manuais permanece aplicável; conversões internas podem produzir mais casas e devem preservar precisão exata até o arredondamento final.
+- Não assumir conversões entre unidades de contagem/serviço sem equivalência cadastrada e validada.
+
+A implementação deverá usar uma tabela controlada de unidades e fatores, evitando conversões textuais ou aproximações implícitas. A validação dimensional, tabela de unidades e persistência/API ainda precisam ser implementadas e testadas.
