@@ -714,7 +714,7 @@ Esta seção atualiza e substitui as pendências de precisão descritas nas seç
 - Custos manuais, quantidades de linhas e quantidade-base aceitam no máximo três casas decimais.
 - A aritmética intermediária preserva o valor exato, inclusive frações periódicas, em toda a composição multinível. Não arredondar linhas, grupos, subconjuntos ou itens intermediários.
 - Somente o custo unitário final apresentado é arredondado para no máximo três casas.
-- Convenção: quarta casa decimal de 0 a 5 mantém a terceira; de 6 a 9 incrementa. Empate exato em 5 fica para baixo. Exemplos: 1,2344 → 1,234; 1,2345 → 1,234; 1,2346 → 1,235.
+- Convenção: observar somente o algarismo da quarta casa decimal: de 0 a 5 mantém a terceira; de 6 a 9 incrementa. Exemplos: 1,2344 → 1,234; 1,2345 → 1,234; 1,2346 → 1,235.
 - A apresentação pode omitir zeros finais: R$ 10; R$ 10,2; R$ 10,025.
 - Valores racionais periódicos devem permanecer exatos internamente; não podem ser arredondados a cada nível para alimentar o próximo.
 
