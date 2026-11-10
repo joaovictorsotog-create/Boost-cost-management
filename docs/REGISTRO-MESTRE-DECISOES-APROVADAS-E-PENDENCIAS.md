@@ -1583,3 +1583,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Considerar combinação/sequência de filtros, períodos, agrupamentos, consultas relacionadas e capacidade de inferência; não usar apenas a quantidade de consultas.
 - [x] Registrar classificação, fundamento e evidências técnicas sem revelar valores/grupos suprimidos.
 - [ ] Definir critérios objetivos, limiares/janelas, falsos positivos, escalonamento, revisão humana, notificações, resposta e testes.
+
+### Tratamento de alertas críticos de tentativa de inferência — decisão aprovada (10/11/2026)
+
+- [x] Notificar imediatamente todos os Administradores.
+- [x] Exigir reconhecimento explícito por Administrador autorizado, com responsável e data/hora; leitura não equivale a reconhecimento.
+- [x] Manter o alerta pendente até investigação e resolução formal justificada.
+- [x] Preservar histórico integral, sem exclusão ou encerramento automático.
+- [x] Não bloquear automaticamente o usuário; contenção exige avaliação técnica, proporcionalidade e fundamento.
+- [ ] Definir canais/entrega, prazo de reconhecimento, escalonamento, papéis autorizados, resolução/reabertura e integração com resposta a incidentes.
