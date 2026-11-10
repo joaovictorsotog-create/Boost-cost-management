@@ -1237,3 +1237,12 @@ Legenda:
 - [x] Interface confirma somente após persistência.
 - [x] Reconhecimento não encerra alerta.
 - [ ] Definir transferência/substituição, permissões e auditoria de concorrência.
+
+### Transferência de responsabilidade por alerta crítico — decisão aprovada (10/11/2026)
+- [x] Titular pode transferir para outro Administrador autorizado.
+- [x] Justificativa obrigatória e confirmação pelo backend.
+- [x] Registrar responsáveis anterior/novo, justificativa, data/hora e resultado.
+- [x] Notificar ambos após confirmação.
+- [x] Preservar histórico e linha do tempo.
+- [x] Não reiniciar ou suspender prazos nem alterar estado do alerta.
+- [ ] Definir indisponibilidade, transferência por terceiro, recusa/ausência e limites.
