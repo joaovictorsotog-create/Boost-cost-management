@@ -1648,3 +1648,18 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Notificar ambos quando possível; falha de notificação não desfaz transferência confirmada.
 - [x] Preservar prazos originais e histórico.
 - [ ] Definir critérios objetivos de indisponibilidade e revisão posterior; até lá, avaliação justificada e auditável.
+
+
+### Precisão do motor de custos e arredondamento — decisão aprovada (10/11/2026)
+
+- [x] Custos manuais, quantidades de estrutura e quantidade-base aceitam no máximo três casas decimais.
+- [x] Preservar precisão exata em todos os cálculos intermediários, inclusive frações periódicas e composições multinível.
+- [x] Não arredondar linhas, grupos, subconjuntos ou níveis intermediários.
+- [x] Arredondar somente o custo unitário final apresentado para no máximo três casas decimais.
+- [x] Manter a convenção aprovada: quarta casa de 0 a 5 mantém a terceira; de 6 a 9 incrementa; empate exato em 5 fica para baixo.
+- [x] Permitir apresentação sem zeros finais, por exemplo R$ 0,025.
+- [x] Grupos de custo criados manualmente na configuração; sem lista fixa imposta pelo motor.
+- [x] Gama como configuração própria de ativação, percentual inicial de 1,2%, com aplicação explicitamente selecionada por grupo.
+- [x] Gama não é grupo de custo nem multiplicador automático/global do motor estrutural.
+- [ ] Definir e validar a representação persistida/API para distinguir valor racional exato interno do valor final formatado, sem arredondamento prematuro.
+
