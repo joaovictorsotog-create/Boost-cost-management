@@ -1221,3 +1221,10 @@ Legenda:
 - [x] Após recuperação do serviço, avisar Administradores sobre falhas e alertas pendentes.
 - [x] Preservar auditoria da indisponibilidade e recuperação.
 - [ ] Definir canais/ordem, confirmação, limites, monitoramento e contingência para falha total.
+
+### Estados da notificação de alerta crítico — decisão aprovada (10/11/2026)
+- [x] Separar Enviado (encaminhamento), Entregue (confirmação técnica do canal) e Reconhecido (ciência explícita por Administrador).
+- [x] Registrar identidade e data/hora do reconhecimento.
+- [x] Envio/entrega não equivalem a leitura, reconhecimento ou resolução.
+- [x] Sem confirmação confiável, não presumir entrega.
+- [ ] Definir comprovantes por canal, estados intermediários, retornos tardios e reconciliação.
