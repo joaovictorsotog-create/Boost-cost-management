@@ -1828,3 +1828,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Preservar integralmente a linha do tempo e o histórico de reconhecimentos e transferências.
 - A transferência não reinicia, suspende ou prorroga prazos do alerta, nem altera seu estado de reconhecimento/resolução.
 - **Pendências:** definir tratamento para indisponibilidade do titular, transferência por terceiro autorizado, recusa/ausência do novo responsável e limites de transferências.
+
+## Transferência excepcional por indisponibilidade do titular — decisão aprovada (10/11/2026)
+
+- Outro Administrador autorizado pode transferir a responsabilidade quando o titular estiver indisponível, sem depender de ação do titular original.
+- Exigir justificativa obrigatória e identificação do novo responsável.
+- Registrar a transferência na auditoria, incluindo titular anterior, novo responsável, justificativa, ator que executou, data/hora e resultado.
+- Notificar o titular anterior e o novo responsável quando os canais estiverem disponíveis; falhas de notificação seguem as regras de contingência e não desfazem a transferência confirmada.
+- Preservar os prazos originais e o histórico integral do alerta.
+- **Pendências operacionais:** definir critérios objetivos de indisponibilidade e eventual revisão posterior. Na ausência de definição específica, aplicar avaliação justificada por Administrador autorizado, com registro auditável.
