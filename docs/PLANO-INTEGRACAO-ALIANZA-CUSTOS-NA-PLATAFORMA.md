@@ -330,7 +330,7 @@ Esses valores podem refletir links externos indisponíveis, fórmulas não recal
 - A suíte cobre o exemplo aprovado de R$ 44,00, o rateio de 12 m comprados por 10 conjuntos e a soma dos grupos de custo da ficha Mini Torniquete - Inox.
 - O motor não calcula por conta própria o arredondamento de barras comerciais; a quantidade da linha deve chegar com o aproveitamento já incorporado, evitando aplicar perda duas vezes. A regra de compra em múltiplos de 6 m permanece específica da ficha e não foi generalizada.
 - Permanecem fora do motor preço de venda, desconto, Alpha/Beta e Gama automático.
-- A execução local isolada de validação passou em 11 asserções de runtime e no TypeScript check do motor; isso não equivale à execução da suíte Vitest completa nem ao CI do repositório.
+- A execução local isolada de validação passou em 12 asserções de runtime e no TypeScript check isolado do motor com o compilador global TypeScript 5.8.3. O repositório fixa TypeScript 5.9.3; portanto, o check completo do projeto com as dependências da versão fixada, a suíte Vitest e o CI ainda precisam ser executados.
 - A escala interna monetária ainda não foi fixada: o motor usa aritmética decimal exata por strings/inteiros, sem escolher uma escala fixa de banco. A política de apresentação aprovada é aplicada separadamente.
 
 **Conclusão da auditoria:** a planilha é útil para extrair candidatos a itens, unidades, composições e práticas industriais, mas não é uma especificação limpa nem uma base confiável para migração automática. Antes de qualquer carga, será necessário mapear fichas e referências, resolver erros e validar a semântica de lote, aproveitamento e serviços com o responsável pelo processo.
