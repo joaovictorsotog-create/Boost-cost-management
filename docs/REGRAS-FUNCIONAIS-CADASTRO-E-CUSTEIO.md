@@ -1800,3 +1800,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Quando o serviço de notificações for restabelecido, informar os Administradores sobre as falhas e alertas críticos ainda pendentes.
 - Preservar a trilha de auditoria de indisponibilidade, tentativas, resultados e recuperação do serviço.
 - **Pendências:** definir canais e ordem de contingência, critérios de confirmação de entrega, repetição/limites de tentativas, monitoramento de indisponibilidade e procedimento se todos os canais falharem.
+
+## Estados da notificação de alerta crítico — decisão aprovada (10/11/2026)
+
+- **Enviado:** o sistema encaminhou a notificação ao canal configurado; isso não comprova recebimento pelo destino.
+- **Entregue:** o canal/provedor confirmou tecnicamente a entrega ao destino, conforme a capacidade e o comprovante disponibilizados pelo canal; isso não comprova leitura ou ciência humana.
+- **Reconhecido:** um Administrador autorizado confirmou explicitamente que tomou conhecimento e assumiu o tratamento do alerta; registrar identidade e data/hora.
+- Os três estados são distintos e não podem ser tratados como equivalentes. Envio ou entrega não reconhecem o alerta nem o encerram.
+- Se o canal não fornecer confirmação confiável de entrega, manter o estado como enviado/entrega não confirmada, sem inferir entrega.
+- **Pendências:** definir comprovantes aceitos por canal, tratamento de estados intermediários/retornos tardios e reconciliação de confirmações.
