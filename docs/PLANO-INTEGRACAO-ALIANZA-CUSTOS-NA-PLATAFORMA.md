@@ -133,7 +133,7 @@ Requisitos de integridade:
 - preservar snapshots históricos mesmo após inativação/exclusão lógica;
 - nunca apagar histórico de custo ou auditoria por cascata de FK.
 
-A precisão interna e a quantidade-base de estrutura continuam pendentes no Registro Mestre/Checklist. Não fixar escala decimal, fórmula de lote ou regra de arredondamento adicional sem fechar essas pendências.
+A quantidade-base de saída da estrutura está aprovada: campo obrigatório para item composto, com padrão 1 quando a estrutura representa uma unidade; para ficha em lote, informar a quantidade de unidades acabadas representadas. O motor calcula o custo total dos componentes para essa saída e divide pela quantidade-base para obter o custo unitário. A precisão interna para divisões não terminantes continua pendente; não inventar escala ou arredondamento intermediário.
 
 ## 7. Transações, recálculo e eventos
 
@@ -212,7 +212,7 @@ A integração será rejeitada se:
 3. Mapeamento formal entre Administrador/Editor/Visualizador e roles/permissões da plataforma.
 4. Ambiente PostgreSQL não produtivo e conclusão dos gates da migração.
 5. Fonte autoral definitiva do schema PostgreSQL e reconciliação do journal.
-6. Precisão interna monetária e quantidade-base/lote.
+6. Precisão interna monetária para divisões não terminantes.
 7. Estratégia de cascata para estruturas muito grandes, caso uma transação única não atenda ao volume medido.
 8. Realtime, filas e observabilidade que serão compartilhados versus específicos do módulo.
 
@@ -547,10 +547,12 @@ O FAQ oficial confirma que MOD e GGF são informados na aba Custo da Produção 
 
 A planilha de referência contém fichas técnicas e quantidades de lote, mas não constitui um sistema de apontamento de produção. O exemplo Mini Torniquete - Inox mostra:
 - lote de 10 conjuntos;
-- consumo calculado de 11 m;
-- quantidade comercial comprada de 12 m, por regra de aproveitamento daquela ficha;
-- custo comprado de R$ 533,68740;
-- rateio de R$ 53,36874 por conjunto.
+- consumo técnico de tubos de 11 m na linha principal, enquanto a ficha calcula 12 m como quantidade comercial comprada;
+- preço de R$ 44,47395/m e custo de compra de 12 m de R$ 533,68740;
+- rateio da compra por 10 conjuntos: R$ 53,36874 por conjunto;
+- quantidade-base da estrutura, portanto, não pode ser presumida como sempre 1.
+
+A conferência das fórmulas também revelou um ponto importante para a validação: a planilha aplica o fator Gama 1,2 tanto ao grupo de chapas inox (AB22 = R$ 213,0577515, resultando em I11 = R$ 255,6693018) quanto ao grupo de tubos (AB15 = R$ 666,10674, resultando em I12 = R$ 799,328088). O total I19 = R$ 1.733,89638 inclui esse fator nos dois grupos. Removendo o efeito de Gama desses dois grupos, sem alterar os demais grupos, o total-base calculado é R$ 1.558,0634817, exibido como R$ 1.558,06 pela regra de apresentação aprovada. A comparação anterior que tratava apenas o grupo de tubos como afetado por Gama estava incompleta e não deve ser usada como fixture de referência.
 
 Isso exige que a estrutura de custeio represente uma quantidade-base de saída e que o motor divida o custo total do lote por essa base. Não exige criar OP, saldo de estoque, reserva de materiais, lote/validade, apontamento de produção ou quantidade rejeitada.
 
@@ -603,9 +605,35 @@ Seu fluxo principal fica definido assim:
 A pesquisa não identificou motivo para adicionar OP, estoque, MOD, GGF, compras ou fiscalidade ao Sistema de Custos. As pendências remanescentes são de fechamento técnico e validação, não de ampliação de produto:
 - definir e documentar a política de precisão interna para divisões periódicas, persistência decimal e apresentação; a regra de apresentação aprovada permanece a existente;
 - verificar que o motor suporta e testa quantidade-base de lote, recálculo em cascata, ciclos, itens inativos, exclusão lógica e snapshots;
-- reconciliar o exemplo da planilha com os dados de origem e separar explicitamente valores antes/depois de Gama;
+- executar reconciliação integral da ficha Mini Torniquete - Inox, incluindo todos os grupos e a regra de Gama aplicada a chapas inox e tubos; a conferência parcial acima não substitui a validação completa de cada linha;
 - executar a suíte do projeto com as versões de dependências fixadas e testes de integração quando o gate de ambiente não produtivo estiver liberado;
 - concluir modelagem, permissões, RLS, auditoria e transações antes de qualquer persistência;
 - não executar migrations, deploy ou alteração de produção sem os gates já registrados neste plano.
 
 **Decisão recomendada para encerramento funcional:** congelar o escopo do módulo nos itens marcados INCLUIR nesta matriz e não acrescentar funcionalidades de execução da produção. A partir deste ponto, mudanças de escopo exigem justificativa operacional e aprovação explícita; o trabalho restante é completar a implementação, validar o cálculo e fechar os gates técnicos.
+
+
+### 13.9 Consolidação final do escopo funcional — decisão de encerramento
+
+A análise complementar do fluxo de produção do Omie e a conferência direta das fórmulas da planilha não justificam ampliar o módulo. Fica congelado o escopo funcional definido na matriz 13.8.4. Esta seção resolve expressamente a pendência anterior de quantidade-base: ela está aprovada conforme a regra abaixo; não permanece como decisão em aberto.
+
+**Contrato funcional da quantidade-base**
+- Todo item composto possui quantidade-base de saída positiva.
+- O padrão é 1 quando a ficha representa uma unidade acabada.
+- Quando a ficha representa um lote, a quantidade-base informa quantas unidades acabadas aquele conjunto de componentes produz.
+- Cada linha informa a quantidade total consumida para aquela quantidade-base de saída.
+- O custo total da estrutura é a soma de quantidade da linha × custo unitário do componente, calculado recursivamente.
+- O custo unitário do item composto é o custo total dividido pela quantidade-base.
+- Quantidade-base zero, negativa ou ausente/inválida deve ser rejeitada; não assumir conversões de unidade.
+- O motor não arredonda cada linha nem cada nível intermediário para exibição. O arredondamento de apresentação é aplicado ao resultado final segundo a regra já aprovada.
+- Divisões cujo resultado decimal seja não terminante exigem política de precisão interna ainda pendente; até essa aprovação, o motor deve rejeitar explicitamente o caso, em vez de arredondar silenciosamente.
+
+**Reconciliação da planilha — correção registrada**
+A ficha Mini Torniquete - Inox aplica o fator Gama 1,2 em dois grupos identificáveis: chapas inox e tubos. O custo I19 da planilha, R$ 1.733,89638, contém Gama nos dois grupos. A base sem Gama desses grupos, mantendo os demais valores, é R$ 1.558,0634817. Qualquer fixture de teste que retire Gama apenas dos tubos está incorreto e deve ser corrigido. Esta conferência valida os valores desses grupos e a lógica da quantidade-base; não certifica ainda a reconciliação de todas as linhas e referências externas da pasta de trabalho.
+
+**Decisão final do módulo**
+O produto aprovado é um Sistema de Cadastro e Custeio Industrial por Estrutura, com Cadastro Central, famílias, materiais/serviços/subconjuntos/produtos reutilizáveis, itens simples e compostos, estruturas multinível, quantidade-base, cálculo recursivo, recálculo em cascata, histórico/versionamento, auditoria, aprovações, importação validada, relatórios e exportação.
+
+Ficam fora do módulo: PCP/OP, apontamento e execução de fábrica, estoque, compras, fornecedores, MRP, MOD, GGF, CMC de estoque, perdas automáticas, preço de venda, margem, descontos, fiscalidade e sincronização com Omie.
+
+A decisão funcional está encerrada. Permanecem tarefas de engenharia, qualidade e liberação: corrigir os fixtures de teste que estejam divergentes da planilha, aprovar a precisão interna para divisões não terminantes, completar UI/API/persistência/RLS/auditoria, executar testes e fechar os gates de ambiente. O encerramento funcional não é autorização para migration, deploy, merge ou alteração de produção.
