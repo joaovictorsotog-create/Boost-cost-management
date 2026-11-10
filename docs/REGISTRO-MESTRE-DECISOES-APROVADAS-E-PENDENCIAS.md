@@ -119,7 +119,7 @@ Os itens abaixo não foram decididos nesta sequência e não devem ser preenchid
 1. Recuperar e documentar a lista exata de unidades de medida já aprovada.
 2. Recuperar a definição exata do controle padrão de usuários e permissões.
 3. Recuperar a periodicidade e os critérios exatos do arquivamento periódico.
-4. Definir detalhes operacionais ainda não cobertos para exclusão de item em uso, garantindo a atualização das estruturas e a integridade das referências.
+4. **Decisão funcional recuperada posteriormente:** a exclusão lógica de item em uso é permitida com prévia de impacto e confirmação exclusiva do Administrador, preservando fotografias históricas e sem restaurar vínculos automaticamente na reativação. Permanecem pendentes a modelagem técnica, a retenção e a consulta das fotografias históricas.
 5. Consolidar as demais decisões dos chats do projeto que ainda não foram transcritas neste registro.
 
 ## 4. Procedimento obrigatório para continuidade do projeto
