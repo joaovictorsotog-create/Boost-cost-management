@@ -730,8 +730,12 @@ Esta seção atualiza e substitui as pendências de precisão descritas nas seç
 - O motor passou a usar frações exatas com `BigInt`, valida entradas de até três casas, preserva resultados periódicos entre níveis e formata o resultado final com três casas no máximo.
 - Os testes escritos cobrem valores pequenos (0,025), recorrência 1/3, preservação exata em composição multinível, limites de entrada, arredondamento e a fixture de grupos ajustada à precisão aprovada.
 
-**Reconciliação Mini Torniquete Inox**
-A fixture passa a representar os grupos com no máximo três casas, conforme a regra nova: 61,660 + 213,058 + 666,107 + 109,805 + 0 + 30,4 + 150 + 327,034 = R$ 1.558,064. Esse total substitui a expectativa anterior de R$ 1.558,0634817 para o cenário de teste com entradas limitadas a três casas. Não se afirma que os caches antigos da planilha foram integralmente reconciliados; a diferença histórica de R$ 0,0000001 fica superada para a fixture sob a nova precisão de entrada, mas permanece registrada como diferença entre os valores originais da planilha.
+**Uso da ficha Mini Torniquete Inox como referência**
+A leitura direta da aba identificou os valores originais antes do fator antigo de Gama: chapa carbono em AB30 = R$ 61,6601903; chapa inox em AB22 = R$ 213,0577515; tubos em AB15 = R$ 666,10674. Os demais grupos exibidos em I13:I16 e I18 completam o total-base de referência de R$ 1.558,0634818. O total final, arredondado somente uma vez para três casas, é R$ 1.558,063.
+
+Esses totais são resultados calculados pela planilha, não entradas manuais. Portanto, não podem ser copiados como custos digitados no motor, pois a validação de entrada aceita no máximo três casas. O teste anterior que arredondava cada grupo para três casas e esperava R$ 1.558,064 foi removido por representar arredondamento intermediário indevido. Foi substituído por um teste de apresentação que verifica formatCostForDisplay(1558.0634818) = 1558.063; esse teste valida somente a regra de arredondamento, não uma reconciliação integral de ponta a ponta da ficha.
+
+A reconciliação integral exigirá decompor os grupos nas quantidades e custos unitários de origem e verificar quais dados da planilha excedem a nova regra de entrada de três casas. A ficha contém, por exemplo, preços unitários com mais de três casas (como R$ 22,0455/kg em U45), o que precisa ser tratado como dado histórico/fórmula derivada ou normalizado antes de uma comparação ponta a ponta. A diferença de R$ 0,0000001 entre as somas antigas também permanece como divergência da referência original, sem ser mascarada.
 
 **Commits complementares após revisão do arredondamento**
 - Motor: `4a188565c987c1efae47945fc83bdf4049a90077` e `0bd1229fde1a423d3df614e715dd8306598ce92a`.
