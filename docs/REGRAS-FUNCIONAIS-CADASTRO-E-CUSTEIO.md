@@ -1782,3 +1782,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Preservar integralmente o histórico do alerta; é proibido excluir ou encerrar automaticamente o alerta.
 - Não bloquear automaticamente o usuário apenas pela geração do alerta. Eventual contenção deverá decorrer de avaliação técnica, ser proporcional e fundamentada, seguindo o plano geral de resposta a incidentes.
 - **Pendências:** definir canais e garantias de entrega das notificações, prazo operacional para reconhecimento, escalonamento se nenhum Administrador reconhecer, papéis autorizados, critérios de resolução/reabertura e integração com a resposta a incidentes.
+
+## Escalonamento por ausência de reconhecimento de alerta crítico — decisão aprovada (10/11/2026)
+
+- Se um alerta crítico permanecer sem reconhecimento, enviar o primeiro lembrete após 30 minutos.
+- Repetir a notificação a cada 30 minutos, até o máximo de três lembretes por ciclo.
+- Após o terceiro lembrete, escalar a ocorrência por canal alternativo aos Administradores.
+- Os lembretes e a escalação não reconhecem, resolvem nem encerram o alerta; ele permanece pendente até reconhecimento e tratamento formal.
+- Registrar cada tentativa de envio, entrega quando disponível, falha de envio, lembrete e escalação na trilha de auditoria.
+- **Pendências:** definir canais alternativos, confirmação de entrega, destinatários/substitutos, tratamento de falhas de canal e critérios para iniciar novo ciclo após reabertura.
