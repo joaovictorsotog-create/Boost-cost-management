@@ -181,3 +181,55 @@ Nenhum código de terceiros deve ser copiado sem verificar licença, obrigaçõe
 - InvenTree audit models: https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/audit/models.py
 - PDM-Web BOM cost roll-up guide: https://github.com/jewisonj/PDM-Web/blob/main/Documentation/06-BOM-COST-ROLLUP-GUIDE.md
 - temp_label audit notes: https://github.com/ankit-tayal-devkraft/temp_label/blob/main/audit.md
+
+
+## 10. Segunda rodada: Odoo
+
+### 10.1 Arquivos inspecionados
+
+- [Diretrizes de segurança do Odoo](https://github.com/odoo/odoo/blob/20.0/skills/odoo-guidelines/guidelines/security.md)
+- [Camada SQL e transações — sql_db.py](https://github.com/odoo/odoo/blob/20.0/odoo/sql_db.py)
+- [Testes de importação — test_import.py](https://github.com/odoo/odoo/blob/20.0/addons/test_import_export/tests/test_import.py)
+- [Testes de mensagens e notificações — test_message_post.py](https://github.com/odoo/odoo/blob/20.0/addons/test_mail/tests/test_message_post.py)
+
+### 10.2 Padrões observados
+
+**Segurança por padrão e menor privilégio.** As diretrizes consultadas descrevem acesso negado por padrão quando não há concessão explícita, permissões vinculadas a grupos e restrições adicionais por domínio. A diretriz também alerta que operações privilegiadas como `sudo()` e SQL direto exigem revisão de segurança específica.
+
+**Concorrência e recuperação de transações.** A camada SQL declara exceções de concorrência que podem ser repetidas, incluindo falha de serialização e deadlock, e implementa savepoints com rollback em saídas malsucedidas. Isso demonstra que a concorrência precisa ser tratada no nível transacional, e não apenas por bloqueios na interface.
+
+**Importação testada por cenários.** A suíte de importação contém testes para campos obrigatórios, somente leitura, relações e estruturas de campos, demonstrando o valor de testar mapeamento e validação de importação como comportamento de domínio, não apenas como upload de planilha.
+
+**Notificações e mensagens com testes próprios.** A suíte de mensagens testa diferentes perfis de usuário, notificações e permissões de acesso. O padrão útil é testar o efeito real da notificação e seus limites de acesso, não apenas a criação visual de um aviso.
+
+### 10.3 Recomendações para o Alianza
+
+- Manter negação por padrão e concessões explícitas por perfil/operação.
+- Tratar permissões de backend como autoridade; esconder botão não é controle de acesso.
+- Revisar cuidadosamente qualquer caminho que contorne o mecanismo normal de autorização.
+- Projetar o recálculo para lidar com conflitos de transação, rollback e repetição segura quando aplicável.
+- Fazer importação Excel com mapeamento, prévia, validação de referências, relatório de erros e confirmação explícita.
+- Testar notificações com perfis diferentes e verificar que a consulta de conteúdo também respeita permissões.
+
+### 10.4 Limitações
+
+A diretriz de segurança consultada é documentação de desenvolvimento e não deve ser confundida com uma auditoria de todas as regras efetivamente carregadas em produção. A camada SQL e os testes foram inspecionados parcialmente. Não foi feita análise integral do ORM, do sistema de permissões, do pipeline de importação ou do barramento de notificações do Odoo.
+
+## 11. Nova matriz de padrões transversais
+
+| Padrão | Fonte | Direção para Alianza |
+|---|---|---|
+| Negação por padrão e concessão explícita | Odoo security guidelines | Adotar como princípio de segurança |
+| Menor privilégio e revisão de caminhos privilegiados | Odoo security guidelines | Adotar na revisão de APIs e serviços |
+| Savepoint e tratamento de falhas transacionais | Odoo sql_db.py | Investigar estratégia equivalente na tecnologia escolhida |
+| Repetição de falhas de serialização/deadlock | Odoo sql_db.py | Projetar retry somente com idempotência e limites claros |
+| Testes de mapeamento e validação de importação | Odoo test_import.py | Incorporar à especificação de importação Excel |
+| Testes de notificações por perfil | Odoo test_message_post.py | Incorporar à estratégia de testes de notificações |
+
+## 12. Próximas frentes atualizadas
+
+Além das frentes já listadas, aprofundar:
+- política de retry, idempotência e savepoints para recálculos concorrentes;
+- matriz de autorização por operação e testes negativos;
+- importação com prévia, mapeamento e validação de referências;
+- testes de notificação e isolamento de conteúdo por perfil.
