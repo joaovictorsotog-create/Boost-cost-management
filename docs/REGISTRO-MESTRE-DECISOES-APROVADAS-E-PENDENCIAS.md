@@ -1629,3 +1629,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Interface só confirma após resposta do backend.
 - [x] Reconhecimento não resolve nem encerra o alerta.
 - [ ] Definir transferência/substituição de titularidade, permissões e auditoria de concorrência.
+
+### Transferência de responsabilidade por alerta crítico — decisão aprovada (10/11/2026)
+
+- [x] Titular Administrador pode transferir para outro Administrador autorizado.
+- [x] Exigir justificativa e confirmação/persistência pelo backend.
+- [x] Registrar titular anterior/novo, justificativa, data/hora e resultado.
+- [x] Notificar ambos após confirmação.
+- [x] Preservar linha do tempo e histórico integral.
+- [x] Não reiniciar, suspender ou prorrogar prazos nem alterar estado do alerta.
+- [ ] Definir indisponibilidade do titular, transferência por terceiro, recusa/ausência do novo responsável e limites.
