@@ -1809,3 +1809,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Os três estados são distintos e não podem ser tratados como equivalentes. Envio ou entrega não reconhecem o alerta nem o encerram.
 - Se o canal não fornecer confirmação confiável de entrega, manter o estado como enviado/entrega não confirmada, sem inferir entrega.
 - **Pendências:** definir comprovantes aceitos por canal, tratamento de estados intermediários/retornos tardios e reconciliação de confirmações.
+
+## Reconhecimento e titularidade de alertas críticos — decisão aprovada (10/11/2026)
+
+- Qualquer Administrador autorizado a visualizar o alerta pode realizar o reconhecimento explícito.
+- O primeiro reconhecimento válido persistido no backend assume a responsabilidade pelo atendimento do alerta, registrando Administrador e data/hora.
+- Reconhecimentos concorrentes devem ser tratados atomicamente pelo backend: somente um Administrador pode assumir a titularidade inicial; os demais recebem o estado atualizado e podem consultar/acompanhar, sem criar titularidade ou reconhecimentos concorrentes.
+- A interface não pode definir o titular por conta própria nem exibir sucesso antes da confirmação do backend.
+- O reconhecimento não resolve nem encerra o alerta; a investigação e resolução formal continuam obrigatórias.
+- **Pendências:** definir transferência de titularidade, substituição em caso de indisponibilidade, permissões de acompanhamento/ação e auditoria de tentativas concorrentes.
