@@ -1619,3 +1619,13 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Estados distintos; envio/entrega não reconhecem nem encerram alerta.
 - [x] Sem confirmação confiável do canal, não presumir entrega.
 - [ ] Definir comprovantes aceitos por canal, estados intermediários/retornos tardios e reconciliação.
+
+### Reconhecimento e titularidade de alertas críticos — decisão aprovada (10/11/2026)
+
+- [x] Qualquer Administrador autorizado a visualizar pode reconhecer explicitamente.
+- [x] Primeiro reconhecimento válido persistido no backend assume a responsabilidade, com identidade e data/hora.
+- [x] Concorrência controlada atomicamente no backend; apenas um titular inicial.
+- [x] Demais Administradores podem consultar/acompanhar, sem titularidade ou reconhecimento concorrente.
+- [x] Interface só confirma após resposta do backend.
+- [x] Reconhecimento não resolve nem encerra o alerta.
+- [ ] Definir transferência/substituição de titularidade, permissões e auditoria de concorrência.
