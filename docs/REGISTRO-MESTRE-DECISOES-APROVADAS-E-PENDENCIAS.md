@@ -1574,3 +1574,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Não bloquear automaticamente o usuário por suspeita isolada ou sinal inconclusivo.
 - [x] Exigir que medidas adicionais sejam proporcionais, fundamentadas e compatíveis com a resposta a incidentes.
 - [ ] Definir janelas/limiares, níveis de risco, falsos positivos, frequência de alertas, revisão humana, retenção e testes.
+
+### Classificação dos alertas de tentativa de inferência — decisão aprovada (10/11/2026)
+
+- [x] Informativa: comportamento incomum sem indicação concreta de risco, para acompanhamento.
+- [x] Alta: padrão suspeito consistente, ainda sem evidência suficiente de tentativa deliberada.
+- [x] Crítica: evidências fortes de tentativa sistemática de contornar a supressão mínima de 5 ocorrências ou reidentificar dados.
+- [x] Considerar combinação/sequência de filtros, períodos, agrupamentos, consultas relacionadas e capacidade de inferência; não usar apenas a quantidade de consultas.
+- [x] Registrar classificação, fundamento e evidências técnicas sem revelar valores/grupos suprimidos.
+- [ ] Definir critérios objetivos, limiares/janelas, falsos positivos, escalonamento, revisão humana, notificações, resposta e testes.
