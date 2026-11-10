@@ -232,3 +232,54 @@ A integração será rejeitada se:
 - `client/src/App.tsx`.
 
 **Conclusão:** integrar no mesmo produto, mas como módulo de domínio isolado. O próximo trabalho técnico é fechar o acesso ao repositório real da plataforma e liberar um ambiente não produtivo com PostgreSQL/RLS verificáveis. Até lá, continuar especificação e testes locais sem tocar banco ou produção.
+
+
+---
+
+## 12. Auditoria complementar do repositório vivo — 10/11/2026
+
+**Repositório:** `joaovictorsotog-create/alianza-ai-platform`  
+**Branch-base verificada:** `main`  
+**Commit-base lido:** `1ac2573092990c8af2793055f1924e28ff0a2c5f`  
+**Branch de trabalho criada:** `feature/alianza-costing-foundation-20261110`  
+**Commit da auditoria complementar:** `ef695a33a40291ca6f06b08fd3b7f7cd3cf56a93` (documentação inicialmente criada na branch de código e transferida para este repositório de gestão).
+
+Esta seção atualiza a auditoria baseada no ZIP com evidências consultadas diretamente no repositório GitHub privado. Quando houver diferença entre snapshot e repositório vivo, a leitura do repositório vivo prevalece para a implementação.
+
+### 12.1 Stack confirmada no repositório vivo
+
+- Node.js `>=22 <23`, pnpm.
+- React 19, TypeScript 5.9, Vite 7, Tailwind CSS 4, Wouter e TanStack Query.
+- Express 4, tRPC 11 e Zod 4.
+- Drizzle ORM 0.45, `postgres-js` no runtime PostgreSQL e dependência MySQL ainda presente.
+- Supabase Auth vinculado a usuário local; procedures protegidas exigem `supabaseAuthId`.
+- Organizações/workspaces, membership e permissões resolvidas no backend.
+- Vitest, Playwright e checks TypeScript.
+- BullMQ/ioredis disponíveis de forma opt-in.
+
+### 12.2 Identidade, tenant e conexão runtime
+
+A leitura de `server/_core/trpc.ts`, `server/lib/appRuntimeDb.ts` e `server/db.ts` confirma o uso de contexto transacional por request. `withRequestRuntimeDb` configura `request.jwt.claim.sub` e `request.app_user_id` localmente à transação e disponibiliza o contexto por `AsyncLocalStorage`.
+
+A autorização de tenant é feita por permissões específicas consultadas no backend, incluindo `requireTenantPermission(userId, organizationId, permission)`. O módulo Custos deverá declarar seu próprio namespace `costing.*`, sem herdar equivalência automática de papéis de CRM/plataforma.
+
+### 12.3 Divergências e riscos adicionais a resolver
+
+1. `drizzle/schema.pg.ts` declara ser gerado a partir de `drizzle/schema.mysql.ts`; sua autoria PostgreSQL precisa ser definida antes de ampliar o schema.
+2. Há dois configs: `drizzle.config.ts` (MySQL) e `drizzle.pg.config.ts` (PostgreSQL). Scripts e CI devem usar explicitamente o alvo correto.
+3. `organizations.id` é UUID no schema PostgreSQL, enquanto parte do schema do catálogo usa `organizationId varchar(64)`. Confirmar constraints físicas e padronizar novas referências com o tipo correto, sem copiar o padrão divergente.
+4. `drizzle/pg/rls_multitenant.sql` percorre uma lista explícita de tabelas; adicionar tabela sem atualizar e testar policies/grants deixa lacuna de segurança.
+5. A migration inicial do catálogo com policies `service_role` não comprova compatibilidade completa com `app_runtime`; revisar o conjunto de migrations do catálogo separadamente.
+6. Novas operações protegidas devem usar o contexto de conexão/transação runtime; evitar conexão paralela que contorne claims e RLS.
+
+### 12.4 Escopo e bloqueios reafirmados
+
+A auditoria foi somente leitura. Não foram executados comandos de migration, DDL, DML, provisionamento, alteração de Auth/RLS, deploy ou publicação. Os gates já descritos neste plano permanecem obrigatórios: ambiente não produtivo inequivocamente identificado, journal reconciliado, RLS verificado no banco real, backup/restore e rollback testados antes de qualquer escrita integrada.
+
+### 12.5 Organização do trabalho e fonte documental
+
+Por decisão do projeto, **toda documentação de produto, arquitetura, auditoria, decisões e planos do Sistema de Custos deve residir no repositório `Boost-cost-management`**, na branch documental `docs/regras-custeio-cadastro-central`, salvo instrução expressa em contrário.
+
+O repositório `alianza-ai-platform` será usado para código, testes e artefatos estritamente necessários à implementação. Não manter cópias divergentes de documentos de gestão nos dois repositórios.
+
+**Estado:** auditoria estática do código vivo concluída em nível inicial; implementação funcional ainda não iniciada. A branch de trabalho existe, mas não autoriza alteração de banco ou produção.
