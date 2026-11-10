@@ -36,6 +36,8 @@ Essas responsabilidades são limites lógicos; não determinam, por si só, a di
 - **Dependência:** relação em que um item composto utiliza outro item como componente. Um componente pode participar de várias estruturas.
 - **Custo vigente:** valor oficial atual do item, utilizado nos cálculos subsequentes.
 - **Histórico de custo:** registro separado do valor vigente, preservado conforme as regras de histórico e auditoria.
+- **Grupos de custo:** grupos criados manualmente na configuração de custos; o motor não impõe uma lista fixa de grupos.
+- **Gama:** configuração própria de ativação, com percentual inicial de 1,2%; a aplicação deve ser explicitamente associada aos grupos escolhidos na configuração. Gama não é um grupo nem um multiplicador automático e global do motor estrutural.
 
 O item deve ser referenciado pelo seu identificador central. Uma estrutura não deve criar cópias independentes de componentes do Cadastro Central.
 
@@ -66,7 +68,7 @@ Se o componente também for composto, seu custo unitário deve ser obtido pelo c
 - A quantidade-base de saída é positiva e representa quantas unidades acabadas a estrutura produz. Quando omitida, vale 1.
 - Para uma estrutura de lote, as quantidades e custos das linhas representam o consumo/custo total do lote; o custo unitário é obtido dividindo o custo total pela quantidade-base.
 - Perdas e aproveitamento já incorporados às quantidades ou aos custos da linha não podem ser adicionados novamente.
-- Se a divisão resultar em decimal periódico, o motor não deve arredondar silenciosamente enquanto a precisão interna e o ponto de arredondamento não estiverem formalmente definidos.
+- A aritmética interna deve preservar exatamente valores racionais, inclusive resultados periódicos, em todos os níveis da composição; não arredondar linhas nem subconjuntos intermediários.
 - Itens inativos ou excluídos não podem ser incluídos em novas estruturas, respeitadas as regras de exclusão e preservação histórica.
 
 ### 5.2 Exemplo de referência
@@ -130,20 +132,16 @@ A estratégia concreta — bloqueio pessimista, controle otimista por versão ou
 
 Ainda é necessário avaliar o volume máximo esperado de dependências. Não se recomenda fixar um limite arbitrário de níveis sem evidência. Também não se deve decidir antecipadamente entre processamento síncrono e fila assíncrona sem medições de volume, latência e comportamento transacional.
 
-## 9. Precisão e arredondamento
+## 9. Precisão e arredondamento — decisão aprovada em 10/11/2026
 
-A regra aprovada para apresentação é arredondar a terceira casa decimal: de 0 a 5, para baixo; acima de 5, para cima.
-
-Para valores monetários, a implementação deve usar representação decimal de precisão controlada, e não ponto flutuante binário comum.
-
-A precisão interna, a escala de armazenamento e o momento exato do arredondamento ainda precisam ser definidos. Como recomendação técnica, evitar arredondar cada parcela prematuramente: preservar precisão durante a soma e aplicar a regra aprovada no ponto de apresentação ou no ponto formalmente definido para persistência.
-
-Antes da implementação, definir e testar:
-- escala interna;
-- escala persistida;
-- ponto de arredondamento;
-- tratamento de valores negativos, se algum caso legítimo existir;
-- consistência entre custo unitário, simulação e relatórios.
+- Valores informados manualmente (custos, quantidades de linhas e quantidade-base de saída) aceitam no máximo três casas decimais. Exemplos válidos: `0.025`, `1.2`, `10`.
+- Cálculos intermediários não ficam limitados a três casas. O motor preserva a precisão exata, inclusive frações periódicas, em todos os níveis da composição.
+- Não arredondar subtotais de linha, grupos, subconjuntos ou níveis intermediários.
+- Arredondar somente o custo unitário final apresentado, para no máximo três casas decimais.
+- Convenção de arredondamento aprovada: a quarta casa decimal de 0 a 5 mantém a terceira casa; de 6 a 9 incrementa a terceira casa. Portanto, empate exato (quarta casa igual a 5, sem dígitos não nulos posteriores) fica para baixo. Exemplos: `1.2344 → 1.234`, `1.2345 → 1.234`, `1.2346 → 1.235`.
+- Valores exibidos não precisam completar zeros à direita: `R$ 10`, `R$ 10.2`, `R$ 10.025`.
+- O motor não usa ponto flutuante binário para valores monetários. A implementação deve preservar a fração exata internamente e só formatar o resultado final para três casas.
+- O valor exato interno e o valor final apresentado devem permanecer semanticamente distintos; persistência e APIs não podem confundir a representação racional exata com o valor formatado.
 
 ## 10. Histórico e auditoria
 
@@ -212,7 +210,7 @@ Os testes de desempenho e escala devem usar cenários representativos de quantid
 
 Esta proposta não fecha os seguintes pontos:
 
-- precisão interna, escala persistida e ponto formal de arredondamento;
+- representação/escala de persistência do valor exato e do valor apresentado, garantindo que não haja arredondamento intermediário;
 - validação definitiva de quantidades zero ou negativas;
 - estratégia de concorrência e bloqueios na tecnologia escolhida;
 - limiares de volume e decisão entre processamento síncrono ou assíncrono;
