@@ -1639,3 +1639,12 @@ Com a tela de detalhes ativa e em primeiro plano, o sistema consultará o backen
 - [x] Preservar linha do tempo e histórico integral.
 - [x] Não reiniciar, suspender ou prorrogar prazos nem alterar estado do alerta.
 - [ ] Definir indisponibilidade do titular, transferência por terceiro, recusa/ausência do novo responsável e limites.
+
+### Transferência excepcional por indisponibilidade do titular — decisão aprovada (10/11/2026)
+
+- [x] Outro Administrador autorizado pode transferir quando o titular estiver indisponível.
+- [x] Justificativa obrigatória e identificação do novo responsável.
+- [x] Registrar titular anterior/novo, executor, justificativa, data/hora e resultado.
+- [x] Notificar ambos quando possível; falha de notificação não desfaz transferência confirmada.
+- [x] Preservar prazos originais e histórico.
+- [ ] Definir critérios objetivos de indisponibilidade e revisão posterior; até lá, avaliação justificada e auditável.
