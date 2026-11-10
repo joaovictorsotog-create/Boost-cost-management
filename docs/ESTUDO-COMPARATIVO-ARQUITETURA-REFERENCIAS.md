@@ -233,3 +233,90 @@ Além das frentes já listadas, aprofundar:
 - matriz de autorização por operação e testes negativos;
 - importação com prévia, mapeamento e validação de referências;
 - testes de notificação e isolamento de conteúdo por perfil.
+
+
+## 13. Terceira rodada: InvenTree — permissões, tarefas e auditoria em profundidade
+
+### 13.1 Arquivos inspecionados
+
+- [Permissões de usuários — users/permissions.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/users/permissions.py)
+- [Endpoints de usuários — users/api.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/users/api.py)
+- [Tarefas de background — InvenTree/tasks.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/InvenTree/tasks.py)
+- [Testes de tarefas — test_tasks.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/InvenTree/test_tasks.py)
+- [Modelos de auditoria — audit/models.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/audit/models.py)
+- [Documentação do log de auditoria](https://github.com/inventree/InvenTree/blob/master/docs/docs/concepts/audit.md)
+
+### 13.2 Permissões
+
+O método `check_user_role()` verifica se o usuário está ativo, trata superusuário, consulta permissões associadas a grupos e utiliza cache de sessão para evitar repetir verificações frequentes. O endpoint de perfil próprio limita os campos editáveis e restringe os métodos HTTP aceitos.
+
+**Aplicação ao Alianza:**
+- Centralizar autorização no backend e modelar permissões por ação e recurso.
+- Considerar cache somente se houver estratégia segura de invalidação quando papéis ou permissões mudarem.
+- Bloquear explicitamente usuários inativos.
+- Limitar cada endpoint aos campos e operações que realmente precisa oferecer.
+- Testar chamadas diretas à API, não apenas a visibilidade de botões.
+
+O cache de permissões não deve ser copiado sem projeto de invalidação: uma permissão revogada não pode continuar efetiva por cache desatualizado.
+
+### 13.3 Tarefas agendadas e execução assíncrona
+
+`schedule_task()` evita criar registros duplicados para a mesma função agendada; quando a tarefa já existe, atualiza seus parâmetros. Os testes verificam que a segunda programação atualiza a frequência sem criar uma segunda tarefa.
+
+Os testes também exercitam falhas e novas tentativas de tarefas assíncronas, distinguindo falha de uma tentativa de falha definitiva após o limite de tentativas. Uma falha ainda elegível para nova tentativa não deve gerar prematuramente uma notificação de falha final.
+
+**Aplicação ao Alianza:**
+- Identidade estável para tarefas agendadas, evitando duplicidade.
+- Estado explícito da execução: aguardando, em execução, concluída ou falha, com tentativas e resultado.
+- Separar falha transitória de falha definitiva.
+- Definir limite de tentativas, timeout, observabilidade e alerta apenas após o critério de falha final.
+- Projetar idempotência antes de permitir retry de operações com efeitos persistentes.
+- Garantir que reprocessar uma tarefa não duplique histórico, notificações, exportações ou alterações de custo.
+
+Não há decisão aqui de adotar uma fila ou tecnologia específica. A necessidade de execução assíncrona deve ser medida para cada operação.
+
+### 13.4 Auditoria: contexto e relações
+
+A documentação do InvenTree descreve registros de criação, alteração e exclusão em modelos selecionados, com data/hora, ator, campos alterados, valores anteriores/novos e origem. Também registra informações de requisição, como IP remoto e identificador de correlação, e identifica tarefas de background como origem de alterações.
+
+O modelo de auditoria complementa o registro com referência ao objeto pai, ator, origem, evento nomeado, observações e mascaramento de valores sensíveis. O username é preservado como texto para que a identidade histórica não desapareça se a conta for removida.
+
+**Aplicação ao Alianza:**
+- Adotar um identificador de correlação por operação para conectar alterações em cascata.
+- Registrar ator, origem (interface, API, importação, tarefa interna), instante, operação, resultado e referência ao evento.
+- Relacionar alterações de linhas/componentes ao histórico do item composto.
+- Preservar identificador textual do responsável como dado histórico, mesmo se a conta for posteriormente desativada ou excluída, respeitando política de dados.
+- Mascarar segredos antes da persistência do log.
+- Distinguir alteração de campo de evento de negócio (por exemplo, aprovação, transferência de titularidade, exclusão lógica ou recálculo em cascata).
+
+### 13.5 Uma ressalva importante: a auditoria do InvenTree não cobre tudo
+
+A documentação do InvenTree informa expressamente que alterações feitas pela ferramenta de importação de dados não são registradas no log de auditoria. Também apenas determinados modelos são auditados, e campos derivados são excluídos.
+
+Para o Alianza, isso é uma **limitação a não reproduzir**. Como as regras aprovadas exigem auditoria para operações de impacto e não permitem contornar o fluxo de aprovação por importação, qualquer importação deverá produzir eventos auditáveis equivalentes às alterações manuais, com identificação da origem, usuário, lote, prévia aprovada, resultado e erros.
+
+A documentação também informa que alterações nas configurações de auditoria são sempre registradas, mesmo quando o log é desativado ou sua retenção é alterada. É um padrão interessante de proteção contra alteração silenciosa dos próprios controles de auditoria; sua implementação exigiria armazenamento e controles independentes suficientemente protegidos.
+
+### 13.6 Limites da inspeção
+
+A documentação descreve o comportamento esperado e os arquivos inspecionados demonstram parte da implementação. Não foi feita análise integral da configuração de todas as permissões, da infraestrutura de filas, da política completa de retenção ou da resistência do log a um administrador de banco de dados privilegiado.
+
+## 14. Lições consolidadas para o Alianza
+
+1. **Autorização:** verificar usuário ativo, papel, recurso, ação e escopo no backend; testar explicitamente negações.
+2. **Cache:** só armazenar decisões de permissão com invalidação robusta e imediata após mudança de papel.
+3. **Auditoria:** padronizar contexto e correlação de operação; auditar importações e processos internos sem exceção silenciosa.
+4. **Relações históricas:** apresentar no histórico do composto as alterações relevantes de seus componentes.
+5. **Eventos de negócio:** separar eventos nomeados de simples diferenças de campos.
+6. **Tarefas:** distinguir tentativas, falhas transitórias e falhas finais; evitar duplicidade e efeitos repetidos.
+7. **Controles de auditoria:** alterações na configuração do próprio mecanismo devem gerar evidência independente e rastreável.
+
+## 15. Pontos para possível evolução dos documentos do Alianza
+
+Os aprendizados justificam avaliar, sem aprovação automática:
+- identificador de correlação comum para uma operação de recálculo em cascata;
+- auditoria obrigatória de importações, tarefas internas e operações via API;
+- histórico do item composto com eventos relevantes das linhas componentes;
+- política de invalidação de cache após mudança de permissões;
+- modelo de execução e reprocessamento idempotente para tarefas assíncronas;
+- trilha específica para mudanças nas configurações de auditoria.
