@@ -733,5 +733,9 @@ Esta seção atualiza e substitui as pendências de precisão descritas nas seç
 **Reconciliação Mini Torniquete Inox**
 A fixture passa a representar os grupos com no máximo três casas, conforme a regra nova: 61,660 + 213,058 + 666,107 + 109,805 + 0 + 30,4 + 150 + 327,034 = R$ 1.558,064. Esse total substitui a expectativa anterior de R$ 1.558,0634817 para o cenário de teste com entradas limitadas a três casas. Não se afirma que os caches antigos da planilha foram integralmente reconciliados; a diferença histórica de R$ 0,0000001 fica superada para a fixture sob a nova precisão de entrada, mas permanece registrada como diferença entre os valores originais da planilha.
 
+**Commits complementares após revisão do arredondamento**
+- Motor: `4a188565c987c1efae47945fc83bdf4049a90077` e `0bd1229fde1a423d3df614e715dd8306598ce92a`.
+- Testes: `237199e0b2097b85fe0fbcbc790cf46a5aafa4f5`.
+
 **Validação**
 Os arquivos foram gravados no branch de implementação e conferidos por leitura no GitHub. A suíte Vitest e o TypeScript check ainda não foram executados; portanto, não declarar testes aprovados. Nenhuma migration, alteração de banco, deploy, merge ou operação de produção foi realizada.
