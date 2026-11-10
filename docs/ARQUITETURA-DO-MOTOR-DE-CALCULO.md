@@ -44,14 +44,15 @@ O item deve ser referenciado pelo seu identificador central. Uma estrutura não 
 Para um item composto:
 
 \[
-C_{composto}=\sum_{i=1}^{n}(Q_i\times C_i)
+C_{unitário}=\frac{\sum_{i=1}^{n}(Q_i\times C_i)}{Q_{saída}}
 \]
 
 Onde:
 
 - \(Q_i\) é a quantidade do componente na linha da estrutura;
 - \(C_i\) é o custo unitário vigente do componente;
-- \(n\) é o número de linhas da estrutura.
+- \(n\) é o número de linhas da estrutura;
+- \(Q_{saída}\) é a quantidade de unidades acabadas representada pela estrutura (quantidade-base de produção).
 
 Se o componente também for composto, seu custo unitário deve ser obtido pelo cálculo recursivo de sua própria estrutura, respeitando a dependência entre itens.
 
@@ -62,6 +63,10 @@ Se o componente também for composto, seu custo unitário deve ser obtido pelo c
 - Desperdícios e perdas já incorporados aos custos conforme o método aprovado não devem ser aplicados novamente pelo motor.
 - Cada item possui uma unidade definida. Não realizar conversões automáticas entre unidades.
 - A quantidade da linha deve ser interpretada na unidade definida para o componente, segundo as regras de cadastro.
+- A quantidade-base de saída é positiva e representa quantas unidades acabadas a estrutura produz. Quando omitida, vale 1.
+- Para uma estrutura de lote, as quantidades e custos das linhas representam o consumo/custo total do lote; o custo unitário é obtido dividindo o custo total pela quantidade-base.
+- Perdas e aproveitamento já incorporados às quantidades ou aos custos da linha não podem ser adicionados novamente.
+- Se a divisão resultar em decimal periódico, o motor não deve arredondar silenciosamente enquanto a precisão interna e o ponto de arredondamento não estiverem formalmente definidos.
 - Itens inativos ou excluídos não podem ser incluídos em novas estruturas, respeitadas as regras de exclusão e preservação histórica.
 
 ### 5.2 Exemplo de referência
@@ -73,7 +78,7 @@ Se o componente também for composto, seu custo unitário deve ser obtido pelo c
 | Parafuso M6 | 4 un | R$ 1,00 | R$ 4,00 |
 | **Total** | | | **R$ 44,00** |
 
-O exemplo demonstra a soma por linha. Não define conversões ou arredondamentos internos adicionais.
+O exemplo demonstra a soma por linha para quantidade-base igual a 1. Para lotes, divide-se o custo total pela quantidade de unidades acabadas representada. Não se definem conversões automáticas nem arredondamentos internos adicionais.
 
 ## 6. Fluxo de cálculo e recálculo
 
