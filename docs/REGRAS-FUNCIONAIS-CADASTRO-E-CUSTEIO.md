@@ -1764,3 +1764,12 @@ A consulta não altera a solicitação nem seus registros. O backend valida iden
 - Uma suspeita isolada ou sinal inconclusivo não deve provocar bloqueio automático do usuário.
 - Qualquer medida adicional de contenção deverá ser proporcional, fundamentada em evidências e seguir as regras gerais de segurança e resposta a incidentes.
 - **Pendências:** definir janelas temporais, critérios/limiares de correlação, níveis de risco, controle de falsos positivos, frequência de alertas, revisão humana, retenção e testes contra inferência.
+
+## Classificação dos alertas de tentativa de inferência — decisão aprovada (10/11/2026)
+
+- **Informativa:** comportamento incomum que merece acompanhamento, mas ainda não indica risco concreto de tentativa de inferência.
+- **Alta:** padrão suspeito consistente de consultas correlacionadas, sem evidência suficiente para concluir tentativa deliberada.
+- **Crítica:** evidências fortes de tentativa sistemática de contornar a supressão mínima de 5 ocorrências ou reidentificar informações protegidas.
+- A classificação deve considerar conjuntamente a combinação e a sequência de filtros, períodos, agrupamentos, consultas relacionadas e a capacidade prática de inferência; não deve se basear apenas na quantidade de consultas.
+- A classificação, seus fundamentos e evidências técnicas devem ser registrados e auditáveis, sem incluir valores/grupos suprimidos.
+- **Pendências:** definir critérios objetivos, limiares/janelas, tratamento de falsos positivos, escalonamento, revisão humana, notificações, resposta proporcional e testes.
