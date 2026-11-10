@@ -1205,3 +1205,11 @@ Legenda:
 - [x] Preservar histórico, sem exclusão ou encerramento automático.
 - [x] Não bloquear automaticamente; contenção exige avaliação técnica, proporcional e fundamentada.
 - [ ] Definir canais, entrega, prazo de reconhecimento, escalonamento, papéis, resolução/reabertura e integração com resposta a incidentes.
+
+### Escalonamento por ausência de reconhecimento de alerta crítico — decisão aprovada (10/11/2026)
+- [x] Primeiro lembrete após 30 minutos sem reconhecimento.
+- [x] Repetição a cada 30 minutos, até três lembretes por ciclo.
+- [x] Escalonamento por canal alternativo aos Administradores após o terceiro lembrete.
+- [x] Alerta permanece pendente; lembretes e escalação não encerram nem reconhecem.
+- [x] Registrar tentativas, entregas disponíveis, falhas, lembretes e escalonamento.
+- [ ] Definir canais, entrega, destinatários, falhas e novo ciclo após reabertura.
