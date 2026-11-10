@@ -138,7 +138,7 @@ Ainda é necessário avaliar o volume máximo esperado de dependências. Não se
 - Cálculos intermediários não ficam limitados a três casas. O motor preserva a precisão exata, inclusive frações periódicas, em todos os níveis da composição.
 - Não arredondar subtotais de linha, grupos, subconjuntos ou níveis intermediários.
 - Arredondar somente o custo unitário final apresentado, para no máximo três casas decimais.
-- Convenção de arredondamento aprovada: a quarta casa decimal de 0 a 5 mantém a terceira casa; de 6 a 9 incrementa a terceira casa. Portanto, empate exato (quarta casa igual a 5, sem dígitos não nulos posteriores) fica para baixo. Exemplos: `1.2344 → 1.234`, `1.2345 → 1.234`, `1.2346 → 1.235`.
+- Convenção de arredondamento aprovada: a observar somente o algarismo da quarta casa decimal: de 0 a 5 mantém a terceira casa; de 6 a 9 incrementa a terceira casa. Exemplos: `1.2344 → 1.234`, `1.2345 → 1.234`, `1.2346 → 1.235`.
 - Valores exibidos não precisam completar zeros à direita: `R$ 10`, `R$ 10.2`, `R$ 10.025`.
 - O motor não usa ponto flutuante binário para valores monetários. A implementação deve preservar a fração exata internamente e só formatar o resultado final para três casas.
 - O valor exato interno e o valor final apresentado devem permanecer semanticamente distintos; persistência e APIs não podem confundir a representação racional exata com o valor formatado.
