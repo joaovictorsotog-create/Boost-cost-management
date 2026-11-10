@@ -158,9 +158,10 @@ Notificações/realtime devem ser emitidas somente após commit, preferencialmen
 - [ ] Conferir o mapeamento de papéis e tenancy do módulo.
 
 ### Fase 1 — fundação isolada do módulo
-- [ ] Adicionar esqueleto `costing` sem alterar módulos atuais.
+- [x] Adicionar a fundação isolada `server/domain/costing/engine.ts` e seus testes, sem alterar módulos atuais.
 - [ ] Criar contratos tRPC, validações Zod e permissões `costing.*`.
-- [ ] Implementar domínio puro e testes unitários de custo/estrutura/ciclos.
+- [x] Implementar motor puro inicial com aritmética decimal exata, estruturas multinível, linhas repetidas e rejeição de ciclos/itens inativos/estruturas contraditórias.
+- [x] Adicionar testes unitários para os invariantes principais; execução dos testes e do TypeScript check ainda pendente.
 - [ ] Criar migrations e policies somente após gate PostgreSQL aprovado.
 - [ ] Testar isolamento entre duas organizações e negação por padrão.
 
@@ -282,7 +283,7 @@ Por decisão do projeto, **toda documentação de produto, arquitetura, auditori
 
 O repositório `alianza-ai-platform` será usado para código, testes e artefatos estritamente necessários à implementação. Não manter cópias divergentes de documentos de gestão nos dois repositórios.
 
-**Estado:** auditoria estática do código vivo concluída em nível inicial; implementação funcional ainda não iniciada. A branch de trabalho existe, mas não autoriza alteração de banco ou produção.
+**Estado atualizado em 10/11/2026:** auditoria estática inicial concluída e fundação do motor puro de domínio iniciada na branch `feature/alianza-costing-foundation-20261110`. Foram adicionados `server/domain/costing/engine.ts` e `server/domain/costing/engine.test.ts`; os testes foram escritos, mas ainda não foram executados e nenhum check de TypeScript foi confirmado. Não há router, UI, persistência ou integração com banco. A branch de trabalho não autoriza alteração de banco ou produção.
 
 
 ---
@@ -325,6 +326,7 @@ Esses valores podem refletir links externos indisponíveis, fórmulas não recal
 
 - O motor puro implementado na branch de desenvolvimento recebe quantidades e custos unitários já normalizados, calcula estruturas multinível com decimal exato, contabiliza linhas repetidas e rejeita ciclos, itens inativos e estruturas contraditórias.
 - O motor não implementa lote de compra, arredondamento para barras comerciais, preço de venda, desconto, Alpha/Beta ou Gama automático.
+- Os testes adicionados ainda não foram executados; a existência dos arquivos no GitHub não deve ser tratada como aprovação de CI.
 - O cálculo atual considera a quantidade da estrutura como consumo necessário para uma unidade do item composto. Essa é uma hipótese técnica mínima para testes da fundação, não o fechamento da decisão de quantidade-base/lote. Não integrar persistência nem expor esse comportamento na UI até a decisão ser fechada.
 - A escala interna monetária ainda não foi fixada: o motor usa aritmética decimal exata por strings/inteiros, sem escolher uma escala fixa de banco. A política de apresentação aprovada é aplicada separadamente.
 
