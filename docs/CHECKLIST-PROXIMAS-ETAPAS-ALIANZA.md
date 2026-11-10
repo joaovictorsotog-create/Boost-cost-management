@@ -1228,3 +1228,12 @@ Legenda:
 - [x] Envio/entrega não equivalem a leitura, reconhecimento ou resolução.
 - [x] Sem confirmação confiável, não presumir entrega.
 - [ ] Definir comprovantes por canal, estados intermediários, retornos tardios e reconciliação.
+
+### Reconhecimento e titularidade de alertas críticos — decisão aprovada (10/11/2026)
+- [x] Qualquer Administrador autorizado pode reconhecer.
+- [x] Primeiro reconhecimento válido confirmado pelo backend assume atendimento, com identidade e data/hora.
+- [x] Backend garante atomicamente um único titular inicial.
+- [x] Outros Administradores podem acompanhar sem assumir titularidade concorrente.
+- [x] Interface confirma somente após persistência.
+- [x] Reconhecimento não encerra alerta.
+- [ ] Definir transferência/substituição, permissões e auditoria de concorrência.
