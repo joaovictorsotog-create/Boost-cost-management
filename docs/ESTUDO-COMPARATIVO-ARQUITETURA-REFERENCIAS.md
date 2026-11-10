@@ -320,3 +320,100 @@ Os aprendizados justificam avaliar, sem aprovação automática:
 - política de invalidação de cache após mudança de permissões;
 - modelo de execução e reprocessamento idempotente para tarefas assíncronas;
 - trilha específica para mudanças nas configurações de auditoria.
+
+
+## 16. Quarta rodada: importação, operações em lote e concorrência
+
+### 16.1 InvenTree — arquivos adicionais inspecionados
+
+- [Modelo de importação — importer/models.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/importer/models.py)
+- [API e operações em lote — InvenTree/api.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/InvenTree/api.py)
+- [Testes do importador e concorrência — importer/tests.py](https://github.com/inventree/InvenTree/blob/master/src/backend/InvenTree/importer/tests.py)
+
+### 16.2 Pipeline de importação
+
+O modelo `DataImportSession` mantém uma sessão de importação com arquivo, usuário, tipo de modelo, mapeamento de colunas, valores padrão/sobrescritos, filtros, estado e contagens históricas. O modelo obtém os campos disponíveis a partir do serializer de destino, exclui campos somente leitura e identifica campos obrigatórios.
+
+O fluxo observado separa etapas:
+1. validar a sessão e o tipo de arquivo;
+2. extrair colunas e sugerir mapeamentos;
+3. exigir mapeamento/default para campos obrigatórios;
+4. verificar permissão do usuário para alterar o modelo de destino;
+5. carregar e validar as linhas sem aplicar imediatamente as alterações definitivas;
+6. armazenar linhas preparadas em lote;
+7. encaminhar o processamento para tarefa de background;
+8. manter a sessão concluída como registro, mesmo após limpar linhas e mapeamentos temporários.
+
+A permissão de importação consulta a permissão de alteração do modelo de destino e pode exigir perfil de equipe em determinados modelos. Isso reforça que a autorização deve ser verificada no servidor para o recurso e a operação concretos.
+
+**Aplicação ao Alianza:** a importação Excel deve ter sessão/lote identificável, usuário responsável, mapeamento explícito, prévia, validação de campos e referências, erros por linha, confirmação e registro final. A etapa de prévia não deve reservar nem modificar silenciosamente o cadastro oficial. A aplicação definitiva deve revalidar permissões e estado atual.
+
+### 16.3 Operações em lote e atomicidade
+
+O `BulkCreateMixin` do InvenTree executa criação em lote dentro de `transaction.atomic()`, valida cada item pelo serializer e dispara erro global se houver itens inválidos, revertendo a transação. O contexto também agrupa eventos e tarefas adiadas. A implementação deliberadamente salva instâncias individualmente para acionar métodos customizados do modelo, em vez de usar um bulk update que poderia ignorar esses comportamentos.
+
+O `BulkUpdateMixin`:
+- calcula e ordena os IDs dos registros atingidos;
+- abre uma transação;
+- bloqueia cada registro com `select_for_update`;
+- revalida e salva cada registro pelo serializer;
+- falha se um registro deixar de corresponder ao conjunto selecionado.
+
+A ordenação dos IDs e o bloqueio reduzem riscos de corrida e inconsistência durante a operação. O código também explica por que evita atualização SQL em massa: precisa disparar os métodos e efeitos de salvamento próprios de cada objeto.
+
+**Aplicação ao Alianza:** operações de impacto devem definir claramente se o lote é totalmente atômico ou se admite sucesso parcial. Para alterações de cadastro/custos/estruturas com integridade interdependente, a direção recomendada é atomicidade total: ou todos os registros passam pela validação e persistem, ou nenhum é confirmado. A escolha precisa ser explicitada por tipo de operação, não presumida pelo componente de interface.
+
+### 16.4 Concorrência: teste de regressão real
+
+O teste `DataImportRowConcurrencyTest` usa duas threads e conexões de banco independentes para reproduzir uma perda de atualização: duas importações alteram campos diferentes do mesmo registro, leem a mesma versão e, como a gravação salva a instância inteira, a segunda poderia apagar silenciosamente a mudança da primeira.
+
+A correção testada bloqueia a linha com `select_for_update` dentro de `transaction.atomic()` durante todo o ciclo de leitura-modificação-gravação. O teste verifica que a segunda transação aguarda a primeira e preserva ambas as alterações.
+
+Este é um padrão especialmente relevante: testes unitários sequenciais não demonstram ausência de corrida. É necessário teste concorrente real, com transações/conexões separadas e sincronização controlada.
+
+**Aplicação ao Alianza:** incluir testes concorrentes para:
+- dois administradores aprovando ou assumindo a mesma solicitação;
+- edição simultânea do mesmo item;
+- mudança de custo de um componente enquanto um composto é recalculado;
+- exclusão lógica enquanto uma estrutura é alterada;
+- confirmação de importação enquanto os registros-alvo mudam;
+- geração concorrente de IDs numéricos.
+
+O bloqueio de linha é uma técnica possível, não uma decisão de tecnologia. A estratégia final deve considerar o banco escolhido, ordem determinística de bloqueios, versionamento otimista quando apropriado, limites de espera e tratamento explícito de conflito.
+
+### 16.5 Limite importante: staging e auditoria não são sinônimos
+
+O InvenTree conserva a sessão de importação como registro e mantém contagens históricas, mas a documentação de auditoria já examinada informa que alterações realizadas pelo importador não entram integralmente no audit log comum. Portanto, a existência de um registro de sessão não substitui a trilha de auditoria das alterações efetivamente aplicadas.
+
+No Alianza, devem existir dois registros relacionados, mas com finalidades diferentes:
+- **registro operacional do lote:** arquivo/referência, mapeamento, prévia, contagens, estado, erros e resultado;
+- **eventos de auditoria de domínio:** cada alteração efetivamente aplicada, usuário, origem, lote, instante, valores relevantes, resultado e identificador de correlação.
+
+A retenção ou limpeza de dados temporários da importação não pode apagar evidências de auditoria.
+
+### 16.6 ERPNext — testes de integridade de estruturas
+
+O teste `test_bom_recursion_transitive` constrói duas BOMs que passam a depender uma da outra e espera `BOMRecursionError`. Além do teste de autorreferência direta, isso confirma a existência de cobertura específica para ciclo indireto/transitivo.
+
+O serviço de custo examinado recalcula o custo da BOM e, quando há alteração, localiza BOMs pais que a utilizam e atualiza esses pais recursivamente. A inspeção confirma esse mecanismo, mas não demonstra, isoladamente, uma estratégia completa de concorrência ou atomicidade para todas as cascatas.
+
+**Aplicação ao Alianza:** além dos testes de ciclo, criar testes de falha no meio de uma cascata: se um descendente/pai falhar, validar que custos vigentes, fotografias e histórico não ficam em estados incompatíveis. A cascata deve ter uma identidade de operação e um limite operacional definido após medição.
+
+### 16.7 Matriz de decisão desta rodada
+
+| Padrão observado | Direção para Alianza | Motivo |
+|---|---|---|
+| Sessão de importação com mapeamento e estados | Aproveitar/adaptar | Rastreabilidade operacional e prévia |
+| Campos somente leitura excluídos do mapeamento | Aproveitar | Evita contornar regras do cadastro |
+| Permissão de alteração verificada no backend | Aproveitar | Importação não pode ser atalho de autorização |
+| Validação por linha antes da confirmação | Aproveitar | Erros claros e previsíveis |
+| Tarefa de background para processamento pesado | Investigar/adaptar | Depende de volume e latência; não presumir tudo assíncrono |
+| Transação total em lote de integridade interdependente | Aproveitar como padrão | Evita estado parcial inconsistente |
+| Salvamento individual para disparar regras do modelo | Adaptar | Preservar eventos de domínio sem perder eficiência |
+| Bloqueio de linha durante read-modify-write | Investigar/adaptar | Evita lost update em operações concorrentes |
+| Teste com duas transações reais | Aproveitar | Evidencia corrida que teste sequencial não detecta |
+| Sessão de importação como substituto do audit log | Rejeitar | Não atende à auditoria integral aprovada |
+
+### 16.8 Limitações desta rodada
+
+A análise foi direcionada aos arquivos listados e aos métodos/testes relevantes. Não foi auditada integralmente a infraestrutura de filas, a semântica de todos os endpoints em lote, as garantias do banco em cada configuração de produção nem o fluxo completo de eventos de todos os modelos. Os comportamentos descritos não devem ser generalizados para todo o sistema sem inspeção adicional.
