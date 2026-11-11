@@ -1,0 +1,5 @@
+COMMAND: pnpm exec prettier --check server/db/costing.ts drizzle/pg/schema.costing.ts server/domain/costing/snapshot.ts server/domain/costing/snapshot.test.ts server/routers/costing.ts server/routers/costing.test.ts scripts/costing-correction-pg.ts docs/costing-rls-proposal.md
+Checking formatting...
+All matched files use Prettier code style!
+
+EXIT_CODE=0

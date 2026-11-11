@@ -1,0 +1,40 @@
+COMMAND: scripts/run-costing-correction-pg.sh
+CREATE TABLE
+INSERT 0 2
+psql:/tmp/alianza-reconstruction/drizzle/pg/0036_costing_foundation.sql:110: NOTICE:  trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping
+INSERT 0 2
+INSERT 0 5
+INSERT 0 5
+INSERT 0 3
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:43: NOTICE:  trigger "cost_structures_published_immutable" for relation "cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:82: NOTICE:  trigger "cost_structure_lines_published_immutable" for relation "cost_structure_lines" does not exist, skipping
+INSERT 0 1
+INSERT 0 1
+{"activeStructure":"active-a","exactUnitCost":"50.6","gamma":"0.6","historyReturned":2,"snapshotsPersisted":3,"draftLifecycle":"create-line-update-line-delete-line-publish","tenConcurrentVersions":[7,8,9,10,11,12,13,14,15,16],"scopedConcurrentCreations":10,"concurrentPublication":["fulfilled","rejected"],"finalActiveForTarget":["W9PeKBLPuFi4tyOVeGbT"],"rollback":"ok"}
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+                        result                        
+------------------------------------------------------
+ direct-published-immutability-and-line-protection-ok
+(1 row)
+
+
+EXIT_CODE=0

@@ -1,0 +1,520 @@
+[1mdiff --git a/drizzle/pg/0037_costing_correction_integrity.sql b/drizzle/pg/0037_costing_correction_integrity.sql[m
+[1mindex f164d5b..acc01a4 100644[m
+[1m--- a/drizzle/pg/0037_costing_correction_integrity.sql[m
+[1m+++ b/drizzle/pg/0037_costing_correction_integrity.sql[m
+[36m@@ -1,6 +1,20 @@[m
+ DROP INDEX IF EXISTS "cost_calculations_org_item_date_idx";[m
+ CREATE INDEX IF NOT EXISTS "cost_calculations_org_item_date_id_idx" ON "cost_calculations" ("organizationId", "itemId", "calculatedAt", "id");[m
+ [m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_structure_version_counters" ([m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "itemId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "nextVersion" integer NOT NULL CHECK ("nextVersion" > 0),[m
+[32m+[m[32m  CONSTRAINT "cost_structure_version_counters_org_item_unique" UNIQUE ("organizationId", "itemId"),[m
+[32m+[m[32m  CONSTRAINT "cost_structure_version_counters_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE CASCADE[m
+[32m+[m[32m);[m
+[32m+[m[32mINSERT INTO "cost_structure_version_counters" ("organizationId", "itemId", "nextVersion")[m
+[32m+[m[32mSELECT "organizationId", "itemId", MAX("version") + 1[m
+[32m+[m[32mFROM "cost_structures"[m
+[32m+[m[32mGROUP BY "organizationId", "itemId"[m
+[32m+[m[32mON CONFLICT ("organizationId", "itemId") DO UPDATE[m
+[32m+[m[32mSET "nextVersion" = GREATEST("cost_structure_version_counters"."nextVersion", EXCLUDED."nextVersion");[m
+[32m+[m
+ CREATE OR REPLACE FUNCTION "prevent_published_cost_structure_mutation"() RETURNS trigger LANGUAGE plpgsql AS $$[m
+ BEGIN[m
+   IF TG_OP = 'DELETE' THEN[m
+[36m@@ -16,10 +30,12 @@[m [mBEGIN[m
+ [m
+   IF OLD."status" = 'ACTIVE' THEN[m
+     IF NEW."status" <> 'SUPERSEDED' OR[m
+[31m-       ROW(NEW."organizationId", NEW."itemId", NEW."version", NEW."outputQuantity", NEW."createdAt") IS DISTINCT FROM[m
+[31m-       ROW(OLD."organizationId", OLD."itemId", OLD."version", OLD."outputQuantity", OLD."createdAt") THEN[m
+[32m+[m[32m       ROW(NEW."id", NEW."organizationId", NEW."itemId", NEW."version", NEW."outputQuantity", NEW."createdAt") IS DISTINCT FROM[m
+[32m+[m[32m       ROW(OLD."id", OLD."organizationId", OLD."itemId", OLD."version", OLD."outputQuantity", OLD."createdAt") THEN[m
+       RAISE EXCEPTION 'Active cost structures are immutable except for superseding';[m
+     END IF;[m
+[32m+[m[32m  ELSIF OLD."status" = 'DRAFT' AND NEW."status" NOT IN ('DRAFT', 'ACTIVE') THEN[m
+[32m+[m[32m    RAISE EXCEPTION 'Invalid cost structure status transition';[m
+   END IF;[m
+   RETURN NEW;[m
+ END;[m
+[36m@@ -29,17 +45,39 @@[m [mCREATE TRIGGER "cost_structures_published_immutable" BEFORE UPDATE OR DELETE ON[m
+ [m
+ CREATE OR REPLACE FUNCTION "prevent_published_cost_structure_line_mutation"() RETURNS trigger LANGUAGE plpgsql AS $$[m
+ DECLARE[m
+[31m-  structure_status text;[m
+[32m+[m[32m  source_status text;[m
+[32m+[m[32m  destination_status text;[m
+ BEGIN[m
+[31m-  SELECT "status" INTO structure_status[m
+[32m+[m[32m  IF TG_OP = 'INSERT' THEN[m
+[32m+[m[32m    SELECT "status" INTO destination_status[m
+[32m+[m[32m    FROM "cost_structures"[m
+[32m+[m[32m    WHERE "organizationId" = NEW."organizationId" AND "id" = NEW."structureId";[m
+[32m+[m[32m    IF destination_status IS DISTINCT FROM 'DRAFT' THEN[m
+[32m+[m[32m      RAISE EXCEPTION 'Lines of published cost structures are immutable';[m
+[32m+[m[32m    END IF;[m
+[32m+[m[32m    RETURN NEW;[m
+[32m+[m[32m  END IF;[m
+[32m+[m
+[32m+[m[32m  SELECT "status" INTO source_status[m
+   FROM "cost_structures"[m
+   WHERE "organizationId" = OLD."organizationId" AND "id" = OLD."structureId";[m
+[31m-  IF structure_status IS NULL OR structure_status <> 'DRAFT' THEN[m
+[32m+[m[32m  IF source_status IS DISTINCT FROM 'DRAFT' THEN[m
+     RAISE EXCEPTION 'Lines of published cost structures are immutable';[m
+   END IF;[m
+[32m+[m
+   IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;[m
+[32m+[m
+[32m+[m[32m  IF NEW."organizationId" <> OLD."organizationId" THEN[m
+[32m+[m[32m    RAISE EXCEPTION 'A cost structure line cannot change organization';[m
+[32m+[m[32m  END IF;[m
+[32m+[m[32m  SELECT "status" INTO destination_status[m
+[32m+[m[32m  FROM "cost_structures"[m
+[32m+[m[32m  WHERE "organizationId" = NEW."organizationId" AND "id" = NEW."structureId";[m
+[32m+[m[32m  IF destination_status IS DISTINCT FROM 'DRAFT' THEN[m
+[32m+[m[32m    RAISE EXCEPTION 'Lines of published cost structures are immutable';[m
+[32m+[m[32m  END IF;[m
+   RETURN NEW;[m
+ END;[m
+ $$;[m
+ DROP TRIGGER IF EXISTS "cost_structure_lines_published_immutable" ON "cost_structure_lines";[m
+[31m-CREATE TRIGGER "cost_structure_lines_published_immutable" BEFORE UPDATE OR DELETE ON "cost_structure_lines" FOR EACH ROW EXECUTE FUNCTION "prevent_published_cost_structure_line_mutation"();[m
+[32m+[m[32mCREATE TRIGGER "cost_structure_lines_published_immutable" BEFORE INSERT OR UPDATE OR DELETE ON "cost_structure_lines" FOR EACH ROW EXECUTE FUNCTION "prevent_published_cost_structure_line_mutation"();[m
+[1mdiff --git a/drizzle/pg/schema.costing.ts b/drizzle/pg/schema.costing.ts[m
+[1mindex 2be1b02..2ab6565 100644[m
+[1m--- a/drizzle/pg/schema.costing.ts[m
+[1m+++ b/drizzle/pg/schema.costing.ts[m
+[36m@@ -85,6 +85,32 @@[m [mexport const costItems = pgTable([m
+   ][m
+ );[m
+ [m
+[32m+[m[32mexport const costStructureVersionCounters = pgTable([m
+[32m+[m[32m  "cost_structure_version_counters",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    itemId: varchar("itemId", { length: 32 }).notNull(),[m
+[32m+[m[32m    nextVersion: integer("nextVersion").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("cost_structure_version_counters_org_item_unique").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.itemId[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    check([m
+[32m+[m[32m      "cost_structure_version_counters_positive_check",[m
+[32m+[m[32m      sql`${table.nextVersion} > 0`[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_structure_version_counters_org_item_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.itemId],[m
+[32m+[m[32m      foreignColumns: [costItems.organizationId, costItems.id],[m
+[32m+[m[32m    }).onDelete("cascade"),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+[32m+[m
+ export const costStructures = pgTable([m
+   "cost_structures",[m
+   {[m
+[1mdiff --git a/scripts/costing-correction-pg.ts b/scripts/costing-correction-pg.ts[m
+[1mindex e91109a..38afe5a 100644[m
+[1m--- a/scripts/costing-correction-pg.ts[m
+[1m+++ b/scripts/costing-correction-pg.ts[m
+[36m@@ -11,6 +11,7 @@[m [mimport {[m
+   createCostStructureLine,[m
+   deleteCostStructureLine,[m
+   getCostStructure,[m
+[32m+[m[32m  listCostStructures,[m
+   listCostingSnapshots,[m
+   publishCostStructure,[m
+   updateCostStructure,[m
+[36m@@ -180,6 +181,52 @@[m [mfor (let i = 1; i < history.length; i += 1) {[m
+   );[m
+ }[m
+ [m
+[32m+[m[32mconst tenConcurrentDrafts = await Promise.all([m
+[32m+[m[32m  Array.from({ length: 10 }, () =>[m
+[32m+[m[32m    createCostStructure({[m
+[32m+[m[32m      organizationId: "org-correction-a",[m
+[32m+[m[32m      itemId: "target-a",[m
+[32m+[m[32m    })[m
+[32m+[m[32m  )[m
+[32m+[m[32m);[m
+[32m+[m[32mconst tenVersions = tenConcurrentDrafts[m
+[32m+[m[32m  .map(structure => structure.version)[m
+[32m+[m[32m  .sort((left, right) => left - right);[m
+[32m+[m[32massert(new Set(tenVersions).size === 10, "same-item versions are not unique");[m
+[32m+[m[32massert([m
+[32m+[m[32m  tenVersions.every([m
+[32m+[m[32m    (version, index) => index === 0 || version === tenVersions[index - 1]! + 1[m
+[32m+[m[32m  ),[m
+[32m+[m[32m  "same-item versions are not sequential"[m
+[32m+[m[32m);[m
+[32m+[m
+[32m+[m[32mconst scopedConcurrentDrafts = await Promise.all([[m
+[32m+[m[32m  ...Array.from({ length: 5 }, () =>[m
+[32m+[m[32m    createCostStructure({[m
+[32m+[m[32m      organizationId: "org-correction-a",[m
+[32m+[m[32m      itemId: "target-c",[m
+[32m+[m[32m    })[m
+[32m+[m[32m  ),[m
+[32m+[m[32m  ...Array.from({ length: 5 }, () =>[m
+[32m+[m[32m    createCostStructure({[m
+[32m+[m[32m      organizationId: "org-correction-b",[m
+[32m+[m[32m      itemId: "target-b",[m
+[32m+[m[32m    })[m
+[32m+[m[32m  ),[m
+[32m+[m[32m]);[m
+[32m+[m[32massert([m
+[32m+[m[32m  scopedConcurrentDrafts.length === 10,[m
+[32m+[m[32m  "cross-scope creation count mismatch"[m
+[32m+[m[32m);[m
+[32m+[m[32massert([m
+[32m+[m[32m  new Set([m
+[32m+[m[32m    scopedConcurrentDrafts.map([m
+[32m+[m[32m      structure => `${structure.organizationId}:${structure.itemId}`[m
+[32m+[m[32m    )[m
+[32m+[m[32m  ).size === 2,[m
+[32m+[m[32m  "cross-scope creation lost tenant or item isolation"[m
+[32m+[m[32m);[m
+[32m+[m
+ const concurrentDrafts = [[m
+   await createCostStructure({[m
+     organizationId: "org-correction-a",[m
+[36m@@ -199,6 +246,24 @@[m [massert([m
+   concurrent.filter(result => result.status === "fulfilled").length >= 1,[m
+   "concurrent publication failed entirely"[m
+ );[m
+[32m+[m[32mconst finalTargetStructures = await listCostStructures([m
+[32m+[m[32m  "org-correction-a",[m
+[32m+[m[32m  "target-a"[m
+[32m+[m[32m);[m
+[32m+[m[32massert([m
+[32m+[m[32m  finalTargetStructures.filter(structure => structure.status === "ACTIVE")[m
+[32m+[m[32m    .length === 1,[m
+[32m+[m[32m  "final target has more than one ACTIVE structure"[m
+[32m+[m[32m);[m
+[32m+[m[32mconst concurrentRows = finalTargetStructures.filter(structure =>[m
+[32m+[m[32m  concurrentDrafts.some(draft => draft.id === structure.id)[m
+[32m+[m[32m);[m
+[32m+[m[32massert([m
+[32m+[m[32m  concurrentRows.every(structure =>[m
+[32m+[m[32m    ["ACTIVE", "SUPERSEDED", "DRAFT"].includes(structure.status)[m
+[32m+[m[32m  ),[m
+[32m+[m[32m  "concurrent publication left an invalid structure state"[m
+[32m+[m[32m);[m
+ [m
+ try {[m
+   await db.transaction(async tx => {[m
+[36m@@ -247,7 +312,12 @@[m [mconsole.log([m
+     historyReturned: history.length,[m
+     snapshotsPersisted: Number(snapshotCount?.count ?? 0),[m
+     draftLifecycle: "create-line-update-line-delete-line-publish",[m
+[32m+[m[32m    tenConcurrentVersions: tenVersions,[m
+[32m+[m[32m    scopedConcurrentCreations: scopedConcurrentDrafts.length,[m
+     concurrentPublication: concurrent.map(result => result.status),[m
+[32m+[m[32m    finalActiveForTarget: finalTargetStructures[m
+[32m+[m[32m      .filter(structure => structure.status === "ACTIVE")[m
+[32m+[m[32m      .map(structure => structure.id),[m
+     rollback: "ok",[m
+   })[m
+ );[m
+[1mdiff --git a/scripts/run-costing-correction-pg.sh b/scripts/run-costing-correction-pg.sh[m
+[1mindex 16af535..c82826c 100755[m
+[1m--- a/scripts/run-costing-correction-pg.sh[m
+[1m+++ b/scripts/run-costing-correction-pg.sh[m
+[36m@@ -22,7 +22,6 @@[m [mCREATE TABLE "organizations" ("id" varchar(32) PRIMARY KEY);[m
+ INSERT INTO "organizations" VALUES ('org-correction-a'), ('org-correction-b');[m
+ SQL[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0036_costing_foundation.sql" >/dev/null[m
+[31m-psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0037_costing_correction_integrity.sql" >/dev/null[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+ INSERT INTO "cost_groups" ("id","organizationId","name","createdAt","updatedAt") VALUES[m
+   ('group-a','org-correction-a','Artificial selected group','now','now'),[m
+[36m@@ -30,15 +29,24 @@[m [mINSERT INTO "cost_groups" ("id","organizationId","name","createdAt","updatedAt")[m
+ INSERT INTO "cost_items" ("id","organizationId","groupId","name","itemType","referenceUnit","manualUnitCost","active","createdAt","updatedAt") VALUES[m
+   ('source-a','org-correction-a','group-a','Artificial source A','SIMPLE','un','100',true,'now','now'),[m
+   ('target-a','org-correction-a',NULL,'Artificial target A','COMPOSITE','un',NULL,true,'now','now'),[m
+[31m-  ('source-b','org-correction-b','group-b','Artificial foreign source B','SIMPLE','un','999',true,'now','now');[m
+[32m+[m[32m  ('target-c','org-correction-a',NULL,'Artificial target C','COMPOSITE','un',NULL,true,'now','now'),[m
+[32m+[m[32m  ('source-b','org-correction-b','group-b','Artificial foreign source B','SIMPLE','un','999',true,'now','now'),[m
+[32m+[m[32m  ('target-b','org-correction-b',NULL,'Artificial target B','COMPOSITE','un',NULL,true,'now','now');[m
+ INSERT INTO "cost_structures" ("id","organizationId","itemId","version","status","outputQuantity","createdAt","updatedAt") VALUES[m
+   ('active-a','org-correction-a','target-a',1,'ACTIVE','2','now','now'),[m
+   ('draft-a','org-correction-a','target-a',2,'DRAFT','1','now','now'),[m
+   ('superseded-a','org-correction-a','target-a',3,'SUPERSEDED','1','now','now'),[m
+[31m-  ('inactive-a','org-correction-a','target-a',4,'INACTIVE','1','now','now');[m
+[32m+[m[32m  ('inactive-a','org-correction-a','target-a',4,'INACTIVE','1','now','now'),[m
+[32m+[m[32m  ('direct-active','org-correction-a','target-c',1,'ACTIVE','1','now','now');[m
+[32m+[m[32mSQL[m
+[32m+[m[32mpsql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+ INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt") VALUES[m
+   ('active-line-a','org-correction-a','active-a','source-a','1','un',0,'now','now'),[m
+[31m-  ('draft-line-a','org-correction-a','draft-a','source-a','1','un',0,'now','now');[m
+[32m+[m[32m  ('draft-line-a','org-correction-a','draft-a','source-a','1','un',0,'now','now'),[m
+[32m+[m[32m  ('direct-active-line','org-correction-a','direct-active','source-a','1','un',0,'now','now');[m
+[32m+[m[32mSQL[m
+[32m+[m[32mpsql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0037_costing_correction_integrity.sql" >/dev/null[m
+[32m+[m[32mpsql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+ INSERT INTO "costing_gamma_settings" ("id","organizationId","active","percentage","createdAt","updatedAt") VALUES[m
+   ('gamma-a','org-correction-a',true,'1.2000','now','now');[m
+ INSERT INTO "costing_gamma_groups" ("organizationId","groupId","createdAt") VALUES[m
+[36m@@ -48,16 +56,127 @@[m [mSUPABASE_DATABASE_URL="postgres://$(whoami)@127.0.0.1:$PORT/postgres" pnpm --dir[m
+ [m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+ DO $$ BEGIN[m
+[31m-  UPDATE "cost_structures" SET "outputQuantity" = '9' WHERE "id" = 'active-a';[m
+[31m-  RAISE EXCEPTION 'published structure mutation was accepted';[m
+[32m+[m[32m  UPDATE "cost_structures" SET "id" = 'direct-active-mutated' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure id mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "organizationId" = 'org-correction-b' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure organization mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "itemId" = 'target-b' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure item mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "version" = 99 WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure version mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "outputQuantity" = '9' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure output mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "createdAt" = 'changed' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure createdAt mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "status" = 'INACTIVE' WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure invalid transition was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Active cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  DELETE FROM "cost_structures" WHERE "id" = 'direct-active';[m
+[32m+[m[32m  RAISE EXCEPTION 'published structure deletion was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "outputQuantity" = '9' WHERE "id" = 'superseded-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'superseded structure update was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  DELETE FROM "cost_structures" WHERE "id" = 'superseded-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'superseded structure deletion was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structures" SET "outputQuantity" = '9' WHERE "id" = 'inactive-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'inactive structure update was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  DELETE FROM "cost_structures" WHERE "id" = 'inactive-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'inactive structure deletion was accepted';[m
+ EXCEPTION WHEN OTHERS THEN[m
+   IF SQLERRM NOT LIKE '%Published cost structures are immutable%' THEN RAISE; END IF;[m
+ END $$;[m
+ DO $$ BEGIN[m
+[31m-  DELETE FROM "cost_structure_lines" WHERE "id" = 'active-line-a';[m
+[31m-  RAISE EXCEPTION 'published line deletion was accepted';[m
+[32m+[m[32m  INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('draft-direct-line','org-correction-a','draft-a','source-a','1','un',2,'now','now');[m
+[32m+[m[32m  UPDATE "cost_structure_lines" SET "quantity" = '2' WHERE "id" = 'draft-direct-line';[m
+[32m+[m[32m  DELETE FROM "cost_structure_lines" WHERE "id" = 'draft-direct-line';[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('insert-active-line','org-correction-a','direct-active','source-a','1','un',1,'now','now');[m
+[32m+[m[32m  RAISE EXCEPTION 'line INSERT into ACTIVE was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('insert-superseded-line','org-correction-a','active-a','source-a','1','un',1,'now','now');[m
+[32m+[m[32m  RAISE EXCEPTION 'line INSERT into SUPERSEDED was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('insert-inactive-line','org-correction-a','inactive-a','source-a','1','un',1,'now','now');[m
+[32m+[m[32m  RAISE EXCEPTION 'line INSERT into INACTIVE was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structure_lines" SET "quantity" = '2' WHERE "id" = 'direct-active-line';[m
+[32m+[m[32m  RAISE EXCEPTION 'line UPDATE in published structure was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structure_lines" SET "structureId" = 'direct-active' WHERE "id" = 'draft-line-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'line move from DRAFT to ACTIVE was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  UPDATE "cost_structure_lines" SET "organizationId" = 'org-correction-b' WHERE "id" = 'draft-line-a';[m
+[32m+[m[32m  RAISE EXCEPTION 'line organization mutation was accepted';[m
+[32m+[m[32mEXCEPTION WHEN OTHERS THEN[m
+[32m+[m[32m  IF SQLERRM NOT LIKE '%cannot change organization%' THEN RAISE; END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mDO $$ BEGIN[m
+[32m+[m[32m  DELETE FROM "cost_structure_lines" WHERE "id" = 'direct-active-line';[m
+[32m+[m[32m  RAISE EXCEPTION 'line DELETE in published structure was accepted';[m
+ EXCEPTION WHEN OTHERS THEN[m
+   IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;[m
+ END $$;[m
+[31m-SELECT 'published-immutability-ok' AS result;[m
+[32m+[m[32mSELECT 'direct-published-immutability-and-line-protection-ok' AS result;[m
+ SQL[m
+[1mdiff --git a/server/db/costing.ts b/server/db/costing.ts[m
+[1mindex 0c1bba5..9fd9cbc 100644[m
+[1m--- a/server/db/costing.ts[m
+[1m+++ b/server/db/costing.ts[m
+[36m@@ -5,6 +5,7 @@[m [mimport {[m
+   costItems,[m
+   costStructureLines,[m
+   costStructures,[m
+[32m+[m[32m  costStructureVersionCounters,[m
+   costingGammaGroups,[m
+   costingGammaSettings,[m
+ } from "../../drizzle/pg/schema.costing";[m
+[36m@@ -106,16 +107,36 @@[m [mexport async function listCostStructures([m
+     .orderBy(desc(costStructures.version), asc(costStructures.id));[m
+ }[m
+ [m
+[31m-export async function createCostStructure(input: {[m
+[31m-  organizationId: string;[m
+[31m-  itemId: string;[m
+[31m-  outputQuantity?: string;[m
+[31m-}) {[m
+[31m-  const outputQuantity = input.outputQuantity ?? "1";[m
+[31m-  requirePositiveDecimal(outputQuantity, "outputQuantity");[m
+[31m-  const db = await requireDb();[m
+[32m+[m[32mfunction isTransientVersionAllocationConflict(error: unknown) {[m
+[32m+[m[32m  let current: unknown = error;[m
+[32m+[m[32m  for (let attempt = 0; attempt < 4 && current; attempt += 1) {[m
+[32m+[m[32m    if ([m
+[32m+[m[32m      typeof current === "object" &&[m
+[32m+[m[32m      current !== null &&[m
+[32m+[m[32m      "code" in current &&[m
+[32m+[m[32m      ((current as { code?: unknown }).code === "40001" ||[m
+[32m+[m[32m        (current as { code?: unknown }).code === "40P01")[m
+[32m+[m[32m    ) {[m
+[32m+[m[32m      return true;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    current =[m
+[32m+[m[32m      typeof current === "object" && current !== null && "cause" in current[m
+[32m+[m[32m        ? (current as { cause?: unknown }).cause[m
+[32m+[m[32m        : undefined;[m
+[32m+[m[32m  }[m
+[32m+[m[32m  return false;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32masync function createCostStructureOnce([m
+[32m+[m[32m  db: Awaited<ReturnType<typeof requireDb>>,[m
+[32m+[m[32m  input: { organizationId: string; itemId: string; outputQuantity?: string }[m
+[32m+[m[32m) {[m
+   return db.transaction(async tx => {[m
+[31m-    await tx.execute(sql`set transaction isolation level repeatable read`);[m
+[32m+[m[32m    // This transaction only validates the item and allocates a version. The[m
+[32m+[m[32m    // atomic counter is the consistency boundary; READ COMMITTED lets a[m
+[32m+[m[32m    // waiting ON CONFLICT update observe the committed counter increment,[m
+[32m+[m[32m    // whereas REPEATABLE READ turns the same legitimate wait into 40001.[m
+[32m+[m[32m    await tx.execute(sql`set transaction isolation level read committed`);[m
+     const [item] = await tx[m
+       .select({ id: costItems.id })[m
+       .from(costItems)[m
+[36m@@ -138,7 +159,27 @@[m [mexport async function createCostStructure(input: {[m
+           eq(costStructures.itemId, input.itemId)[m
+         )[m
+       );[m
+[31m-    const version = Number(versionRow?.maxVersion ?? 0) + 1;[m
+[32m+[m[32m    const [counter] = await tx[m
+[32m+[m[32m      .insert(costStructureVersionCounters)[m
+[32m+[m[32m      .values({[m
+[32m+[m[32m        organizationId: input.organizationId,[m
+[32m+[m[32m        itemId: input.itemId,[m
+[32m+[m[32m        nextVersion: Number(versionRow?.maxVersion ?? 0) + 1,[m
+[32m+[m[32m      })[m
+[32m+[m[32m      .onConflictDoUpdate({[m
+[32m+[m[32m        target: [[m
+[32m+[m[32m          costStructureVersionCounters.organizationId,[m
+[32m+[m[32m          costStructureVersionCounters.itemId,[m
+[32m+[m[32m        ],[m
+[32m+[m[32m        set: {[m
+[32m+[m[32m          nextVersion: sql`${costStructureVersionCounters.nextVersion} + 1`,[m
+[32m+[m[32m        },[m
+[32m+[m[32m      })[m
+[32m+[m[32m      .returning({ version: costStructureVersionCounters.nextVersion });[m
+[32m+[m[32m    const version = Number(counter?.version);[m
+[32m+[m[32m    if (!Number.isInteger(version) || version < 1) {[m
+[32m+[m[32m      throw new Error("Não foi possível reservar uma versão de estrutura");[m
+[32m+[m[32m    }[m
+     const id = nanoid(20);[m
+     const timestamp = nowText();[m
+     const [structure] = await tx[m
+[36m@@ -149,7 +190,7 @@[m [mexport async function createCostStructure(input: {[m
+         itemId: input.itemId,[m
+         version,[m
+         status: "DRAFT",[m
+[31m-        outputQuantity,[m
+[32m+[m[32m        outputQuantity: input.outputQuantity ?? "1",[m
+         createdAt: timestamp,[m
+         updatedAt: timestamp,[m
+       })[m
+[36m@@ -158,6 +199,26 @@[m [mexport async function createCostStructure(input: {[m
+   });[m
+ }[m
+ [m
+[32m+[m[32mexport async function createCostStructure(input: {[m
+[32m+[m[32m  organizationId: string;[m
+[32m+[m[32m  itemId: string;[m
+[32m+[m[32m  outputQuantity?: string;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  const outputQuantity = input.outputQuantity ?? "1";[m
+[32m+[m[32m  requirePositiveDecimal(outputQuantity, "outputQuantity");[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  for (let attempt = 1; attempt <= 3; attempt += 1) {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      return await createCostStructureOnce(db, { ...input, outputQuantity });[m
+[32m+[m[32m    } catch (error) {[m
+[32m+[m[32m      if (!isTransientVersionAllocationConflict(error) || attempt === 3) {[m
+[32m+[m[32m        throw error;[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m  throw new Error("Não foi possível reservar uma versão de estrutura");[m
+[32m+[m[32m}[m
+[32m+[m
+ export async function updateCostStructure(input: {[m
+   organizationId: string;[m
+   structureId: string;[m

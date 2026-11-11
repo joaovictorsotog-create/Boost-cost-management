@@ -1,0 +1,37 @@
+COMMAND: git status --short --branch
+## [32mcosting-integrity-concurrency-round-20261111[m
+
+COMMAND: git show -s
+HEAD=e110f98b8298d7732e3424e4b84da09df9bad9ca
+PARENT=b9fc34b1c58b5bb76d104ebeddf4675c88dec536
+AUTHOR=joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+DATE=2026-11-11T14:44:01+00:00
+SUBJECT=fix(costing): close integrity and concurrency gaps
+
+COMMAND: git log --oneline --decorate -8
+[33me110f98[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcosting-integrity-concurrency-round-20261111[m[33m)[m fix(costing): close integrity and concurrency gaps
+[33mb9fc34b[m[33m ([m[1;31morigin/costing-correction-round-20261111[m[33m, [m[1;32mcosting-correction-round-20261111[m[33m)[m fix(costing): enforce snapshot integrity and draft lifecycle
+[33m0e1457c[m[33m ([m[1;32mfeature/alianza-costing-foundation-20261110[m[33m)[m reconstruct(costing): apply recovered audit corrections
+[33m5415538[m reconstruct(costing): restore initial costing implementation
+[33m27df6b0[m[33m ([m[1;31morigin/feature/alianza-costing-foundation-20261110[m[33m)[m Normalize exact rational values in costing snapshots
+[33m68a673b[m Test calculation snapshots and structure publication planning
+[33m04a63cb[m Add validated costing structure publication plan
+[33m13905fa[m Add reproducible costing calculation snapshots
+
+COMMAND: git diff --stat BASE..FINAL
+ drizzle/pg/0037_costing_correction_integrity.sql |  50 [32m++++++++[m[31m-[m
+ drizzle/pg/schema.costing.ts                     |  26 [32m+++++[m
+ scripts/costing-correction-pg.ts                 |  70 [32m++++++++++++[m
+ scripts/run-costing-correction-pg.sh             | 137 [32m+++++++++++++++++++++[m[31m--[m
+ server/db/costing.ts                             |  83 [32m++++++++++++[m[31m--[m
+ 5 files changed, 340 insertions(+), 26 deletions(-)
+
+COMMAND: git diff --name-status BASE..FINAL
+M	drizzle/pg/0037_costing_correction_integrity.sql
+M	drizzle/pg/schema.costing.ts
+M	scripts/costing-correction-pg.ts
+M	scripts/run-costing-correction-pg.sh
+M	server/db/costing.ts
+
+COMMAND: git diff --check BASE..FINAL
+EXIT=0

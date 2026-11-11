@@ -1,0 +1,6 @@
+Temporary audit-only wrapper derived from the audited executor; the application repository and audited files were not modified.
+
+Command:
+/tmp/run-costing-integrity-audit-extra.sh
+
+The wrapper added one direct SQL UPDATE changing both organizationId and structureId in the same statement, followed by direct SQL GROUP BY/count queries for the final target-a state. The complete output is in postgres-extra-org-structure-and-final-state.txt.
