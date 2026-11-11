@@ -1,0 +1,10 @@
+# SHA-256 — Entrega 3B.1.8
+# Gerado localmente após a suíte PostgreSQL 16.15; o próprio manifesto não é incluído.
+7b9d022c9e6444a654eb1b3bd07f1f92cf795e035f23b073f51a007afb4c37dc  alianza-entrega-3b1-role-auditoria.sql
+b5cf6944b4d8eb404011c8590eaf3645586d5bd43a56cc8c454d4aeceb659709  alianza-entrega-3b1-8-plano-tecnico.md
+6d892b62d837a031c2248488db47463a56b556760f8d3d09572e85f1fcc73df2  alianza-entrega-3b1-8-matriz-controles-evidencias.md
+7855e3aa5fe713d8a0e34ce2d5edb2301c8eb0649f23e5d430c3d7d58479667b  alianza-entrega-3b1-8-relatorio-validacoes.md
+082f9154b5bd34abf33ecbbc8557307dc71ce6d4e0946df709e78ca50ff0a152  alianza-entrega-3b1-8-registro-revisoes-executaveis.csv
+f4819da71cfcc42a06daf44203c91cddc38c8433c6c00f192c657a09f3c17032  alianza-entrega-3b1-8-cenarios.md
+2423f37fd042e33bc82b12eae2fd53b8579bb885f4dd74cd6cf903ebedc6cc30  alianza-entrega-3b1-8-modelo-aceitacao-temporary.csv
+36d7bffe25b66f0b979abb44a1439a5ea103f4410f9f22efdc878414bc7f0d19  test_3b1_8_postgres.py
