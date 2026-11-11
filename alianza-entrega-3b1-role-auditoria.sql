@@ -1,4 +1,4 @@
--- ENTREGA 3B.1 — Plano SQL da role PostgreSQL de auditoria
+-- ENTREGA 3B.1.7 — Plano SQL da role PostgreSQL de auditoria
 --
 -- NÃO EXECUTAR SEM AUTORIZAÇÃO ADMINISTRATIVA EXPLÍCITA.
 -- Este arquivo é um plano revisável. Não contém senha nem connection string.
@@ -438,6 +438,40 @@ SELECT e.extname AS extension_name,
 FROM pg_catalog.pg_extension e
 ORDER BY e.extname;
 
+-- Ownership de categorias adicionais que podem permitir alterações estruturais
+-- ou controlar resolução/execução: tablespaces, collations e text search.
+SELECT 'tablespace' AS object_kind,
+       NULL::text AS schema_name,
+       spcname AS object_name,
+       pg_get_userbyid(spcowner) AS owner_name
+FROM pg_catalog.pg_tablespace
+UNION ALL
+SELECT 'collation', n.nspname, c.collname, pg_get_userbyid(c.collowner)
+FROM pg_catalog.pg_collation c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.collnamespace
+WHERE n.nspname NOT LIKE 'pg_%' AND n.nspname <> 'information_schema'
+UNION ALL
+SELECT 'text_search_configuration', n.nspname, c.cfgname,
+       pg_get_userbyid(c.cfgowner)
+FROM pg_catalog.pg_ts_config c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.cfgnamespace
+UNION ALL
+SELECT 'text_search_dictionary', n.nspname, d.dictname,
+       pg_get_userbyid(d.dictowner)
+FROM pg_catalog.pg_ts_dict d
+JOIN pg_catalog.pg_namespace n ON n.oid = d.dictnamespace
+UNION ALL
+SELECT 'text_search_parser', n.nspname, p.prsname,
+       pg_get_userbyid(p.prsowner)
+FROM pg_catalog.pg_ts_parser p
+JOIN pg_catalog.pg_namespace n ON n.oid = p.prsnamespace
+UNION ALL
+SELECT 'text_search_template', n.nspname, t.tmplname,
+       pg_get_userbyid(t.tmplowner)
+FROM pg_catalog.pg_ts_template t
+JOIN pg_catalog.pg_namespace n ON n.oid = t.tmplnamespace
+ORDER BY object_kind, schema_name, object_name;
+
 -- Resultado obrigatório: nenhum type, domain, enum ou extensão relevante
 -- pertencente a alianza_audit_ro. A ausência de visibilidade deve ser marcada
 -- como indeterminada, não interpretada como ausência física.
@@ -739,38 +773,48 @@ ORDER BY function_signature, referenced_class, referenced_object_id;
 -- Campos obrigatórios do registro externo:
 --   schema_name, object_name, identity_arguments, object_type, language_name,
 --   owner_name, security_mode, extension_name, definition_sha256,
---   definition_md5, review_status, reviewer, reviewed_at, evidence_ref,
+--   sha256_verified, definition_md5, review_status, reviewer, reviewed_at,
+--   evidence_ref,
 --   technical_conclusion, risk_justification.
 --
 -- `definition_sha256` é calculado pelo cliente sobre os bytes UTF-8 da
 -- definição visível sem normalização. `definition_md5` é exposto pelo SQL
 -- apenas como verificação auxiliar de alteração. Se a definição mudar, o
 -- registro perde validade mesmo que os demais campos permaneçam iguais.
+-- `sha256_verified` só pode ser true após o procedimento externo documentado;
+-- o PostgreSQL não é declarado como calculador de SHA-256 nesta etapa.
 -- O cliente deve substituir a CTE vazia por VALUES tipado, sem executar DDL.
 WITH review_registry AS (
   SELECT *
   FROM (VALUES
     (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::timestamptz, NULL::text,
+     NULL::text, NULL::text, NULL::text, NULL::text, NULL::boolean,
+     NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text,
      NULL::text, NULL::text)
   ) AS v(schema_name, object_name, identity_arguments, object_type,
          language_name, owner_name, security_mode, extension_name,
-         definition_sha256, definition_md5, review_status, reviewer,
+         definition_sha256, sha256_verified, definition_md5, review_status, reviewer,
          reviewed_at, evidence_ref, technical_conclusion, risk_justification)
   WHERE schema_name IS NOT NULL
 ), function_inventory AS (
   SELECT n.nspname AS schema_name,
          p.proname AS object_name,
          pg_get_function_identity_arguments(p.oid) AS identity_arguments,
-         CASE WHEN p.prokind = 'p' THEN 'procedure' ELSE 'function' END
+         CASE WHEN p.prokind = 'p' THEN 'procedure'
+              WHEN p.prokind = 'a' THEN 'aggregate'
+              WHEN p.prokind = 'w' THEN 'window_function'
+              ELSE 'unknown' END
            AS object_type,
          lang.lanname AS language_name,
          owner.rolname AS owner_name,
          CASE WHEN p.prosecdef THEN 'SECURITY DEFINER'
               ELSE 'SECURITY INVOKER' END AS security_mode,
          ext.extname AS extension_name,
-         md5(pg_get_functiondef(p.oid)) AS definition_md5,
+         md5(CASE WHEN p.prokind IN ('f', 'p', 'w')
+                  THEN pg_get_functiondef(p.oid)
+                  ELSE format('pg_proc:%s:%s:%s:%s:%s', p.oid, p.proname,
+                              p.prokind, p.proowner, p.prolang)
+             END) AS definition_md5,
          has_function_privilege(current_user, p.oid, 'EXECUTE') AS can_execute
   FROM pg_catalog.pg_proc p
   JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
@@ -784,7 +828,7 @@ WITH review_registry AS (
   LEFT JOIN pg_catalog.pg_extension ext ON ext.oid = dep.refobjid
   WHERE n.nspname NOT LIKE 'pg_%'
     AND n.nspname <> 'information_schema'
-    AND p.prokind IN ('f', 'p')
+    AND p.prokind IN ('f', 'p', 'a', 'w')
 ), review_reconciliation AS (
   SELECT
     COALESCE(bool_and(
@@ -803,11 +847,13 @@ WITH review_registry AS (
       AND rr.evidence_ref IS NOT NULL
       AND rr.technical_conclusion IS NOT NULL
       AND rr.risk_justification IS NOT NULL
+      AND rr.sha256_verified IS TRUE
     ) FILTER (WHERE fi.can_execute), true) AS all_reviews_valid,
     COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NULL), false)
       AS has_missing_review,
     COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NOT NULL
       AND (rr.review_status <> 'APPROVED'
+        OR rr.sha256_verified IS NOT TRUE
         OR rr.definition_md5 <> fi.definition_md5
         OR rr.schema_name <> fi.schema_name
         OR rr.object_name <> fi.object_name
@@ -1027,6 +1073,9 @@ LIMIT 1;
 ROLLBACK;
 
 -- Resultado obrigatório: transaction_read_only = on.
+-- Resultado obrigatório adicional: default_transaction_read_only = on.
+-- A configuração padrão não substitui ACLs, RLS ou a verificação do estado
+-- transaccional; ambas as flags são necessárias para aprovação.
 
 -- ============================================================================
 -- ETAPA 13 — Validação final objetiva
@@ -1040,12 +1089,12 @@ review_registry AS (
   SELECT *
   FROM (VALUES
     (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::timestamptz, NULL::text,
+     NULL::text, NULL::text, NULL::text, NULL::text, NULL::boolean,
+     NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text,
      NULL::text, NULL::text)
   ) AS v(schema_name, object_name, identity_arguments, object_type,
          language_name, owner_name, security_mode, extension_name,
-         definition_sha256, definition_md5, review_status, reviewer,
+         definition_sha256, sha256_verified, definition_md5, review_status, reviewer,
          reviewed_at, evidence_ref, technical_conclusion, risk_justification)
   WHERE schema_name IS NOT NULL
 ),
@@ -1053,14 +1102,21 @@ review_inventory_final AS (
   SELECT n.nspname AS schema_name,
          p.proname AS object_name,
          pg_get_function_identity_arguments(p.oid) AS identity_arguments,
-         CASE WHEN p.prokind = 'p' THEN 'procedure' ELSE 'function' END
+         CASE WHEN p.prokind = 'p' THEN 'procedure'
+              WHEN p.prokind = 'a' THEN 'aggregate'
+              WHEN p.prokind = 'w' THEN 'window_function'
+              ELSE 'unknown' END
            AS object_type,
          lang.lanname AS language_name,
          owner.rolname AS owner_name,
          CASE WHEN p.prosecdef THEN 'SECURITY DEFINER'
               ELSE 'SECURITY INVOKER' END AS security_mode,
          ext.extname AS extension_name,
-         md5(pg_get_functiondef(p.oid)) AS definition_md5,
+         md5(CASE WHEN p.prokind IN ('f', 'p', 'w')
+                  THEN pg_get_functiondef(p.oid)
+                  ELSE format('pg_proc:%s:%s:%s:%s:%s', p.oid, p.proname,
+                              p.prokind, p.proowner, p.prolang)
+             END) AS definition_md5,
          has_function_privilege(current_user, p.oid, 'EXECUTE') AS can_execute
   FROM pg_catalog.pg_proc p
   JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
@@ -1093,11 +1149,13 @@ review_state AS (
       AND rr.evidence_ref IS NOT NULL
       AND rr.technical_conclusion IS NOT NULL
       AND rr.risk_justification IS NOT NULL
+      AND rr.sha256_verified IS TRUE
     ) FILTER (WHERE fi.can_execute), true) AS all_function_reviews_valid,
     COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NULL), false)
       AS has_missing_function_review,
     COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NOT NULL
       AND (rr.review_status <> 'APPROVED'
+        OR rr.sha256_verified IS NOT TRUE
         OR rr.definition_md5 <> fi.definition_md5
         OR rr.schema_name <> fi.schema_name
         OR rr.object_name <> fi.object_name
@@ -1116,6 +1174,14 @@ review_state AS (
    AND rr.object_name = fi.object_name
    AND rr.identity_arguments = fi.identity_arguments
    AND rr.object_type = fi.object_type
+),
+temporary_acceptance AS (
+  SELECT
+    false AS temporary_acceptance_valid,
+    NULL::text AS temporary_acceptance_responsible,
+    NULL::timestamptz AS temporary_acceptance_date,
+    NULL::text AS temporary_acceptance_evidence,
+    NULL::text AS temporary_acceptance_justification
 ),
 role_tree AS (
   SELECT r.oid AS role_oid,
@@ -1285,6 +1351,18 @@ ownership_state AS (
                WHERE pg_get_userbyid(s.subowner) = current_user)
     OR EXISTS (SELECT 1 FROM pg_catalog.pg_language l
                WHERE pg_get_userbyid(l.lanowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_tablespace t
+               WHERE pg_get_userbyid(t.spcowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_collation c
+               WHERE pg_get_userbyid(c.collowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_ts_config c
+               WHERE pg_get_userbyid(c.cfgowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_ts_dict d
+               WHERE pg_get_userbyid(d.dictowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_ts_parser p
+               WHERE pg_get_userbyid(p.prsowner) = current_user)
+    OR EXISTS (SELECT 1 FROM pg_catalog.pg_ts_template t
+               WHERE pg_get_userbyid(t.tmplowner) = current_user)
     AS has_relevant_ownership
 ),
 owner_effective_privilege_state AS (
@@ -1472,7 +1550,7 @@ executable_function_state AS (
 ),
 catalog_state AS (
   SELECT
-    count(*) = 22 AS required_catalogs_visible,
+    count(*) = 28 AS required_catalogs_visible,
     COALESCE(bool_and(has_table_privilege(current_user, c.oid, 'SELECT')),
              false) AS required_catalogs_selectable,
     COALESCE(bool_and(
@@ -1487,7 +1565,10 @@ catalog_state AS (
                                   'pg_largeobject_metadata',
                                   'pg_foreign_data_wrapper', 'pg_foreign_server',
                                   'pg_event_trigger', 'pg_publication',
-                                  'pg_subscription', 'pg_language')), false)
+                                  'pg_subscription', 'pg_language',
+                                  'pg_tablespace', 'pg_collation',
+                                  'pg_ts_config', 'pg_ts_dict', 'pg_ts_parser',
+                                  'pg_ts_template')), false)
       AS ownership_catalogs_selectable,
     COALESCE(bool_and(has_table_privilege(current_user, c.oid, 'SELECT'))
       FILTER (WHERE c.relname = 'pg_default_acl'), false)
@@ -1501,7 +1582,52 @@ catalog_state AS (
                       'pg_type', 'pg_extension', 'pg_depend', 'pg_language',
                       'pg_largeobject_metadata', 'pg_foreign_data_wrapper',
                       'pg_foreign_server', 'pg_event_trigger', 'pg_publication',
-                      'pg_subscription')
+                      'pg_subscription', 'pg_tablespace', 'pg_collation',
+                      'pg_ts_config', 'pg_ts_dict', 'pg_ts_parser',
+                      'pg_ts_template')
+),
+default_acl_state AS (
+  WITH RECURSIVE default_role_tree AS (
+    SELECT oid AS role_oid
+    FROM pg_catalog.pg_roles
+    WHERE rolname = current_user
+    UNION
+    SELECT am.roleid
+    FROM pg_catalog.pg_auth_members am
+    JOIN default_role_tree rt ON rt.role_oid = am.member
+  )
+  SELECT
+    COALESCE(bool_or(
+      (x.grantee = 0 OR x.grantee IN (SELECT role_oid FROM default_role_tree))
+      AND x.privilege_type IN (
+        'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES',
+        'TRIGGER', 'USAGE', 'CREATE', 'EXECUTE'
+      )
+    ), false) AS has_dangerous_default_acl,
+    count(*) AS visible_default_acl_entries,
+    has_table_privilege(current_user, 'pg_catalog.pg_default_acl', 'SELECT')
+      AS default_acl_inventory_complete
+  FROM pg_catalog.pg_default_acl d
+  CROSS JOIN LATERAL aclexplode(d.defaclacl) x
+),
+foreign_privilege_state AS (
+  SELECT
+    to_regprocedure('has_foreign_data_wrapper_privilege(name,name,text)')
+      IS NOT NULL AS fdw_check_available,
+    to_regprocedure('has_server_privilege(name,name,text)') IS NOT NULL
+      AS server_check_available,
+    COALESCE((SELECT bool_or(
+      has_foreign_data_wrapper_privilege(current_user, f.fdwname, 'USAGE')
+    ) FROM pg_catalog.pg_foreign_data_wrapper f), false)
+      AS has_fdw_effective_privilege,
+    COALESCE((SELECT bool_or(
+      has_server_privilege(current_user, s.srvname, 'USAGE')
+    ) FROM pg_catalog.pg_foreign_server s), false)
+      AS has_server_effective_privilege,
+    (SELECT count(*) FROM pg_catalog.pg_foreign_data_wrapper)
+      AS visible_fdw_count,
+    (SELECT count(*) FROM pg_catalog.pg_foreign_server)
+      AS visible_server_count
 ),
 final_flags AS (
   SELECT
@@ -1524,13 +1650,17 @@ final_flags AS (
     sd.*,
     ef.*,
     cs.*,
+    fps.*,
+    das.*,
     (SELECT count(*) FROM security_definer_dependencies)
       AS security_definer_dependency_count,
     has_database_privilege(current_user, current_database(), 'CREATE')
       AS can_create_in_database,
     has_database_privilege(current_user, current_database(), 'TEMPORARY')
       AS can_create_temp,
-    current_setting('transaction_read_only') = 'on' AS transaction_read_only_ok
+    current_setting('transaction_read_only') = 'on' AS transaction_read_only_ok,
+    current_setting('default_transaction_read_only') = 'on'
+      AS default_transaction_read_only_ok
   FROM membership_state ms
   CROSS JOIN schema_state ss
   CROSS JOIN relation_state rs
@@ -1540,6 +1670,8 @@ final_flags AS (
   CROSS JOIN security_definer_state sd
   CROSS JOIN executable_function_state ef
   CROSS JOIN catalog_state cs
+  CROSS JOIN default_acl_state das
+  CROSS JOIN temporary_acceptance ta
 )
 SELECT CASE
          WHEN NOT identity_ok
@@ -1554,9 +1686,13 @@ SELECT CASE
            OR has_sequence_privilege
            OR has_large_object_read
            OR has_large_object_write
+           OR has_fdw_effective_privilege
+           OR has_server_effective_privilege
            OR has_relevant_ownership
            OR has_security_definer_risk
+           OR has_owner_effective_privilege_risk
            OR NOT transaction_read_only_ok
+           OR NOT default_transaction_read_only_ok
          THEN 'REPROVADA'
          WHEN NOT membership_options_visible
            OR NOT membership_catalog_selectable
@@ -1564,13 +1700,23 @@ SELECT CASE
            OR NOT required_catalogs_selectable
            OR NOT ownership_catalogs_selectable
            OR NOT default_acl_catalog_selectable
+           OR NOT default_acl_inventory_complete
+           OR has_dangerous_default_acl
+           OR NOT fdw_check_available
+           OR NOT server_check_available
+           OR visible_fdw_count IS NULL
+           OR visible_server_count IS NULL
            OR visible_schema_count = 0
            OR visible_relation_count = 0
            OR has_missing_function_review
            OR has_stale_function_review
            OR NOT all_function_reviews_valid
            OR registry_entry_count <> executable_function_count
+           OR has_security_definer_metadata_indeterminate
+           OR has_nonverifiable_executable_function
            OR NOT has_migration_select
+         THEN 'INDETERMINADA'
+         WHEN can_create_temp AND NOT temporary_acceptance_valid
          THEN 'INDETERMINADA'
          WHEN can_create_temp
          THEN 'APROVACAO_CONDICIONAL_TEMPORARY'
@@ -1594,6 +1740,12 @@ SELECT CASE
        visible_large_object_count,
        has_large_object_read,
        has_large_object_write,
+       fdw_check_available,
+       server_check_available,
+       has_fdw_effective_privilege,
+       has_server_effective_privilege,
+       visible_fdw_count,
+       visible_server_count,
        has_relevant_ownership,
        has_security_definer_risk,
        has_security_definer_review_required,
@@ -1610,6 +1762,15 @@ SELECT CASE
        executable_function_count,
        registry_entry_count,
        transaction_read_only_ok,
+       default_transaction_read_only_ok,
+       has_dangerous_default_acl,
+       visible_default_acl_entries,
+       default_acl_inventory_complete,
+       temporary_acceptance_valid,
+       temporary_acceptance_responsible,
+       temporary_acceptance_date,
+       temporary_acceptance_evidence,
+       temporary_acceptance_justification,
        required_catalogs_visible,
        required_catalogs_selectable,
        membership_catalog_selectable,

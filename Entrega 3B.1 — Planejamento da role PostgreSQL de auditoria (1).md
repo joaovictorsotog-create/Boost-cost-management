@@ -1,4 +1,4 @@
-# Entrega 3B.1.5 — Fechamento da auditoria da role PostgreSQL
+# Entrega 3B.1.7 — Fechamento da auditoria da role PostgreSQL
 
 **Projeto:** Alianza — Sistema de Custos  
 **Ambiente:** Supabase PostgreSQL de produção  
@@ -404,13 +404,43 @@ Nenhuma destas ações foi executada.
 
 Este documento requer revisão e aprovação do administrador do Supabase. Até essa aprovação, não executar o SQL, não criar a role, não configurar secrets e não iniciar a Entrega 3B.
 
-## 16. Artefactos da revisão 3B.1.6
+## 16. Artefactos da revisão 3B.1.7
 
 Além deste plano e do SQL comentado, a revisão entrega:
 
 1. uma matriz de controlos e evidências, com a consulta correspondente e os critérios de `REPROVADA`/`INDETERMINADA`;
 2. um relatório de alterações em relação à 3B.1.3;
 3. uma matriz de compatibilidade por versão PostgreSQL, sempre condicionada à confirmação de `server_version_num` na conexão real;
-4. o modelo externo `alianza-entrega-3b1-6-registro-revisoes-funcoes.csv`, sem dados preenchidos, para reconciliação individual.
+4. o modelo externo `alianza-entrega-3b1-7-registro-revisoes-funcoes.csv`, sem dados preenchidos, para reconciliação individual;
+5. a matriz de cenários e o teste local da decisão consolidada;
+6. o modelo vazio `alianza-entrega-3b1-7-aceitacao-temporary.csv`, que não pode ser preenchido automaticamente.
 
 Esses artefactos são documentais. Nenhum resultado de produção é afirmado antes de uma execução autorizada através da conexão independente da role.
+
+## 17. Correções obrigatórias da 3B.1.7
+
+### SHA-256 e representação canónica
+
+O SQL expõe a representação textual de revisão e um `definition_md5` auxiliar, mas não presume `pgcrypto` nem declara cálculo de SHA-256 dentro do PostgreSQL. O cliente deve obter a definição/canonical material da mesma sessão, preservar exactamente os bytes UTF-8 sem normalização e calcular SHA-256 externamente. O registo só é válido com `sha256_verified = true`, hash não vazio e evidência reproduzível; divergência invalida a revisão e produz `INDETERMINADA`.
+
+### População completa de `pg_proc`
+
+As CTEs de revisão incluem `prokind` `f`, `p`, `a` e `w`, respectivamente função, procedure, aggregate e window function. Objectos fora dessa população, ou categorias não interpretáveis na versão real, não podem ser omitidos: a consulta falhada ou a população não verificável impede aprovação.
+
+### Read-only da sessão
+
+São observados separadamente `transaction_read_only` e `default_transaction_read_only`. Ambos devem estar `on`. O segundo é uma configuração preventiva e não substitui ACLs, RLS, ausência de `BYPASSRLS`, `NOINHERIT` nem a validação dos privilégios efectivos.
+
+### FDW e foreign servers
+
+As funções nativas `has_foreign_data_wrapper_privilege` e `has_server_privilege` são verificadas por disponibilidade e usadas para avaliar `USAGE` efectivo, que inclui concessões directas, `PUBLIC` e memberships segundo o PostgreSQL. A ausência de qualquer função, falha da consulta ou visibilidade incompleta impede aprovação.
+
+### Default ACLs e TEMPORARY
+
+Default ACLs são inventariados por owner, schema, tipo, grantee e privilégio. Concessões perigosas a `PUBLIC`, à role auditada ou a roles relacionadas produzem `INDETERMINADA`; não são tratadas como ausência de risco.
+
+`TEMPORARY` não gera aprovação condicional automaticamente. A aceitação deve ser injectada externamente com responsável, data, evidência e justificação válidos. Sem esse registo, o resultado é `INDETERMINADA`; somente com aceitação válida pode ser `APROVACAO_CONDICIONAL_TEMPORARY`.
+
+### Ownership ampliado
+
+Além de relações, funções, tipos, extensões, Large Objects e objectos externos, o inventário cobre tablespaces, collations e objectos de text search. Qualquer catálogo não verificável mantém o resultado `INDETERMINADA`.

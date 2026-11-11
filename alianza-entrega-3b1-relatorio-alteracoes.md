@@ -1,4 +1,4 @@
-# Entrega 3B.1.6 — Relatório de alterações e compatibilidade
+# Entrega 3B.1.7 — Relatório de alterações e compatibilidade
 
 **Projeto:** Alianza — Sistema de Custos  
 **Role proposta:** `alianza_audit_ro`  
@@ -90,4 +90,22 @@ Um owner com caminho efectivo de escrita ou ownership externo relevante torna o 
 
 ### 6.3 Limitação deliberada
 
-O registo de revisões não é persistido no banco nesta entrega. O cliente read-only deve injectá-lo como CTE `VALUES` tipada, a partir do ficheiro auxiliar, sem DDL/DML. Isso preserva a proibição de escrita e mantém a reconciliação vinculada à mesma sessão e definição observadas.
+O registo de revisões não é persistido no banco nesta entrega. O cliente read-only deve injectá-lo como CTE `VALUES` tipada, a partir de `alianza-entrega-3b1-7-registro-revisoes-funcoes.csv`, sem DDL/DML. Isso preserva a proibição de escrita e mantém a reconciliação vinculada à mesma sessão e definição observadas.
+
+## 7. Correcções da Entrega 3B.1.7
+
+| Problema | Alteração | Localização | Teste/evidência |
+|---|---|---|---|
+| CSV tinha SHA-256, mas a SQL só comparava MD5 | Adicionado `sha256_verified`; SHA-256 externo reproduzível sobre bytes UTF-8 sem normalização; MD5 permanece auxiliar | Etapa 9D, CTE `review_state`, CSV | Hash divergente fica stale e `INDETERMINADA`; teste 2 |
+| Aggregates/window functions não bloqueavam cobertura incompleta | População inclui `prokind` `f`, `p`, `a`, `w`; material canónico para categorias sem `pg_get_functiondef` | Inventários 9D e 13 | Aggregate sem registo: `INDETERMINADA`; teste 4 |
+| `default_transaction_read_only` não entrava na decisão | Adicionada flag separada e precedência de reprovação | Etapa 12 e `final_flags` | Configuração desligada: `REPROVADA`; teste 8 |
+| FDW/servers apenas tinham ACL inventariada | Adicionadas `has_foreign_data_wrapper_privilege` e `has_server_privilege`, disponibilidade, contagem e privilégio efectivo | `foreign_privilege_state` | Privilégio efectivo: `REPROVADA`; função indisponível/falha: `INDETERMINADA`; testes 9–10 |
+| Indicadores críticos eram apenas exibidos | `has_security_definer_metadata_indeterminate`, `has_owner_effective_privilege_risk`, `has_nonverifiable_executable_function`, Large Objects e outros agora participam do `CASE` | Etapa 13 | Testes 5, 6 e 15 |
+| Default ACL e TEMPORARY permitiam conclusão indevida | Default ACL classificado; aceitação TEMPORARY exige responsável, data, evidência e justificação externos | `default_acl_state`, `temporary_acceptance` | Sem aceitação: `INDETERMINADA`; com aceitação válida: condicional; testes 11–13 |
+| Ownership não cobria categorias adicionais | Adicionados tablespaces, collations e text search; catálogo obrigatório ampliado | Etapa 8B, `ownership_state`, `catalog_state` | Categoria não verificável: `INDETERMINADA`; teste 14 |
+
+## 8. Testes executados
+
+O teste local `alianza-entrega-3b1-7-test-decisao.py` executa 15 cenários positivos e negativos da precedência do `CASE`; todos devem passar sem conexão a banco. A matriz correspondente está em `alianza-entrega-3b1-7-cenarios-decisao.md`.
+
+Não foram executadas consultas PostgreSQL, portanto continuam não executados: assinatura real das funções FDW/server, versão efectiva, visibilidade dos catálogos, resultados de ACLs, memberships, ownership, `transaction_read_only` e `default_transaction_read_only` da produção. Essas limitações produzem `INDETERMINADA` quando a execução real for autorizada e não devem ser convertidas em aprovação.

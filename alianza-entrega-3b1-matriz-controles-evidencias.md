@@ -1,4 +1,4 @@
-# Entrega 3B.1.6 — Matriz de controlos e evidências
+# Entrega 3B.1.7 — Matriz de controlos e evidências
 
 **Projeto:** Alianza — Sistema de Custos  
 **Role:** `alianza_audit_ro`  
@@ -31,6 +31,13 @@
 | Migrations | Etapa 11 e `has_migration_select` | `SELECT` em outras tabelas de `supabase_migrations` | Histórico não legível ou sessão diferente da role auditada |
 | RLS | Etapa 10: `relrowsecurity`, `relforcerowsecurity`, policies | `BYPASSRLS` ou privilégio não autorizado | Policy/catálogo não visível |
 | Read-only transacional | Etapa 12 e `transaction_read_only_ok` | `transaction_read_only` desligado | Falha de `SHOW`, `BEGIN`/`ROLLBACK` ou estado não observável |
+| Read-only padrão | Etapa 12 e `default_transaction_read_only_ok` | Configuração padrão desligada | Falha de `SHOW` ou valor não observável |
+| SHA-256 da revisão | Etapa 9D/13: `sha256_verified`, hash externo, identidade e MD5 auxiliar | Divergência de hash | SHA externo não calculado/verificado de forma reproduzível |
+| População executável | `pg_proc.prokind` `f/p/a/w`, contadores e categorias desconhecidas | Objecto executável com risco ou privilégio indevido | Aggregate/window/unknown sem material ou revisão verificável |
+| FDW e foreign server efectivo | `foreign_privilege_state` e funções nativas | `USAGE` efectivo indevido | Função nativa ausente, ACL/role invisível ou consulta falha |
+| Default ACLs classificados | `default_acl_state`: owner, schema, tipo, grantee e privilégio | Concessão futura perigosa | Catálogo ou inventário não verificável |
+| Aceitação de TEMPORARY | `temporary_acceptance` com responsável, data, evidência e justificação | TEMPORARY sem aceitação formal | Registo ausente/incompleto |
+| Ownership ampliado | Tablespaces, collations e text search, além das categorias anteriores | Ownership relevante da role auditada | Categoria/catálogo não verificável |
 | Integridade do inventário | Contagens, ausência de limites arbitrários e regras do plano | Conclusão baseada em inventário truncado | Timeout, falha de statement, transporte truncado ou visibilidade parcial |
 
 ## Estados finais
@@ -61,4 +68,4 @@ Para cada função executável, o registo externo deve conter:
 
 O registo deve ainda conter `definition_sha256` calculado sobre os bytes UTF-8 da definição visível e `definition_md5` auxiliar. A consulta final compara os campos de identidade, exige `review_status = APPROVED`, conta todas as funções executáveis e reprova a validade lógica do registo quando houver entrada duplicada, ausente ou desatualizada.
 
-O SQL não executa funções e não transforma uma classificação manual sem evidências em aprovação.
+O SQL não executa funções e não transforma uma classificação manual sem evidências em aprovação. O SHA-256 é calculado externamente; o SQL exige `sha256_verified = true` e reconcilia o material observado.
