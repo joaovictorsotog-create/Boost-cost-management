@@ -1,0 +1,53 @@
+--- application status ---
+## [32mcosting-security-bootstrap-final-20261111[m
+--- application log ---
+[33mcommit 3350e6e884be85b410d31e5ca9e6d133b643bf7f[m
+Author:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+AuthorDate: Wed Nov 11 19:05:20 2026 +0000
+Commit:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+CommitDate: Wed Nov 11 19:05:20 2026 +0000
+
+    fix(costing): separate RLS identities and add safe CRUD edits
+
+[33mcommit d9ff4dd7024674c54af128e4bdc816a0b459e22a[m
+Author:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+AuthorDate: Wed Nov 11 18:37:35 2026 +0000
+Commit:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+CommitDate: Wed Nov 11 18:37:35 2026 +0000
+
+    audit(costing): package completion evidence
+
+    Co-authored-by: Manus <dev-agent@manus.ai>
+
+[33mcommit 357fc3226dc784964679c6ce611eaee2f0f9d76b[m
+Author:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+AuthorDate: Wed Nov 11 15:34:20 2026 +0000
+Commit:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+CommitDate: Wed Nov 11 15:34:20 2026 +0000
+
+    fix(costing): verify postgres migration and concurrency pipeline
+
+    Co-authored-by: Manus <dev-agent@manus.ai>
+--- base comparison ---
+ drizzle/pg/0039_costing_rls_security.sql           | 247 [32m+++++++++++[m[31m----------[m
+ .../0040_costing_security_identity_bootstrap.sql   | 172 [32m++++++++++++++[m
+ drizzle/pg/meta/_journal.json                      |   7 [32m+[m
+ drizzle/pg/rls_multitenant.sql                     | 172 [32m+++++++++[m[31m-----[m
+ scripts/apply-supabase-rls.mjs                     |  90 [32m++++++[m[31m--[m
+ scripts/costing-crud-edit-pg.ts                    | 120 [32m++++++++++[m
+ scripts/run-costing-final-verification-pg.sh       |  12 [32m+[m
+ scripts/run-costing-identity-boundary-pg.sh        |  64 [32m++++++[m
+ scripts/run-costing-rls-pg.sh                      |  46 [32m+++[m[31m-[m
+ server/app-runtime-rls-context.contract.test.ts    |   9 [32m+[m[31m-[m
+ server/db/costing.ts                               | 138 [32m++++++++++++[m
+ server/routers/costing.test.ts                     |  63 [32m++++++[m
+ server/routers/costing.ts                          |  41 [32m++++[m
+ 13 files changed, 980 insertions(+), 201 deletions(-)
+--- branch refs ---
+  costing-completion-20261111                 [m d9ff4dd audit(costing): package completion evidence
+  costing-correction-round-20261111           [m b9fc34b fix(costing): enforce snapshot integrity and draft lifecycle
+  costing-final-stabilization-20261111        [m 0fe7df0 fix(costing): finalize versioning and publication races
+  costing-final-verification-20261111         [m 357fc32 fix(costing): verify postgres migration and concurrency pipeline
+  costing-integrity-concurrency-round-20261111[m e110f98 fix(costing): close integrity and concurrency gaps
+* [32mcosting-security-bootstrap-final-20261111   [m 3350e6e fix(costing): separate RLS identities and add safe CRUD edits
+  feature/alianza-costing-foundation-20261110 [m 0e1457c [[34morigin/feature/alianza-costing-foundation-20261110[m: ahead 2] reconstruct(costing): apply recovered audit corrections

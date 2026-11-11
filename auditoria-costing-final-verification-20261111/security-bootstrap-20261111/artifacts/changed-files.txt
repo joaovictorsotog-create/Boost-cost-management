@@ -1,0 +1,13 @@
+M	drizzle/pg/0039_costing_rls_security.sql
+A	drizzle/pg/0040_costing_security_identity_bootstrap.sql
+M	drizzle/pg/meta/_journal.json
+M	drizzle/pg/rls_multitenant.sql
+M	scripts/apply-supabase-rls.mjs
+A	scripts/costing-crud-edit-pg.ts
+M	scripts/run-costing-final-verification-pg.sh
+A	scripts/run-costing-identity-boundary-pg.sh
+M	scripts/run-costing-rls-pg.sh
+M	server/app-runtime-rls-context.contract.test.ts
+M	server/db/costing.ts
+M	server/routers/costing.test.ts
+M	server/routers/costing.ts

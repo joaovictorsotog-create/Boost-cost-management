@@ -1,0 +1,12 @@
+RLS apply preflight evidence — 2026-11-11
+
+Executed cases and observed fail-closed results:
+- missing SUPABASE_DATABASE_URL/VITE_SUPABASE_URL: rejected before connection
+- SUPABASE_RLS_ENV=production: rejected before connection
+- staging without SUPABASE_RLS_ALLOW_STAGING=true: rejected before connection
+- staging ref absent from SUPABASE_RLS_ALLOWED_PROJECT_REFS: rejected before connection
+- local database URL with remote host: rejected before connection
+- SUPABASE_RLS_APPLY_GLOBAL=true without SUPABASE_RLS_CONFIRM=APPLY_GLOBAL_RLS: rejected before connection
+- local host 127.0.0.1 with applyGlobal=false: preflight-passed, then connection refused on deliberately unused port 1; no database operation was performed
+
+Markers: RLS_APPLY_PREFLIGHT_TEST=PASS and RLS_APPLY_PREFLIGHT_CORRECTED_TEST=PASS.

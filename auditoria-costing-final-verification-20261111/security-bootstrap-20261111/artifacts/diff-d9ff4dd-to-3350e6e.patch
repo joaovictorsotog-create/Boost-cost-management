@@ -1,0 +1,1582 @@
+[1mdiff --git a/drizzle/pg/0039_costing_rls_security.sql b/drizzle/pg/0039_costing_rls_security.sql[m
+[1mindex 4c72950..2c4e37c 100644[m
+[1m--- a/drizzle/pg/0039_costing_rls_security.sql[m
+[1m+++ b/drizzle/pg/0039_costing_rls_security.sql[m
+[36m@@ -1,68 +1,89 @@[m
+[31m--- Costing tenant isolation and least-privilege grants.[m
+[31m--- This is intentionally incremental: historical migrations are not rewritten.[m
+[32m+[m[32m-- Costing RLS: identities are deliberately separated.[m
+[32m+[m[32m-- authenticated -> auth.uid() -> public.users.supabaseAuthId[m
+[32m+[m[32m-- app_runtime -> trusted transaction-local request.app_user_id[m
+[32m+[m[32m-- This migration fails closed when the Supabase auth dependency is absent.[m
+ [m
+[31m-CREATE SCHEMA IF NOT EXISTS private;[m
+[31m-REVOKE ALL ON SCHEMA private FROM PUBLIC;[m
+[31m-[m
+[31m--- A bootstrap-safe fallback is created only when the canonical helper has not[m
+[31m--- been installed yet by rls_multitenant.sql. The canonical helper later[m
+[31m--- replaces this body with Supabase auth.uid() support.[m
+ DO $$[m
+ BEGIN[m
+[31m-  IF to_regprocedure('private.current_app_user_id()') IS NULL THEN[m
+[31m-    EXECUTE $fn$[m
+[31m-      CREATE FUNCTION private.current_app_user_id()[m
+[31m-      RETURNS integer[m
+[31m-      LANGUAGE sql[m
+[31m-      STABLE[m
+[31m-      SECURITY DEFINER[m
+[31m-      SET search_path = public[m
+[31m-      AS $body$[m
+[31m-        SELECT id[m
+[31m-        FROM public.users[m
+[31m-        WHERE id = NULLIF(current_setting('request.app_user_id', true), '')::integer[m
+[31m-        LIMIT 1[m
+[31m-      $body$[m
+[31m-    $fn$;[m
+[31m-  END IF;[m
+[31m-[m
+[31m-  IF to_regprocedure('private.has_organization_access(character varying)') IS NULL THEN[m
+[31m-    EXECUTE $fn$[m
+[31m-      CREATE FUNCTION private.has_organization_access(target_organization_id varchar)[m
+[31m-      RETURNS boolean[m
+[31m-      LANGUAGE sql[m
+[31m-      STABLE[m
+[31m-      SECURITY DEFINER[m
+[31m-      SET search_path = public[m
+[31m-      AS $body$[m
+[31m-        SELECT EXISTS ([m
+[31m-          SELECT 1[m
+[31m-          FROM public.organization_members membership[m
+[31m-          WHERE membership."organizationId" = target_organization_id[m
+[31m-            AND membership."userId" = private.current_app_user_id()[m
+[31m-            AND membership.status = 'active'[m
+[31m-        )[m
+[31m-      $body$[m
+[31m-    $fn$;[m
+[32m+[m[32m  IF to_regclass('public.users') IS NULL[m
+[32m+[m[32m     OR to_regclass('public.organization_members') IS NULL[m
+[32m+[m[32m     OR to_regprocedure('auth.uid()') IS NULL THEN[m
+[32m+[m[32m    RAISE EXCEPTION[m
+[32m+[m[32m      'Costing RLS requires public.users, public.organization_members and auth.uid()';[m
+   END IF;[m
+ END $$;[m
+ [m
+[31m-REVOKE ALL ON FUNCTION private.current_app_user_id() FROM PUBLIC;[m
+[31m-REVOKE ALL ON FUNCTION private.has_organization_access(varchar) FROM PUBLIC;[m
+[32m+[m[32mCREATE SCHEMA IF NOT EXISTS private;[m
+[32m+[m[32mREVOKE ALL ON SCHEMA private FROM PUBLIC;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.current_authenticated_user_id()[m
+[32m+[m[32mRETURNS integer[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT u.id[m
+[32m+[m[32m  FROM public.users AS u[m
+[32m+[m[32m  WHERE u."supabaseAuthId" = auth.uid()[m
+[32m+[m[32m  LIMIT 1[m
+[32m+[m[32m$$;[m
+ [m
+[31m-DO $$[m
+[31m-BEGIN[m
+[31m-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN[m
+[31m-    EXECUTE 'GRANT USAGE ON SCHEMA private TO authenticated';[m
+[31m-    EXECUTE 'GRANT EXECUTE ON FUNCTION private.current_app_user_id() TO authenticated';[m
+[31m-    EXECUTE 'GRANT EXECUTE ON FUNCTION private.has_organization_access(varchar) TO authenticated';[m
+[31m-  END IF;[m
+[31m-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_runtime') THEN[m
+[31m-    EXECUTE 'GRANT USAGE ON SCHEMA private TO app_runtime';[m
+[31m-    EXECUTE 'GRANT EXECUTE ON FUNCTION private.current_app_user_id() TO app_runtime';[m
+[31m-    EXECUTE 'GRANT EXECUTE ON FUNCTION private.has_organization_access(varchar) TO app_runtime';[m
+[31m-  END IF;[m
+[31m-END $$;[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.current_app_runtime_user_id()[m
+[32m+[m[32mRETURNS integer[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT u.id[m
+[32m+[m[32m  FROM public.users AS u[m
+[32m+[m[32m  WHERE u.id = NULLIF(current_setting('request.app_user_id', true), '')::integer[m
+[32m+[m[32m  LIMIT 1[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.has_authenticated_organization_access(target_organization_id varchar)[m
+[32m+[m[32mRETURNS boolean[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT EXISTS ([m
+[32m+[m[32m    SELECT 1[m
+[32m+[m[32m    FROM public.organization_members AS membership[m
+[32m+[m[32m    WHERE membership."organizationId" = target_organization_id[m
+[32m+[m[32m      AND membership."userId" = private.current_authenticated_user_id()[m
+[32m+[m[32m      AND membership.status = 'active'[m
+[32m+[m[32m  )[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.has_app_runtime_organization_access(target_organization_id varchar)[m
+[32m+[m[32mRETURNS boolean[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT EXISTS ([m
+[32m+[m[32m    SELECT 1[m
+[32m+[m[32m    FROM public.organization_members AS membership[m
+[32m+[m[32m    WHERE membership."organizationId" = target_organization_id[m
+[32m+[m[32m      AND membership."userId" = private.current_app_runtime_user_id()[m
+[32m+[m[32m      AND membership.status = 'active'[m
+[32m+[m[32m  )[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.current_authenticated_user_id() FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.current_app_runtime_user_id() FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.has_authenticated_organization_access(varchar) FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.has_app_runtime_organization_access(varchar) FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m
+[32m+[m[32mGRANT USAGE ON SCHEMA private TO authenticated, app_runtime;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.current_authenticated_user_id() TO authenticated;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.has_authenticated_organization_access(varchar) TO authenticated;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.current_app_runtime_user_id() TO app_runtime;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.has_app_runtime_organization_access(varchar) TO app_runtime;[m
+ [m
+ DO $$[m
+ DECLARE[m
+[36m@@ -80,80 +101,70 @@[m [mBEGIN[m
+   ] LOOP[m
+     EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', current_table);[m
+     EXECUTE format('ALTER TABLE public.%I FORCE ROW LEVEL SECURITY', current_table);[m
+[31m-    EXECUTE format('REVOKE ALL ON TABLE public.%I FROM PUBLIC', current_table);[m
+[31m-    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN[m
+[31m-      EXECUTE format('REVOKE ALL ON TABLE public.%I FROM anon', current_table);[m
+[31m-    END IF;[m
+[31m-    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN[m
+[31m-      EXECUTE format('REVOKE ALL ON TABLE public.%I FROM authenticated', current_table);[m
+[31m-    END IF;[m
+[32m+[m[32m    EXECUTE format('REVOKE ALL ON TABLE public.%I FROM PUBLIC, anon, authenticated, app_runtime', current_table);[m
+ [m
+     EXECUTE format('DROP POLICY IF EXISTS %I_tenant_select ON public.%I', current_table, current_table);[m
+[31m-    EXECUTE format([m
+[31m-      'CREATE POLICY %I_tenant_select ON public.%I FOR SELECT TO PUBLIC USING (private.has_organization_access("organizationId"))',[m
+[31m-      current_table,[m
+[31m-      current_table[m
+[31m-    );[m
+[31m-[m
+     EXECUTE format('DROP POLICY IF EXISTS %I_tenant_insert ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_update ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_delete ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_authenticated_select ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_select ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_insert ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_update ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_delete ON public.%I', current_table, current_table);[m
+[32m+[m
+     EXECUTE format([m
+[31m-      'CREATE POLICY %I_tenant_insert ON public.%I FOR INSERT TO PUBLIC WITH CHECK (private.has_organization_access("organizationId"))',[m
+[31m-      current_table,[m
+[31m-      current_table[m
+[32m+[m[32m      'CREATE POLICY %I_authenticated_select ON public.%I FOR SELECT TO authenticated USING (private.has_authenticated_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+     );[m
+[31m-[m
+[31m-    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_update ON public.%I', current_table, current_table);[m
+     EXECUTE format([m
+[31m-      'CREATE POLICY %I_tenant_update ON public.%I FOR UPDATE TO PUBLIC USING (private.has_organization_access("organizationId")) WITH CHECK (private.has_organization_access("organizationId"))',[m
+[31m-      current_table,[m
+[31m-      current_table[m
+[32m+[m[32m      'CREATE POLICY %I_app_runtime_select ON public.%I FOR SELECT TO app_runtime USING (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+     );[m
+[31m-[m
+[31m-    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_delete ON public.%I', current_table, current_table);[m
+     EXECUTE format([m
+[31m-      'CREATE POLICY %I_tenant_delete ON public.%I FOR DELETE TO PUBLIC USING (private.has_organization_access("organizationId"))',[m
+[31m-      current_table,[m
+[31m-      current_table[m
+[32m+[m[32m      'CREATE POLICY %I_app_runtime_insert ON public.%I FOR INSERT TO app_runtime WITH CHECK (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+     );[m
+[32m+[m[32m    IF current_table <> 'cost_calculations' THEN[m
+[32m+[m[32m      EXECUTE format([m
+[32m+[m[32m        'CREATE POLICY %I_app_runtime_update ON public.%I FOR UPDATE TO app_runtime USING (private.has_app_runtime_organization_access("organizationId")) WITH CHECK (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m        current_table, current_table[m
+[32m+[m[32m      );[m
+[32m+[m[32m      EXECUTE format([m
+[32m+[m[32m        'CREATE POLICY %I_app_runtime_delete ON public.%I FOR DELETE TO app_runtime USING (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m        current_table, current_table[m
+[32m+[m[32m      );[m
+[32m+[m[32m    END IF;[m
+   END LOOP;[m
+ END $$;[m
+ [m
+[31m--- Authenticated clients are read-only. The backend runtime receives the[m
+[31m--- narrowly required DML privileges and remains subject to FORCE RLS.[m
+[32m+[m[32mGRANT USAGE ON SCHEMA public TO authenticated, app_runtime;[m
+ DO $$[m
+ DECLARE[m
+   current_table text;[m
+ BEGIN[m
+[31m-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN[m
+[31m-    EXECUTE 'GRANT USAGE ON SCHEMA public TO authenticated';[m
+[31m-    FOREACH current_table IN ARRAY ARRAY[[m
+[31m-      'cost_groups',[m
+[31m-      'cost_items',[m
+[31m-      'cost_structure_version_counters',[m
+[31m-      'cost_structures',[m
+[31m-      'cost_structure_lines',[m
+[31m-      'cost_calculations',[m
+[31m-      'costing_gamma_settings',[m
+[31m-      'costing_gamma_groups'[m
+[31m-    ] LOOP[m
+[31m-      EXECUTE format('GRANT SELECT ON TABLE public.%I TO authenticated', current_table);[m
+[31m-    END LOOP;[m
+[31m-  END IF;[m
+[31m-[m
+[31m-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_runtime') THEN[m
+[31m-    EXECUTE 'GRANT USAGE ON SCHEMA public TO app_runtime';[m
+[31m-    FOREACH current_table IN ARRAY ARRAY[[m
+[31m-      'cost_groups',[m
+[31m-      'cost_items',[m
+[31m-      'cost_structure_version_counters',[m
+[31m-      'cost_structures',[m
+[31m-      'cost_structure_lines',[m
+[31m-      'costing_gamma_settings',[m
+[31m-      'costing_gamma_groups'[m
+[31m-    ] LOOP[m
+[31m-      EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.%I TO app_runtime', current_table);[m
+[31m-    END LOOP;[m
+[31m-    -- Calculation snapshots are append-only: no UPDATE/DELETE privilege.[m
+[31m-    EXECUTE 'GRANT SELECT, INSERT ON TABLE public.cost_calculations TO app_runtime';[m
+[31m-  END IF;[m
+[32m+[m[32m  FOREACH current_table IN ARRAY ARRAY[[m
+[32m+[m[32m    'cost_groups',[m
+[32m+[m[32m    'cost_items',[m
+[32m+[m[32m    'cost_structure_version_counters',[m
+[32m+[m[32m    'cost_structures',[m
+[32m+[m[32m    'cost_structure_lines',[m
+[32m+[m[32m    'costing_gamma_settings',[m
+[32m+[m[32m    'costing_gamma_groups'[m
+[32m+[m[32m  ] LOOP[m
+[32m+[m[32m    EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.%I TO app_runtime', current_table);[m
+[32m+[m[32m  END LOOP;[m
+[32m+[m[32m  GRANT SELECT, INSERT ON TABLE public.cost_calculations TO app_runtime;[m
+[32m+[m[32m  FOREACH current_table IN ARRAY ARRAY[[m
+[32m+[m[32m    'cost_groups',[m
+[32m+[m[32m    'cost_items',[m
+[32m+[m[32m    'cost_structure_version_counters',[m
+[32m+[m[32m    'cost_structures',[m
+[32m+[m[32m    'cost_structure_lines',[m
+[32m+[m[32m    'cost_calculations',[m
+[32m+[m[32m    'costing_gamma_settings',[m
+[32m+[m[32m    'costing_gamma_groups'[m
+[32m+[m[32m  ] LOOP[m
+[32m+[m[32m    EXECUTE format('GRANT SELECT ON TABLE public.%I TO authenticated', current_table);[m
+[32m+[m[32m  END LOOP;[m
+ END $$;[m
+[1mdiff --git a/drizzle/pg/0040_costing_security_identity_bootstrap.sql b/drizzle/pg/0040_costing_security_identity_bootstrap.sql[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7e7a2ef[m
+[1m--- /dev/null[m
+[1m+++ b/drizzle/pg/0040_costing_security_identity_bootstrap.sql[m
+[36m@@ -0,0 +1,172 @@[m
+[32m+[m[32m-- Incremental security bootstrap for databases that already applied 0039.[m
+[32m+[m[32m-- Re-applies the fail-closed identity-separated Costing RLS definition.[m
+[32m+[m[32m-- Costing RLS: identities are deliberately separated.[m
+[32m+[m[32m-- authenticated -> auth.uid() -> public.users.supabaseAuthId[m
+[32m+[m[32m-- app_runtime -> trusted transaction-local request.app_user_id[m
+[32m+[m[32m-- This migration fails closed when the Supabase auth dependency is absent.[m
+[32m+[m
+[32m+[m[32mDO $$[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  IF to_regclass('public.users') IS NULL[m
+[32m+[m[32m     OR to_regclass('public.organization_members') IS NULL[m
+[32m+[m[32m     OR to_regprocedure('auth.uid()') IS NULL THEN[m
+[32m+[m[32m    RAISE EXCEPTION[m
+[32m+[m[32m      'Costing RLS requires public.users, public.organization_members and auth.uid()';[m
+[32m+[m[32m  END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m
+[32m+[m[32mCREATE SCHEMA IF NOT EXISTS private;[m
+[32m+[m[32mREVOKE ALL ON SCHEMA private FROM PUBLIC;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.current_authenticated_user_id()[m
+[32m+[m[32mRETURNS integer[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT u.id[m
+[32m+[m[32m  FROM public.users AS u[m
+[32m+[m[32m  WHERE u."supabaseAuthId" = auth.uid()[m
+[32m+[m[32m  LIMIT 1[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.current_app_runtime_user_id()[m
+[32m+[m[32mRETURNS integer[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT u.id[m
+[32m+[m[32m  FROM public.users AS u[m
+[32m+[m[32m  WHERE u.id = NULLIF(current_setting('request.app_user_id', true), '')::integer[m
+[32m+[m[32m  LIMIT 1[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.has_authenticated_organization_access(target_organization_id varchar)[m
+[32m+[m[32mRETURNS boolean[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT EXISTS ([m
+[32m+[m[32m    SELECT 1[m
+[32m+[m[32m    FROM public.organization_members AS membership[m
+[32m+[m[32m    WHERE membership."organizationId" = target_organization_id[m
+[32m+[m[32m      AND membership."userId" = private.current_authenticated_user_id()[m
+[32m+[m[32m      AND membership.status = 'active'[m
+[32m+[m[32m  )[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION private.has_app_runtime_organization_access(target_organization_id varchar)[m
+[32m+[m[32mRETURNS boolean[m
+[32m+[m[32mLANGUAGE sql[m
+[32m+[m[32mSTABLE[m
+[32m+[m[32mSECURITY DEFINER[m
+[32m+[m[32mSET search_path = ''[m
+[32m+[m[32mAS $$[m
+[32m+[m[32m  SELECT EXISTS ([m
+[32m+[m[32m    SELECT 1[m
+[32m+[m[32m    FROM public.organization_members AS membership[m
+[32m+[m[32m    WHERE membership."organizationId" = target_organization_id[m
+[32m+[m[32m      AND membership."userId" = private.current_app_runtime_user_id()[m
+[32m+[m[32m      AND membership.status = 'active'[m
+[32m+[m[32m  )[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.current_authenticated_user_id() FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.current_app_runtime_user_id() FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.has_authenticated_organization_access(varchar) FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m[32mREVOKE ALL ON FUNCTION private.has_app_runtime_organization_access(varchar) FROM PUBLIC, anon, authenticated, app_runtime;[m
+[32m+[m
+[32m+[m[32mGRANT USAGE ON SCHEMA private TO authenticated, app_runtime;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.current_authenticated_user_id() TO authenticated;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.has_authenticated_organization_access(varchar) TO authenticated;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.current_app_runtime_user_id() TO app_runtime;[m
+[32m+[m[32mGRANT EXECUTE ON FUNCTION private.has_app_runtime_organization_access(varchar) TO app_runtime;[m
+[32m+[m
+[32m+[m[32mDO $$[m
+[32m+[m[32mDECLARE[m
+[32m+[m[32m  current_table text;[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  FOREACH current_table IN ARRAY ARRAY[[m
+[32m+[m[32m    'cost_groups',[m
+[32m+[m[32m    'cost_items',[m
+[32m+[m[32m    'cost_structure_version_counters',[m
+[32m+[m[32m    'cost_structures',[m
+[32m+[m[32m    'cost_structure_lines',[m
+[32m+[m[32m    'cost_calculations',[m
+[32m+[m[32m    'costing_gamma_settings',[m
+[32m+[m[32m    'costing_gamma_groups'[m
+[32m+[m[32m  ] LOOP[m
+[32m+[m[32m    EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', current_table);[m
+[32m+[m[32m    EXECUTE format('ALTER TABLE public.%I FORCE ROW LEVEL SECURITY', current_table);[m
+[32m+[m[32m    EXECUTE format('REVOKE ALL ON TABLE public.%I FROM PUBLIC, anon, authenticated, app_runtime', current_table);[m
+[32m+[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_select ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_insert ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_update ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_tenant_delete ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_authenticated_select ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_select ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_insert ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_update ON public.%I', current_table, current_table);[m
+[32m+[m[32m    EXECUTE format('DROP POLICY IF EXISTS %I_app_runtime_delete ON public.%I', current_table, current_table);[m
+[32m+[m
+[32m+[m[32m    EXECUTE format([m
+[32m+[m[32m      'CREATE POLICY %I_authenticated_select ON public.%I FOR SELECT TO authenticated USING (private.has_authenticated_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+[32m+[m[32m    );[m
+[32m+[m[32m    EXECUTE format([m
+[32m+[m[32m      'CREATE POLICY %I_app_runtime_select ON public.%I FOR SELECT TO app_runtime USING (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+[32m+[m[32m    );[m
+[32m+[m[32m    EXECUTE format([m
+[32m+[m[32m      'CREATE POLICY %I_app_runtime_insert ON public.%I FOR INSERT TO app_runtime WITH CHECK (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table, current_table[m
+[32m+[m[32m    );[m
+[32m+[m[32m    IF current_table <> 'cost_calculations' THEN[m
+[32m+[m[32m      EXECUTE format([m
+[32m+[m[32m        'CREATE POLICY %I_app_runtime_update ON public.%I FOR UPDATE TO app_runtime USING (private.has_app_runtime_organization_access("organizationId")) WITH CHECK (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m        current_table, current_table[m
+[32m+[m[32m      );[m
+[32m+[m[32m      EXECUTE format([m
+[32m+[m[32m        'CREATE POLICY %I_app_runtime_delete ON public.%I FOR DELETE TO app_runtime USING (private.has_app_runtime_organization_access("organizationId"))',[m
+[32m+[m[32m        current_table, current_table[m
+[32m+[m[32m      );[m
+[32m+[m[32m    END IF;[m
+[32m+[m[32m  END LOOP;[m
+[32m+[m[32mEND $$;[m
+[32m+[m
+[32m+[m[32mGRANT USAGE ON SCHEMA public TO authenticated, app_runtime;[m
+[32m+[m[32mDO $$[m
+[32m+[m[32mDECLARE[m
+[32m+[m[32m  current_table text;[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  FOREACH current_table IN ARRAY ARRAY[[m
+[32m+[m[32m    'cost_groups',[m
+[32m+[m[32m    'cost_items',[m
+[32m+[m[32m    'cost_structure_version_counters',[m
+[32m+[m[32m    'cost_structures',[m
+[32m+[m[32m    'cost_structure_lines',[m
+[32m+[m[32m    'costing_gamma_settings',[m
+[32m+[m[32m    'costing_gamma_groups'[m
+[32m+[m[32m  ] LOOP[m
+[32m+[m[32m    EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.%I TO app_runtime', current_table);[m
+[32m+[m[32m  END LOOP;[m
+[32m+[m[32m  GRANT SELECT, INSERT ON TABLE public.cost_calculations TO app_runtime;[m
+[32m+[m[32m  FOREACH current_table IN ARRAY ARRAY[[m
+[32m+[m[32m    'cost_groups',[m
+[32m+[m[32m    'cost_items',[m
+[32m+[m[32m    'cost_structure_version_counters',[m
+[32m+[m[32m    'cost_structures',[m
+[32m+[m[32m    'cost_structure_lines',[m
+[32m+[m[32m    'cost_calculations',[m
+[32m+[m[32m    'costing_gamma_settings',[m
+[32m+[m[32m    'costing_gamma_groups'[m
+[32m+[m[32m  ] LOOP[m
+[32m+[m[32m    EXECUTE format('GRANT SELECT ON TABLE public.%I TO authenticated', current_table);[m
+[32m+[m[32m  END LOOP;[m
+[32m+[m[32mEND $$;[m
+[1mdiff --git a/drizzle/pg/meta/_journal.json b/drizzle/pg/meta/_journal.json[m
+[1mindex 9336041..e2a7139 100644[m
+[1m--- a/drizzle/pg/meta/_journal.json[m
+[1m+++ b/drizzle/pg/meta/_journal.json[m
+[36m@@ -43,6 +43,13 @@[m
+       "when": 1794409303000,[m
+       "tag": "0039_costing_rls_security",[m
+       "breakpoints": true[m
+[32m+[m[32m    },[m
+[32m+[m[32m    {[m
+[32m+[m[32m      "idx": 6,[m
+[32m+[m[32m      "version": "7",[m
+[32m+[m[32m      "when": 1794409304000,[m
+[32m+[m[32m      "tag": "0040_costing_security_identity_bootstrap",[m
+[32m+[m[32m      "breakpoints": true[m
+     }[m
+   ][m
+ }[m
+[1mdiff --git a/drizzle/pg/rls_multitenant.sql b/drizzle/pg/rls_multitenant.sql[m
+[1mindex 2ff617d..68bff07 100644[m
+[1m--- a/drizzle/pg/rls_multitenant.sql[m
+[1m+++ b/drizzle/pg/rls_multitenant.sql[m
+[36m@@ -1,46 +1,95 @@[m
+[31m--- RLS Supabase para Alianza. Aplicação server-side continua usando uma credencial[m
+[31m--- administrativa; clientes autenticados recebem somente leitura isolada por tenant.[m
+[32m+[m[32m-- Canonical Alianza RLS helpers. The client identity is only auth.uid();[m
+[32m+[m[32m-- app_runtime identity is only the trusted transaction-local request.app_user_id.[m
+ [m
+ create schema if not exists private;[m
+ revoke all on schema private from public;[m
+ [m
+[31m-create or replace function private.current_app_user_id()[m
+[32m+[m[32mdo $$[m
+[32m+[m[32mbegin[m
+[32m+[m[32m  if to_regprocedure('auth.uid()') is null then[m
+[32m+[m[32m    raise exception 'Canonical RLS requires auth.uid()';[m
+[32m+[m[32m  end if;[m
+[32m+[m[32mend $$;[m
+[32m+[m
+[32m+[m[32mcreate or replace function private.current_authenticated_user_id()[m
+[32m+[m[32mreturns integer[m
+[32m+[m[32mlanguage sql stable security definer set search_path = ''[m
+[32m+[m[32mas $$[m
+[32m+[m[32m  select u.id from public.users as u[m
+[32m+[m[32m  where u."supabaseAuthId" = auth.uid()[m
+[32m+[m[32m  limit 1[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mcreate or replace function private.current_app_runtime_user_id()[m
+ returns integer[m
+[31m-language sql[m
+[31m-stable[m
+[31m-security definer[m
+[31m-set search_path = public[m
+[32m+[m[32mlanguage sql stable security definer set search_path = ''[m
+[32m+[m[32mas $$[m
+[32m+[m[32m  select u.id from public.users as u[m
+[32m+[m[32m  where u.id = nullif(current_setting('request.app_user_id', true), '')::integer[m
+[32m+[m[32m  limit 1[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mcreate or replace function private.has_authenticated_organization_access(target_organization_id varchar)[m
+[32m+[m[32mreturns boolean[m
+[32m+[m[32mlanguage sql stable security definer set search_path = ''[m
+ as $$[m
+[31m-  select id[m
+[31m-  from public.users[m
+[31m-  where id = coalesce([m
+[31m-    nullif(current_setting('request.app_user_id', true), '')::integer,[m
+[31m-    (select id from public.users where "supabaseAuthId" = auth.uid() limit 1)[m
+[32m+[m[32m  select exists ([m
+[32m+[m[32m    select 1 from public.organization_members as membership[m
+[32m+[m[32m    where membership."organizationId" = target_organization_id[m
+[32m+[m[32m      and membership."userId" = private.current_authenticated_user_id()[m
+[32m+[m[32m      and membership.status = 'active'[m
+   )[m
+[31m-  limit 1;[m
+ $$;[m
+ [m
+[31m-create or replace function private.has_organization_access(target_organization_id varchar)[m
+[32m+[m[32mcreate or replace function private.has_app_runtime_organization_access(target_organization_id varchar)[m
+ returns boolean[m
+[31m-language sql[m
+[31m-stable[m
+[31m-security definer[m
+[31m-set search_path = public[m
+[32m+[m[32mlanguage sql stable security definer set search_path = ''[m
+ as $$[m
+   select exists ([m
+[31m-    select 1[m
+[31m-    from public.organization_members membership[m
+[32m+[m[32m    select 1 from public.organization_members as membership[m
+     where membership."organizationId" = target_organization_id[m
+[31m-      and membership."userId" = private.current_app_user_id()[m
+[32m+[m[32m      and membership."userId" = private.current_app_runtime_user_id()[m
+       and membership.status = 'active'[m
+[31m-  );[m
+[32m+[m[32m  )[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32m-- Compatibility for historical policies/functions. New Costing policies never[m
+[32m+[m[32m-- use these names; the session role selects the already-separated identity.[m
+[32m+[m[32mcreate or replace function private.current_app_user_id()[m
+[32m+[m[32mreturns integer[m
+[32m+[m[32mlanguage sql stable security definer set search_path = ''[m
+[32m+[m[32mas $$[m
+[32m+[m[32m  select case when session_user = 'app_runtime'[m
+[32m+[m[32m    then private.current_app_runtime_user_id()[m
+[32m+[m[32m    else private.current_authenticated_user_id()[m
+[32m+[m[32m  end[m
+[32m+[m[32m$$;[m
+[32m+[m
+[32m+[m[32mcreate or replace function private.has_organization_access(target_organization_id varchar)[m
+[32m+[m[32mreturns boolean[m
+[32m+[m[32mlanguage plpgsql stable security definer set search_path = ''[m
+[32m+[m[32mas $$[m
+[32m+[m[32mbegin[m
+[32m+[m[32m  if session_user = 'app_runtime' then[m
+[32m+[m[32m    return private.has_app_runtime_organization_access(target_organization_id);[m
+[32m+[m[32m  end if;[m
+[32m+[m[32m  return private.has_authenticated_organization_access(target_organization_id);[m
+[32m+[m[32mend[m
+ $$;[m
+ [m
+[31m-revoke all on function private.current_app_user_id() from public, anon;[m
+[31m-revoke all on function private.has_organization_access(varchar) from public, anon;[m
+[31m-grant usage on schema private to authenticated;[m
+[31m-grant execute on function private.current_app_user_id() to authenticated;[m
+[31m-grant execute on function private.has_organization_access(varchar) to authenticated;[m
+[32m+[m[32mrevoke all on function private.current_authenticated_user_id() from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.current_app_runtime_user_id() from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.has_authenticated_organization_access(varchar) from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.has_app_runtime_organization_access(varchar) from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.current_app_user_id() from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.has_organization_access(varchar) from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mgrant usage on schema private to authenticated, app_runtime;[m
+[32m+[m[32mgrant execute on function private.current_authenticated_user_id() to authenticated;[m
+[32m+[m[32mgrant execute on function private.has_authenticated_organization_access(varchar) to authenticated;[m
+[32m+[m[32mgrant execute on function private.current_app_runtime_user_id() to app_runtime;[m
+[32m+[m[32mgrant execute on function private.has_app_runtime_organization_access(varchar) to app_runtime;[m
+[32m+[m[32mgrant execute on function private.current_app_user_id() to authenticated, app_runtime;[m
+[32m+[m[32mgrant execute on function private.has_organization_access(varchar) to authenticated, app_runtime;[m
+ [m
+ alter table public.users enable row level security;[m
+ alter table public.users force row level security;[m
+[36m@@ -49,7 +98,7 @@[m [mgrant select on table public.users to authenticated;[m
+ drop policy if exists users_read_self on public.users;[m
+ create policy users_read_self on public.users[m
+   for select to authenticated[m
+[31m-  using (id = private.current_app_user_id());[m
+[32m+[m[32m  using (id = private.current_authenticated_user_id());[m
+ [m
+ -- app_runtime: permite atualizar apenas o nome do próprio utilizador autenticado.[m
+ revoke update on table public.users from app_runtime;[m
+[36m@@ -57,8 +106,8 @@[m [mgrant update (name) on table public.users to app_runtime;[m
+ drop policy if exists users_app_runtime_update_self on public.users;[m
+ create policy users_app_runtime_update_self on public.users[m
+   for update to app_runtime[m
+[31m-  using (id = private.current_app_user_id())[m
+[31m-  with check (id = private.current_app_user_id());[m
+[32m+[m[32m  using (id = private.current_app_runtime_user_id())[m
+[32m+[m[32m  with check (id = private.current_app_runtime_user_id());[m
+ [m
+ do $$[m
+ declare[m
+[36m@@ -84,7 +133,7 @@[m [mbegin[m
+     execute format('grant select on table public.%I to authenticated', current_table);[m
+     execute format('drop policy if exists tenant_read on public.%I', current_table);[m
+     execute format([m
+[31m-      'create policy tenant_read on public.%I for select to authenticated using (private.has_organization_access("organizationId"))',[m
+[32m+[m[32m      'create policy tenant_read on public.%I for select to authenticated using (private.has_authenticated_organization_access("organizationId"))',[m
+       current_table[m
+     );[m
+   end loop;[m
+[36m@@ -97,33 +146,38 @@[m [mgrant select on table public.organizations to authenticated;[m
+ drop policy if exists organization_read on public.organizations;[m
+ create policy organization_read on public.organizations[m
+   for select to authenticated[m
+[31m-  using (private.has_organization_access(id));[m
+[32m+[m[32m  using (private.has_authenticated_organization_access(id));[m
+ [m
+ -- As operações de convite já passam por RBAC no tRPC. Estas políticas mantêm[m
+ -- o limite de tenant no PostgreSQL para a role app_runtime, que herda authenticated.[m
+ drop policy if exists organization_invitations_insert on public.organization_invitations;[m
+ create policy organization_invitations_insert on public.organization_invitations[m
+   for insert to authenticated[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_authenticated_organization_access("organizationId"));[m
+ [m
+ drop policy if exists organization_invitations_update on public.organization_invitations;[m
+ create policy organization_invitations_update on public.organization_invitations[m
+   for update to authenticated[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_authenticated_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_authenticated_organization_access("organizationId"));[m
+ [m
+ drop policy if exists organization_invitations_delete on public.organization_invitations;[m
+ create policy organization_invitations_delete on public.organization_invitations[m
+   for delete to authenticated[m
+[31m-  using (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_authenticated_organization_access("organizationId"));[m
+ [m
+ -- A auditoria é gravável apenas para ações já autorizadas dentro do próprio tenant.[m
+ drop policy if exists audit_logs_insert on public.audit_logs;[m
+ create policy audit_logs_insert on public.audit_logs[m
+   for insert to authenticated[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_authenticated_organization_access("organizationId"));[m
+ [m
+[31m-revoke execute on function public.rls_auto_enable() from public, anon, authenticated;[m
+[32m+[m[32mdo $$[m
+[32m+[m[32mbegin[m
+[32m+[m[32m  if to_regprocedure('public.rls_auto_enable()') is not null then[m
+[32m+[m[32m    revoke execute on function public.rls_auto_enable() from public, anon, authenticated;[m
+[32m+[m[32m  end if;[m
+[32m+[m[32mend $$;[m
+ [m
+ -- app_runtime: escrita tenant-scoped para criação de Agents e prompts.[m
+ drop policy if exists ai_agents_app_runtime_insert on public.ai_agents;[m
+[36m@@ -131,14 +185,14 @@[m [mcreate policy ai_agents_app_runtime_insert[m
+   on public.ai_agents[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists prompt_versions_app_runtime_insert on public.prompt_versions;[m
+ create policy prompt_versions_app_runtime_insert[m
+   on public.prompt_versions[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ -- app_runtime: atualização tenant-scoped de Agents e versões de prompt.[m
+ drop policy if exists ai_agents_app_runtime_update on public.ai_agents;[m
+[36m@@ -146,16 +200,16 @@[m [mcreate policy ai_agents_app_runtime_update[m
+   on public.ai_agents[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists prompt_versions_app_runtime_update on public.prompt_versions;[m
+ create policy prompt_versions_app_runtime_update[m
+   on public.prompt_versions[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ -- app_runtime: escrita tenant-scoped do CRM.[m
+ drop policy if exists contacts_app_runtime_insert on public.contacts;[m
+[36m@@ -163,72 +217,72 @@[m [mcreate policy contacts_app_runtime_insert[m
+   on public.contacts[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists contacts_app_runtime_update on public.contacts;[m
+ create policy contacts_app_runtime_update[m
+   on public.contacts[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists companies_app_runtime_insert on public.companies;[m
+ create policy companies_app_runtime_insert[m
+   on public.companies[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists companies_app_runtime_update on public.companies;[m
+ create policy companies_app_runtime_update[m
+   on public.companies[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists crm_activities_app_runtime_insert on public.crm_activities;[m
+ create policy crm_activities_app_runtime_insert[m
+   on public.crm_activities[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists crm_activities_app_runtime_update on public.crm_activities;[m
+ create policy crm_activities_app_runtime_update[m
+   on public.crm_activities[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists pipelines_app_runtime_insert on public.pipelines;[m
+ create policy pipelines_app_runtime_insert[m
+   on public.pipelines[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists pipelines_app_runtime_update on public.pipelines;[m
+ create policy pipelines_app_runtime_update[m
+   on public.pipelines[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists pipeline_stages_app_runtime_insert on public.pipeline_stages;[m
+ create policy pipeline_stages_app_runtime_insert[m
+   on public.pipeline_stages[m
+   for insert[m
+   to app_runtime[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+ [m
+ drop policy if exists pipeline_stages_app_runtime_update on public.pipeline_stages;[m
+ create policy pipeline_stages_app_runtime_update[m
+   on public.pipeline_stages[m
+   for update[m
+   to app_runtime[m
+[31m-  using (private.has_organization_access("organizationId"))[m
+[31m-  with check (private.has_organization_access("organizationId"));[m
+[32m+[m[32m  using (private.has_app_runtime_organization_access("organizationId"))[m
+[32m+[m[32m  with check (private.has_app_runtime_organization_access("organizationId"));[m
+[1mdiff --git a/scripts/apply-supabase-rls.mjs b/scripts/apply-supabase-rls.mjs[m
+[1mindex 73b53e6..eb8b2b9 100644[m
+[1m--- a/scripts/apply-supabase-rls.mjs[m
+[1m+++ b/scripts/apply-supabase-rls.mjs[m
+[36m@@ -3,43 +3,93 @@[m [mimport postgres from "postgres";[m
+ [m
+ const databaseUrl = process.env.SUPABASE_DATABASE_URL;[m
+ const supabaseUrl = process.env.VITE_SUPABASE_URL;[m
+[31m-if (!databaseUrl || !supabaseUrl)[m
+[32m+[m[32mconst environment = process.env.SUPABASE_RLS_ENV;[m
+[32m+[m[32mconst applyGlobal = process.env.SUPABASE_RLS_APPLY_GLOBAL === "true";[m
+[32m+[m
+[32m+[m[32mif (!databaseUrl || !supabaseUrl) {[m
+[32m+[m[32m  throw new Error([m
+[32m+[m[32m    "SUPABASE_DATABASE_URL e VITE_SUPABASE_URL são obrigatórias; nenhuma conexão foi iniciada."[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32mif (environment !== "local" && environment !== "staging") {[m
+[32m+[m[32m  throw new Error([m
+[32m+[m[32m    "SUPABASE_RLS_ENV deve ser explicitamente local ou staging; produção é recusada."[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32mif (environment === "staging" && process.env.SUPABASE_RLS_ALLOW_STAGING !== "true") {[m
+   throw new Error([m
+[31m-    "SUPABASE_DATABASE_URL e VITE_SUPABASE_URL são obrigatórias."[m
+[32m+[m[32m    "Staging exige SUPABASE_RLS_ALLOW_STAGING=true; nenhuma conexão foi iniciada."[m
+   );[m
+[32m+[m[32m}[m
+ [m
+[31m-function normalizeDatabaseUrl(value) {[m
+[31m-  const url = new URL(value);[m
+[31m-  const projectRef = new URL(supabaseUrl).hostname.split(".")[0];[m
+[31m-  if (!url.hostname.startsWith("db.")) return url.toString();[m
+[31m-  url.hostname = "aws-0-sa-east-1.pooler.supabase.com";[m
+[31m-  url.port = "6543";[m
+[31m-  url.username = `postgres.${projectRef}`;[m
+[31m-  url.searchParams.set("pgbouncer", "true");[m
+[31m-  return url.toString();[m
+[32m+[m[32mconst targetUrl = new URL(supabaseUrl);[m
+[32m+[m[32mconst projectRef = targetUrl.hostname.split(".")[0];[m
+[32m+[m[32mif (!projectRef || projectRef === targetUrl.hostname) {[m
+[32m+[m[32m  throw new Error("Não foi possível determinar o project ref do Supabase.");[m
+[32m+[m[32m}[m
+[32m+[m[32mif (environment === "staging") {[m
+[32m+[m[32m  const allowed = (process.env.SUPABASE_RLS_ALLOWED_PROJECT_REFS ?? "")[m
+[32m+[m[32m    .split(",")[m
+[32m+[m[32m    .map(value => value.trim())[m
+[32m+[m[32m    .filter(Boolean);[m
+[32m+[m[32m  if (!allowed.includes(projectRef)) {[m
+[32m+[m[32m    throw new Error([m
+[32m+[m[32m      `Project ref ${projectRef} não está na allowlist de staging; nenhuma conexão foi iniciada.`[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+ }[m
+ [m
+[31m-const sql = postgres(normalizeDatabaseUrl(databaseUrl), {[m
+[32m+[m[32mconst connectionUrl = new URL(databaseUrl);[m
+[32m+[m[32mif (environment === "local" && !["127.0.0.1", "localhost"].includes(connectionUrl.hostname)) {[m
+[32m+[m[32m  throw new Error([m
+[32m+[m[32m    `Ambiente local só aceita PostgreSQL local; host recebido: ${connectionUrl.hostname}.`[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32mif (applyGlobal && process.env.SUPABASE_RLS_CONFIRM !== "APPLY_GLOBAL_RLS") {[m
+[32m+[m[32m  throw new Error([m
+[32m+[m[32m    "A aplicação global exige SUPABASE_RLS_CONFIRM=APPLY_GLOBAL_RLS; Costing permanece separado."[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mconsole.log([m
+[32m+[m[32m  JSON.stringify({[m
+[32m+[m[32m    environment,[m
+[32m+[m[32m    projectRef,[m
+[32m+[m[32m    applyGlobal,[m
+[32m+[m[32m    targetHost: connectionUrl.hostname,[m
+[32m+[m[32m    status: "preflight-passed",[m
+[32m+[m[32m  })[m
+[32m+[m[32m);[m
+[32m+[m
+[32m+[m[32mconst sql = postgres(databaseUrl, {[m
+   prepare: false,[m
+   max: 1,[m
+[31m-  ssl: "require",[m
+[32m+[m[32m  ssl: environment === "staging" ? "require" : false,[m
+ });[m
+ try {[m
+[31m-  const migration = await readFile([m
+[31m-    new URL("../drizzle/pg/rls_multitenant.sql", import.meta.url),[m
+[31m-    "utf8"[m
+[31m-  );[m
+   const costingMigration = await readFile([m
+     new URL("../drizzle/pg/0039_costing_rls_security.sql", import.meta.url),[m
+     "utf8"[m
+   );[m
+[32m+[m[32m  const statements = [];[m
+[32m+[m[32m  if (applyGlobal) {[m
+[32m+[m[32m    statements.push([m
+[32m+[m[32m      await readFile([m
+[32m+[m[32m        new URL("../drizzle/pg/rls_multitenant.sql", import.meta.url),[m
+[32m+[m[32m        "utf8"[m
+[32m+[m[32m      )[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+[32m+[m[32m  statements.push(costingMigration);[m
+   await sql.begin(async transaction => {[m
+[31m-    await transaction.unsafe(migration);[m
+[31m-    await transaction.unsafe(costingMigration);[m
+[32m+[m[32m    for (const statement of statements) await transaction.unsafe(statement);[m
+   });[m
+   console.log([m
+     JSON.stringify({[m
+[31m-      applied: ["rls_multitenant", "0039_costing_rls_security"],[m
+[32m+[m[32m      applied: [[m
+[32m+[m[32m        ...(applyGlobal ? ["rls_multitenant"] : []),[m
+[32m+[m[32m        "0039_costing_rls_security",[m
+[32m+[m[32m      ],[m
+       status: "ok",[m
+     })[m
+   );[m
+[1mdiff --git a/scripts/costing-crud-edit-pg.ts b/scripts/costing-crud-edit-pg.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2095510[m
+[1m--- /dev/null[m
+[1m+++ b/scripts/costing-crud-edit-pg.ts[m
+[36m@@ -0,0 +1,120 @@[m
+[32m+[m[32mimport postgres from "postgres";[m
+[32m+[m
+[32m+[m[32mconst url = process.env.SUPABASE_DATABASE_URL;[m
+[32m+[m[32mif (!url) throw new Error("SUPABASE_DATABASE_URL is required");[m
+[32m+[m[32mconst admin = postgres(url, { max: 1 });[m
+[32m+[m
+[32m+[m[32mfunction assert(condition: unknown, message: string): asserts condition {[m
+[32m+[m[32m  if (!condition) throw new Error(message);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32masync function expectReject(work: () => Promise<unknown>, fragment: string) {[m
+[32m+[m[32m  try {[m
+[32m+[m[32m    await work();[m
+[32m+[m[32m    throw new Error(`expected rejection containing ${fragment}`);[m
+[32m+[m[32m  } catch (error) {[m
+[32m+[m[32m    if (!(error instanceof Error) || !error.message.includes(fragment)) throw error;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mconst { updateCostGroup, updateCostItem } = await import("../server/db/costing");[m
+[32m+[m[32mconst now = "now";[m
+[32m+[m[32mawait admin`[m
+[32m+[m[32m  INSERT INTO "organizations" ("id","name","slug","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('org-edit-verification','Edit Verification','edit-verification',1,1),[m
+[32m+[m[32m         ('org-edit-foreign','Edit Foreign','edit-foreign',1,1)[m
+[32m+[m[32m`;[m
+[32m+[m[32mawait admin`[m
+[32m+[m[32m  INSERT INTO "cost_groups" ("id","organizationId","name","position","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('edit-group','org-edit-verification','Original',0,${now},${now}),[m
+[32m+[m[32m         ('foreign-group','org-edit-foreign','Foreign',0,${now},${now})[m
+[32m+[m[32m`;[m
+[32m+[m[32mawait admin`[m
+[32m+[m[32m  INSERT INTO "cost_items" ("id","organizationId","groupId","code","name","itemType","referenceUnit","manualUnitCost","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('edit-item','org-edit-verification','edit-group','EDIT-1','Original Item','SIMPLE','kg','10',${now},${now})[m
+[32m+[m[32m`;[m
+[32m+[m[32mawait admin`[m
+[32m+[m[32m  INSERT INTO "cost_structures" ("id","organizationId","itemId","version","status","outputQuantity","createdAt","updatedAt")[m
+[32m+[m[32m  VALUES ('edit-published-structure','org-edit-verification','edit-item',1,'ACTIVE','1',${now},${now})[m
+[32m+[m[32m`;[m
+[32m+[m
+[32m+[m[32mconst group = await updateCostGroup({[m
+[32m+[m[32m  organizationId: "org-edit-verification",[m
+[32m+[m[32m  groupId: "edit-group",[m
+[32m+[m[32m  name: "Updated Group",[m
+[32m+[m[32m  description: "Updated description",[m
+[32m+[m[32m  position: 4,[m
+[32m+[m[32m});[m
+[32m+[m[32massert(group?.name === "Updated Group" && group.position === 4, "group update failed");[m
+[32m+[m
+[32m+[m[32mconst item = await updateCostItem({[m
+[32m+[m[32m  organizationId: "org-edit-verification",[m
+[32m+[m[32m  itemId: "edit-item",[m
+[32m+[m[32m  name: "Updated Item",[m
+[32m+[m[32m  code: "EDIT-2",[m
+[32m+[m[32m  description: "Updated description",[m
+[32m+[m[32m  referenceUnit: "kg",[m
+[32m+[m[32m  groupId: "edit-group",[m
+[32m+[m[32m  manualUnitCost: "12.500",[m
+[32m+[m[32m});[m
+[32m+[m[32massert(item?.name === "Updated Item" && item.manualUnitCost === "12.500", "item update failed");[m
+[32m+[m
+[32m+[m[32mawait expectReject([m
+[32m+[m[32m  () => updateCostItem({[m
+[32m+[m[32m    organizationId: "org-edit-verification",[m
+[32m+[m[32m    itemId: "edit-item",[m
+[32m+[m[32m    name: "Updated Item",[m
+[32m+[m[32m    referenceUnit: "kg",[m
+[32m+[m[32m    groupId: "foreign-group",[m
+[32m+[m[32m    manualUnitCost: "12.500",[m
+[32m+[m[32m  }),[m
+[32m+[m[32m  "Grupo não encontrado"[m
+[32m+[m[32m);[m
+[32m+[m[32mawait expectReject([m
+[32m+[m[32m  () => updateCostItem({[m
+[32m+[m[32m    organizationId: "org-edit-verification",[m
+[32m+[m[32m    itemId: "edit-item",[m
+[32m+[m[32m    name: "Updated Item",[m
+[32m+[m[32m    referenceUnit: "",[m
+[32m+[m[32m    groupId: "edit-group",[m
+[32m+[m[32m    manualUnitCost: "12.500",[m
+[32m+[m[32m  }),[m
+[32m+[m[32m  "Unidade de referência inválida"[m
+[32m+[m[32m);[m
+[32m+[m[32mawait expectReject([m
+[32m+[m[32m  () => updateCostItem({[m
+[32m+[m[32m    organizationId: "org-edit-verification",[m
+[32m+[m[32m    itemId: "edit-item",[m
+[32m+[m[32m    name: "Updated Item",[m
+[32m+[m[32m    referenceUnit: "g",[m
+[32m+[m[32m    groupId: "edit-group",[m
+[32m+[m[32m    manualUnitCost: "12.500",[m
+[32m+[m[32m  }),[m
+[32m+[m[32m  "não pode ser alterada após a publicação"[m
+[32m+[m[32m);[m
+[32m+[m[32mawait expectReject([m
+[32m+[m[32m  () => updateCostItem({[m
+[32m+[m[32m    organizationId: "org-edit-foreign",[m
+[32m+[m[32m    itemId: "edit-item",[m
+[32m+[m[32m    name: "Foreign Attempt",[m
+[32m+[m[32m    referenceUnit: "kg",[m
+[32m+[m[32m    manualUnitCost: "99",[m
+[32m+[m[32m  }),[m
+[32m+[m[32m  "Item não encontrado na organização"[m
+[32m+[m[32m);[m
+[32m+[m
+[32m+[m[32mconst [storedGroup] = await admin`SELECT "name","position" FROM "cost_groups" WHERE "id" = 'edit-group'`;[m
+[32m+[m[32mconst [storedItem] = await admin`SELECT "name","code","manualUnitCost" FROM "cost_items" WHERE "id" = 'edit-item'`;[m
+[32m+[m[32massert(storedGroup?.name === "Updated Group" && storedGroup.position === 4, "stored group mismatch");[m
+[32m+[m[32massert(storedItem?.name === "Updated Item" && storedItem.code === "EDIT-2" && storedItem.manualUnitCost === "12.500", "stored item mismatch");[m
+[32m+[m[32mawait admin.end({ timeout: 5 });[m
+[32m+[m[32mconsole.log(JSON.stringify({[m
+[32m+[m[32m  groupUpdated: true,[m
+[32m+[m[32m  itemUpdated: true,[m
+[32m+[m[32m  crossTenantGroupRejected: true,[m
+[32m+[m[32m  invalidUnitRejected: true,[m
+[32m+[m[32m  publishedUnitMutationRejected: true,[m
+[32m+[m[32m  foreignItemRejected: true,[m
+[32m+[m[32m  result: "COSTING_CRUD_EDIT_TEST=PASS",[m
+[32m+[m[32m}));[m
+[32m+[m[32mprocess.exit(0);[m
+[1mdiff --git a/scripts/run-costing-final-verification-pg.sh b/scripts/run-costing-final-verification-pg.sh[m
+[1mindex 67e2ef9..c0e17ff 100755[m
+[1m--- a/scripts/run-costing-final-verification-pg.sh[m
+[1m+++ b/scripts/run-costing-final-verification-pg.sh[m
+[36m@@ -17,6 +17,16 @@[m [mtrap cleanup EXIT[m
+ DATABASE_URL="postgres://$(whoami)@127.0.0.1:$PORT/postgres"[m
+ export SUPABASE_DATABASE_URL="$DATABASE_URL"[m
+ [m
+[32m+[m[32mpsql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+[32m+[m[32mCREATE SCHEMA auth;[m
+[32m+[m[32mCREATE FUNCTION auth.uid() RETURNS uuid[m
+[32m+[m[32mLANGUAGE sql STABLE[m
+[32m+[m[32mAS $$ SELECT NULLIF(current_setting('request.jwt.claim.sub', true), '')::uuid $$;[m
+[32m+[m[32mCREATE ROLE anon NOLOGIN;[m
+[32m+[m[32mCREATE ROLE authenticated NOLOGIN;[m
+[32m+[m[32mCREATE ROLE app_runtime NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;[m
+[32m+[m[32mSQL[m
+[32m+[m
+ printf '%s\n' '=== drizzle runner: first execution ==='[m
+ pnpm --dir "$ROOT_DIR" exec drizzle-kit migrate --config "$ROOT_DIR/drizzle.pg.config.ts"[m
+ printf '%s\n' '=== drizzle runner: second execution ==='[m
+[36m@@ -25,5 +35,7 @@[m [mprintf '%s\n' '=== migration journal rows ==='[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -Atc 'select hash from drizzle.__drizzle_migrations order by created_at'[m
+ printf '%s\n' '=== Costing tables ==='[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -Atc "select tablename from pg_tables where schemaname='public' and tablename like 'cost_%' order by tablename"[m
+[32m+[m[32mprintf '%s\n' '=== CRUD edit service harness ==='[m
+[32m+[m[32mpnpm --dir "$ROOT_DIR" exec tsx "$ROOT_DIR/scripts/costing-crud-edit-pg.ts"[m
+ printf '%s\n' '=== independent mutation/publication harness ==='[m
+ pnpm --dir "$ROOT_DIR" exec tsx "$ROOT_DIR/scripts/costing-final-verification-pg.ts"[m
+[1mdiff --git a/scripts/run-costing-identity-boundary-pg.sh b/scripts/run-costing-identity-boundary-pg.sh[m
+[1mnew file mode 100755[m
+[1mindex 0000000..cf81a4c[m
+[1m--- /dev/null[m
+[1m+++ b/scripts/run-costing-identity-boundary-pg.sh[m
+[36m@@ -0,0 +1,64 @@[m
+[32m+[m[32m#!/usr/bin/env bash[m
+[32m+[m[32mset -euo pipefail[m
+[32m+[m
+[32m+[m[32mROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)[m
+[32m+[m[32mexport PATH="/usr/lib/postgresql/16/bin:$PATH"[m
+[32m+[m[32mTEMP_ROOT=$(mktemp -d /tmp/alianza-costing-identity-XXXXXX)[m
+[32m+[m[32mSOCKET="$TEMP_ROOT/socket"[m
+[32m+[m[32mPORT="${COSTING_IDENTITY_PG_PORT:-55448}"[m
+[32m+[m[32mOLD_0039="$TEMP_ROOT/0039-before.sql"[m
+[32m+[m
+[32m+[m[32mgit -C "$ROOT_DIR" show d9ff4dd7024674c54af128e4bdc816a0b459e22a:drizzle/pg/0039_costing_rls_security.sql > "$OLD_0039"[m
+[32m+[m[32minitdb -D "$TEMP_ROOT/data" -A trust --no-locale >/dev/null[m
+[32m+[m[32mprintf "listen_addresses = '127.0.0.1'\nport = %s\nunix_socket_directories = '%s'\n" "$PORT" "$SOCKET" >> "$TEMP_ROOT/data/postgresql.conf"[m
+[32m+[m[32mmkdir -p "$SOCKET"[m
+[32m+[m[32mpg_ctl -D "$TEMP_ROOT/data" -o "-k $SOCKET" -w start >/dev/null[m
+[32m+[m[32mcleanup() {[m
+[32m+[m[32m  pg_ctl -D "$TEMP_ROOT/data" -m immediate -w stop >/dev/null 2>&1 || true[m
+[32m+[m[32m  rm -rf "$TEMP_ROOT"[m
+[32m+[m[32m}[m
+[32m+[m[32mtrap cleanup EXIT[m
+[32m+[m
+[32m+[m[32mpsql() { command psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 "$@"; }[m
+[32m+[m[32mpsql <<'SQL'[m
+[32m+[m[32mCREATE SCHEMA auth;[m
+[32m+[m[32mCREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE[m
+[32m+[m[32mAS $$ SELECT NULLIF(current_setting('request.jwt.claim.sub', true), '')::uuid $$;[m
+[32m+[m[32mCREATE ROLE anon NOLOGIN;[m
+[32m+[m[32mCREATE ROLE authenticated NOLOGIN;[m
+[32m+[m[32mCREATE ROLE app_runtime NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;[m
+[32m+[m[32mSQL[m
+[32m+[m[32mfor migration in 0000_eminent_mathemanic 0001_pink_pete_wisdom 0036_costing_foundation 0037_costing_correction_integrity 0038_costing_final_stabilization; do[m
+[32m+[m[32m  psql -f "$ROOT_DIR/drizzle/pg/$migration.sql" >/dev/null[m
+[32m+[m[32mdone[m
+[32m+[m[32mpsql -f "$OLD_0039" >/dev/null[m
+[32m+[m[32mpsql <<'SQL'[m
+[32m+[m[32mINSERT INTO public.organizations ("id","name","slug","createdAt","updatedAt") VALUES[m
+[32m+[m[32m  ('org-identity-a','Identity A','identity-a',1,1),[m
+[32m+[m[32m  ('org-identity-b','Identity B','identity-b',1,1);[m
+[32m+[m[32mINSERT INTO public.users ("id","openId","name","supabaseAuthId") VALUES[m
+[32m+[m[32m  (301,'identity-user-a','Identity A','31111111-1111-1111-1111-111111111111'),[m
+[32m+[m[32m  (302,'identity-user-b','Identity B','32222222-2222-2222-2222-222222222222');[m
+[32m+[m[32mINSERT INTO public.organization_members ("id","organizationId","userId","role","status","createdAt","updatedAt") VALUES[m
+[32m+[m[32m  ('identity-membership-a','org-identity-a',301,'admin','active',1,1),[m
+[32m+[m[32m  ('identity-membership-b','org-identity-b',302,'admin','active',1,1);[m
+[32m+[m[32mINSERT INTO public.cost_groups ("id","organizationId","name","createdAt","updatedAt") VALUES[m
+[32m+[m[32m  ('identity-group-a','org-identity-a','A','now','now'),[m
+[32m+[m[32m  ('identity-group-b','org-identity-b','B','now','now');[m
+[32m+[m[32mINSERT INTO public.cost_items ("id","organizationId","groupId","name","itemType","referenceUnit","manualUnitCost","createdAt","updatedAt") VALUES[m
+[32m+[m[32m  ('identity-item-a','org-identity-a','identity-group-a','A','SIMPLE','kg','10','now','now'),[m
+[32m+[m[32m  ('identity-item-b','org-identity-b','identity-group-b','B','SIMPLE','kg','20','now','now');[m
+[32m+[m[32mSQL[m
+[32m+[m
+[32m+[m[32mprintf '%s\n' '=== before correction: authenticated forges request.app_user_id=B ==='[m
+[32m+[m[32mbefore=$(psql -Atqc "SET ROLE authenticated; SELECT set_config('request.app_user_id','302',false); SELECT count(*) FROM public.cost_items WHERE \"organizationId\" = 'org-identity-b'; RESET ROLE;" | tail -1)[m
+[32m+[m[32mprintf 'before_visible_org_b=%s\n' "$before"[m
+[32m+[m[32m[ "$before" = 1 ][m
+[32m+[m
+[32m+[m[32mpsql -f "$ROOT_DIR/drizzle/pg/0039_costing_rls_security.sql" >/dev/null[m
+[32m+[m[32mprintf '%s\n' '=== after correction: JWT=A, request.app_user_id=B ==='[m
+[32m+[m[32mafter=$(psql -Atqc "SET ROLE authenticated; SELECT set_config('request.jwt.claim.sub','31111111-1111-1111-1111-111111111111',false); SELECT set_config('request.app_user_id','302',false); SELECT count(*) FROM public.cost_items WHERE \"organizationId\" = 'org-identity-a'; SELECT count(*) FROM public.cost_items WHERE \"organizationId\" = 'org-identity-b'; RESET ROLE;" | tail -2)[m
+[32m+[m[32mprintf 'after_visible_counts_A_then_B=%s\n' "$after"[m
+[32m+[m[32mexpected=$'1\n0'[m
+[32m+[m[32m[ "$after" = "$expected" ][m
+[32m+[m[32mprintf '%s\n' 'IDENTITY_BOUNDARY_TEST=PASS'[m
+[1mdiff --git a/scripts/run-costing-rls-pg.sh b/scripts/run-costing-rls-pg.sh[m
+[1mindex f2bd9d4..af14cdf 100755[m
+[1m--- a/scripts/run-costing-rls-pg.sh[m
+[1m+++ b/scripts/run-costing-rls-pg.sh[m
+[36m@@ -18,6 +18,10 @@[m [mcleanup() {[m
+ trap cleanup EXIT[m
+ [m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+[32m+[m[32mCREATE SCHEMA auth;[m
+[32m+[m[32mCREATE FUNCTION auth.uid() RETURNS uuid[m
+[32m+[m[32mLANGUAGE sql STABLE[m
+[32m+[m[32mAS $$ SELECT NULLIF(current_setting('request.jwt.claim.sub', true), '')::uuid $$;[m
+ CREATE ROLE anon NOLOGIN;[m
+ CREATE ROLE authenticated NOLOGIN;[m
+ CREATE ROLE app_runtime NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;[m
+[36m@@ -71,13 +75,26 @@[m [mBEGIN[m
+   END IF;[m
+ END $$;[m
+ DO $$[m
+[32m+[m[32mDECLARE inserted_id text;[m
+ BEGIN[m
+   INSERT INTO public.cost_items ("id","organizationId","name","itemType","referenceUnit","manualUnitCost","createdAt","updatedAt")[m
+[31m-  VALUES ('item-rls-a-new','org-rls-a','Item A New','SIMPLE','kg','11','now','now');[m
+[32m+[m[32m  VALUES ('item-rls-a-new','org-rls-a','Item A New','SIMPLE','kg','11','now','now')[m
+[32m+[m[32m  RETURNING id INTO inserted_id;[m
+[32m+[m[32m  IF inserted_id <> 'item-rls-a-new' THEN RAISE EXCEPTION 'app_runtime INSERT RETURNING failed'; END IF;[m
+[32m+[m[32m  UPDATE public.cost_items SET "name" = 'Item A Updated'[m
+[32m+[m[32m  WHERE "id" = 'item-rls-a-new'[m
+[32m+[m[32m  RETURNING id INTO inserted_id;[m
+[32m+[m[32m  IF inserted_id <> 'item-rls-a-new' THEN RAISE EXCEPTION 'app_runtime UPDATE RETURNING failed'; END IF;[m
+   BEGIN[m
+     INSERT INTO public.cost_items ("id","organizationId","name","itemType","referenceUnit","manualUnitCost","createdAt","updatedAt")[m
+     VALUES ('item-rls-b-forged','org-rls-b','Forged B','SIMPLE','kg','99','now','now');[m
+     RAISE EXCEPTION 'cross-tenant INSERT was accepted';[m
+[32m+[m[32m    EXCEPTION WHEN insufficient_privilege OR check_violation THEN NULL;[m
+[32m+[m[32m  END;[m
+[32m+[m[32m  BEGIN[m
+[32m+[m[32m    UPDATE public.cost_items SET "organizationId" = 'org-rls-b'[m
+[32m+[m[32m    WHERE "id" = 'item-rls-a-new';[m
+[32m+[m[32m    RAISE EXCEPTION 'organization change was accepted';[m
+   EXCEPTION WHEN insufficient_privilege OR check_violation THEN NULL;[m
+   END;[m
+ END $$;[m
+[36m@@ -112,7 +129,8 @@[m [mSQL[m
+ printf '%s\n' '=== authenticated read-only tenant A ==='[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+ SET ROLE authenticated;[m
+[31m-SELECT set_config('request.app_user_id','101',false);[m
+[32m+[m[32mSELECT set_config('request.jwt.claim.sub','11111111-1111-1111-1111-111111111111',false);[m
+[32m+[m[32mSELECT set_config('request.app_user_id','202',false);[m
+ DO $$[m
+ DECLARE visible_count integer;[m
+ BEGIN[m
+[36m@@ -129,6 +147,30 @@[m [mEND $$;[m
+ RESET ROLE;[m
+ SQL[m
+ [m
+[32m+[m[32mprintf '%s\n' '=== authenticated without JWT and anon ==='[m
+[32m+[m[32mpsql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'[m
+[32m+[m[32mSET ROLE authenticated;[m
+[32m+[m[32mSELECT set_config('request.jwt.claim.sub','',false);[m
+[32m+[m[32mSELECT set_config('request.app_user_id','202',false);[m
+[32m+[m[32mDO $$[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  IF (SELECT count(*) FROM public.cost_items) <> 0 THEN[m
+[32m+[m[32m    RAISE EXCEPTION 'authenticated without JWT accessed tenant data';[m
+[32m+[m[32m  END IF;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mRESET ROLE;[m
+[32m+[m[32mSET ROLE anon;[m
+[32m+[m[32mDO $$[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  BEGIN[m
+[32m+[m[32m    PERFORM count(*) FROM public.cost_items;[m
+[32m+[m[32m    RAISE EXCEPTION 'anon accessed Costing data';[m
+[32m+[m[32m  EXCEPTION WHEN insufficient_privilege THEN NULL;[m
+[32m+[m[32m  END;[m
+[32m+[m[32mEND $$;[m
+[32m+[m[32mRESET ROLE;[m
+[32m+[m[32mSQL[m
+[32m+[m
+ printf '%s\n' '=== role and policy inventory ==='[m
+ psql -h "$SOCKET" -p "$PORT" -d postgres -P pager=off -c "[m
+ SELECT rolname, rolsuper, rolbypassrls[m
+[1mdiff --git a/server/app-runtime-rls-context.contract.test.ts b/server/app-runtime-rls-context.contract.test.ts[m
+[1mindex 4736b64..ace5160 100644[m
+[1m--- a/server/app-runtime-rls-context.contract.test.ts[m
+[1m+++ b/server/app-runtime-rls-context.contract.test.ts[m
+[36m@@ -33,11 +33,16 @@[m [mdescribe("contexto RLS da role app_runtime", () => {[m
+     );[m
+ [m
+     expect(rls).toContain([m
+[31m-      "create or replace function private.current_app_user_id()"[m
+[32m+[m[32m      "create or replace function private.current_app_runtime_user_id()"[m
+     );[m
+     expect(rls).toContain("current_setting('request.app_user_id', true)");[m
+     expect(rls).toContain('"supabaseAuthId" = auth.uid()');[m
+     expect(rls).toContain("security definer");[m
+[32m+[m[32m    expect(rls).toContain("set search_path = ''");[m
+[32m+[m[32m    expect(rls).toContain([m
+[32m+[m[32m      "create or replace function private.current_authenticated_user_id()"[m
+[32m+[m[32m    );[m
+[32m+[m[32m    expect(rls).not.toContain("coalesce(");[m
+ [m
+     expect(rls).toContain("create policy ai_agents_app_runtime_insert");[m
+     expect(rls).toContain("create policy ai_agents_app_runtime_update");[m
+[36m@@ -52,7 +57,7 @@[m [mdescribe("contexto RLS da role app_runtime", () => {[m
+     expect(rls).toContain([m
+       "create policy users_app_runtime_update_self on public.users"[m
+     );[m
+[31m-    expect(rls).toContain("using (id = private.current_app_user_id())");[m
+[32m+[m[32m    expect(rls).toContain("using (id = private.current_app_runtime_user_id())");[m
+     expect(rls).toContain("to app_runtime");[m
+   });[m
+ });[m
+[1mdiff --git a/server/db/costing.ts b/server/db/costing.ts[m
+[1mindex 6ef1ac7..12a2dea 100644[m
+[1m--- a/server/db/costing.ts[m
+[1m+++ b/server/db/costing.ts[m
+[36m@@ -77,6 +77,37 @@[m [mexport async function createCostGroup(input: {[m
+   return group;[m
+ }[m
+ [m
+[32m+[m[32mexport async function updateCostGroup(input: {[m
+[32m+[m[32m  organizationId: string;[m
+[32m+[m[32m  groupId: string;[m
+[32m+[m[32m  name: string;[m
+[32m+[m[32m  description?: string | null;[m
+[32m+[m[32m  position: number;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  const name = input.name.trim();[m
+[32m+[m[32m  if (!name || name.length > 120) throw new Error("Nome de grupo inválido");[m
+[32m+[m[32m  if (!Number.isInteger(input.position) || input.position < 0)[m
+[32m+[m[32m    throw new Error("Posição de grupo inválida");[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  const [group] = await db[m
+[32m+[m[32m    .update(costGroups)[m
+[32m+[m[32m    .set({[m
+[32m+[m[32m      name,[m
+[32m+[m[32m      description: input.description?.trim() || null,[m
+[32m+[m[32m      position: input.position,[m
+[32m+[m[32m      updatedAt: nowText(),[m
+[32m+[m[32m    })[m
+[32m+[m[32m    .where([m
+[32m+[m[32m      and([m
+[32m+[m[32m        eq(costGroups.organizationId, input.organizationId),[m
+[32m+[m[32m        eq(costGroups.id, input.groupId)[m
+[32m+[m[32m      )[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .returning();[m
+[32m+[m[32m  if (!group) throw new Error("Grupo não encontrado na organização");[m
+[32m+[m[32m  return group;[m
+[32m+[m[32m}[m
+[32m+[m
+ export async function listCostItems([m
+   organizationId: string,[m
+   activeOnly = false[m
+[36m@@ -148,6 +179,113 @@[m [mexport async function createCostItem(input: {[m
+   return item;[m
+ }[m
+ [m
+[32m+[m[32mexport async function updateCostItem(input: {[m
+[32m+[m[32m  organizationId: string;[m
+[32m+[m[32m  itemId: string;[m
+[32m+[m[32m  name: string;[m
+[32m+[m[32m  code?: string | null;[m
+[32m+[m[32m  description?: string | null;[m
+[32m+[m[32m  referenceUnit: string;[m
+[32m+[m[32m  groupId?: string | null;[m
+[32m+[m[32m  manualUnitCost?: string | null;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  const name = input.name.trim();[m
+[32m+[m[32m  const referenceUnit = input.referenceUnit.trim();[m
+[32m+[m[32m  if (!name || name.length > 240) throw new Error("Nome de item inválido");[m
+[32m+[m[32m  if (!referenceUnit || referenceUnit.length > 24)[m
+[32m+[m[32m    throw new Error("Unidade de referência inválida");[m
+[32m+[m[32m  if (input.manualUnitCost !== null && input.manualUnitCost !== undefined) {[m
+[32m+[m[32m    if (!/^\d+(?:\.\d{1,3})?$/.test(input.manualUnitCost)) {[m
+[32m+[m[32m      throw new Error([m
+[32m+[m[32m        "manualUnitCost deve ser um número não negativo com até três casas decimais"[m
+[32m+[m[32m      );[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  return db.transaction(async tx => {[m
+[32m+[m[32m    const [existing] = await tx[m
+[32m+[m[32m      .select()[m
+[32m+[m[32m      .from(costItems)[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costItems.organizationId, input.organizationId),[m
+[32m+[m[32m          eq(costItems.id, input.itemId)[m
+[32m+[m[32m        )[m
+[32m+[m[32m      )[m
+[32m+[m[32m      .for("update")[m
+[32m+[m[32m      .limit(1);[m
+[32m+[m[32m    if (!existing) throw new Error("Item não encontrado na organização");[m
+[32m+[m[32m    if (input.groupId) {[m
+[32m+[m[32m      const [group] = await tx[m
+[32m+[m[32m        .select({ id: costGroups.id })[m
+[32m+[m[32m        .from(costGroups)[m
+[32m+[m[32m        .where([m
+[32m+[m[32m          and([m
+[32m+[m[32m            eq(costGroups.organizationId, input.organizationId),[m
+[32m+[m[32m            eq(costGroups.id, input.groupId)[m
+[32m+[m[32m          )[m
+[32m+[m[32m        )[m
+[32m+[m[32m        .limit(1);[m
+[32m+[m[32m      if (!group) throw new Error("Grupo não encontrado na organização");[m
+[32m+[m[32m    }[m
+[32m+[m[32m    if (referenceUnit !== existing.referenceUnit) {[m
+[32m+[m[32m      const [published] = await tx[m
+[32m+[m[32m        .select({ id: costStructures.id })[m
+[32m+[m[32m        .from(costStructures)[m
+[32m+[m[32m        .where([m
+[32m+[m[32m          and([m
+[32m+[m[32m            eq(costStructures.organizationId, input.organizationId),[m
+[32m+[m[32m            eq(costStructures.itemId, input.itemId),[m
+[32m+[m[32m            or([m
+[32m+[m[32m              eq(costStructures.status, "ACTIVE"),[m
+[32m+[m[32m              eq(costStructures.status, "SUPERSEDED"),[m
+[32m+[m[32m              eq(costStructures.status, "INACTIVE")[m
+[32m+[m[32m            )[m
+[32m+[m[32m          )[m
+[32m+[m[32m        )[m
+[32m+[m[32m        .limit(1);[m
+[32m+[m[32m      if (published)[m
+[32m+[m[32m        throw new Error([m
+[32m+[m[32m          "A unidade não pode ser alterada após a publicação de uma estrutura"[m
+[32m+[m[32m        );[m
+[32m+[m[32m      const [snapshot] = await tx[m
+[32m+[m[32m        .select({ id: costCalculations.id })[m
+[32m+[m[32m        .from(costCalculations)[m
+[32m+[m[32m        .where([m
+[32m+[m[32m          and([m
+[32m+[m[32m            eq(costCalculations.organizationId, input.organizationId),[m
+[32m+[m[32m            eq(costCalculations.itemId, input.itemId)[m
+[32m+[m[32m          )[m
+[32m+[m[32m        )[m
+[32m+[m[32m        .limit(1);[m
+[32m+[m[32m      if (snapshot)[m
+[32m+[m[32m        throw new Error([m
+[32m+[m[32m          "A unidade não pode ser alterada após a criação de snapshots"[m
+[32m+[m[32m        );[m
+[32m+[m[32m    }[m
+[32m+[m[32m    const [item] = await tx[m
+[32m+[m[32m      .update(costItems)[m
+[32m+[m[32m      .set({[m
+[32m+[m[32m        name,[m
+[32m+[m[32m        code: input.code?.trim() || null,[m
+[32m+[m[32m        description: input.description?.trim() || null,[m
+[32m+[m[32m        referenceUnit,[m
+[32m+[m[32m        groupId: input.groupId ?? null,[m
+[32m+[m[32m        manualUnitCost: input.manualUnitCost ?? null,[m
+[32m+[m[32m        updatedAt: nowText(),[m
+[32m+[m[32m      })[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costItems.organizationId, input.organizationId),[m
+[32m+[m[32m          eq(costItems.id, input.itemId)[m
+[32m+[m[32m        )[m
+[32m+[m[32m      )[m
+[32m+[m[32m      .returning();[m
+[32m+[m[32m    if (!item) throw new Error("Item não pôde ser atualizado");[m
+[32m+[m[32m    return item;[m
+[32m+[m[32m  });[m
+[32m+[m[32m}[m
+[32m+[m
+ export async function setCostItemActive(input: {[m
+   organizationId: string;[m
+   itemId: string;[m
+[1mdiff --git a/server/routers/costing.test.ts b/server/routers/costing.test.ts[m
+[1mindex 9fb8e89..b392858 100644[m
+[1m--- a/server/routers/costing.test.ts[m
+[1m+++ b/server/routers/costing.test.ts[m
+[36m@@ -15,6 +15,8 @@[m [mconst mocks = vi.hoisted(() => ({[m
+   listCostItems: vi.fn(),[m
+   createCostItem: vi.fn(),[m
+   setCostItemActive: vi.fn(),[m
+[32m+[m[32m  updateCostGroup: vi.fn(),[m
+[32m+[m[32m  updateCostItem: vi.fn(),[m
+   listCostStructures: vi.fn(),[m
+   getCostStructure: vi.fn(),[m
+   createCostStructure: vi.fn(),[m
+[36m@@ -41,6 +43,8 @@[m [mvi.mock("../db/costing", () => ({[m
+   listCostItems: mocks.listCostItems,[m
+   createCostItem: mocks.createCostItem,[m
+   setCostItemActive: mocks.setCostItemActive,[m
+[32m+[m[32m  updateCostGroup: mocks.updateCostGroup,[m
+[32m+[m[32m  updateCostItem: mocks.updateCostItem,[m
+   listCostStructures: mocks.listCostStructures,[m
+   getCostStructure: mocks.getCostStructure,[m
+   createCostStructure: mocks.createCostStructure,[m
+[36m@@ -109,6 +113,8 @@[m [mdescribe("costing router authorization and service boundaries", () => {[m
+     mocks.calculateAndCreateCostingSnapshot.mockResolvedValue({[m
+       id: "snapshot-1",[m
+     });[m
+[32m+[m[32m    mocks.updateCostGroup.mockResolvedValue({ id: "group-1", name: "Updated" });[m
+[32m+[m[32m    mocks.updateCostItem.mockResolvedValue({ id: "item-1", name: "Updated" });[m
+   });[m
+ [m
+   it("permite leitura ao tenant correto com costing.read", async () => {[m
+[36m@@ -204,6 +210,63 @@[m [mdescribe("costing router authorization and service boundaries", () => {[m
+     });[m
+   });[m
+ [m
+[32m+[m[32m  it("permite editar grupo e item com workspace.manage e preserva o tenant", async () => {[m
+[32m+[m[32m    await caller().updateGroup({[m
+[32m+[m[32m      organizationId,[m
+[32m+[m[32m      groupId: "group-1",[m
+[32m+[m[32m      name: "Updated group",[m
+[32m+[m[32m      description: "description",[m
+[32m+[m[32m      position: 3,[m
+[32m+[m[32m    });[m
+[32m+[m[32m    await caller().updateItem({[m
+[32m+[m[32m      organizationId,[m
+[32m+[m[32m      itemId: "item-1",[m
+[32m+[m[32m      name: "Updated item",[m
+[32m+[m[32m      code: "ITEM-2",[m
+[32m+[m[32m      description: "description",[m
+[32m+[m[32m      referenceUnit: "kg",[m
+[32m+[m[32m      groupId: "group-1",[m
+[32m+[m[32m      manualUnitCost: "12.500",[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(mocks.updateCostGroup).toHaveBeenCalledWith({[m
+[32m+[m[32m      organizationId,[m
+[32m+[m[32m      groupId: "group-1",[m
+[32m+[m[32m      name: "Updated group",[m
+[32m+[m[32m      description: "description",[m
+[32m+[m[32m      position: 3,[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(mocks.updateCostItem).toHaveBeenCalledWith({[m
+[32m+[m[32m      organizationId,[m
+[32m+[m[32m      itemId: "item-1",[m
+[32m+[m[32m      name: "Updated item",[m
+[32m+[m[32m      code: "ITEM-2",[m
+[32m+[m[32m      description: "description",[m
+[32m+[m[32m      referenceUnit: "kg",[m
+[32m+[m[32m      groupId: "group-1",[m
+[32m+[m[32m      manualUnitCost: "12.500",[m
+[32m+[m[32m    });[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("não chama edição sem workspace.manage nem aceita tenant estrangeiro", async () => {[m
+[32m+[m[32m    mocks.requireTenantPermission.mockImplementation([m
+[32m+[m[32m      async (_userId, org, permission) => {[m
+[32m+[m[32m        if (org !== organizationId) throw forbidden("tenant inválido");[m
+[32m+[m[32m        if (permission !== "workspace.manage") throw forbidden("manage ausente");[m
+[32m+[m[32m        return { role: "admin" };[m
+[32m+[m[32m      }[m
+[32m+[m[32m    );[m
+[32m+[m[32m    await expect([m
+[32m+[m[32m      caller().updateItem({[m
+[32m+[m[32m        organizationId: otherOrganizationId,[m
+[32m+[m[32m        itemId: "item-1",[m
+[32m+[m[32m        name: "foreign",[m
+[32m+[m[32m        referenceUnit: "kg",[m
+[32m+[m[32m        manualUnitCost: "1",[m
+[32m+[m[32m      })[m
+[32m+[m[32m    ).rejects.toThrow("tenant inválido");[m
+[32m+[m[32m    expect(mocks.updateCostItem).not.toHaveBeenCalled();[m
+[32m+[m[32m  });[m
+[32m+[m
+   it("não aceita snapshot oficial baseado em estrutura não ACTIVE", async () => {[m
+     mocks.calculateAndCreateCostingSnapshot.mockRejectedValue([m
+       new Error("Snapshots oficiais exigem uma estrutura ACTIVE")[m
+[1mdiff --git a/server/routers/costing.ts b/server/routers/costing.ts[m
+[1mindex 3c74b3b..c85e4e6 100644[m
+[1m--- a/server/routers/costing.ts[m
+[1m+++ b/server/routers/costing.ts[m
+[36m@@ -20,6 +20,8 @@[m [mimport {[m
+   listCostItems,[m
+   publishCostStructure,[m
+   setCostItemActive,[m
+[32m+[m[32m  updateCostGroup,[m
+[32m+[m[32m  updateCostItem,[m
+   updateCostStructure,[m
+   updateCostStructureLine,[m
+ } from "../db/costing";[m
+[36m@@ -120,6 +122,24 @@[m [mexport const costingRouter = router({[m
+       );[m
+       return createCostGroup(input);[m
+     }),[m
+[32m+[m[32m  updateGroup: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        groupId: z.string().trim().min(1).max(32),[m
+[32m+[m[32m        name: z.string().trim().min(1).max(120),[m
+[32m+[m[32m        description: z.string().max(4000).nullable().optional(),[m
+[32m+[m[32m        position: z.number().int().min(0).max(100000),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .mutation(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "workspace.manage"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      return updateCostGroup(input);[m
+[32m+[m[32m    }),[m
+   items: protectedProcedure[m
+     .input(z.object({ organizationId, activeOnly: z.boolean().optional() }))[m
+     .query(async ({ ctx, input }) => {[m
+[36m@@ -151,6 +171,27 @@[m [mexport const costingRouter = router({[m
+       );[m
+       return createCostItem(input);[m
+     }),[m
+[32m+[m[32m  updateItem: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        itemId: z.string().trim().min(1).max(32),[m
+[32m+[m[32m        name: z.string().trim().min(1).max(240),[m
+[32m+[m[32m        code: z.string().trim().max(64).nullable().optional(),[m
+[32m+[m[32m        description: z.string().max(4000).nullable().optional(),[m
+[32m+[m[32m        referenceUnit: z.string().trim().min(1).max(24),[m
+[32m+[m[32m        groupId: z.string().trim().min(1).max(32).nullable().optional(),[m
+[32m+[m[32m        manualUnitCost: decimalInput.nullable().optional(),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .mutation(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "workspace.manage"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      return updateCostItem(input);[m
+[32m+[m[32m    }),[m
+   setItemActive: protectedProcedure[m
+     .input([m
+       z.object({[m

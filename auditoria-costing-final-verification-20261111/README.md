@@ -45,6 +45,10 @@ evidence/
 manifest.sha256
 ```
 
+## Rodada Security Bootstrap & CRUD
+
+A subpasta [`security-bootstrap-20261111/`](security-bootstrap-20261111/) documenta o commit local `3350e6e884be85b410d31e5ca9e6d133b643bf7f`, baseado em `d9ff4dd7024674c54af128e4bdc816a0b459e22a`. Ela responde explicitamente às sete perguntas obrigatórias, demonstra a fronteira `auth.uid()` versus `request.app_user_id`, cobre o CRUD de grupos/itens e inclui a migration incremental `0040`. A publicação da RLS em produção continua **pending**; a branch da aplicação não foi enviada.
+
 ## Resultados resumidos
 
 - Testes Costing direcionados: **52/52 aprovados**.

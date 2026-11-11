@@ -1,0 +1,92 @@
+CREATE SCHEMA
+CREATE FUNCTION
+CREATE ROLE
+CREATE ROLE
+CREATE ROLE
+psql:/tmp/alianza-reconstruction/drizzle/pg/0036_costing_foundation.sql:110: NOTICE:  trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:43: NOTICE:  trigger "cost_structures_published_immutable" for relation "cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:82: NOTICE:  trigger "cost_structure_lines_published_immutable" for relation "cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_groups_tenant_select" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_groups_tenant_insert" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_groups_tenant_update" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_groups_tenant_delete" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_items_tenant_select" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_items_tenant_insert" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_items_tenant_update" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_items_tenant_delete" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_version_counters_tenant_select" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_version_counters_tenant_insert" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_version_counters_tenant_update" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_version_counters_tenant_delete" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structures_tenant_select" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structures_tenant_insert" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structures_tenant_update" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structures_tenant_delete" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_lines_tenant_select" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_lines_tenant_insert" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_lines_tenant_update" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_structure_lines_tenant_delete" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_calculations_tenant_select" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_calculations_tenant_insert" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_calculations_tenant_update" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "cost_calculations_tenant_delete" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_settings_tenant_select" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_settings_tenant_insert" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_settings_tenant_update" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_settings_tenant_delete" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_groups_tenant_select" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_groups_tenant_insert" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_groups_tenant_update" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-costing-identity-axT00B/0039-before.sql:119: NOTICE:  policy "costing_gamma_groups_tenant_delete" for relation "public.costing_gamma_groups" does not exist, skipping
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+=== before correction: authenticated forges request.app_user_id=B ===
+before_visible_org_b=1
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:16: NOTICE:  schema "private" already exists, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_groups_authenticated_select" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_groups_app_runtime_select" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_groups_app_runtime_insert" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_groups_app_runtime_update" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_groups_app_runtime_delete" for relation "public.cost_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_items_authenticated_select" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_items_app_runtime_select" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_items_app_runtime_insert" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_items_app_runtime_update" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_items_app_runtime_delete" for relation "public.cost_items" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_version_counters_authenticated_select" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_version_counters_app_runtime_select" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_version_counters_app_runtime_insert" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_version_counters_app_runtime_update" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_version_counters_app_runtime_delete" for relation "public.cost_structure_version_counters" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structures_authenticated_select" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structures_app_runtime_select" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structures_app_runtime_insert" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structures_app_runtime_update" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structures_app_runtime_delete" for relation "public.cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_lines_authenticated_select" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_lines_app_runtime_select" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_lines_app_runtime_insert" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_lines_app_runtime_update" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_structure_lines_app_runtime_delete" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_calculations_authenticated_select" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_calculations_app_runtime_select" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_calculations_app_runtime_insert" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_calculations_app_runtime_update" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "cost_calculations_app_runtime_delete" for relation "public.cost_calculations" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_settings_authenticated_select" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_settings_app_runtime_select" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_settings_app_runtime_insert" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_settings_app_runtime_update" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_settings_app_runtime_delete" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_groups_authenticated_select" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_groups_app_runtime_select" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_groups_app_runtime_insert" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_groups_app_runtime_update" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0039_costing_rls_security.sql:139: NOTICE:  policy "costing_gamma_groups_app_runtime_delete" for relation "public.costing_gamma_groups" does not exist, skipping
+=== after correction: JWT=A, request.app_user_id=B ===
+after_visible_counts_A_then_B=1
+0
+IDENTITY_BOUNDARY_TEST=PASS

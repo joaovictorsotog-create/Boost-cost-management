@@ -1,0 +1,12 @@
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.
+
+ RUN  v3.2.7 /tmp/alianza-reconstruction
+
+ ✓ server/app-runtime-rls-context.contract.test.ts (2 tests) 4ms
+ ✓ server/routers/costing.test.ts (20 tests) 23ms
+ ✓ server/app-runtime-fail-closed.contract.test.ts (10 tests) 17ms
+
+ Test Files  3 passed (3)
+      Tests  32 passed (32)
+   Start at  18:50:58
+   Duration  768ms (transform 313ms, setup 0ms, collect 844ms, tests 45ms, environment 0ms, prepare 305ms)

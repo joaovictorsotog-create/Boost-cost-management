@@ -1,0 +1,1337 @@
+CREATE SCHEMA
+CREATE FUNCTION
+CREATE ROLE
+CREATE ROLE
+CREATE ROLE
+Reading config file '/tmp/alianza-reconstruction/drizzle.pg.config.ts'
+Using 'postgres' driver for database querying
+[⣷] applying migrations...[2K[1G[⣯] applying migrations...[2K[1G[⣟] applying migrations...[2K[1G[⡿] applying migrations...{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_structures_published_immutable" for relation "cost_structures" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_structure_lines_published_immutable" for relation "cost_structure_lines" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_select" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_select ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_insert" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_insert ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_update" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_update ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_delete" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_delete ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_authenticated_select" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_authenticated_select ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_app_runtime_select" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_app_runtime_select ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_app_runtime_insert" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_app_runtime_insert ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_app_runtime_update" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_app_runtime_update ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_app_runtime_delete" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_app_runtime_delete ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_select" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_select ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_insert" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_insert ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_update" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_update ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_delete" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_delete ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_authenticated_select" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_authenticated_select ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_app_runtime_select" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_app_runtime_select ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_app_runtime_insert" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_app_runtime_insert ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_app_runtime_update" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_app_runtime_update ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_app_runtime_delete" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_app_runtime_delete ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_select" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_select ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_insert" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_insert ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_update" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_update ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_delete" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_delete ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_authenticated_select" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_authenticated_select ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_app_runtime_select" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_app_runtime_select ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_app_runtime_insert" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_app_runtime_insert ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_app_runtime_update" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_app_runtime_update ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_app_runtime_delete" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_app_runtime_delete ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_select" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_select ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_insert" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_insert ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_update" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_update ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_delete" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_delete ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_authenticated_select" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_authenticated_select ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_app_runtime_select" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_app_runtime_select ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_app_runtime_insert" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_app_runtime_insert ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_app_runtime_update" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_app_runtime_update ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_app_runtime_delete" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_app_runtime_delete ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_select" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_select ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_insert" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_insert ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_update" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_update ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_delete" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_delete ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_authenticated_select" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_authenticated_select ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_app_runtime_select" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_app_runtime_select ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_app_runtime_insert" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_app_runtime_insert ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_app_runtime_update" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_app_runtime_update ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_app_runtime_delete" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_app_runtime_delete ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_select" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_select ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_insert" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_insert ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_update" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_update ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_delete" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_delete ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_authenticated_select" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_authenticated_select ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_select" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_select ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_insert" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_insert ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_update" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_update ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_delete" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_delete ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_select" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_select ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_insert" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_insert ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_update" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_update ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_delete" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_delete ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_authenticated_select" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_authenticated_select ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_app_runtime_select" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_app_runtime_select ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_app_runtime_insert" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_app_runtime_insert ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_app_runtime_update" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_app_runtime_update ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_app_runtime_delete" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_app_runtime_delete ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_select" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_select ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_insert" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_insert ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_update" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_update ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_delete" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_delete ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_authenticated_select" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_authenticated_select ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 23 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_app_runtime_select" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_app_runtime_select ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 24 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_app_runtime_insert" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_app_runtime_insert ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 25 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_app_runtime_update" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_app_runtime_update ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_app_runtime_delete" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_app_runtime_delete ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "private" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_select" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_select ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_insert" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_insert ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_update" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_update ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_groups_tenant_delete" for relation "public.cost_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_groups_tenant_delete ON public.cost_groups"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_select" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_select ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_insert" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_insert ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_update" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_update ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_items_tenant_delete" for relation "public.cost_items" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_items_tenant_delete ON public.cost_items"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_select" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_select ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_insert" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_insert ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_update" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_update ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_version_counters_tenant_delete" for relation "public.cost_structure_version_counters" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_version_counters_tenant_delete ON public.cost_structure_version_counters"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_select" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_select ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_insert" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_insert ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_update" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_update ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structures_tenant_delete" for relation "public.cost_structures" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structures_tenant_delete ON public.cost_structures"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_select" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_select ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_insert" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_insert ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_update" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_update ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_structure_lines_tenant_delete" for relation "public.cost_structure_lines" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_structure_lines_tenant_delete ON public.cost_structure_lines"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_select" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_select ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_insert" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_insert ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_update" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_update ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_tenant_delete" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_tenant_delete ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_update" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_update ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 26 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "cost_calculations_app_runtime_delete" for relation "public.cost_calculations" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS cost_calculations_app_runtime_delete ON public.cost_calculations"\n' +
+    'PL/pgSQL function inline_code_block line 27 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_select" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_select ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_insert" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_insert ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_update" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_update ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_settings_tenant_delete" for relation "public.costing_gamma_settings" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_settings_tenant_delete ON public.costing_gamma_settings"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_select" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_select ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 19 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_insert" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_insert ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 20 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_update" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_update ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 21 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'policy "costing_gamma_groups_tenant_delete" for relation "public.costing_gamma_groups" does not exist, skipping',
+  where: 'SQL statement "DROP POLICY IF EXISTS costing_gamma_groups_tenant_delete ON public.costing_gamma_groups"\n' +
+    'PL/pgSQL function inline_code_block line 22 at EXECUTE',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+[2K[1G[✓] migrations applied successfully!Reading config file '/tmp/alianza-reconstruction/drizzle.pg.config.ts'
+Using 'postgres' driver for database querying
+[⣷] applying migrations...{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+[2K[1G[✓] migrations applied successfully!INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+=== physical RLS flags ===
+ protected_tables
+------------------
+                8
+(1 row)
+
+=== app_runtime tenant A ===
+SET
+ set_config
+------------
+ 101
+(1 row)
+
+DO
+DO
+DO
+DO
+DO
+RESET
+=== authenticated read-only tenant A ===
+SET
+              set_config
+--------------------------------------
+ 11111111-1111-1111-1111-111111111111
+(1 row)
+
+ set_config
+------------
+ 202
+(1 row)
+
+DO
+DO
+RESET
+=== authenticated without JWT and anon ===
+SET
+ set_config
+------------
+
+(1 row)
+
+ set_config
+------------
+ 202
+(1 row)
+
+DO
+RESET
+SET
+DO
+RESET
+=== role and policy inventory ===
+    rolname    | rolsuper | rolbypassrls
+---------------+----------+--------------
+ anon          | f        | f
+ app_runtime   | f        | f
+ authenticated | f        | f
+(3 rows)
+
+            tablename            |                      policyname                      |  cmd   |      roles
+---------------------------------+------------------------------------------------------+--------+-----------------
+ cost_calculations               | cost_calculations_app_runtime_insert                 | INSERT | {app_runtime}
+ cost_calculations               | cost_calculations_app_runtime_select                 | SELECT | {app_runtime}
+ cost_calculations               | cost_calculations_authenticated_select               | SELECT | {authenticated}
+ cost_groups                     | cost_groups_app_runtime_delete                       | DELETE | {app_runtime}
+ cost_groups                     | cost_groups_app_runtime_insert                       | INSERT | {app_runtime}
+ cost_groups                     | cost_groups_app_runtime_select                       | SELECT | {app_runtime}
+ cost_groups                     | cost_groups_app_runtime_update                       | UPDATE | {app_runtime}
+ cost_groups                     | cost_groups_authenticated_select                     | SELECT | {authenticated}
+ cost_items                      | cost_items_app_runtime_delete                        | DELETE | {app_runtime}
+ cost_items                      | cost_items_app_runtime_insert                        | INSERT | {app_runtime}
+ cost_items                      | cost_items_app_runtime_select                        | SELECT | {app_runtime}
+ cost_items                      | cost_items_app_runtime_update                        | UPDATE | {app_runtime}
+ cost_items                      | cost_items_authenticated_select                      | SELECT | {authenticated}
+ cost_structure_lines            | cost_structure_lines_app_runtime_delete              | DELETE | {app_runtime}
+ cost_structure_lines            | cost_structure_lines_app_runtime_insert              | INSERT | {app_runtime}
+ cost_structure_lines            | cost_structure_lines_app_runtime_select              | SELECT | {app_runtime}
+ cost_structure_lines            | cost_structure_lines_app_runtime_update              | UPDATE | {app_runtime}
+ cost_structure_lines            | cost_structure_lines_authenticated_select            | SELECT | {authenticated}
+ cost_structure_version_counters | cost_structure_version_counters_app_runtime_delete   | DELETE | {app_runtime}
+ cost_structure_version_counters | cost_structure_version_counters_app_runtime_insert   | INSERT | {app_runtime}
+ cost_structure_version_counters | cost_structure_version_counters_app_runtime_select   | SELECT | {app_runtime}
+ cost_structure_version_counters | cost_structure_version_counters_app_runtime_update   | UPDATE | {app_runtime}
+ cost_structure_version_counters | cost_structure_version_counters_authenticated_select | SELECT | {authenticated}
+ cost_structures                 | cost_structures_app_runtime_delete                   | DELETE | {app_runtime}
+ cost_structures                 | cost_structures_app_runtime_insert                   | INSERT | {app_runtime}
+ cost_structures                 | cost_structures_app_runtime_select                   | SELECT | {app_runtime}
+ cost_structures                 | cost_structures_app_runtime_update                   | UPDATE | {app_runtime}
+ cost_structures                 | cost_structures_authenticated_select                 | SELECT | {authenticated}
+ costing_gamma_groups            | costing_gamma_groups_app_runtime_delete              | DELETE | {app_runtime}
+ costing_gamma_groups            | costing_gamma_groups_app_runtime_insert              | INSERT | {app_runtime}
+ costing_gamma_groups            | costing_gamma_groups_app_runtime_select              | SELECT | {app_runtime}
+ costing_gamma_groups            | costing_gamma_groups_app_runtime_update              | UPDATE | {app_runtime}
+ costing_gamma_groups            | costing_gamma_groups_authenticated_select            | SELECT | {authenticated}
+ costing_gamma_settings          | costing_gamma_settings_app_runtime_delete            | DELETE | {app_runtime}
+ costing_gamma_settings          | costing_gamma_settings_app_runtime_insert            | INSERT | {app_runtime}
+ costing_gamma_settings          | costing_gamma_settings_app_runtime_select            | SELECT | {app_runtime}
+ costing_gamma_settings          | costing_gamma_settings_app_runtime_update            | UPDATE | {app_runtime}
+ costing_gamma_settings          | costing_gamma_settings_authenticated_select          | SELECT | {authenticated}
+(38 rows)
+
+COSTING_RLS_TEST=PASS
