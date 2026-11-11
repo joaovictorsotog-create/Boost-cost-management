@@ -1,0 +1,15 @@
+# Manifesto SHA-256 — Entrega 3B.1.9
+# Versão: 3B.1.9
+# Data UTC: 2026-11-11T12:01:32.396455+00:00
+# A SQL é o artefato principal; os documentos descrevem o contrato; os CSVs alimentam fixtures locais; os testes executam a SQL; o teste 3B.1.7 cobre regressão.
+
+arquivo	tamanho_bytes	sha256	relação
+alianza-entrega-3b1-role-auditoria.sql	83007	d83996cd90a51a92fadf453ae7c8e27c5f1f85f57b6e40307fe4b1551cb9f325	SQL principal
+alianza-entrega-3b1-9-plano-tecnico.md	2876	8ccc33e70b4d1f917ba903e9b632be52c5bae9000067390e2993d8a8607b5aaa	documento/fixture
+alianza-entrega-3b1-9-matriz-controles-evidencias.md	1933	3ee69622f10a96fce9c36317791cdbe0aa01ddc4a3f6ca27f5482c853bc5af1f	documento/fixture
+alianza-entrega-3b1-9-relatorio-validacoes.md	2766	89a276464ac5dc884b8f8809c1da5949e2461d6f1ef8476ba1e7c835f6e3b39c	documento/fixture
+alianza-entrega-3b1-9-cenarios.md	2188	db73d5bd71de1b2770cd484f98f4446fa1b3f2cbb72f5aa2af83243a585099b0	documento/fixture
+alianza-entrega-3b1-9-registro-revisoes-executaveis.csv	392	f3e8c1a48bb8082d9d28d3b6ad303a6023060ec6e929f4de5ddf541a04a5210b	documento/fixture
+alianza-entrega-3b1-9-modelo-aceitacao-temporary.csv	110	abe189eba39bbdc633d50fb5850a1536fb507e5b233c00a411fda8b71c19b971	documento/fixture
+test_3b1_9_postgres.py	13277	6e9ffec08da6a1ae17915ab91d56ef33657ac090d0d9d8e678341f677dbd756d	teste SQL real
+alianza-entrega-3b1-7-test-decisao.py	2758	5e77ca7d2e66ac6471690b0d19d68c871e89e9c6ffdc358fc2fe7202ab3caf90	regressão legada

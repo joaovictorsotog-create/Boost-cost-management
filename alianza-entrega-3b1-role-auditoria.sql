@@ -780,12 +780,13 @@ WITH review_registry AS (
     (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
      NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::boolean,
      NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text)
+     NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text, NULL::text,
+     NULL::text)
   ) AS v(audit_id, role_name, snapshot_id, schema_name, object_name,
          identity_arguments, object_type, language_name, owner_name,
          security_mode, extension_name, definition_normalized, definition_source,
-         definition_encoding, definition_bytes_hex, definition_sha256,
-         definition_sha256_calculated, review_status, reviewer, reviewed_at,
+         definition_encoding, canonical_definition, definition_bytes_hex, definition_sha256,
+         definition_sha256_calculated, hash_algorithm, review_status, reviewer, reviewed_at,
          evidence_ref, technical_conclusion, risk_justification)
   WHERE schema_name IS NOT NULL
 ), function_inventory AS (
@@ -831,6 +832,9 @@ WITH review_registry AS (
       AND rr.definition_encoding='UTF-8' AND rr.definition_normalized IS FALSE
       AND rr.definition_bytes_hex IS NOT NULL AND rr.definition_bytes_hex ~ '^[0-9A-Fa-f]+$'
       AND length(rr.definition_sha256)=64 AND rr.definition_sha256 ~ '^[0-9A-Fa-f]{64}$'
+      AND rr.canonical_definition=fi.canonical_definition
+      AND lower(rr.definition_bytes_hex)=encode(convert_to(fi.canonical_definition,'UTF8'),'hex')
+      AND rr.hash_algorithm='SHA-256'
       AND rr.definition_sha256 = rr.definition_sha256_calculated
       AND rr.schema_name=fi.schema_name AND rr.object_name=fi.object_name
       AND rr.identity_arguments=fi.identity_arguments AND rr.object_type=fi.object_type
@@ -1072,13 +1076,14 @@ review_registry AS (
     (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
      NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::boolean,
      NULL::text, NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
-     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text)
+     NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text, NULL::text,
+     NULL::text)
   ) AS v(audit_id, role_name, snapshot_id, schema_name, object_name,
          identity_arguments, object_type, language_name, owner_name, security_mode,
          extension_name, definition_normalized, definition_source, definition_encoding,
-         definition_bytes_hex, definition_sha256, definition_sha256_calculated,
-         review_status, reviewer, reviewed_at, evidence_ref, technical_conclusion,
-         risk_justification)
+         canonical_definition, definition_bytes_hex, definition_sha256,
+         definition_sha256_calculated, hash_algorithm, review_status, reviewer,
+         reviewed_at, evidence_ref, technical_conclusion, risk_justification)
   WHERE schema_name IS NOT NULL
 ),
 review_inventory_final AS (
@@ -1090,10 +1095,16 @@ review_inventory_final AS (
     CASE WHEN p.prosecdef THEN 'SECURITY DEFINER' ELSE 'SECURITY INVOKER' END AS security_mode,
     ext.extname AS extension_name, has_function_privilege(current_user,p.oid,'EXECUTE') AS can_execute,
     CASE WHEN p.prokind IN ('f','p') THEN 'pg_get_functiondef'
-         WHEN p.prokind='a' THEN 'pg_catalog.pg_aggregate' ELSE 'pg_catalog.pg_proc' END AS definition_source
+         WHEN p.prokind='a' THEN 'pg_catalog.pg_aggregate' ELSE 'pg_catalog.pg_proc' END AS definition_source,
+    CASE WHEN p.prokind IN ('f','p') THEN pg_get_functiondef(p.oid)
+         WHEN p.prokind='a' THEN format('pg_aggregate:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s',
+           p.oid::regprocedure,p.proowner,p.prolang,p.prosecdef,p.provolatile,p.proparallel,p.proleakproof,p.prosrc,p.proargtypes::text,
+           a.aggkind,a.aggnumdirectargs,a.aggtransfn::text,a.aggfinalfn::text,a.aggcombinefn::text,a.aggserialfn::text,a.aggdeserialfn::text,a.aggmtransfn::text,a.aggminvtransfn::text)
+         WHEN p.prokind='w' THEN format('pg_window:%s:%s:%s:%s:%s:%s:%s:%s:%s',p.oid::regprocedure,p.proowner,p.prolang,p.prosecdef,p.provolatile,p.proparallel,p.proleakproof,p.prosrc,p.proargtypes::text) END AS canonical_definition
   FROM pg_catalog.pg_proc p JOIN pg_catalog.pg_namespace n ON n.oid=p.pronamespace
   JOIN pg_catalog.pg_language lang ON lang.oid=p.prolang
   LEFT JOIN pg_catalog.pg_roles owner ON owner.oid=p.proowner
+  LEFT JOIN pg_catalog.pg_aggregate a ON a.aggfnoid=p.oid
   LEFT JOIN pg_catalog.pg_depend dep ON dep.classid='pg_proc'::regclass AND dep.objid=p.oid
     AND dep.refclassid='pg_extension'::regclass AND dep.deptype='e'
   LEFT JOIN pg_catalog.pg_extension ext ON ext.oid=dep.refobjid
@@ -1104,8 +1115,10 @@ review_inventory_final AS (
     rr.review_status='APPROVED' AND rr.audit_id IS NOT NULL AND rr.role_name=current_user
     AND rr.snapshot_id=current_setting('alianza.audit_snapshot_id',true)
     AND rr.definition_source=fi.definition_source AND rr.definition_encoding='UTF-8'
+    AND rr.canonical_definition=fi.canonical_definition
     AND rr.definition_normalized IS FALSE AND rr.definition_bytes_hex IS NOT NULL
-    AND rr.definition_sha256=rr.definition_sha256_calculated
+    AND lower(rr.definition_bytes_hex)=encode(convert_to(fi.canonical_definition,'UTF8'),'hex')
+    AND rr.hash_algorithm='SHA-256' AND rr.definition_sha256=rr.definition_sha256_calculated
     AND rr.schema_name=fi.schema_name AND rr.object_name=fi.object_name
     AND rr.identity_arguments=fi.identity_arguments AND rr.object_type=fi.object_type
     AND rr.language_name=fi.language_name AND rr.owner_name=fi.owner_name
@@ -1115,7 +1128,9 @@ review_inventory_final AS (
   ) FILTER (WHERE fi.can_execute),true) AS all_function_reviews_valid,
   COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NULL),false) AS has_missing_function_review,
   COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NOT NULL AND NOT (
-    rr.review_status='APPROVED' AND rr.definition_sha256=rr.definition_sha256_calculated
+    rr.review_status='APPROVED' AND rr.canonical_definition=fi.canonical_definition
+    AND lower(rr.definition_bytes_hex)=encode(convert_to(fi.canonical_definition,'UTF8'),'hex')
+    AND rr.hash_algorithm='SHA-256' AND rr.definition_sha256=rr.definition_sha256_calculated
     AND rr.schema_name=fi.schema_name AND rr.object_name=fi.object_name
     AND rr.identity_arguments=fi.identity_arguments AND rr.object_type=fi.object_type
     AND rr.language_name=fi.language_name AND rr.owner_name=fi.owner_name
@@ -1124,22 +1139,28 @@ review_inventory_final AS (
   count(*) FILTER (WHERE fi.can_execute) AS executable_function_count,
   count(*) FILTER (WHERE rr.schema_name IS NOT NULL) AS registry_entry_count,
   COALESCE(bool_or(fi.can_execute AND fi.object_type IN ('aggregate','window_function')
-                   AND rr.schema_name IS NULL),false) AS has_nonverifiable_executable_function
+                   AND rr.schema_name IS NULL),false) AS has_nonverifiable_executable_function,
+  EXISTS (SELECT 1 FROM review_registry d GROUP BY d.audit_id,d.role_name,d.snapshot_id,d.schema_name,d.object_name,d.identity_arguments,d.object_type HAVING count(*) > 1) AS has_duplicate_review_registry,
+  EXISTS (SELECT 1 FROM review_registry x WHERE x.schema_name IS NOT NULL AND NOT EXISTS (SELECT 1 FROM review_inventory_final y WHERE y.schema_name=x.schema_name AND y.object_name=x.object_name AND y.identity_arguments=x.identity_arguments AND y.object_type=x.object_type)) AS has_unmatched_review_registry,
+  EXISTS (SELECT 1 FROM review_registry x WHERE x.schema_name IS NOT NULL AND (x.audit_id IS NULL OR x.role_name IS NULL OR x.snapshot_id IS NULL OR x.definition_source IS NULL OR x.definition_encoding IS NULL OR x.canonical_definition IS NULL OR x.definition_bytes_hex IS NULL OR x.definition_sha256 IS NULL OR x.definition_sha256_calculated IS NULL OR x.hash_algorithm IS NULL OR x.review_status IS NULL OR x.reviewer IS NULL OR x.reviewed_at IS NULL OR x.evidence_ref IS NULL OR x.technical_conclusion IS NULL OR x.risk_justification IS NULL)) AS has_incomplete_review_registry,
+  EXISTS (SELECT 1 FROM review_registry x WHERE x.schema_name IS NOT NULL AND x.snapshot_id IS DISTINCT FROM current_setting('alianza.audit_snapshot_id',true)) AS has_review_snapshot_mismatch
   FROM review_inventory_final fi LEFT JOIN review_registry rr
     ON rr.schema_name=fi.schema_name AND rr.object_name=fi.object_name
    AND rr.identity_arguments=fi.identity_arguments AND rr.object_type=fi.object_type
 ),
 temporary_acceptance AS (
   SELECT
-    (ta.audit_id IS NOT NULL AND ta.role_name=current_user AND ta.responsible IS NOT NULL
+    (ta.audit_id IS NOT NULL AND ta.role_name=current_user AND ta.snapshot_id=current_setting('alianza.audit_snapshot_id',true)
+     AND EXISTS (SELECT 1 FROM review_registry ar WHERE ar.audit_id=ta.audit_id AND ar.role_name=current_user AND ar.snapshot_id=ta.snapshot_id)
+     AND ta.responsible IS NOT NULL
      AND ta.accepted_at IS NOT NULL AND ta.evidence_ref IS NOT NULL
      AND ta.justification IS NOT NULL AND ta.risk_scope IS NOT NULL
      AND ta.acceptance_valid IS TRUE) AS temporary_acceptance_valid,
     ta.responsible AS temporary_acceptance_responsible, ta.accepted_at AS temporary_acceptance_date,
     ta.evidence_ref AS temporary_acceptance_evidence, ta.justification AS temporary_acceptance_justification
   FROM (VALUES
-    (NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text, NULL::text, NULL::text, NULL::boolean)
-  ) AS ta(audit_id, role_name, responsible, accepted_at, evidence_ref, justification, risk_scope, acceptance_valid)
+    (NULL::text, NULL::text, NULL::text, NULL::text, NULL::timestamptz, NULL::text, NULL::text, NULL::text, NULL::boolean)
+  ) AS ta(audit_id, role_name, snapshot_id, responsible, accepted_at, evidence_ref, justification, risk_scope, acceptance_valid)
 ),
 role_tree AS (
   SELECT r.oid AS role_oid,
@@ -1671,9 +1692,13 @@ SELECT CASE
            OR has_security_definer_metadata_indeterminate
            OR has_nonverifiable_language_function
            OR has_nonverifiable_executable_function
+           OR has_duplicate_review_registry
+           OR has_unmatched_review_registry
+           OR has_incomplete_review_registry
+           OR has_review_snapshot_mismatch
            OR NOT has_migration_select
          THEN 'INDETERMINADA'
-         WHEN can_create_temp AND NOT temporary_acceptance_valid
+         WHEN can_create_temp AND COALESCE(NOT temporary_acceptance_valid, true)
          THEN 'INDETERMINADA'
          WHEN can_create_temp
          THEN 'APROVACAO_CONDICIONAL_TEMPORARY'
@@ -1719,6 +1744,10 @@ SELECT CASE
        has_stale_function_review,
        executable_function_count,
        registry_entry_count,
+       has_duplicate_review_registry,
+       has_unmatched_review_registry,
+       has_incomplete_review_registry,
+       has_review_snapshot_mismatch,
        transaction_read_only_ok,
        default_transaction_read_only_ok,
        has_dangerous_default_acl,
