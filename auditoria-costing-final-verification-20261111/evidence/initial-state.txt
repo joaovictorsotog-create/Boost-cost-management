@@ -1,0 +1,8 @@
+repository=/tmp/alianza-reconstruction
+branch=costing-final-verification-20261111
+head=0fe7df0bcd6412b90bd3bd1d5be2341a7408fb69
+parent=e110f98b8298d7732e3424e4b84da09df9bad9ca
+status=
+remote=origin	https://github.com/joaovictorsotog-create/alianza-ai-platform.git (fetch) [blob:none]
+origin	https://github.com/joaovictorsotog-create/alianza-ai-platform.git (push)
+timestamp=2026-11-11T15:14:26+00:00

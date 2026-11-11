@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1787315194504,
+      "tag": "0000_eminent_mathemanic",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787315519829,
+      "tag": "0001_pink_pete_wisdom",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794409300000,
+      "tag": "0036_costing_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794409301000,
+      "tag": "0037_costing_correction_integrity",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794409302000,
+      "tag": "0038_costing_final_stabilization",
+      "breakpoints": true
+    }
+  ]
+}

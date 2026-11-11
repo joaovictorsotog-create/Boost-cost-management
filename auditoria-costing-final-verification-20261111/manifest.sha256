@@ -1,0 +1,16 @@
+20542c943899572c9e9cab01dcba1b932dd61a161a1ec3f4b15e8af2d2c8af4d  ./artifacts/commit-357fc32.patch
+a22ff75f15b4e25df91228a9d57fdf43bb4defd84c9f6f1866ccdbbbfffe7967  ./artifacts/verification-round.patch
+51deb9e5e8dcb074f2ce15fbf6244e204eb2e6af39beb7d7216b984b36b49d18  ./evidence/application-git-state.txt
+5d243c5ead9c5d8f6f9dbb3b90651e53aa55a3b36d08897998eb2762c7726ec5  ./evidence/costing-complete-harness.txt
+f5735b060ad139c6114d2b07c7dae06307aa8b2e93dd73e30fb8748eab0a1f84  ./evidence/final-review.md
+e49e2bc49ae2037a32ba02b97f2cafb952cd954ff51ead5fbfda5cfe08c42606  ./evidence/full-suite.txt
+bccc684d4cb1d9bb8aaf8532561895b854b97a2a5d4444db52c26a6812b84a17  ./evidence/initial-state.txt
+9f3b61bac4731d8e2bbe8dfc57cef19d1e87b2f51bbf1495d8c1a9cb2be7dc34  ./evidence/migration-pipeline-report.md
+db09db90a61ede190c88927ab78df8b6895033efb09629135e4837f0b1c6351f  ./evidence/postgres-verification-harness.txt
+37d9d23b50af5da1957ed8d53a9b449fee1d4302c7b0ff75c51e8506492016f8  ./evidence/targeted-tests.txt
+1665910a7addc9427ffc57537c3e6e25864f2b75424322fc3a0a0c2aa66864ba  ./evidence/validation-commands.txt
+9be4933b82d1fb2d7d4173e6944fed6d74d55dd8484263818f2e9ff05792d669  ./files/drizzle.pg.config.ts
+ff25f8af2af45783347a75628d9221b743448d83f02b843811d0c138f320f984  ./files/drizzle/pg/meta/_journal.json
+6597cee6d4c550dbebde0742a53ed93b4f1e1e6ed9fd1749761bf06c092deb63  ./files/scripts/costing-final-verification-pg.ts
+879a44d3be42b25012694efec8286b5987274a932bca297c132e82047d040061  ./files/scripts/costing-publish-worker.ts
+7623517970324cad6d6e5d0f82a324ca48bc6acb0665dd5564c8e5045938bee1  ./files/scripts/run-costing-final-verification-pg.sh

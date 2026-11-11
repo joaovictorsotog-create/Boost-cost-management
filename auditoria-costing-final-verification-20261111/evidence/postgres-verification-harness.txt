@@ -1,0 +1,417 @@
+=== drizzle runner: first execution ===
+Reading config file '/tmp/alianza-reconstruction/drizzle.pg.config.ts'
+Using 'postgres' driver for database querying
+[⣷] applying migrations...[2K[1G[⣯] applying migrations...[2K[1G[⣟] applying migrations...[2K[1G[⡿] applying migrations...{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_structures_published_immutable" for relation "cost_structures" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '00000',
+  message: 'trigger "cost_structure_lines_published_immutable" for relation "cost_structure_lines" does not exist, skipping',
+  file: 'dropcmds.c',
+  line: '528',
+  routine: 'does_not_exist_skipping'
+}
+[2K[1G[✓] migrations applied successfully!=== drizzle runner: second execution ===
+Reading config file '/tmp/alianza-reconstruction/drizzle.pg.config.ts'
+Using 'postgres' driver for database querying
+[⣷] applying migrations...{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+[2K[1G[✓] migrations applied successfully!=== migration journal rows ===
+9528093f9a0c6d5f0bd86a55fa17a123575bc47b50268ddccdc6413de4ccd232
+2ec533faa3a4934b7158842d81a5274957c06f548a74128ae62da1be370b98cc
+09a67f4f3d676118a29f74e613aa18e83ad8b25161c1d3da8b3ce53fcce85fa2
+807524a6868dbb949aaedcbc86454450ea068014728b12d57350c64375aaab60
+5acaa6b60cd81e7107652de2a41c38e5ac2b188ce8fd1c0c1fb1a090cbf61663
+=== Costing tables ===
+cost_calculations
+cost_groups
+cost_items
+cost_structure_lines
+cost_structure_version_counters
+cost_structures
+costing_gamma_groups
+costing_gamma_settings
+=== independent mutation/publication harness ===
+{
+  "lineMutationCases": [
+    {
+      "case": "insert-mutation",
+      "operation": "insert",
+      "winner": "mutation",
+      "mutationPid": 70836,
+      "publicationPid": 70837,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "insert-mutation",
+      "result": "mutation-committed-before-publication"
+    },
+    {
+      "case": "insert-mutation",
+      "finalStructures": [
+        {
+          "id": "verify-im-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-im-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-im-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-im-line",
+        "structureId": "verify-im-draft",
+        "quantity": "1.000",
+        "notes": null
+      }
+    },
+    {
+      "case": "insert-publication",
+      "operation": "insert",
+      "winner": "publication",
+      "mutationPid": 70838,
+      "publicationPid": 70839,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "insert-publication",
+      "result": "publication-committed-before-mutation",
+      "mutationError": "PostgresError: Lines of published cost structures are immutable"
+    },
+    {
+      "case": "insert-publication",
+      "finalStructures": [
+        {
+          "id": "verify-ip-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-ip-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-ip-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": null
+    },
+    {
+      "case": "update-mutation",
+      "operation": "update",
+      "winner": "mutation",
+      "mutationPid": 70840,
+      "publicationPid": 70841,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "update-mutation",
+      "result": "mutation-committed-before-publication"
+    },
+    {
+      "case": "update-mutation",
+      "finalStructures": [
+        {
+          "id": "verify-um-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-um-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-um-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-um-line",
+        "structureId": "verify-um-draft",
+        "quantity": "2.000",
+        "notes": "verification-update"
+      }
+    },
+    {
+      "case": "update-publication",
+      "operation": "update",
+      "winner": "publication",
+      "mutationPid": 70842,
+      "publicationPid": 70843,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "update-publication",
+      "result": "publication-committed-before-mutation",
+      "mutationError": "PostgresError: Lines of published cost structures are immutable"
+    },
+    {
+      "case": "update-publication",
+      "finalStructures": [
+        {
+          "id": "verify-up-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-up-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-up-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-up-line",
+        "structureId": "verify-up-draft",
+        "quantity": "1.000",
+        "notes": null
+      }
+    },
+    {
+      "case": "delete-mutation",
+      "operation": "delete",
+      "winner": "mutation",
+      "mutationPid": 70844,
+      "publicationPid": 70845,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "delete-mutation",
+      "result": "mutation-committed-before-publication"
+    },
+    {
+      "case": "delete-mutation",
+      "finalStructures": [
+        {
+          "id": "verify-dm-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-dm-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-dm-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": null
+    },
+    {
+      "case": "delete-publication",
+      "operation": "delete",
+      "winner": "publication",
+      "mutationPid": 70846,
+      "publicationPid": 70847,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "delete-publication",
+      "result": "publication-committed-before-mutation",
+      "mutationError": "PostgresError: Lines of published cost structures are immutable"
+    },
+    {
+      "case": "delete-publication",
+      "finalStructures": [
+        {
+          "id": "verify-dp-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-dp-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-dp-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-dp-line",
+        "structureId": "verify-dp-draft",
+        "quantity": "1.000",
+        "notes": null
+      }
+    },
+    {
+      "case": "move-mutation",
+      "operation": "move",
+      "winner": "mutation",
+      "mutationPid": 70848,
+      "publicationPid": 70849,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "move-mutation",
+      "result": "mutation-committed-before-publication"
+    },
+    {
+      "case": "move-mutation",
+      "finalStructures": [
+        {
+          "id": "verify-mm-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-mm-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-mm-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-mm-line",
+        "structureId": "verify-mm-destination",
+        "quantity": "1.000",
+        "notes": null
+      }
+    },
+    {
+      "case": "move-publication",
+      "operation": "move",
+      "winner": "publication",
+      "mutationPid": 70850,
+      "publicationPid": 70851,
+      "barrier": "both transactions began before the critical section"
+    },
+    {
+      "case": "move-publication",
+      "result": "publication-committed-before-mutation",
+      "mutationError": "PostgresError: Lines of published cost structures are immutable"
+    },
+    {
+      "case": "move-publication",
+      "finalStructures": [
+        {
+          "id": "verify-mp-destination",
+          "status": "DRAFT"
+        },
+        {
+          "id": "verify-mp-draft",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "verify-mp-old",
+          "status": "SUPERSEDED"
+        }
+      ],
+      "finalLine": {
+        "id": "verify-mp-line",
+        "structureId": "verify-mp-draft",
+        "quantity": "1.000",
+        "notes": null
+      }
+    }
+  ],
+  "publicationService": [
+    {
+      "label": "same-item",
+      "serviceResults": [
+        {
+          "status": "fulfilled",
+          "backendPid": 70968,
+          "structureId": "service-same-draft-a",
+          "publishedStatus": "ACTIVE",
+          "supersededStructureIds": [
+            "service-same-old"
+          ],
+          "startedAt": 1794411235796,
+          "finishedAt": 1794411235857,
+          "exitCode": 0
+        },
+        {
+          "status": "fulfilled",
+          "backendPid": 70969,
+          "structureId": "service-same-draft-b",
+          "publishedStatus": "ACTIVE",
+          "supersededStructureIds": [
+            "service-same-draft-a"
+          ],
+          "startedAt": 1794411235814,
+          "finishedAt": 1794411235875,
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "label": "independent-items",
+      "serviceResults": [
+        {
+          "status": "fulfilled",
+          "backendPid": 71089,
+          "structureId": "service-ind-a-draft",
+          "publishedStatus": "ACTIVE",
+          "supersededStructureIds": [
+            "service-ind-a-old"
+          ],
+          "startedAt": 1794411237403,
+          "finishedAt": 1794411237460,
+          "exitCode": 0
+        },
+        {
+          "status": "fulfilled",
+          "backendPid": 71088,
+          "structureId": "service-ind-b-draft",
+          "publishedStatus": "ACTIVE",
+          "supersededStructureIds": [
+            "service-ind-b-old"
+          ],
+          "startedAt": 1794411237382,
+          "finishedAt": 1794411237461,
+          "exitCode": 0
+        }
+      ]
+    }
+  ],
+  "independentServiceOverlap": [
+    {
+      "backendPid": 71089,
+      "startedAt": 1794411237403,
+      "finishedAt": 1794411237460
+    },
+    {
+      "backendPid": 71088,
+      "startedAt": 1794411237382,
+      "finishedAt": 1794411237461
+    }
+  ]
+}

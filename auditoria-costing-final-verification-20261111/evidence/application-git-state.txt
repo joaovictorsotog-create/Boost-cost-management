@@ -1,0 +1,5 @@
+branch=costing-final-verification-20261111
+head=357fc3226dc784964679c6ce611eaee2f0f9d76b
+parent=0fe7df0bcd6412b90bd3bd1d5be2341a7408fb69
+status=
+origin=https://github.com/joaovictorsotog-create/alianza-ai-platform.git
