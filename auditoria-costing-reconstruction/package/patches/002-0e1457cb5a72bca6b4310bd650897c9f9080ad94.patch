@@ -1,0 +1,485 @@
+[33mcommit 0e1457cb5a72bca6b4310bd650897c9f9080ad94[m
+Author:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+AuthorDate: Wed Nov 11 13:57:09 2026 +0000
+Commit:     joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+CommitDate: Wed Nov 11 13:57:09 2026 +0000
+
+    reconstruct(costing): apply recovered audit corrections
+
+[1mdiff --git a/drizzle/pg/0036_costing_foundation.sql b/drizzle/pg/0036_costing_foundation.sql[m
+[1mindex b8ff2a867229dfee9e3c354bade4b2ea42f2f863..e6a5777e2ea6d79c5e56fc2f00b0bc18d0e379e6 100644[m
+[1m--- a/drizzle/pg/0036_costing_foundation.sql[m
+[1m+++ b/drizzle/pg/0036_costing_foundation.sql[m
+[36m@@ -43,6 +43,8 @@[m [mCREATE TABLE IF NOT EXISTS "cost_structures" ([m
+   "updatedAt" text NOT NULL,[m
+   CONSTRAINT "cost_structures_org_id_id_unique" UNIQUE ("organizationId", "id"),[m
+   CONSTRAINT "cost_structures_org_item_version_unique" UNIQUE ("organizationId", "itemId", "version"),[m
+[32m+[m[32m  CONSTRAINT "cost_structures_status_check" CHECK ("status" IN ('DRAFT', 'ACTIVE', 'SUPERSEDED', 'INACTIVE')),[m
+[32m+[m[32m  CONSTRAINT "cost_structures_output_positive_check" CHECK ("outputQuantity" > 0),[m
+   CONSTRAINT "cost_structures_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT[m
+ );[m
+ CREATE UNIQUE INDEX IF NOT EXISTS "cost_structures_one_active_per_item_idx" ON "cost_structures" ("organizationId", "itemId") WHERE "status" = 'ACTIVE';[m
+[36m@@ -59,6 +61,7 @@[m [mCREATE TABLE IF NOT EXISTS "cost_structure_lines" ([m
+   "notes" text,[m
+   "createdAt" text NOT NULL,[m
+   "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_structure_lines_quantity_positive_check" CHECK ("quantity" > 0),[m
+   CONSTRAINT "cost_structure_lines_org_structure_fk" FOREIGN KEY ("organizationId", "structureId") REFERENCES "cost_structures" ("organizationId", "id") ON DELETE CASCADE,[m
+   CONSTRAINT "cost_structure_lines_org_component_fk" FOREIGN KEY ("organizationId", "componentItemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT[m
+ );[m
+[36m@@ -88,6 +91,7 @@[m [mCREATE TABLE IF NOT EXISTS "costing_gamma_settings" ([m
+   "percentage" numeric(8,4) NOT NULL DEFAULT 1.2000,[m
+   "createdAt" text NOT NULL,[m
+   "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "costing_gamma_percentage_nonnegative_check" CHECK ("percentage" >= 0),[m
+   CONSTRAINT "costing_gamma_settings_org_unique" UNIQUE ("organizationId")[m
+ );[m
+ CREATE TABLE IF NOT EXISTS "costing_gamma_groups" ([m
+[36m@@ -100,12 +104,8 @@[m [mCREATE TABLE IF NOT EXISTS "costing_gamma_groups" ([m
+ [m
+ CREATE OR REPLACE FUNCTION "prevent_cost_calculation_update"() RETURNS trigger LANGUAGE plpgsql AS $$[m
+ BEGIN[m
+[31m-  IF ROW(NEW."organizationId", NEW."itemId", NEW."structureId", NEW."exactCostNumerator", NEW."exactCostDenominator", NEW."displayUnitCost", NEW."snapshotVersion", NEW."calculationSnapshot", NEW."calculatedAt") IS DISTINCT FROM[m
+[31m-     ROW(OLD."organizationId", OLD."itemId", OLD."structureId", OLD."exactCostNumerator", OLD."exactCostDenominator", OLD."displayUnitCost", OLD."snapshotVersion", OLD."calculationSnapshot", OLD."calculatedAt") THEN[m
+[31m-    RAISE EXCEPTION 'Cost calculation snapshots are immutable';[m
+[31m-  END IF;[m
+[31m-  RETURN NEW;[m
+[32m+[m[32m  RAISE EXCEPTION 'Cost calculation snapshots are immutable';[m
+ END;[m
+ $$;[m
+ DROP TRIGGER IF EXISTS "cost_calculations_immutable" ON "cost_calculations";[m
+[31m-CREATE TRIGGER "cost_calculations_immutable" BEFORE UPDATE ON "cost_calculations" FOR EACH ROW EXECUTE FUNCTION "prevent_cost_calculation_update"();[m
+[32m+[m[32mCREATE TRIGGER "cost_calculations_immutable" BEFORE UPDATE OR DELETE ON "cost_calculations" FOR EACH ROW EXECUTE FUNCTION "prevent_cost_calculation_update"();[m
+[1mdiff --git a/drizzle/pg/schema.costing.ts b/drizzle/pg/schema.costing.ts[m
+[1mindex 3d9ddb0c084eae3cb0d41f7a42e9c292f22bf1af..add9dc7978f77307df848d9e9446c2c0dc4f5671 100644[m
+[1m--- a/drizzle/pg/schema.costing.ts[m
+[1m+++ b/drizzle/pg/schema.costing.ts[m
+[36m@@ -1,5 +1,6 @@[m
+ import {[m
+   boolean,[m
+[32m+[m[32m  check,[m
+   decimal,[m
+   foreignKey,[m
+   index,[m
+[36m@@ -117,6 +118,14 @@[m [mexport const costStructures = pgTable([m
+       table.itemId,[m
+       table.version[m
+     ),[m
+[32m+[m[32m    check([m
+[32m+[m[32m      "cost_structures_status_check",[m
+[32m+[m[32m      sql`${table.status} in ('DRAFT', 'ACTIVE', 'SUPERSEDED', 'INACTIVE')`[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    check([m
+[32m+[m[32m      "cost_structures_output_positive_check",[m
+[32m+[m[32m      sql`${table.outputQuantity} > 0`[m
+[32m+[m[32m    ),[m
+     // A single published structure is authoritative for an item at any moment.[m
+     // Drafts and historical versions remain unrestricted.[m
+     uniqueIndex("cost_structures_one_active_per_item_idx")[m
+[36m@@ -156,6 +165,10 @@[m [mexport const costStructureLines = pgTable([m
+     updatedAt: text("updatedAt").notNull(),[m
+   },[m
+   table => [[m
+[32m+[m[32m    check([m
+[32m+[m[32m      "cost_structure_lines_quantity_positive_check",[m
+[32m+[m[32m      sql`${table.quantity} > 0`[m
+[32m+[m[32m    ),[m
+     foreignKey({[m
+       name: "cost_structure_lines_org_structure_fk",[m
+       columns: [table.organizationId, table.structureId],[m
+[36m@@ -238,6 +251,10 @@[m [mexport const costingGammaSettings = pgTable([m
+     updatedAt: text("updatedAt").notNull(),[m
+   },[m
+   table => [[m
+[32m+[m[32m    check([m
+[32m+[m[32m      "costing_gamma_percentage_nonnegative_check",[m
+[32m+[m[32m      sql`${table.percentage} >= 0`[m
+[32m+[m[32m    ),[m
+     unique("costing_gamma_settings_org_unique").on(table.organizationId),[m
+   ][m
+ );[m
+[1mdiff --git a/server/db/costing.ts b/server/db/costing.ts[m
+[1mindex 267dcdaa09d75f5c3cc41833615ec787af0f437f..a4830821a1d972079ff607a5315d5bafcf3da9fc 100644[m
+[1m--- a/server/db/costing.ts[m
+[1m+++ b/server/db/costing.ts[m
+[36m@@ -2,8 +2,11 @@[m [mimport { and, asc, eq } from "drizzle-orm";[m
+ import { nanoid } from "nanoid";[m
+ import {[m
+   costCalculations,[m
+[32m+[m[32m  costItems,[m
+   costStructureLines,[m
+   costStructures,[m
+[32m+[m[32m  costingGammaGroups,[m
+[32m+[m[32m  costingGammaSettings,[m
+ } from "../../drizzle/pg/schema.costing";[m
+ import { getDb } from "../db";[m
+ import {[m
+[36m@@ -11,7 +14,11 @@[m [mimport {[m
+   type CostingCalculationSnapshot,[m
+   type CostingGammaSnapshot,[m
+ } from "../domain/costing/snapshot";[m
+[31m-import type { CostingItem, CostingResult } from "../domain/costing/engine";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  calculateItemCostWithGamma,[m
+[32m+[m[32m  type CostingItem,[m
+[32m+[m[32m  type CostingResult,[m
+[32m+[m[32m} from "../domain/costing/engine";[m
+ [m
+ async function requireDb() {[m
+   const db = await getDb();[m
+[36m@@ -19,7 +26,7 @@[m [masync function requireDb() {[m
+   return db;[m
+ }[m
+ [m
+[31m-export async function createCostingSnapshot(input: {[m
+[32m+[m[32masync function persistCostingSnapshot(input: {[m
+   organizationId: string;[m
+   targetItemId: string;[m
+   structureId?: string | null;[m
+[36m@@ -48,6 +55,100 @@[m [mexport async function createCostingSnapshot(input: {[m
+   return { id, snapshot };[m
+ }[m
+ [m
+[32m+[m[32mexport async function calculateAndCreateCostingSnapshot(input: {[m
+[32m+[m[32m  organizationId: string;[m
+[32m+[m[32m  targetItemId: string;[m
+[32m+[m[32m  structureId?: string | null;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  const itemRows = await db[m
+[32m+[m[32m    .select()[m
+[32m+[m[32m    .from(costItems)[m
+[32m+[m[32m    .where(eq(costItems.organizationId, input.organizationId));[m
+[32m+[m[32m  const target = itemRows.find(row => row.id === input.targetItemId);[m
+[32m+[m[32m  if (!target) throw new Error("Item não encontrado na organização");[m
+[32m+[m
+[32m+[m[32m  const structureRows = await db[m
+[32m+[m[32m    .select()[m
+[32m+[m[32m    .from(costStructures)[m
+[32m+[m[32m    .where(eq(costStructures.organizationId, input.organizationId));[m
+[32m+[m[32m  const requestedStructure = input.structureId[m
+[32m+[m[32m    ? structureRows.find(row => row.id === input.structureId)[m
+[32m+[m[32m    : undefined;[m
+[32m+[m[32m  if (input.structureId && !requestedStructure)[m
+[32m+[m[32m    throw new Error("Estrutura não encontrada na organização");[m
+[32m+[m[32m  if (requestedStructure && requestedStructure.itemId !== input.targetItemId)[m
+[32m+[m[32m    throw new Error("A estrutura não pertence ao item-alvo");[m
+[32m+[m
+[32m+[m[32m  const lineRows = await db[m
+[32m+[m[32m    .select()[m
+[32m+[m[32m    .from(costStructureLines)[m
+[32m+[m[32m    .where(eq(costStructureLines.organizationId, input.organizationId));[m
+[32m+[m[32m  const activeByItem = new Map([m
+[32m+[m[32m    structureRows[m
+[32m+[m[32m      .filter(row => row.status === "ACTIVE")[m
+[32m+[m[32m      .map(row => [row.itemId, row])[m
+[32m+[m[32m  );[m
+[32m+[m[32m  if (requestedStructure) activeByItem.set(target.id, requestedStructure);[m
+[32m+[m
+[32m+[m[32m  const sourceItems: CostingItem[] = itemRows.map(row => {[m
+[32m+[m[32m    const structure =[m
+[32m+[m[32m      row.itemType === "COMPOSITE" ? activeByItem.get(row.id) : undefined;[m
+[32m+[m[32m    return {[m
+[32m+[m[32m      id: row.id,[m
+[32m+[m[32m      type: row.itemType,[m
+[32m+[m[32m      active: row.active,[m
+[32m+[m[32m      unit: row.referenceUnit,[m
+[32m+[m[32m      groupId: row.groupId,[m
+[32m+[m[32m      manualUnitCost: row.manualUnitCost,[m
+[32m+[m[32m      outputQuantity: structure?.outputQuantity ?? "1",[m
+[32m+[m[32m      structure: structure[m
+[32m+[m[32m        ? lineRows[m
+[32m+[m[32m            .filter(line => line.structureId === structure.id)[m
+[32m+[m[32m            .sort((left, right) => left.position - right.position)[m
+[32m+[m[32m            .map(line => ({[m
+[32m+[m[32m              componentItemId: line.componentItemId,[m
+[32m+[m[32m              quantity: line.quantity,[m
+[32m+[m[32m              quantityUnit: line.quantityUnit,[m
+[32m+[m[32m            }))[m
+[32m+[m[32m        : undefined,[m
+[32m+[m[32m    };[m
+[32m+[m[32m  });[m
+[32m+[m[32m  const [settings] = await db[m
+[32m+[m[32m    .select()[m
+[32m+[m[32m    .from(costingGammaSettings)[m
+[32m+[m[32m    .where(eq(costingGammaSettings.organizationId, input.organizationId))[m
+[32m+[m[32m    .limit(1);[m
+[32m+[m[32m  const groupRows = await db[m
+[32m+[m[32m    .select({ groupId: costingGammaGroups.groupId })[m
+[32m+[m[32m    .from(costingGammaGroups)[m
+[32m+[m[32m    .where(eq(costingGammaGroups.organizationId, input.organizationId));[m
+[32m+[m[32m  const gammaResult = calculateItemCostWithGamma(sourceItems, target.id, {[m
+[32m+[m[32m    active: settings?.active ?? false,[m
+[32m+[m[32m    percentage: settings?.percentage ?? "1.2000",[m
+[32m+[m[32m    selectedGroupIds: groupRows.map(row => row.groupId),[m
+[32m+[m[32m  });[m
+[32m+[m[32m  const calculatedAt = new Date().toISOString();[m
+[32m+[m[32m  return persistCostingSnapshot({[m
+[32m+[m[32m    organizationId: input.organizationId,[m
+[32m+[m[32m    targetItemId: target.id,[m
+[32m+[m[32m    structureId:[m
+[32m+[m[32m      requestedStructure?.id ?? activeByItem.get(target.id)?.id ?? null,[m
+[32m+[m[32m    sourceItems,[m
+[32m+[m[32m    result: gammaResult.result,[m
+[32m+[m[32m    gamma: {[m
+[32m+[m[32m      active: settings?.active ?? false,[m
+[32m+[m[32m      percentage: settings?.percentage ?? "1.2000",[m
+[32m+[m[32m      selectedGroupIds: groupRows.map(row => row.groupId),[m
+[32m+[m[32m      baseBatchCost: gammaResult.baseBatchCost,[m
+[32m+[m[32m      adjustmentBatchCost: gammaResult.adjustmentBatchCost,[m
+[32m+[m[32m      adjustmentUnitCost: gammaResult.adjustmentUnitCost,[m
+[32m+[m[32m      baseLines: gammaResult.baseLines,[m
+[32m+[m[32m    },[m
+[32m+[m[32m    calculatedAt,[m
+[32m+[m[32m  });[m
+[32m+[m[32m}[m
+[32m+[m
+ export async function listCostingSnapshots([m
+   organizationId: string,[m
+   itemId: string,[m
+[1mdiff --git a/server/domain/costing/engine.test.ts b/server/domain/costing/engine.test.ts[m
+[1mindex a5885ca161af4706bbd70b931136dda92ab48a0c..5a2f45943fe3515c2898014bf22de54e60043e49 100644[m
+[1m--- a/server/domain/costing/engine.test.ts[m
+[1m+++ b/server/domain/costing/engine.test.ts[m
+[36m@@ -217,7 +217,7 @@[m [mdescribe("costing domain engine", () => {[m
+     );[m
+   });[m
+ [m
+[31m-  it("matches the approved Alianza calculation reference (R$ 44)", () => {[m
+[32m+[m[32m  it("calculates an artificial multi-line composition (R$ 44)", () => {[m
+     const items: CostingItem[] = [[m
+       simple("shaft", "10"),[m
+       simple("steel-sheet", "10"),[m
+[36m@@ -490,6 +490,72 @@[m [mdescribe("costing domain engine", () => {[m
+     expect(result.result.exactUnitCost).toBe("202.4");[m
+   });[m
+ [m
+[32m+[m[32m  it("applies Gama to a batch once and divides the adjustment by output", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "batch-source",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-batch",[m
+[32m+[m[32m        manualUnitCost: "100",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "batch-of-two",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        outputQuantity: "2",[m
+[32m+[m[32m        structure: [{ componentItemId: "batch-source", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "batch-of-two", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["g-batch"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("100");[m
+[32m+[m[32m    expect(result.adjustmentUnitCost).toBe("0.6");[m
+[32m+[m[32m    expect(result.result.exactUnitCost).toBe("50.6");[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("preserves exact Gama bases through an intermediate composite output", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "nested-source",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-nested",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "nested-batch",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        outputQuantity: "2",[m
+[32m+[m[32m        structure: [{ componentItemId: "nested-source", quantity: "3" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "nested-finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        outputQuantity: "4",[m
+[32m+[m[32m        structure: [{ componentItemId: "nested-batch", quantity: "2" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "nested-finished", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      percentage: "1.2000",[m
+[32m+[m[32m      selectedGroupIds: ["g-nested"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("30");[m
+[32m+[m[32m    expect(result.adjustmentBatchCost).toBe("0.36");[m
+[32m+[m[32m    expect(result.adjustmentUnitCost).toBe("0.09");[m
+[32m+[m[32m    expect(result.result.exactUnitCost).toBe("7.59");[m
+[32m+[m[32m  });[m
+[32m+[m
+   it("sums several selected groups and ignores an unselected group", () => {[m
+     const items: CostingItem[] = [[m
+       {[m
+[1mdiff --git a/server/domain/costing/engine.ts b/server/domain/costing/engine.ts[m
+[1mindex b39a22a52fd24f4a849df52a1ede8e16c58626b4..d91fd5224e08b0c935258ee3e1f4bbb42ca49abd 100644[m
+[1m--- a/server/domain/costing/engine.ts[m
+[1m+++ b/server/domain/costing/engine.ts[m
+[36m@@ -485,7 +485,11 @@[m [mexport function calculateItemCostWithGamma([m
+   const selected = new Set(gamma.selectedGroupIds);[m
+   const baseLines: CostingGammaBaseLine[] = [];[m
+   const visiting = new Set<string>();[m
+[31m-  const collect = (item: CostingItem, consumedQuantity: Fraction): Fraction => {[m
+[32m+[m[32m  const collect = ([m
+[32m+[m[32m    item: CostingItem,[m
+[32m+[m[32m    consumedQuantity: Fraction,[m
+[32m+[m[32m    isRoot = false[m
+[32m+[m[32m  ): Fraction => {[m
+     if (visiting.has(item.id))[m
+       throw new CostingDomainError([m
+         "CYCLE_DETECTED",[m
+[36m@@ -520,6 +524,9 @@[m [mexport function calculateItemCostWithGamma([m
+         item.outputQuantity ?? "1",[m
+         "output quantity in " + item.id[m
+       );[m
+[32m+[m[32m      const childConsumedQuantity = isRoot[m
+[32m+[m[32m        ? consumedQuantity[m
+[32m+[m[32m        : divide(consumedQuantity, outputQuantity, item.id);[m
+       for (const line of item.structure) {[m
+         const component = items.get(line.componentItemId);[m
+         if (!component)[m
+[36m@@ -538,10 +545,7 @@[m [mexport function calculateItemCostWithGamma([m
+           total,[m
+           collect([m
+             component,[m
+[31m-            multiply([m
+[31m-              divide(consumedQuantity, outputQuantity, item.id),[m
+[31m-              converted.quantity[m
+[31m-            )[m
+[32m+[m[32m            multiply(childConsumedQuantity, converted.quantity)[m
+           )[m
+         );[m
+       }[m
+[36m@@ -550,7 +554,9 @@[m [mexport function calculateItemCostWithGamma([m
+       visiting.delete(item.id);[m
+     }[m
+   };[m
+[31m-  const baseBatch = gamma.active ? collect(root, fraction(1n)) : fraction(0n);[m
+[32m+[m[32m  const baseBatch = gamma.active[m
+[32m+[m[32m    ? collect(root, fraction(1n), true)[m
+[32m+[m[32m    : fraction(0n);[m
+   const percentage = gamma.active[m
+     ? parseGammaPercentage(gamma.percentage ?? "1.2")[m
+     : fraction(0n);[m
+[1mdiff --git a/server/routers/costing.test.ts b/server/routers/costing.test.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000000000000000000000000000000000000..05aef1854c68ab6ee0a00e6058121b7547acd11a[m
+[1m--- /dev/null[m
+[1m+++ b/server/routers/costing.test.ts[m
+[36m@@ -0,0 +1,15 @@[m
+[32m+[m[32mimport { describe, expect, it } from "vitest";[m
+[32m+[m[32mimport { decimalInput } from "./costing";[m
+[32m+[m
+[32m+[m[32mdescribe("costing decimal input", () => {[m
+[32m+[m[32m  it.each(["10", "1.25", "0.500", "0"])("accepts %s", value => {[m
+[32m+[m[32m    expect(decimalInput.safeParse(value).success).toBe(true);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it.each(["1.2345", "-1", "-0.5", "", ".5", "1.", "1,25", " 1"])([m
+[32m+[m[32m    "rejects %s",[m
+[32m+[m[32m    value => {[m
+[32m+[m[32m      expect(decimalInput.safeParse(value).success).toBe(false);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  );[m
+[32m+[m[32m});[m
+[1mdiff --git a/server/routers/costing.ts b/server/routers/costing.ts[m
+[1mindex db7586ac53dc42fb2d0595a54e8acf4815d4e3f1..fc185bcc59ed8062552345b1c26772d6260eacb9 100644[m
+[1m--- a/server/routers/costing.ts[m
+[1m+++ b/server/routers/costing.ts[m
+[36m@@ -7,7 +7,7 @@[m [mimport {[m
+   type CostingItem,[m
+ } from "../domain/costing/engine";[m
+ import {[m
+[31m-  createCostingSnapshot,[m
+[32m+[m[32m  calculateAndCreateCostingSnapshot,[m
+   listCostingSnapshots,[m
+   publishCostStructure,[m
+ } from "../db/costing";[m
+[36m@@ -15,10 +15,10 @@[m [mimport { requireTenantPermission } from "../services/tenant-access";[m
+ import { protectedProcedure, router } from "../_core/trpc";[m
+ [m
+ const organizationId = z.string().min(8).max(64);[m
+[31m-const decimalInput = z[m
+[32m+[m[32mexport const decimalInput = z[m
+   .string()[m
+   .regex([m
+[31m-    /^\\d+(?:\\.\\d{1,3})?$/,[m
+[32m+[m[32m    /^\d+(?:\.\d{1,3})?$/,[m
+     "Use um número não negativo com até três casas decimais."[m
+   );[m
+ const unitInput = z.enum([[m
+[36m@@ -137,48 +137,6 @@[m [mexport const costingRouter = router({[m
+         organizationId,[m
+         targetItemId: z.string().trim().min(1).max(128),[m
+         structureId: z.string().trim().min(1).max(32).nullable().optional(),[m
+[31m-        items: z.array(costingItem).min(1).max(500),[m
+[31m-        gamma: z.object({[m
+[31m-          active: z.boolean(),[m
+[31m-          percentage: z[m
+[31m-            .string()[m
+[31m-            .regex(/^\d+(?:\.\d{1,4})?$/)[m
+[31m-            .default("1.2"),[m
+[31m-          selectedGroupIds: z.array(z.string().trim().min(1).max(32)).max(100),[m
+[31m-          baseBatchCost: z.string().optional(),[m
+[31m-          adjustmentBatchCost: z.string().optional(),[m
+[31m-          adjustmentUnitCost: z.string().optional(),[m
+[31m-          baseLines: z[m
+[31m-            .array([m
+[31m-              z.object({[m
+[31m-                itemId: z.string(),[m
+[31m-                groupId: z.string(),[m
+[31m-                quantity: z.string(),[m
+[31m-                unit: z.string(),[m
+[31m-                unitCost: z.string(),[m
+[31m-                batchCost: z.string(),[m
+[31m-              })[m
+[31m-            )[m
+[31m-            .optional(),[m
+[31m-        }),[m
+[31m-        result: z.object({[m
+[31m-          itemId: z.string(),[m
+[31m-          unit: z.string(),[m
+[31m-          exactUnitCost: z.string(),[m
+[31m-          displayUnitCost: z.string(),[m
+[31m-          lines: z.array([m
+[31m-            z.object({[m
+[31m-              componentItemId: z.string(),[m
+[31m-              quantity: z.string(),[m
+[31m-              enteredUnit: z.string(),[m
+[31m-              referenceUnit: z.string(),[m
+[31m-              conversionFactor: z.string(),[m
+[31m-              componentUnitCost: z.string(),[m
+[31m-              batchLineCost: z.string(),[m
+[31m-            })[m
+[31m-          ),[m
+[31m-        }),[m
+[31m-        calculatedAt: z.string().datetime(),[m
+       })[m
+     )[m
+     .mutation(async ({ ctx, input }) => {[m
+[36m@@ -187,12 +145,7 @@[m [mexport const costingRouter = router({[m
+         input.organizationId,[m
+         "costing.read"[m
+       );[m
+[31m-      return createCostingSnapshot({[m
+[31m-        ...input,[m
+[31m-        sourceItems: input.items as CostingItem[],[m
+[31m-        result: input.result,[m
+[31m-        gamma: input.gamma,[m
+[31m-      });[m
+[32m+[m[32m      return calculateAndCreateCostingSnapshot(input);[m
+     }),[m
+   snapshots: protectedProcedure[m
+     .input([m

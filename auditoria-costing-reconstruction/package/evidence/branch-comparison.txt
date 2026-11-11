@@ -1,0 +1,19 @@
+branch=feature/alianza-costing-foundation-20261110
+base=27df6b0ba4ebff3785b6bf5e62bcfdeb4ebb7801
+head=0e1457cb5a72bca6b4310bd650897c9f9080ad94
+remote=origin/feature/alianza-costing-foundation-20261110
+ahead_behind=2	0
+base_ancestor=0
+ drizzle/pg/0036_costing_foundation.sql         | 111 [32m+++++[m
+ drizzle/pg/schema.costing.ts                   | 388 [32m++++++++++++[m[31m------[m
+ server/db.ts                                   |  20 [32m+[m[31m-[m
+ server/db/costing.ts                           | 234 [32m+++++++++++[m
+ server/domain/costing/engine.test.ts           | 542 [32m+++++++++++++++++++++[m[31m----[m
+ server/domain/costing/engine.ts                | 479 [32m+++++++++++++++++++[m[31m---[m
+ server/domain/costing/snapshot.test.ts         | 144 [32m+++++[m[31m--[m
+ server/domain/costing/snapshot.ts              |  31 [32m+[m[31m-[m
+ server/domain/costing/structure-publication.ts |  27 [32m+[m[31m-[m
+ server/routers/costing.test.ts                 |  15 [32m+[m
+ server/routers/costing.ts                      | 163 [32m+++++++[m[31m-[m
+ tsconfig.json                                  |   1 [32m+[m
+ 12 files changed, 1833 insertions(+), 322 deletions(-)

@@ -1,0 +1,30 @@
+CREATE TABLE
+INSERT 0 2
+psql:/tmp/alianza-reconstruction/drizzle/pg/0036_costing_foundation.sql:110: NOTICE:  trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+{"serverExact":"50.6","gammaAdjustment":"0.6","history":1,"crossOrgRejected":true,"firstPublication":"ACTIVE","concurrent":["fulfilled","rejected"]}
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+             result              
+---------------------------------
+ immutability-and-constraints-ok
+(1 row)
+
+BEGIN
+UPDATE 1
+ROLLBACK
+   result    
+-------------
+ rollback-ok
+(1 row)
+

@@ -1,0 +1,2447 @@
+diff --git a/drizzle/pg/0036_costing_foundation.sql b/drizzle/pg/0036_costing_foundation.sql
+new file mode 100644
+index 0000000..b8ff2a8
+--- /dev/null
++++ b/drizzle/pg/0036_costing_foundation.sql
+@@ -0,0 +1,111 @@
++CREATE TABLE IF NOT EXISTS "cost_groups" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "name" varchar(120) NOT NULL,
++  "description" text,
++  "position" integer NOT NULL DEFAULT 0,
++  "active" boolean NOT NULL DEFAULT true,
++  "createdAt" text NOT NULL,
++  "updatedAt" text NOT NULL,
++  CONSTRAINT "cost_groups_org_id_id_unique" UNIQUE ("organizationId", "id"),
++  CONSTRAINT "cost_groups_org_name_unique" UNIQUE ("organizationId", "name")
++);
++CREATE INDEX IF NOT EXISTS "cost_groups_org_active_position_idx" ON "cost_groups" ("organizationId", "active", "position");
++
++CREATE TABLE IF NOT EXISTS "cost_items" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "groupId" varchar(32),
++  "code" varchar(64),
++  "name" varchar(240) NOT NULL,
++  "description" text,
++  "itemType" text NOT NULL,
++  "referenceUnit" varchar(24) NOT NULL,
++  "manualUnitCost" numeric(24,3),
++  "active" boolean NOT NULL DEFAULT true,
++  "createdAt" text NOT NULL,
++  "updatedAt" text NOT NULL,
++  CONSTRAINT "cost_items_org_id_id_unique" UNIQUE ("organizationId", "id"),
++  CONSTRAINT "cost_items_org_code_unique" UNIQUE ("organizationId", "code"),
++  CONSTRAINT "cost_items_org_group_fk" FOREIGN KEY ("organizationId", "groupId") REFERENCES "cost_groups" ("organizationId", "id") ON DELETE RESTRICT
++);
++CREATE INDEX IF NOT EXISTS "cost_items_org_name_idx" ON "cost_items" ("organizationId", "name");
++CREATE INDEX IF NOT EXISTS "cost_items_org_group_active_idx" ON "cost_items" ("organizationId", "groupId", "active");
++
++CREATE TABLE IF NOT EXISTS "cost_structures" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "itemId" varchar(32) NOT NULL,
++  "version" integer NOT NULL,
++  "status" text NOT NULL DEFAULT 'DRAFT',
++  "outputQuantity" numeric(24,3) NOT NULL DEFAULT 1,
++  "createdAt" text NOT NULL,
++  "updatedAt" text NOT NULL,
++  CONSTRAINT "cost_structures_org_id_id_unique" UNIQUE ("organizationId", "id"),
++  CONSTRAINT "cost_structures_org_item_version_unique" UNIQUE ("organizationId", "itemId", "version"),
++  CONSTRAINT "cost_structures_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT
++);
++CREATE UNIQUE INDEX IF NOT EXISTS "cost_structures_one_active_per_item_idx" ON "cost_structures" ("organizationId", "itemId") WHERE "status" = 'ACTIVE';
++CREATE INDEX IF NOT EXISTS "cost_structures_org_item_status_idx" ON "cost_structures" ("organizationId", "itemId", "status");
++
++CREATE TABLE IF NOT EXISTS "cost_structure_lines" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "structureId" varchar(32) NOT NULL,
++  "componentItemId" varchar(32) NOT NULL,
++  "quantity" numeric(24,3) NOT NULL,
++  "quantityUnit" varchar(24) NOT NULL,
++  "position" integer NOT NULL DEFAULT 0,
++  "notes" text,
++  "createdAt" text NOT NULL,
++  "updatedAt" text NOT NULL,
++  CONSTRAINT "cost_structure_lines_org_structure_fk" FOREIGN KEY ("organizationId", "structureId") REFERENCES "cost_structures" ("organizationId", "id") ON DELETE CASCADE,
++  CONSTRAINT "cost_structure_lines_org_component_fk" FOREIGN KEY ("organizationId", "componentItemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT
++);
++CREATE INDEX IF NOT EXISTS "cost_structure_lines_structure_position_idx" ON "cost_structure_lines" ("organizationId", "structureId", "position");
++CREATE INDEX IF NOT EXISTS "cost_structure_lines_component_idx" ON "cost_structure_lines" ("organizationId", "componentItemId");
++
++CREATE TABLE IF NOT EXISTS "cost_calculations" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "itemId" varchar(32) NOT NULL,
++  "structureId" varchar(32),
++  "exactCostNumerator" text NOT NULL,
++  "exactCostDenominator" text NOT NULL,
++  "displayUnitCost" numeric(24,3) NOT NULL,
++  "snapshotVersion" integer NOT NULL DEFAULT 1,
++  "calculationSnapshot" jsonb NOT NULL,
++  "calculatedAt" text NOT NULL,
++  CONSTRAINT "cost_calculations_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT,
++  CONSTRAINT "cost_calculations_org_structure_fk" FOREIGN KEY ("organizationId", "structureId") REFERENCES "cost_structures" ("organizationId", "id") ON DELETE RESTRICT
++);
++CREATE INDEX IF NOT EXISTS "cost_calculations_org_item_date_idx" ON "cost_calculations" ("organizationId", "itemId", "calculatedAt");
++
++CREATE TABLE IF NOT EXISTS "costing_gamma_settings" (
++  "id" varchar(32) PRIMARY KEY,
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "active" boolean NOT NULL DEFAULT false,
++  "percentage" numeric(8,4) NOT NULL DEFAULT 1.2000,
++  "createdAt" text NOT NULL,
++  "updatedAt" text NOT NULL,
++  CONSTRAINT "costing_gamma_settings_org_unique" UNIQUE ("organizationId")
++);
++CREATE TABLE IF NOT EXISTS "costing_gamma_groups" (
++  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,
++  "groupId" varchar(32) NOT NULL,
++  "createdAt" text NOT NULL,
++  CONSTRAINT "costing_gamma_groups_org_group_unique" UNIQUE ("organizationId", "groupId"),
++  CONSTRAINT "costing_gamma_groups_org_group_fk" FOREIGN KEY ("organizationId", "groupId") REFERENCES "cost_groups" ("organizationId", "id") ON DELETE CASCADE
++);
++
++CREATE OR REPLACE FUNCTION "prevent_cost_calculation_update"() RETURNS trigger LANGUAGE plpgsql AS $$
++BEGIN
++  IF ROW(NEW."organizationId", NEW."itemId", NEW."structureId", NEW."exactCostNumerator", NEW."exactCostDenominator", NEW."displayUnitCost", NEW."snapshotVersion", NEW."calculationSnapshot", NEW."calculatedAt") IS DISTINCT FROM
++     ROW(OLD."organizationId", OLD."itemId", OLD."structureId", OLD."exactCostNumerator", OLD."exactCostDenominator", OLD."displayUnitCost", OLD."snapshotVersion", OLD."calculationSnapshot", OLD."calculatedAt") THEN
++    RAISE EXCEPTION 'Cost calculation snapshots are immutable';
++  END IF;
++  RETURN NEW;
++END;
++$$;
++DROP TRIGGER IF EXISTS "cost_calculations_immutable" ON "cost_calculations";
++CREATE TRIGGER "cost_calculations_immutable" BEFORE UPDATE ON "cost_calculations" FOR EACH ROW EXECUTE FUNCTION "prevent_cost_calculation_update"();
+diff --git a/drizzle/pg/schema.costing.ts b/drizzle/pg/schema.costing.ts
+index 428cc8c..3d9ddb0 100644
+--- a/drizzle/pg/schema.costing.ts
++++ b/drizzle/pg/schema.costing.ts
+@@ -10,7 +10,6 @@ import {
+   unique,
+   uniqueIndex,
+   varchar,
+-
+ } from "drizzle-orm/pg-core";
+ import { sql } from "drizzle-orm";
+ import { organizations } from "../schema.pg";
+@@ -21,142 +20,246 @@ import { organizations } from "../schema.pg";
+  * Valores monetários são strings decimais ou frações racionais. Não usar
+  * mode: "number": a precisão exata do motor depende de não passar por float.
+  */
+-export const costGroups = pgTable("cost_groups", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  name: varchar("name", { length: 120 }).notNull(),
+-  description: text("description"),
+-  position: integer("position").default(0).notNull(),
+-  active: boolean("active").default(true).notNull(),
+-  createdAt: text("createdAt").notNull(),
+-  updatedAt: text("updatedAt").notNull(),
+-}, table => [
+-  unique("cost_groups_org_id_id_unique").on(table.organizationId, table.id),
+-  unique("cost_groups_org_name_unique").on(table.organizationId, table.name),
+-  index("cost_groups_org_active_position_idx").on(table.organizationId, table.active, table.position),
+-]);
++export const costGroups = pgTable(
++  "cost_groups",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    name: varchar("name", { length: 120 }).notNull(),
++    description: text("description"),
++    position: integer("position").default(0).notNull(),
++    active: boolean("active").default(true).notNull(),
++    createdAt: text("createdAt").notNull(),
++    updatedAt: text("updatedAt").notNull(),
++  },
++  table => [
++    unique("cost_groups_org_id_id_unique").on(table.organizationId, table.id),
++    unique("cost_groups_org_name_unique").on(table.organizationId, table.name),
++    index("cost_groups_org_active_position_idx").on(
++      table.organizationId,
++      table.active,
++      table.position
++    ),
++  ]
++);
+ 
+-export const costItems = pgTable("cost_items", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  groupId: varchar("groupId", { length: 32 }),
+-  code: varchar("code", { length: 64 }),
+-  name: varchar("name", { length: 240 }).notNull(),
+-  description: text("description"),
+-  itemType: text("itemType").$type<"SIMPLE" | "COMPOSITE">().notNull(),
+-  referenceUnit: varchar("referenceUnit", { length: 24 }).notNull(),
+-  manualUnitCost: decimal("manualUnitCost", { precision: 24, scale: 3, mode: "string" }),
+-  active: boolean("active").default(true).notNull(),
+-  createdAt: text("createdAt").notNull(),
+-  updatedAt: text("updatedAt").notNull(),
+-}, table => [
+-  unique("cost_items_org_id_id_unique").on(table.organizationId, table.id),
+-  unique("cost_items_org_code_unique").on(table.organizationId, table.code),
+-  foreignKey({
+-    name: "cost_items_org_group_fk",
+-    columns: [table.organizationId, table.groupId],
+-    foreignColumns: [costGroups.organizationId, costGroups.id],
+-  }).onDelete("restrict"),
+-  index("cost_items_org_name_idx").on(table.organizationId, table.name),
+-  index("cost_items_org_group_active_idx").on(table.organizationId, table.groupId, table.active),
+-]);
++export const costItems = pgTable(
++  "cost_items",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    groupId: varchar("groupId", { length: 32 }),
++    code: varchar("code", { length: 64 }),
++    name: varchar("name", { length: 240 }).notNull(),
++    description: text("description"),
++    itemType: text("itemType").$type<"SIMPLE" | "COMPOSITE">().notNull(),
++    referenceUnit: varchar("referenceUnit", { length: 24 }).notNull(),
++    manualUnitCost: decimal("manualUnitCost", {
++      precision: 24,
++      scale: 3,
++      mode: "string",
++    }),
++    active: boolean("active").default(true).notNull(),
++    createdAt: text("createdAt").notNull(),
++    updatedAt: text("updatedAt").notNull(),
++  },
++  table => [
++    unique("cost_items_org_id_id_unique").on(table.organizationId, table.id),
++    unique("cost_items_org_code_unique").on(table.organizationId, table.code),
++    foreignKey({
++      name: "cost_items_org_group_fk",
++      columns: [table.organizationId, table.groupId],
++      foreignColumns: [costGroups.organizationId, costGroups.id],
++    }).onDelete("restrict"),
++    index("cost_items_org_name_idx").on(table.organizationId, table.name),
++    index("cost_items_org_group_active_idx").on(
++      table.organizationId,
++      table.groupId,
++      table.active
++    ),
++  ]
++);
+ 
+-export const costStructures = pgTable("cost_structures", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  itemId: varchar("itemId", { length: 32 }).notNull(),
+-  version: integer("version").notNull(),
+-  status: text("status").$type<"DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE">().default("DRAFT").notNull(),
+-  outputQuantity: decimal("outputQuantity", { precision: 24, scale: 3, mode: "string" }).default("1").notNull(),
+-  createdAt: text("createdAt").notNull(),
+-  updatedAt: text("updatedAt").notNull(),
+-}, table => [
+-  unique("cost_structures_org_id_id_unique").on(table.organizationId, table.id),
+-  unique("cost_structures_org_item_version_unique").on(table.organizationId, table.itemId, table.version),
+-  // A single published structure is authoritative for an item at any moment.
+-  // Drafts and historical versions remain unrestricted.
+-  uniqueIndex("cost_structures_one_active_per_item_idx")
+-    .on(table.organizationId, table.itemId)
+-    .where(sql`${table.status} = 'ACTIVE'`),
+-  foreignKey({
+-    name: "cost_structures_org_item_fk",
+-    columns: [table.organizationId, table.itemId],
+-    foreignColumns: [costItems.organizationId, costItems.id],
+-  }).onDelete("restrict"),
+-  index("cost_structures_org_item_status_idx").on(table.organizationId, table.itemId, table.status),
+-]);
++export const costStructures = pgTable(
++  "cost_structures",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    itemId: varchar("itemId", { length: 32 }).notNull(),
++    version: integer("version").notNull(),
++    status: text("status")
++      .$type<"DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE">()
++      .default("DRAFT")
++      .notNull(),
++    outputQuantity: decimal("outputQuantity", {
++      precision: 24,
++      scale: 3,
++      mode: "string",
++    })
++      .default("1")
++      .notNull(),
++    createdAt: text("createdAt").notNull(),
++    updatedAt: text("updatedAt").notNull(),
++  },
++  table => [
++    unique("cost_structures_org_id_id_unique").on(
++      table.organizationId,
++      table.id
++    ),
++    unique("cost_structures_org_item_version_unique").on(
++      table.organizationId,
++      table.itemId,
++      table.version
++    ),
++    // A single published structure is authoritative for an item at any moment.
++    // Drafts and historical versions remain unrestricted.
++    uniqueIndex("cost_structures_one_active_per_item_idx")
++      .on(table.organizationId, table.itemId)
++      .where(sql`${table.status} = 'ACTIVE'`),
++    foreignKey({
++      name: "cost_structures_org_item_fk",
++      columns: [table.organizationId, table.itemId],
++      foreignColumns: [costItems.organizationId, costItems.id],
++    }).onDelete("restrict"),
++    index("cost_structures_org_item_status_idx").on(
++      table.organizationId,
++      table.itemId,
++      table.status
++    ),
++  ]
++);
+ 
+-export const costStructureLines = pgTable("cost_structure_lines", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  structureId: varchar("structureId", { length: 32 }).notNull(),
+-  componentItemId: varchar("componentItemId", { length: 32 }).notNull(),
+-  quantity: decimal("quantity", { precision: 24, scale: 3, mode: "string" }).notNull(),
+-  quantityUnit: varchar("quantityUnit", { length: 24 }).notNull(),
+-  position: integer("position").default(0).notNull(),
+-  notes: text("notes"),
+-  createdAt: text("createdAt").notNull(),
+-  updatedAt: text("updatedAt").notNull(),
+-}, table => [
+-  foreignKey({
+-    name: "cost_structure_lines_org_structure_fk",
+-    columns: [table.organizationId, table.structureId],
+-    foreignColumns: [costStructures.organizationId, costStructures.id],
+-  }).onDelete("cascade"),
+-  foreignKey({
+-    name: "cost_structure_lines_org_component_fk",
+-    columns: [table.organizationId, table.componentItemId],
+-    foreignColumns: [costItems.organizationId, costItems.id],
+-  }).onDelete("restrict"),
+-  index("cost_structure_lines_structure_position_idx").on(table.organizationId, table.structureId, table.position),
+-  index("cost_structure_lines_component_idx").on(table.organizationId, table.componentItemId),
+-]);
++export const costStructureLines = pgTable(
++  "cost_structure_lines",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    structureId: varchar("structureId", { length: 32 }).notNull(),
++    componentItemId: varchar("componentItemId", { length: 32 }).notNull(),
++    quantity: decimal("quantity", {
++      precision: 24,
++      scale: 3,
++      mode: "string",
++    }).notNull(),
++    quantityUnit: varchar("quantityUnit", { length: 24 }).notNull(),
++    position: integer("position").default(0).notNull(),
++    notes: text("notes"),
++    createdAt: text("createdAt").notNull(),
++    updatedAt: text("updatedAt").notNull(),
++  },
++  table => [
++    foreignKey({
++      name: "cost_structure_lines_org_structure_fk",
++      columns: [table.organizationId, table.structureId],
++      foreignColumns: [costStructures.organizationId, costStructures.id],
++    }).onDelete("cascade"),
++    foreignKey({
++      name: "cost_structure_lines_org_component_fk",
++      columns: [table.organizationId, table.componentItemId],
++      foreignColumns: [costItems.organizationId, costItems.id],
++    }).onDelete("restrict"),
++    index("cost_structure_lines_structure_position_idx").on(
++      table.organizationId,
++      table.structureId,
++      table.position
++    ),
++    index("cost_structure_lines_component_idx").on(
++      table.organizationId,
++      table.componentItemId
++    ),
++  ]
++);
+ 
+-export const costCalculations = pgTable("cost_calculations", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  itemId: varchar("itemId", { length: 32 }).notNull(),
+-  structureId: varchar("structureId", { length: 32 }),
+-  exactCostNumerator: text("exactCostNumerator").notNull(),
+-  exactCostDenominator: text("exactCostDenominator").notNull(),
+-  displayUnitCost: decimal("displayUnitCost", { precision: 24, scale: 3, mode: "string" }).notNull(),
+-  snapshotVersion: integer("snapshotVersion").default(1).notNull(),
+-  calculationSnapshot: jsonb("calculationSnapshot").$type<Record<string, unknown>>().notNull(),
+-  calculatedAt: text("calculatedAt").notNull(),
+-}, table => [
+-  foreignKey({
+-    name: "cost_calculations_org_item_fk",
+-    columns: [table.organizationId, table.itemId],
+-    foreignColumns: [costItems.organizationId, costItems.id],
+-  }).onDelete("restrict"),
+-  foreignKey({
+-    name: "cost_calculations_org_structure_fk",
+-    columns: [table.organizationId, table.structureId],
+-    foreignColumns: [costStructures.organizationId, costStructures.id],
+-  }).onDelete("restrict"),
+-  index("cost_calculations_org_item_date_idx").on(table.organizationId, table.itemId, table.calculatedAt),
+-]);
++export const costCalculations = pgTable(
++  "cost_calculations",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    itemId: varchar("itemId", { length: 32 }).notNull(),
++    structureId: varchar("structureId", { length: 32 }),
++    exactCostNumerator: text("exactCostNumerator").notNull(),
++    exactCostDenominator: text("exactCostDenominator").notNull(),
++    displayUnitCost: decimal("displayUnitCost", {
++      precision: 24,
++      scale: 3,
++      mode: "string",
++    }).notNull(),
++    snapshotVersion: integer("snapshotVersion").default(1).notNull(),
++    calculationSnapshot: jsonb("calculationSnapshot")
++      .$type<Record<string, unknown>>()
++      .notNull(),
++    calculatedAt: text("calculatedAt").notNull(),
++  },
++  table => [
++    foreignKey({
++      name: "cost_calculations_org_item_fk",
++      columns: [table.organizationId, table.itemId],
++      foreignColumns: [costItems.organizationId, costItems.id],
++    }).onDelete("restrict"),
++    foreignKey({
++      name: "cost_calculations_org_structure_fk",
++      columns: [table.organizationId, table.structureId],
++      foreignColumns: [costStructures.organizationId, costStructures.id],
++    }).onDelete("restrict"),
++    index("cost_calculations_org_item_date_idx").on(
++      table.organizationId,
++      table.itemId,
++      table.calculatedAt
++    ),
++  ]
++);
+ 
+-export const costingGammaSettings = pgTable("costing_gamma_settings", {
+-  id: varchar("id", { length: 32 }).primaryKey(),
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  active: boolean("active").default(false).notNull(),
+-  percentage: decimal("percentage", { precision: 8, scale: 4, mode: "string" }).default("1.2000").notNull(),
+-  createdAt: text("createdAt").notNull(),
+-  updatedAt: text("updatedAt").notNull(),
+-}, table => [
+-  unique("costing_gamma_settings_org_unique").on(table.organizationId),
+-]);
++export const costingGammaSettings = pgTable(
++  "costing_gamma_settings",
++  {
++    id: varchar("id", { length: 32 }).primaryKey(),
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    active: boolean("active").default(false).notNull(),
++    percentage: decimal("percentage", {
++      precision: 8,
++      scale: 4,
++      mode: "string",
++    })
++      .default("1.2000")
++      .notNull(),
++    createdAt: text("createdAt").notNull(),
++    updatedAt: text("updatedAt").notNull(),
++  },
++  table => [
++    unique("costing_gamma_settings_org_unique").on(table.organizationId),
++  ]
++);
+ 
+-export const costingGammaGroups = pgTable("costing_gamma_groups", {
+-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),
+-  groupId: varchar("groupId", { length: 32 }).notNull(),
+-  createdAt: text("createdAt").notNull(),
+-}, table => [
+-  unique("costing_gamma_groups_org_group_unique").on(table.organizationId, table.groupId),
+-  foreignKey({
+-    name: "costing_gamma_groups_org_group_fk",
+-    columns: [table.organizationId, table.groupId],
+-    foreignColumns: [costGroups.organizationId, costGroups.id],
+-  }).onDelete("cascade"),
+-]);
++export const costingGammaGroups = pgTable(
++  "costing_gamma_groups",
++  {
++    organizationId: varchar("organizationId", { length: 32 })
++      .notNull()
++      .references(() => organizations.id, { onDelete: "cascade" }),
++    groupId: varchar("groupId", { length: 32 }).notNull(),
++    createdAt: text("createdAt").notNull(),
++  },
++  table => [
++    unique("costing_gamma_groups_org_group_unique").on(
++      table.organizationId,
++      table.groupId
++    ),
++    foreignKey({
++      name: "costing_gamma_groups_org_group_fk",
++      columns: [table.organizationId, table.groupId],
++      foreignColumns: [costGroups.organizationId, costGroups.id],
++    }).onDelete("cascade"),
++  ]
++);
+diff --git a/server/db.ts b/server/db.ts
+index cdc80e3..dc96f7f 100644
+--- a/server/db.ts
++++ b/server/db.ts
+@@ -15,13 +15,21 @@ export async function getDb(): Promise<ReturnType<typeof drizzle> | null> {
+   if (requestRuntimeDb) return requestRuntimeDb as ReturnType<typeof drizzle>;
+   if (!_db && process.env.SUPABASE_DATABASE_URL) {
+     try {
+-      _sql = postgres(
+-        normalizeSupabasePostgresUrl(
+-          process.env.SUPABASE_DATABASE_URL,
+-          process.env.VITE_SUPABASE_URL
+-        ),
+-        { prepare: false, ssl: "require", max: 5 }
++      const databaseUrl = normalizeSupabasePostgresUrl(
++        process.env.SUPABASE_DATABASE_URL,
++        process.env.VITE_SUPABASE_URL
+       );
++      const localDatabase =
++        new URL(databaseUrl).hostname === "127.0.0.1" ||
++        new URL(databaseUrl).hostname === "localhost";
++      const connectionOptions = localDatabase
++        ? { ssl: false }
++        : { ssl: "require" as const };
++      _sql = postgres(databaseUrl, {
++        prepare: false,
++        max: 5,
++        ...connectionOptions,
++      });
+       _db = drizzle(_sql, {
+         logger: process.env.NODE_ENV === "development",
+       });
+diff --git a/server/db/costing.ts b/server/db/costing.ts
+new file mode 100644
+index 0000000..267dcda
+--- /dev/null
++++ b/server/db/costing.ts
+@@ -0,0 +1,133 @@
++import { and, asc, eq } from "drizzle-orm";
++import { nanoid } from "nanoid";
++import {
++  costCalculations,
++  costStructureLines,
++  costStructures,
++} from "../../drizzle/pg/schema.costing";
++import { getDb } from "../db";
++import {
++  createCostingCalculationSnapshot,
++  type CostingCalculationSnapshot,
++  type CostingGammaSnapshot,
++} from "../domain/costing/snapshot";
++import type { CostingItem, CostingResult } from "../domain/costing/engine";
++
++async function requireDb() {
++  const db = await getDb();
++  if (!db) throw new Error("Banco de dados indisponível");
++  return db;
++}
++
++export async function createCostingSnapshot(input: {
++  organizationId: string;
++  targetItemId: string;
++  structureId?: string | null;
++  sourceItems: readonly CostingItem[];
++  gamma: CostingGammaSnapshot;
++  result: CostingResult;
++  calculatedAt: string;
++}): Promise<{ id: string; snapshot: CostingCalculationSnapshot }> {
++  const db = await requireDb();
++  const snapshot = createCostingCalculationSnapshot(input);
++  const id = nanoid(20);
++  await db.transaction(async tx => {
++    await tx.insert(costCalculations).values({
++      id,
++      organizationId: input.organizationId,
++      itemId: input.targetItemId,
++      structureId: input.structureId ?? null,
++      exactCostNumerator: snapshot.exactUnitCost.numerator,
++      exactCostDenominator: snapshot.exactUnitCost.denominator,
++      displayUnitCost: snapshot.result.displayUnitCost,
++      snapshotVersion: snapshot.snapshotVersion,
++      calculationSnapshot: snapshot as unknown as Record<string, unknown>,
++      calculatedAt: snapshot.calculatedAt,
++    });
++  });
++  return { id, snapshot };
++}
++
++export async function listCostingSnapshots(
++  organizationId: string,
++  itemId: string,
++  limit = 50
++) {
++  const db = await requireDb();
++  return db
++    .select()
++    .from(costCalculations)
++    .where(
++      and(
++        eq(costCalculations.organizationId, organizationId),
++        eq(costCalculations.itemId, itemId)
++      )
++    )
++    .orderBy(asc(costCalculations.calculatedAt))
++    .limit(Math.min(limit, 100));
++}
++
++export async function publishCostStructure(
++  organizationId: string,
++  targetStructureId: string
++) {
++  const db = await requireDb();
++  return db.transaction(async tx => {
++    const [target] = await tx
++      .select()
++      .from(costStructures)
++      .where(
++        and(
++          eq(costStructures.organizationId, organizationId),
++          eq(costStructures.id, targetStructureId)
++        )
++      )
++      .for("update")
++      .limit(1);
++    if (!target) throw new Error("Estrutura não encontrada");
++    if (target.status !== "DRAFT")
++      throw new Error("Somente uma estrutura DRAFT pode ser publicada");
++    const active = await tx
++      .select({ id: costStructures.id })
++      .from(costStructures)
++      .where(
++        and(
++          eq(costStructures.organizationId, organizationId),
++          eq(costStructures.itemId, target.itemId),
++          eq(costStructures.status, "ACTIVE")
++        )
++      )
++      .for("update");
++    await tx
++      .update(costStructures)
++      .set({ status: "SUPERSEDED", updatedAt: Date.now().toString() })
++      .where(
++        and(
++          eq(costStructures.organizationId, organizationId),
++          eq(costStructures.itemId, target.itemId),
++          eq(costStructures.status, "ACTIVE")
++        )
++      );
++    const [published] = await tx
++      .update(costStructures)
++      .set({ status: "ACTIVE", updatedAt: Date.now().toString() })
++      .where(
++        and(
++          eq(costStructures.organizationId, organizationId),
++          eq(costStructures.id, targetStructureId),
++          eq(costStructures.status, "DRAFT")
++        )
++      )
++      .returning();
++    if (!published) throw new Error("Estrutura não pôde ser publicada");
++    return { published, supersededStructureIds: active.map(row => row.id) };
++  });
++}
++
++export async function updateCostStructureLine(): Promise<never> {
++  throw new Error(
++    "Estruturas publicadas são imutáveis; crie uma nova versão DRAFT"
++  );
++}
++
++export { costStructureLines };
+diff --git a/server/domain/costing/engine.test.ts b/server/domain/costing/engine.test.ts
+index 858af12..a5885ca 100644
+--- a/server/domain/costing/engine.test.ts
++++ b/server/domain/costing/engine.test.ts
+@@ -1,8 +1,18 @@
+ import { describe, expect, it } from "vitest";
+-import { calculateItemCost, CostingDomainError, formatCostForDisplay, type CostingItem } from "./engine";
++import {
++  calculateItemCost,
++  calculateItemCostWithGamma,
++  CostingDomainError,
++  formatCostForDisplay,
++  type CostingItem,
++} from "./engine";
+ 
+ const simple = (id: string, cost: string, active = true): CostingItem => ({
+-  id, type: "SIMPLE", active, unit: "unidade", manualUnitCost: cost,
++  id,
++  type: "SIMPLE",
++  active,
++  unit: "unidade",
++  manualUnitCost: cost,
+ });
+ 
+ describe("costing domain engine", () => {
+@@ -74,60 +84,136 @@ describe("costing domain engine", () => {
+ 
+   it("calculates multi-level structures and repeated occurrences", () => {
+     const items: CostingItem[] = [
+-      simple("bolt", "0.1"), simple("plate", "10"),
+-      { id: "sub", type: "COMPOSITE", active: true, unit: "unidade", structure: [{ componentItemId: "bolt", quantity: "2" }] },
+-      { id: "finished", type: "COMPOSITE", active: true, unit: "unidade", structure: [
+-        { componentItemId: "sub", quantity: "3" }, { componentItemId: "plate", quantity: "1.5" },
+-        { componentItemId: "bolt", quantity: "2" },
+-      ] },
++      simple("bolt", "0.1"),
++      simple("plate", "10"),
++      {
++        id: "sub",
++        type: "COMPOSITE",
++        active: true,
++        unit: "unidade",
++        structure: [{ componentItemId: "bolt", quantity: "2" }],
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "unidade",
++        structure: [
++          { componentItemId: "sub", quantity: "3" },
++          { componentItemId: "plate", quantity: "1.5" },
++          { componentItemId: "bolt", quantity: "2" },
++        ],
++      },
+     ];
+     const result = calculateItemCost(items, "finished");
+     expect(result.exactUnitCost).toBe("15.8");
+     expect(result.displayUnitCost).toBe("15.8");
+-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["0.6", "15", "0.2"]);
++    expect(result.lines.map(line => line.batchLineCost)).toEqual([
++      "0.6",
++      "15",
++      "0.2",
++    ]);
+   });
+ 
+   it("rejects composition cycles", () => {
+     const items: CostingItem[] = [
+-      { id: "a", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "b", quantity: "1" }] },
+-      { id: "b", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "a", quantity: "1" }] },
++      {
++        id: "a",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "b", quantity: "1" }],
++      },
++      {
++        id: "b",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "a", quantity: "1" }],
++      },
+     ];
+-    expect(() => calculateItemCost(items, "a")).toThrowError(expect.objectContaining({ code: "CYCLE_DETECTED" }));
++    expect(() => calculateItemCost(items, "a")).toThrowError(
++      expect.objectContaining({ code: "CYCLE_DETECTED" })
++    );
+   });
+ 
+   it("rejects inactive components", () => {
+-    const items: CostingItem[] = [simple("x", "2", false), {
+-      id: "parent", type: "COMPOSITE", active: true, unit: "un",
+-      structure: [{ componentItemId: "x", quantity: "1" }],
+-    }];
+-    expect(() => calculateItemCost(items, "parent")).toThrowError(expect.objectContaining({ code: "COMPONENT_INACTIVE" }));
++    const items: CostingItem[] = [
++      simple("x", "2", false),
++      {
++        id: "parent",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "x", quantity: "1" }],
++      },
++    ];
++    expect(() => calculateItemCost(items, "parent")).toThrowError(
++      expect.objectContaining({ code: "COMPONENT_INACTIVE" })
++    );
+   });
+ 
+   it("rejects manual cost on a composite", () => {
+-    const items: CostingItem[] = [simple("x", "2"), {
+-      id: "parent", type: "COMPOSITE", active: true, unit: "un", manualUnitCost: "99",
+-      structure: [{ componentItemId: "x", quantity: "1" }],
+-    }];
+-    expect(() => calculateItemCost(items, "parent")).toThrowError(expect.objectContaining({ code: "COMPOSITE_HAS_MANUAL_COST" }));
++    const items: CostingItem[] = [
++      simple("x", "2"),
++      {
++        id: "parent",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        manualUnitCost: "99",
++        structure: [{ componentItemId: "x", quantity: "1" }],
++      },
++    ];
++    expect(() => calculateItemCost(items, "parent")).toThrowError(
++      expect.objectContaining({ code: "COMPOSITE_HAS_MANUAL_COST" })
++    );
+   });
+ 
+   it("rejects missing components and malformed decimal quantities", () => {
+-    const missing: CostingItem[] = [{ id: "p", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "ghost", quantity: "1" }] }];
+-    expect(() => calculateItemCost(missing, "p")).toThrowError(expect.objectContaining({ code: "COMPONENT_NOT_FOUND" }));
+-    const malformed: CostingItem[] = [simple("x", "2"), { id: "p", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "x", quantity: "1,2" }] }];
+-    expect(() => calculateItemCost(malformed, "p")).toThrowError(CostingDomainError);
++    const missing: CostingItem[] = [
++      {
++        id: "p",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "ghost", quantity: "1" }],
++      },
++    ];
++    expect(() => calculateItemCost(missing, "p")).toThrowError(
++      expect.objectContaining({ code: "COMPONENT_NOT_FOUND" })
++    );
++    const malformed: CostingItem[] = [
++      simple("x", "2"),
++      {
++        id: "p",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "x", quantity: "1,2" }],
++      },
++    ];
++    expect(() => calculateItemCost(malformed, "p")).toThrowError(
++      CostingDomainError
++    );
+   });
+ 
+   it("rejects user-entered values with more than three decimal places", () => {
+-    expect(() => calculateItemCost([simple("invalid", "1.2345")], "invalid")).toThrowError(
+-      expect.objectContaining({ code: "INVALID_DECIMAL" }),
+-    );
++    expect(() =>
++      calculateItemCost([simple("invalid", "1.2345")], "invalid")
++    ).toThrowError(expect.objectContaining({ code: "INVALID_DECIMAL" }));
+     const items: CostingItem[] = [
+       simple("part", "1"),
+-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "part", quantity: "0.0001" }] },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "part", quantity: "0.0001" }],
++      },
+     ];
+     expect(() => calculateItemCost(items, "finished")).toThrowError(
+-      expect.objectContaining({ code: "INVALID_DECIMAL" }),
++      expect.objectContaining({ code: "INVALID_DECIMAL" })
+     );
+   });
+ 
+@@ -151,19 +237,26 @@ describe("costing domain engine", () => {
+     const result = calculateItemCost(items, "mechanism");
+     expect(result.exactUnitCost).toBe("44");
+     expect(result.displayUnitCost).toBe("44");
+-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["10", "30", "4"]);
++    expect(result.lines.map(line => line.batchLineCost)).toEqual([
++      "10",
++      "30",
++      "4",
++    ]);
+   });
+ 
+-  it("applies final three-decimal rounding to the Mini Torniquete Inox source total", () => {
+-    // Source workbook group totals retain more than three decimal places internally.
+-    // This verifies presentation rounding only; those historical totals are not valid
+-    // user-entered values under the new three-decimal input rule.
+-    expect(formatCostForDisplay("1558.0634818")).toBe("1558.063");
++  it("rounds an artificial exact result only for presentation", () => {
++    expect(formatCostForDisplay("123.4564818")).toBe("123.456");
+   });
+ 
+   it("allocates a three-decimal tube purchase across the output quantity", () => {
+     const items: CostingItem[] = [
+-      { id: "tube-meter", type: "SIMPLE", active: true, unit: "m", manualUnitCost: "44.474" },
++      {
++        id: "tube-meter",
++        type: "SIMPLE",
++        active: true,
++        unit: "m",
++        manualUnitCost: "44.474",
++      },
+       {
+         id: "tube-lot",
+         type: "COMPOSITE",
+@@ -197,7 +290,7 @@ describe("costing domain engine", () => {
+     const result = calculateItemCost(items, "three-unit-batch");
+     expect(result.exactUnitCost).toBe("1");
+     expect(result.displayUnitCost).toBe("1");
+-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["1", "2"]);
++    expect(result.lines.map(line => line.batchLineCost)).toEqual(["1", "2"]);
+   });
+ 
+   it("rejects a zero output quantity", () => {
+@@ -213,31 +306,58 @@ describe("costing domain engine", () => {
+       },
+     ];
+     expect(() => calculateItemCost(items, "invalid-batch")).toThrowError(
+-      expect.objectContaining({ code: "INVALID_OUTPUT_QUANTITY" }),
++      expect.objectContaining({ code: "INVALID_OUTPUT_QUANTITY" })
+     );
+   });
+ 
+   it("converts grams to kilograms exactly and records the conversion audit data", () => {
+     const items: CostingItem[] = [
+-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },
+-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "steel", quantity: "500", quantityUnit: "g" },
+-      ] },
++      {
++        id: "steel",
++        type: "SIMPLE",
++        active: true,
++        unit: "kg",
++        manualUnitCost: "10",
++      },
++      {
++        id: "assembly",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "steel", quantity: "500", quantityUnit: "g" },
++        ],
++      },
+     ];
+     const result = calculateItemCost(items, "assembly");
+     expect(result.exactUnitCost).toBe("5");
+     expect(result.lines[0]).toMatchObject({
+-      quantity: "500", enteredUnit: "g", referenceUnit: "kg",
+-      conversionFactor: "0.001", batchLineCost: "5",
++      quantity: "500",
++      enteredUnit: "g",
++      referenceUnit: "kg",
++      conversionFactor: "0.001",
++      batchLineCost: "5",
+     });
+   });
+ 
+   it("converts centimeters to meters without intermediate rounding", () => {
+     const items: CostingItem[] = [
+-      { id: "profile", type: "SIMPLE", active: true, unit: "m", manualUnitCost: "10" },
+-      { id: "frame", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "profile", quantity: "50", quantityUnit: "cm" },
+-      ] },
++      {
++        id: "profile",
++        type: "SIMPLE",
++        active: true,
++        unit: "m",
++        manualUnitCost: "10",
++      },
++      {
++        id: "frame",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "profile", quantity: "50", quantityUnit: "cm" },
++        ],
++      },
+     ];
+     const result = calculateItemCost(items, "frame");
+     expect(result.exactUnitCost).toBe("5");
+@@ -246,34 +366,74 @@ describe("costing domain engine", () => {
+ 
+   it("rejects conversions between different dimensions", () => {
+     const items: CostingItem[] = [
+-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },
+-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "steel", quantity: "2", quantityUnit: "m" },
+-      ] },
++      {
++        id: "steel",
++        type: "SIMPLE",
++        active: true,
++        unit: "kg",
++        manualUnitCost: "10",
++      },
++      {
++        id: "assembly",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "steel", quantity: "2", quantityUnit: "m" },
++        ],
++      },
+     ];
+     expect(() => calculateItemCost(items, "assembly")).toThrowError(
+-      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" }),
++      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" })
+     );
+   });
+ 
+   it("rejects units outside the controlled unit catalog", () => {
+     const items: CostingItem[] = [
+-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },
+-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "steel", quantity: "2", quantityUnit: "caixa" },
+-      ] },
++      {
++        id: "steel",
++        type: "SIMPLE",
++        active: true,
++        unit: "kg",
++        manualUnitCost: "10",
++      },
++      {
++        id: "assembly",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "steel", quantity: "2", quantityUnit: "caixa" },
++        ],
++      },
+     ];
+     expect(() => calculateItemCost(items, "assembly")).toThrowError(
+-      expect.objectContaining({ code: "UNIT_NOT_SUPPORTED" }),
++      expect.objectContaining({ code: "UNIT_NOT_SUPPORTED" })
+     );
+   });
+ 
+   it("supports service-priced items without treating services as countable units", () => {
+     const items: CostingItem[] = [
+-      { id: "machining", type: "SIMPLE", active: true, unit: "serviço", manualUnitCost: "25" },
+-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "machining", quantity: "2", quantityUnit: "serviço" },
+-      ] },
++      {
++        id: "machining",
++        type: "SIMPLE",
++        active: true,
++        unit: "serviço",
++        manualUnitCost: "25",
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          {
++            componentItemId: "machining",
++            quantity: "2",
++            quantityUnit: "serviço",
++          },
++        ],
++      },
+     ];
+     const result = calculateItemCost(items, "finished");
+     expect(result.exactUnitCost).toBe("50");
+@@ -281,13 +441,189 @@ describe("costing domain engine", () => {
+ 
+   it("does not silently convert a service into a generic unit", () => {
+     const items: CostingItem[] = [
+-      { id: "machining", type: "SIMPLE", active: true, unit: "serviço", manualUnitCost: "25" },
+-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "machining", quantity: "2", quantityUnit: "un" },
+-      ] },
++      {
++        id: "machining",
++        type: "SIMPLE",
++        active: true,
++        unit: "serviço",
++        manualUnitCost: "25",
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "machining", quantity: "2", quantityUnit: "un" },
++        ],
++      },
+     ];
+     expect(() => calculateItemCost(items, "finished")).toThrowError(
+-      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" }),
++      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" })
+     );
+   });
++
++  it("applies the default 1.2% once to one selected group", () => {
++    const items: CostingItem[] = [
++      {
++        id: "raw-a",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g-a",
++        manualUnitCost: "100",
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "raw-a", quantity: "2" }],
++      },
++    ];
++    const result = calculateItemCostWithGamma(items, "finished", {
++      active: true,
++      selectedGroupIds: ["g-a"],
++    });
++    expect(result.baseBatchCost).toBe("200");
++    expect(result.adjustmentBatchCost).toBe("2.4");
++    expect(result.result.exactUnitCost).toBe("202.4");
++  });
++
++  it("sums several selected groups and ignores an unselected group", () => {
++    const items: CostingItem[] = [
++      {
++        id: "a",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g-a",
++        manualUnitCost: "10",
++      },
++      {
++        id: "b",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g-b",
++        manualUnitCost: "20",
++      },
++      {
++        id: "c",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g-c",
++        manualUnitCost: "30",
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "a", quantity: "1" },
++          { componentItemId: "b", quantity: "1" },
++          { componentItemId: "c", quantity: "1" },
++        ],
++      },
++    ];
++    const result = calculateItemCostWithGamma(items, "finished", {
++      active: true,
++      selectedGroupIds: ["g-a", "g-b"],
++    });
++    expect(result.baseBatchCost).toBe("30");
++    expect(result.result.exactUnitCost).toBe("60.36");
++    expect(result.baseLines).toHaveLength(2);
++  });
++
++  it("resolves manual selected items through different composition levels without recursion", () => {
++    const items: CostingItem[] = [
++      {
++        id: "manual",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g",
++        manualUnitCost: "50",
++      },
++      {
++        id: "sub",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        outputQuantity: "2",
++        structure: [{ componentItemId: "manual", quantity: "1" }],
++      },
++      {
++        id: "root",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [{ componentItemId: "sub", quantity: "4" }],
++      },
++    ];
++    const result = calculateItemCostWithGamma(items, "root", {
++      active: true,
++      selectedGroupIds: ["g"],
++    });
++    expect(result.baseBatchCost).toBe("100");
++    expect(result.adjustmentBatchCost).toBe("1.2");
++    expect(result.result.exactUnitCost).toBe("101.2");
++    expect(result.baseLines).toHaveLength(1);
++  });
++
++  it("counts each physical line once, keeps duplicate group IDs harmless, and preserves exact gamma data", () => {
++    const items: CostingItem[] = [
++      {
++        id: "manual",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "g",
++        manualUnitCost: "1",
++      },
++      {
++        id: "root",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "manual", quantity: "2" },
++          { componentItemId: "manual", quantity: "3" },
++        ],
++      },
++    ];
++    const result = calculateItemCostWithGamma(items, "root", {
++      active: true,
++      selectedGroupIds: ["g", "g"],
++    });
++    expect(result.baseBatchCost).toBe("5");
++    expect(result.adjustmentBatchCost).toBe("0.06");
++    expect(result.baseLines.map(line => line.batchCost)).toEqual(["2", "3"]);
++  });
++
++  it("does not apply gamma when inactive or when the selected base is empty", () => {
++    const items: CostingItem[] = [
++      {
++        id: "manual",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        groupId: "other",
++        manualUnitCost: "10",
++      },
++    ];
++    const inactive = calculateItemCostWithGamma(items, "manual", {
++      active: false,
++      selectedGroupIds: ["other"],
++    });
++    const empty = calculateItemCostWithGamma(items, "manual", {
++      active: true,
++      selectedGroupIds: ["missing"],
++    });
++    expect(inactive.result.exactUnitCost).toBe("10");
++    expect(empty.result.exactUnitCost).toBe("10");
++    expect(empty.baseBatchCost).toBe("0");
++  });
+ });
+diff --git a/server/domain/costing/engine.ts b/server/domain/costing/engine.ts
+index 0ef8ce4..b39a22a 100644
+--- a/server/domain/costing/engine.ts
++++ b/server/domain/costing/engine.ts
+@@ -4,53 +4,131 @@
+  * No database, framework, floating-point money arithmetic, or commercial pricing.
+  */
+ export type CostingItemType = "SIMPLE" | "COMPOSITE";
+-export interface CostingStructureLine { componentItemId: string; quantity: string; /** Unit used to enter this consumption; defaults to the component reference unit for legacy callers. */ quantityUnit?: string }
++export interface CostingStructureLine {
++  componentItemId: string;
++  quantity: string;
++  /** Unit used to enter this consumption; defaults to the component reference unit for legacy callers. */ quantityUnit?: string;
++}
+ export interface CostingItem {
+-  id: string; type: CostingItemType; active: boolean; unit: string;
++  id: string;
++  type: CostingItemType;
++  active: boolean;
++  unit: string;
++  groupId?: string | null;
+   /** Number of finished units represented by the composite structure; defaults to 1. */
+   outputQuantity?: string;
+-  manualUnitCost?: string | null; structure?: readonly CostingStructureLine[];
++  manualUnitCost?: string | null;
++  structure?: readonly CostingStructureLine[];
+ }
+ export interface CostingLineResult {
+-  componentItemId: string; quantity: string; enteredUnit: string; referenceUnit: string; conversionFactor: string; componentUnitCost: string; batchLineCost: string;
++  componentItemId: string;
++  quantity: string;
++  enteredUnit: string;
++  referenceUnit: string;
++  conversionFactor: string;
++  componentUnitCost: string;
++  batchLineCost: string;
+ }
+ export interface CostingResult {
+-  itemId: string; unit: string;
++  itemId: string;
++  unit: string;
+   /** Exact decimal, or an exact numerator/denominator string when the value is recurring. */
+   exactUnitCost: string;
+   /** Final unit cost rounded to at most three places by the fourth decimal digit (0–5 down, 6–9 up). */
+   displayUnitCost: string;
+   lines: CostingLineResult[];
+ }
++export interface CostingGammaBaseLine {
++  itemId: string;
++  groupId: string;
++  quantity: string;
++  unit: string;
++  unitCost: string;
++  batchCost: string;
++}
++export interface CostingGammaInput {
++  active: boolean;
++  percentage?: string;
++  selectedGroupIds: readonly string[];
++}
++export interface CostingGammaResult {
++  baseBatchCost: string;
++  adjustmentBatchCost: string;
++  adjustmentUnitCost: string;
++  baseLines: CostingGammaBaseLine[];
++  result: CostingResult;
++}
+ export type CostingErrorCode =
+-  | "DUPLICATE_ITEM_ID" | "ITEM_NOT_FOUND" | "ITEM_INACTIVE" | "INVALID_ITEM_TYPE"
+-  | "INVALID_UNIT" | "INVALID_DECIMAL" | "SIMPLE_HAS_STRUCTURE" | "SIMPLE_COST_MISSING"
+-  | "COMPOSITE_STRUCTURE_MISSING" | "COMPOSITE_HAS_MANUAL_COST" | "COMPONENT_NOT_FOUND"
+-  | "COMPONENT_INACTIVE" | "CYCLE_DETECTED" | "INVALID_OUTPUT_QUANTITY"
+-  | "UNIT_NOT_SUPPORTED" | "INCOMPATIBLE_UNITS";
++  | "DUPLICATE_ITEM_ID"
++  | "ITEM_NOT_FOUND"
++  | "ITEM_INACTIVE"
++  | "INVALID_ITEM_TYPE"
++  | "INVALID_UNIT"
++  | "INVALID_DECIMAL"
++  | "SIMPLE_HAS_STRUCTURE"
++  | "SIMPLE_COST_MISSING"
++  | "COMPOSITE_STRUCTURE_MISSING"
++  | "COMPOSITE_HAS_MANUAL_COST"
++  | "COMPONENT_NOT_FOUND"
++  | "COMPONENT_INACTIVE"
++  | "CYCLE_DETECTED"
++  | "INVALID_OUTPUT_QUANTITY"
++  | "UNIT_NOT_SUPPORTED"
++  | "INCOMPATIBLE_UNITS";
+ export class CostingDomainError extends Error {
+   readonly code: CostingErrorCode;
+   readonly itemId?: string;
+   readonly componentItemId?: string;
+-  constructor(code: CostingErrorCode, message: string, details: { itemId?: string; componentItemId?: string } = {}) {
+-    super(message); this.name = "CostingDomainError"; this.code = code;
+-    this.itemId = details.itemId; this.componentItemId = details.componentItemId;
++  constructor(
++    code: CostingErrorCode,
++    message: string,
++    details: { itemId?: string; componentItemId?: string } = {}
++  ) {
++    super(message);
++    this.name = "CostingDomainError";
++    this.code = code;
++    this.itemId = details.itemId;
++    this.componentItemId = details.componentItemId;
+   }
+ }
+-interface Fraction { numerator: bigint; denominator: bigint }
++interface Fraction {
++  numerator: bigint;
++  denominator: bigint;
++}
+ function gcd(a: bigint, b: bigint): bigint {
+-  a = a < 0n ? -a : a; b = b < 0n ? -b : b;
+-  while (b !== 0n) { const remainder = a % b; a = b; b = remainder; }
++  a = a < 0n ? -a : a;
++  b = b < 0n ? -b : b;
++  while (b !== 0n) {
++    const remainder = a % b;
++    a = b;
++    b = remainder;
++  }
+   return a;
+ }
+ function fraction(numerator: bigint, denominator = 1n): Fraction {
+   if (denominator === 0n) throw new Error("Zero denominator");
+   const sign = denominator < 0n ? -1n : 1n;
+   const divisor = gcd(numerator, denominator);
+-  return { numerator: numerator / divisor * sign, denominator: denominator / divisor * sign };
++  return {
++    numerator: (numerator / divisor) * sign,
++    denominator: (denominator / divisor) * sign,
++  };
++}
++type UnitDimension =
++  | "mass"
++  | "length"
++  | "count"
++  | "service"
++  | "set"
++  | "pair"
++  | "piece"
++  | "time"
++  | "volume"
++  | "area";
++interface UnitDefinition {
++  dimension: UnitDimension;
++  factorToBase: Fraction;
+ }
+-type UnitDimension = "mass" | "length" | "count" | "service" | "set" | "pair" | "piece" | "time" | "volume" | "area";
+-interface UnitDefinition { dimension: UnitDimension; factorToBase: Fraction }
+ /** Exact factors to a canonical unit: kg, m, un, h, L and m². */
+ const UNIT_DEFINITIONS: Record<string, UnitDefinition> = {
+   kg: { dimension: "mass", factorToBase: fraction(1n) },
+@@ -79,61 +157,107 @@ const UNIT_DEFINITIONS: Record<string, UnitDefinition> = {
+ };
+ function getUnitDefinition(unit: string, itemId: string): UnitDefinition {
+   const definition = UNIT_DEFINITIONS[unit];
+-  if (!definition) throw new CostingDomainError("UNIT_NOT_SUPPORTED", "Unsupported unit '" + unit + "' on item " + itemId, { itemId });
++  if (!definition)
++    throw new CostingDomainError(
++      "UNIT_NOT_SUPPORTED",
++      "Unsupported unit '" + unit + "' on item " + itemId,
++      { itemId }
++    );
+   return definition;
+ }
+-function convertQuantity(quantity: Fraction, enteredUnit: string, referenceUnit: string, itemId: string): { quantity: Fraction; factor: Fraction } {
++function convertQuantity(
++  quantity: Fraction,
++  enteredUnit: string,
++  referenceUnit: string,
++  itemId: string
++): { quantity: Fraction; factor: Fraction } {
+   const entered = getUnitDefinition(enteredUnit, itemId);
+   const reference = getUnitDefinition(referenceUnit, itemId);
+   if (entered.dimension !== reference.dimension) {
+-    throw new CostingDomainError("INCOMPATIBLE_UNITS", "Cannot convert " + enteredUnit + " to " + referenceUnit + " for item " + itemId, { itemId });
++    throw new CostingDomainError(
++      "INCOMPATIBLE_UNITS",
++      "Cannot convert " +
++        enteredUnit +
++        " to " +
++        referenceUnit +
++        " for item " +
++        itemId,
++      { itemId }
++    );
+   }
+   const factor = divide(entered.factorToBase, reference.factorToBase, itemId);
+   return { quantity: multiply(quantity, factor), factor };
+ }
+ function parseDecimal(value: string, context: string): Fraction {
+   if (typeof value !== "string" || !/^\d+(?:\.\d{1,3})?$/.test(value)) {
+-    throw new CostingDomainError("INVALID_DECIMAL", "Expected a non-negative decimal with at most three decimal places for " + context + ": " + String(value));
++    throw new CostingDomainError(
++      "INVALID_DECIMAL",
++      "Expected a non-negative decimal with at most three decimal places for " +
++        context +
++        ": " +
++        String(value)
++    );
+   }
+   const parts = value.split(".");
+   const scale = (parts[1] || "").length;
+   return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt(scale));
+ }
+ function add(a: Fraction, b: Fraction): Fraction {
+-  return fraction(a.numerator * b.denominator + b.numerator * a.denominator, a.denominator * b.denominator);
++  return fraction(
++    a.numerator * b.denominator + b.numerator * a.denominator,
++    a.denominator * b.denominator
++  );
+ }
+ function multiply(a: Fraction, b: Fraction): Fraction {
+   return fraction(a.numerator * b.numerator, a.denominator * b.denominator);
+ }
+ function divide(a: Fraction, b: Fraction, itemId: string): Fraction {
+   if (b.numerator === 0n) {
+-    throw new CostingDomainError("INVALID_OUTPUT_QUANTITY", "Output quantity must be greater than zero: " + itemId, { itemId });
++    throw new CostingDomainError(
++      "INVALID_OUTPUT_QUANTITY",
++      "Output quantity must be greater than zero: " + itemId,
++      { itemId }
++    );
+   }
+   return fraction(a.numerator * b.denominator, a.denominator * b.numerator);
+ }
+ function terminatingDecimal(value: Fraction): string | null {
+-  let denominator = value.denominator, twos = 0, fives = 0;
+-  while (denominator % 2n === 0n) { denominator /= 2n; twos += 1; }
+-  while (denominator % 5n === 0n) { denominator /= 5n; fives += 1; }
++  let denominator = value.denominator,
++    twos = 0,
++    fives = 0;
++  while (denominator % 2n === 0n) {
++    denominator /= 2n;
++    twos += 1;
++  }
++  while (denominator % 5n === 0n) {
++    denominator /= 5n;
++    fives += 1;
++  }
+   if (denominator !== 1n) return null;
+   const scale = Math.max(twos, fives);
+-  const coefficient = value.numerator * 2n ** BigInt(scale - twos) * 5n ** BigInt(scale - fives);
++  const coefficient =
++    value.numerator * 2n ** BigInt(scale - twos) * 5n ** BigInt(scale - fives);
+   const negative = coefficient < 0n;
+   const digits = (negative ? -coefficient : coefficient).toString();
+   if (scale === 0) return (negative ? "-" : "") + digits;
+-  const padded = digits.padStart(scale + 1, "0"), splitAt = padded.length - scale;
++  const padded = digits.padStart(scale + 1, "0"),
++    splitAt = padded.length - scale;
+   let result = padded.slice(0, splitAt) + "." + padded.slice(splitAt);
+   result = result.replace(/0+$/, "").replace(/\.$/, "");
+   return (negative ? "-" : "") + result;
+ }
+ function fractionToExactString(value: Fraction): string {
+-  return terminatingDecimal(value) ?? (value.numerator.toString() + "/" + value.denominator.toString());
++  return (
++    terminatingDecimal(value) ??
++    value.numerator.toString() + "/" + value.denominator.toString()
++  );
+ }
+ /** Round the final result to three places. Exact ties stay down, matching the approved convention. */
+ function roundFractionToThree(value: Fraction): string {
+   const scaledNumerator = value.numerator * 1000n;
+   let rounded = scaledNumerator / value.denominator;
+-  const fourthDecimalDigit = (scaledNumerator * 10n / value.denominator) % 10n;
++  const fourthDecimalDigit =
++    ((scaledNumerator * 10n) / value.denominator) % 10n;
+   if (fourthDecimalDigit > 5n) rounded += 1n;
+   const negative = rounded < 0n;
+   const digits = (negative ? -rounded : rounded).toString().padStart(4, "0");
+@@ -148,52 +272,152 @@ function parseExactString(value: string): Fraction {
+   }
+   if (/^\d+(?:\.\d+)?$/.test(value)) {
+     const parts = value.split(".");
+-    return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt((parts[1] || "").length));
++    return fraction(
++      BigInt(parts[0] + (parts[1] || "")),
++      10n ** BigInt((parts[1] || "").length)
++    );
+   }
+-  throw new CostingDomainError("INVALID_DECIMAL", "Invalid exact decimal value: " + value);
++  throw new CostingDomainError(
++    "INVALID_DECIMAL",
++    "Invalid exact decimal value: " + value
++  );
+ }
+ export function formatCostForDisplay(exactValue: string): string {
+   return roundFractionToThree(parseExactString(exactValue));
+ }
+-export function calculateItemCost(sourceItems: readonly CostingItem[], targetItemId: string): CostingResult {
++export function calculateItemCost(
++  sourceItems: readonly CostingItem[],
++  targetItemId: string
++): CostingResult {
+   const items = new Map<string, CostingItem>();
+   for (const item of sourceItems) {
+-    if (items.has(item.id)) throw new CostingDomainError("DUPLICATE_ITEM_ID", "Duplicate item identifier: " + item.id, { itemId: item.id });
++    if (items.has(item.id))
++      throw new CostingDomainError(
++        "DUPLICATE_ITEM_ID",
++        "Duplicate item identifier: " + item.id,
++        { itemId: item.id }
++      );
+     items.set(item.id, item);
+   }
+   const root = items.get(targetItemId);
+-  if (!root) throw new CostingDomainError("ITEM_NOT_FOUND", "Item not found: " + targetItemId, { itemId: targetItemId });
++  if (!root)
++    throw new CostingDomainError(
++      "ITEM_NOT_FOUND",
++      "Item not found: " + targetItemId,
++      { itemId: targetItemId }
++    );
+   const visiting: string[] = [];
+-  const resolve = (item: CostingItem): { result: CostingResult; exactCost: Fraction } => {
+-    if (!item.active) throw new CostingDomainError("ITEM_INACTIVE", "Item is inactive: " + item.id, { itemId: item.id });
+-    if (!item.unit.trim()) throw new CostingDomainError("INVALID_UNIT", "Item has no unit: " + item.id, { itemId: item.id });
+-    if (item.type !== "SIMPLE" && item.type !== "COMPOSITE") throw new CostingDomainError("INVALID_ITEM_TYPE", "Invalid item type: " + item.id, { itemId: item.id });
++  const resolve = (
++    item: CostingItem
++  ): { result: CostingResult; exactCost: Fraction } => {
++    if (!item.active)
++      throw new CostingDomainError(
++        "ITEM_INACTIVE",
++        "Item is inactive: " + item.id,
++        { itemId: item.id }
++      );
++    if (!item.unit.trim())
++      throw new CostingDomainError(
++        "INVALID_UNIT",
++        "Item has no unit: " + item.id,
++        { itemId: item.id }
++      );
++    if (item.type !== "SIMPLE" && item.type !== "COMPOSITE")
++      throw new CostingDomainError(
++        "INVALID_ITEM_TYPE",
++        "Invalid item type: " + item.id,
++        { itemId: item.id }
++      );
+     const cycleIndex = visiting.indexOf(item.id);
+-    if (cycleIndex >= 0) throw new CostingDomainError("CYCLE_DETECTED", "Composition cycle detected: " + [...visiting.slice(cycleIndex), item.id].join(" -> "), { itemId: item.id });
++    if (cycleIndex >= 0)
++      throw new CostingDomainError(
++        "CYCLE_DETECTED",
++        "Composition cycle detected: " +
++          [...visiting.slice(cycleIndex), item.id].join(" -> "),
++        { itemId: item.id }
++      );
+     if (item.type === "SIMPLE") {
+-      if (item.structure && item.structure.length > 0) throw new CostingDomainError("SIMPLE_HAS_STRUCTURE", "Simple item cannot have a structure: " + item.id, { itemId: item.id });
+-      if (item.manualUnitCost == null || item.manualUnitCost === "") throw new CostingDomainError("SIMPLE_COST_MISSING", "Simple item has no manual cost: " + item.id, { itemId: item.id });
++      if (item.structure && item.structure.length > 0)
++        throw new CostingDomainError(
++          "SIMPLE_HAS_STRUCTURE",
++          "Simple item cannot have a structure: " + item.id,
++          { itemId: item.id }
++        );
++      if (item.manualUnitCost == null || item.manualUnitCost === "")
++        throw new CostingDomainError(
++          "SIMPLE_COST_MISSING",
++          "Simple item has no manual cost: " + item.id,
++          { itemId: item.id }
++        );
+       const cost = parseDecimal(item.manualUnitCost, "item " + item.id);
+       const exactUnitCost = fractionToExactString(cost);
+-      return { exactCost: cost, result: { itemId: item.id, unit: item.unit, exactUnitCost, displayUnitCost: formatCostForDisplay(exactUnitCost), lines: [] } };
++      return {
++        exactCost: cost,
++        result: {
++          itemId: item.id,
++          unit: item.unit,
++          exactUnitCost,
++          displayUnitCost: formatCostForDisplay(exactUnitCost),
++          lines: [],
++        },
++      };
+     }
+-    if (item.manualUnitCost != null && item.manualUnitCost !== "") throw new CostingDomainError("COMPOSITE_HAS_MANUAL_COST", "Composite item cannot have manual cost: " + item.id, { itemId: item.id });
+-    if (!item.structure || item.structure.length === 0) throw new CostingDomainError("COMPOSITE_STRUCTURE_MISSING", "Composite item has no structure: " + item.id, { itemId: item.id });
++    if (item.manualUnitCost != null && item.manualUnitCost !== "")
++      throw new CostingDomainError(
++        "COMPOSITE_HAS_MANUAL_COST",
++        "Composite item cannot have manual cost: " + item.id,
++        { itemId: item.id }
++      );
++    if (!item.structure || item.structure.length === 0)
++      throw new CostingDomainError(
++        "COMPOSITE_STRUCTURE_MISSING",
++        "Composite item has no structure: " + item.id,
++        { itemId: item.id }
++      );
+     visiting.push(item.id);
+     try {
+-      const outputQuantity = parseDecimal(item.outputQuantity ?? "1", "output quantity in " + item.id);
++      const outputQuantity = parseDecimal(
++        item.outputQuantity ?? "1",
++        "output quantity in " + item.id
++      );
+       if (outputQuantity.numerator === 0n) {
+-        throw new CostingDomainError("INVALID_OUTPUT_QUANTITY", "Output quantity must be greater than zero: " + item.id, { itemId: item.id });
++        throw new CostingDomainError(
++          "INVALID_OUTPUT_QUANTITY",
++          "Output quantity must be greater than zero: " + item.id,
++          { itemId: item.id }
++        );
+       }
+       let batchTotal = fraction(0n);
+       const lines: CostingLineResult[] = [];
+       for (const line of item.structure) {
+         const component = items.get(line.componentItemId);
+-        if (!component) throw new CostingDomainError("COMPONENT_NOT_FOUND", "Component " + line.componentItemId + " referenced by " + item.id + " does not exist", { itemId: item.id, componentItemId: line.componentItemId });
+-        if (!component.active) throw new CostingDomainError("COMPONENT_INACTIVE", "Inactive component " + component.id + " is used by " + item.id, { itemId: item.id, componentItemId: component.id });
+-        const enteredQuantity = parseDecimal(line.quantity, "quantity in " + item.id);
++        if (!component)
++          throw new CostingDomainError(
++            "COMPONENT_NOT_FOUND",
++            "Component " +
++              line.componentItemId +
++              " referenced by " +
++              item.id +
++              " does not exist",
++            { itemId: item.id, componentItemId: line.componentItemId }
++          );
++        if (!component.active)
++          throw new CostingDomainError(
++            "COMPONENT_INACTIVE",
++            "Inactive component " + component.id + " is used by " + item.id,
++            { itemId: item.id, componentItemId: component.id }
++          );
++        const enteredQuantity = parseDecimal(
++          line.quantity,
++          "quantity in " + item.id
++        );
+         const enteredUnit = line.quantityUnit ?? component.unit;
+-        const conversion = convertQuantity(enteredQuantity, enteredUnit, component.unit, item.id);
++        const conversion = convertQuantity(
++          enteredQuantity,
++          enteredUnit,
++          component.unit,
++          item.id
++        );
+         const child = resolve(component);
+         const batchLineCost = multiply(conversion.quantity, child.exactCost);
+         batchTotal = add(batchTotal, batchLineCost);
+@@ -212,9 +436,148 @@ export function calculateItemCost(sourceItems: readonly CostingItem[], targetIte
+       const exactUnitCost = fractionToExactString(exactCost);
+       return {
+         exactCost,
+-        result: { itemId: item.id, unit: item.unit, exactUnitCost, displayUnitCost: roundFractionToThree(exactCost), lines },
++        result: {
++          itemId: item.id,
++          unit: item.unit,
++          exactUnitCost,
++          displayUnitCost: roundFractionToThree(exactCost),
++          lines,
++        },
+       };
+-    } finally { visiting.pop(); }
++    } finally {
++      visiting.pop();
++    }
+   };
+   return resolve(root).result;
+ }
++
++function parseGammaPercentage(value: string): Fraction {
++  if (typeof value !== "string" || !/^\d+(?:\.\d{1,4})?$/.test(value)) {
++    throw new CostingDomainError(
++      "INVALID_DECIMAL",
++      "Gama deve ser um percentual não negativo com até quatro casas decimais."
++    );
++  }
++  const parts = value.split("."),
++    scale = (parts[1] || "").length;
++  return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt(scale));
++}
++
++/**
++ * Applies Gama once to the resolved manual-price bases. Composite group IDs
++ * are never used as bases: only SIMPLE items with a selected group contribute,
++ * so nested compositions cannot apply the percentage recursively.
++ */
++export function calculateItemCostWithGamma(
++  sourceItems: readonly CostingItem[],
++  targetItemId: string,
++  gamma: CostingGammaInput
++): CostingGammaResult {
++  const result = calculateItemCost(sourceItems, targetItemId);
++  const items = new Map(sourceItems.map(item => [item.id, item]));
++  const root = items.get(targetItemId);
++  if (!root)
++    throw new CostingDomainError(
++      "ITEM_NOT_FOUND",
++      "Item not found: " + targetItemId,
++      { itemId: targetItemId }
++    );
++  const selected = new Set(gamma.selectedGroupIds);
++  const baseLines: CostingGammaBaseLine[] = [];
++  const visiting = new Set<string>();
++  const collect = (item: CostingItem, consumedQuantity: Fraction): Fraction => {
++    if (visiting.has(item.id))
++      throw new CostingDomainError(
++        "CYCLE_DETECTED",
++        "Composition cycle detected: " + item.id,
++        { itemId: item.id }
++      );
++    if (item.type === "SIMPLE") {
++      if (
++        item.groupId &&
++        selected.has(item.groupId) &&
++        item.manualUnitCost != null
++      ) {
++        const unitCost = parseDecimal(item.manualUnitCost, "item " + item.id);
++        const batchCost = multiply(consumedQuantity, unitCost);
++        baseLines.push({
++          itemId: item.id,
++          groupId: item.groupId,
++          quantity: fractionToExactString(consumedQuantity),
++          unit: item.unit,
++          unitCost: fractionToExactString(unitCost),
++          batchCost: fractionToExactString(batchCost),
++        });
++        return batchCost;
++      }
++      return fraction(0n);
++    }
++    if (!item.structure) return fraction(0n);
++    visiting.add(item.id);
++    try {
++      let total = fraction(0n);
++      const outputQuantity = parseDecimal(
++        item.outputQuantity ?? "1",
++        "output quantity in " + item.id
++      );
++      for (const line of item.structure) {
++        const component = items.get(line.componentItemId);
++        if (!component)
++          throw new CostingDomainError(
++            "COMPONENT_NOT_FOUND",
++            "Component not found: " + line.componentItemId,
++            { itemId: item.id, componentItemId: line.componentItemId }
++          );
++        const converted = convertQuantity(
++          parseDecimal(line.quantity, "quantity in " + item.id),
++          line.quantityUnit ?? component.unit,
++          component.unit,
++          item.id
++        );
++        total = add(
++          total,
++          collect(
++            component,
++            multiply(
++              divide(consumedQuantity, outputQuantity, item.id),
++              converted.quantity
++            )
++          )
++        );
++      }
++      return total;
++    } finally {
++      visiting.delete(item.id);
++    }
++  };
++  const baseBatch = gamma.active ? collect(root, fraction(1n)) : fraction(0n);
++  const percentage = gamma.active
++    ? parseGammaPercentage(gamma.percentage ?? "1.2")
++    : fraction(0n);
++  const adjustmentBatch = divide(
++    multiply(baseBatch, percentage),
++    fraction(100n),
++    targetItemId
++  );
++  const outputQuantity = parseDecimal(
++    root.outputQuantity ?? "1",
++    "output quantity in " + root.id
++  );
++  const adjustmentUnit = divide(adjustmentBatch, outputQuantity, targetItemId);
++  const adjustedExact = add(
++    parseExactString(result.exactUnitCost),
++    adjustmentUnit
++  );
++  const adjusted: CostingResult = {
++    ...result,
++    exactUnitCost: fractionToExactString(adjustedExact),
++    displayUnitCost: roundFractionToThree(adjustedExact),
++  };
++  return {
++    baseBatchCost: fractionToExactString(baseBatch),
++    adjustmentBatchCost: fractionToExactString(adjustmentBatch),
++    adjustmentUnitCost: fractionToExactString(adjustmentUnit),
++    baseLines,
++    result: adjusted,
++  };
++}
+diff --git a/server/domain/costing/snapshot.test.ts b/server/domain/costing/snapshot.test.ts
+index 79c93c1..b561af6 100644
+--- a/server/domain/costing/snapshot.test.ts
++++ b/server/domain/costing/snapshot.test.ts
+@@ -6,17 +6,33 @@ import { planStructurePublication } from "./structure-publication";
+ describe("costing calculation snapshots", () => {
+   it("captures the complete input graph, result, and Gama configuration", () => {
+     const items: CostingItem[] = [
+-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },
+-      { id: "frame", type: "COMPOSITE", active: true, unit: "un", structure: [
+-        { componentItemId: "steel", quantity: "500", quantityUnit: "g" },
+-      ] },
++      {
++        id: "steel",
++        type: "SIMPLE",
++        active: true,
++        unit: "kg",
++        manualUnitCost: "10",
++      },
++      {
++        id: "frame",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [
++          { componentItemId: "steel", quantity: "500", quantityUnit: "g" },
++        ],
++      },
+     ];
+     const result = calculateItemCost(items, "frame");
+     const snapshot = createCostingCalculationSnapshot({
+       organizationId: "org-12345678",
+       targetItemId: "frame",
+       sourceItems: items,
+-      gamma: { active: true, percentage: "1.2000", selectedGroupIds: ["raw-materials"] },
++      gamma: {
++        active: true,
++        percentage: "1.2000",
++        selectedGroupIds: ["raw-materials"],
++      },
+       result,
+       calculatedAt: "2026-11-10T15:00:00.000Z",
+     });
+@@ -25,39 +41,77 @@ describe("costing calculation snapshots", () => {
+     expect(snapshot.engineVersion).toBe("costing-engine-v1");
+     expect(snapshot.sourceItems).toHaveLength(2);
+     expect(snapshot.result.exactUnitCost).toBe("5");
+-    expect(snapshot.exactUnitCost).toEqual({ numerator: "5", denominator: "1" });
++    expect(snapshot.exactUnitCost).toEqual({
++      numerator: "5",
++      denominator: "1",
++    });
+     expect(snapshot.gamma).toEqual({
+-      active: true, percentage: "1.2000", selectedGroupIds: ["raw-materials"],
++      active: true,
++      percentage: "1.2000",
++      selectedGroupIds: ["raw-materials"],
+     });
+     expect(JSON.parse(JSON.stringify(snapshot))).toEqual(snapshot);
+   });
+ 
+   it("stores recurring exact costs as numerator and denominator", () => {
+     const items: CostingItem[] = [
+-      { id: "raw", type: "SIMPLE", active: true, unit: "un", manualUnitCost: "1" },
+-      { id: "third", type: "COMPOSITE", active: true, unit: "un", outputQuantity: "3",
+-        structure: [{ componentItemId: "raw", quantity: "1" }] },
++      {
++        id: "raw",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        manualUnitCost: "1",
++      },
++      {
++        id: "third",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        outputQuantity: "3",
++        structure: [{ componentItemId: "raw", quantity: "1" }],
++      },
+     ];
+     const result = calculateItemCost(items, "third");
+     const snapshot = createCostingCalculationSnapshot({
+-      organizationId: "org-12345678", targetItemId: "third", sourceItems: items,
++      organizationId: "org-12345678",
++      targetItemId: "third",
++      sourceItems: items,
+       gamma: { active: false, percentage: "1.2000", selectedGroupIds: [] },
+-      result, calculatedAt: "2026-11-10T15:00:00.000Z",
++      result,
++      calculatedAt: "2026-11-10T15:00:00.000Z",
++    });
++    expect(snapshot.exactUnitCost).toEqual({
++      numerator: "1",
++      denominator: "3",
+     });
+-    expect(snapshot.exactUnitCost).toEqual({ numerator: "1", denominator: "3" });
+   });
+ 
+   it("copies nested source lines so later mutations do not rewrite the snapshot", () => {
+     const line = { componentItemId: "raw", quantity: "1", quantityUnit: "un" };
+     const items: CostingItem[] = [
+-      { id: "raw", type: "SIMPLE", active: true, unit: "un", manualUnitCost: "2" },
+-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [line] },
++      {
++        id: "raw",
++        type: "SIMPLE",
++        active: true,
++        unit: "un",
++        manualUnitCost: "2",
++      },
++      {
++        id: "finished",
++        type: "COMPOSITE",
++        active: true,
++        unit: "un",
++        structure: [line],
++      },
+     ];
+     const result = calculateItemCost(items, "finished");
+     const snapshot = createCostingCalculationSnapshot({
+-      organizationId: "org-12345678", targetItemId: "finished", sourceItems: items,
++      organizationId: "org-12345678",
++      targetItemId: "finished",
++      sourceItems: items,
+       gamma: { active: false, percentage: "1.2000", selectedGroupIds: [] },
+-      result, calculatedAt: "2026-11-10T15:00:00.000Z",
++      result,
++      calculatedAt: "2026-11-10T15:00:00.000Z",
+     });
+     line.quantity = "99";
+     expect(snapshot.sourceItems[1].structure?.[0].quantity).toBe("1");
+@@ -66,32 +120,52 @@ describe("costing calculation snapshots", () => {
+ 
+ describe("cost structure publication planning", () => {
+   it("plans atomic replacement of the currently active version", () => {
+-    expect(planStructurePublication([
+-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },
+-      { id: "v2", itemId: "item-a", version: 2, status: "DRAFT" },
+-      { id: "other", itemId: "item-b", version: 1, status: "ACTIVE" },
+-    ], "v2")).toEqual({
++    expect(
++      planStructurePublication(
++        [
++          { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },
++          { id: "v2", itemId: "item-a", version: 2, status: "DRAFT" },
++          { id: "other", itemId: "item-b", version: 1, status: "ACTIVE" },
++        ],
++        "v2"
++      )
++    ).toEqual({
+       activateStructureId: "v2",
+       supersedeStructureIds: ["v1"],
+     });
+   });
+ 
+   it("rejects publishing a non-draft or missing version", () => {
+-    expect(() => planStructurePublication([
+-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },
+-    ], "v1")).toThrow("Only a DRAFT structure can be published.");
+-    expect(() => planStructurePublication([], "missing")).toThrow("Structure version not found.");
++    expect(() =>
++      planStructurePublication(
++        [{ id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" }],
++        "v1"
++      )
++    ).toThrow("Only a DRAFT structure can be published.");
++    expect(() => planStructurePublication([], "missing")).toThrow(
++      "Structure version not found."
++    );
+   });
+ 
+   it("detects corrupt existing states and duplicate version numbers", () => {
+-    expect(() => planStructurePublication([
+-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },
+-      { id: "v2", itemId: "item-a", version: 2, status: "ACTIVE" },
+-      { id: "v3", itemId: "item-a", version: 3, status: "DRAFT" },
+-    ], "v3")).toThrow("Data integrity error");
+-    expect(() => planStructurePublication([
+-      { id: "v1", itemId: "item-a", version: 1, status: "INACTIVE" },
+-      { id: "v2", itemId: "item-a", version: 1, status: "DRAFT" },
+-    ], "v2")).toThrow("Duplicate structure version number.");
++    expect(() =>
++      planStructurePublication(
++        [
++          { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },
++          { id: "v2", itemId: "item-a", version: 2, status: "ACTIVE" },
++          { id: "v3", itemId: "item-a", version: 3, status: "DRAFT" },
++        ],
++        "v3"
++      )
++    ).toThrow("Data integrity error");
++    expect(() =>
++      planStructurePublication(
++        [
++          { id: "v1", itemId: "item-a", version: 1, status: "INACTIVE" },
++          { id: "v2", itemId: "item-a", version: 1, status: "DRAFT" },
++        ],
++        "v2"
++      )
++    ).toThrow("Duplicate structure version number.");
+   });
+ });
+diff --git a/server/domain/costing/snapshot.ts b/server/domain/costing/snapshot.ts
+index f1fbc62..bc580a2 100644
+--- a/server/domain/costing/snapshot.ts
++++ b/server/domain/costing/snapshot.ts
+@@ -1,4 +1,8 @@
+-import type { CostingItem, CostingResult } from "./engine";
++import type {
++  CostingGammaBaseLine,
++  CostingItem,
++  CostingResult,
++} from "./engine";
+ 
+ export const COSTING_SNAPSHOT_VERSION = 1 as const;
+ export const COSTING_ENGINE_VERSION = "costing-engine-v1" as const;
+@@ -8,6 +12,10 @@ export interface CostingGammaSnapshot {
+   percentage: string;
+   /** IDs of the groups explicitly selected when this calculation was made. */
+   selectedGroupIds: readonly string[];
++  baseBatchCost?: string;
++  adjustmentBatchCost?: string;
++  adjustmentUnitCost?: string;
++  baseLines?: readonly CostingGammaBaseLine[];
+ }
+ 
+ export interface CostingCalculationSnapshot {
+@@ -38,7 +46,9 @@ export function createCostingCalculationSnapshot(input: {
+   calculatedAt: string;
+ }): CostingCalculationSnapshot {
+   if (!input.organizationId.trim() || !input.targetItemId.trim()) {
+-    throw new Error("Organization and target item are required for a costing snapshot.");
++    throw new Error(
++      "Organization and target item are required for a costing snapshot."
++    );
+   }
+   if (!Number.isFinite(Date.parse(input.calculatedAt))) {
+     throw new Error("A valid calculation timestamp is required.");
+@@ -57,7 +67,10 @@ export function createCostingCalculationSnapshot(input: {
+   }
+   let n = BigInt(numerator);
+   let d = BigInt(denominator);
+-  if (n < 0n || d <= 0n) throw new Error("The exact cost must be non-negative with a positive denominator.");
++  if (n < 0n || d <= 0n)
++    throw new Error(
++      "The exact cost must be non-negative with a positive denominator."
++    );
+   const gcd = (left: bigint, right: bigint): bigint => {
+     while (right !== 0n) [left, right] = [right, left % right];
+     return left;
+@@ -82,6 +95,18 @@ export function createCostingCalculationSnapshot(input: {
+       active: input.gamma.active,
+       percentage: input.gamma.percentage,
+       selectedGroupIds: [...input.gamma.selectedGroupIds],
++      ...(input.gamma.baseBatchCost === undefined
++        ? {}
++        : { baseBatchCost: input.gamma.baseBatchCost }),
++      ...(input.gamma.adjustmentBatchCost === undefined
++        ? {}
++        : { adjustmentBatchCost: input.gamma.adjustmentBatchCost }),
++      ...(input.gamma.adjustmentUnitCost === undefined
++        ? {}
++        : { adjustmentUnitCost: input.gamma.adjustmentUnitCost }),
++      ...(input.gamma.baseLines === undefined
++        ? {}
++        : { baseLines: input.gamma.baseLines.map(line => ({ ...line })) }),
+     },
+     result: {
+       ...input.result,
+diff --git a/server/domain/costing/structure-publication.ts b/server/domain/costing/structure-publication.ts
+index 2754324..df58d42 100644
+--- a/server/domain/costing/structure-publication.ts
++++ b/server/domain/costing/structure-publication.ts
+@@ -1,4 +1,8 @@
+-export type CostStructureStatus = "DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE";
++export type CostStructureStatus =
++  | "DRAFT"
++  | "ACTIVE"
++  | "SUPERSEDED"
++  | "INACTIVE";
+ 
+ export interface CostStructureVersionState {
+   id: string;
+@@ -21,20 +25,29 @@ export interface StructurePublicationPlan {
+  */
+ export function planStructurePublication(
+   structures: readonly CostStructureVersionState[],
+-  targetStructureId: string,
++  targetStructureId: string
+ ): StructurePublicationPlan {
+-  const target = structures.find(structure => structure.id === targetStructureId);
++  const target = structures.find(
++    structure => structure.id === targetStructureId
++  );
+   if (!target) throw new Error("Structure version not found.");
+-  if (target.status !== "DRAFT") throw new Error("Only a DRAFT structure can be published.");
++  if (target.status !== "DRAFT")
++    throw new Error("Only a DRAFT structure can be published.");
+ 
+-  const sameItem = structures.filter(structure => structure.itemId === target.itemId);
++  const sameItem = structures.filter(
++    structure => structure.itemId === target.itemId
++  );
+   const duplicateVersions = new Set<number>();
+   for (const structure of sameItem) {
+-    if (duplicateVersions.has(structure.version)) throw new Error("Duplicate structure version number.");
++    if (duplicateVersions.has(structure.version))
++      throw new Error("Duplicate structure version number.");
+     duplicateVersions.add(structure.version);
+   }
+   const active = sameItem.filter(structure => structure.status === "ACTIVE");
+-  if (active.length > 1) throw new Error("Data integrity error: more than one ACTIVE structure exists for this item.");
++  if (active.length > 1)
++    throw new Error(
++      "Data integrity error: more than one ACTIVE structure exists for this item."
++    );
+ 
+   return {
+     activateStructureId: target.id,
+diff --git a/server/routers/costing.ts b/server/routers/costing.ts
+index a77af27..db7586a 100644
+--- a/server/routers/costing.ts
++++ b/server/routers/costing.ts
+@@ -1,14 +1,50 @@
+ import { TRPCError } from "@trpc/server";
+ import { z } from "zod";
+-import { calculateItemCost, CostingDomainError, type CostingItem } from "../domain/costing/engine";
++import {
++  calculateItemCost,
++  calculateItemCostWithGamma,
++  CostingDomainError,
++  type CostingItem,
++} from "../domain/costing/engine";
++import {
++  createCostingSnapshot,
++  listCostingSnapshots,
++  publishCostStructure,
++} from "../db/costing";
+ import { requireTenantPermission } from "../services/tenant-access";
+ import { protectedProcedure, router } from "../_core/trpc";
+ 
+ const organizationId = z.string().min(8).max(64);
+-const decimalInput = z.string().regex(/^\\d+(?:\\.\\d{1,3})?$/, "Use um número não negativo com até três casas decimais.");
++const decimalInput = z
++  .string()
++  .regex(
++    /^\\d+(?:\\.\\d{1,3})?$/,
++    "Use um número não negativo com até três casas decimais."
++  );
+ const unitInput = z.enum([
+-  "kg", "g", "mg", "t", "m", "cm", "mm", "un", "unidade", "serviço", "servico", "conjunto", "par", "peça", "peca",
+-  "h", "min", "s", "L", "mL", "m²", "cm²", "mm²",
++  "kg",
++  "g",
++  "mg",
++  "t",
++  "m",
++  "cm",
++  "mm",
++  "un",
++  "unidade",
++  "serviço",
++  "servico",
++  "conjunto",
++  "par",
++  "peça",
++  "peca",
++  "h",
++  "min",
++  "s",
++  "L",
++  "mL",
++  "m²",
++  "cm²",
++  "mm²",
+ ]);
+ const structureLine = z.object({
+   componentItemId: z.string().trim().min(1).max(128),
+@@ -20,6 +56,7 @@ const costingItem = z.object({
+   type: z.enum(["SIMPLE", "COMPOSITE"]),
+   active: z.boolean(),
+   unit: unitInput,
++  groupId: z.string().trim().min(1).max(32).nullable().optional(),
+   outputQuantity: decimalInput.optional(),
+   manualUnitCost: decimalInput.nullable().optional(),
+   structure: z.array(structureLine).max(1000).optional(),
+@@ -27,20 +64,169 @@ const costingItem = z.object({
+ 
+ export const costingRouter = router({
+   calculate: protectedProcedure
+-    .input(z.object({
+-      organizationId,
+-      items: z.array(costingItem).min(1).max(500),
+-      targetItemId: z.string().trim().min(1).max(128),
+-    }))
++    .input(
++      z.object({
++        organizationId,
++        items: z.array(costingItem).min(1).max(500),
++        targetItemId: z.string().trim().min(1).max(128),
++      })
++    )
+     .mutation(async ({ ctx, input }) => {
+-      await requireTenantPermission(ctx.user.id, input.organizationId, "costing.read");
++      await requireTenantPermission(
++        ctx.user.id,
++        input.organizationId,
++        "costing.read"
++      );
+       try {
+-        return calculateItemCost(input.items as CostingItem[], input.targetItemId);
++        return calculateItemCost(
++          input.items as CostingItem[],
++          input.targetItemId
++        );
+       } catch (error) {
+         if (error instanceof CostingDomainError) {
+-          throw new TRPCError({ code: "BAD_REQUEST", message: error.message, cause: error });
++          throw new TRPCError({
++            code: "BAD_REQUEST",
++            message: error.message,
++            cause: error,
++          });
+         }
+         throw error;
+       }
+     }),
++  calculateWithGamma: protectedProcedure
++    .input(
++      z.object({
++        organizationId,
++        items: z.array(costingItem).min(1).max(500),
++        targetItemId: z.string().trim().min(1).max(128),
++        gamma: z.object({
++          active: z.boolean(),
++          percentage: z
++            .string()
++            .regex(/^\d+(?:\.\d{1,4})?$/)
++            .default("1.2"),
++          selectedGroupIds: z.array(z.string().trim().min(1).max(32)).max(100),
++        }),
++      })
++    )
++    .mutation(async ({ ctx, input }) => {
++      await requireTenantPermission(
++        ctx.user.id,
++        input.organizationId,
++        "costing.read"
++      );
++      try {
++        return calculateItemCostWithGamma(
++          input.items as CostingItem[],
++          input.targetItemId,
++          input.gamma
++        );
++      } catch (error) {
++        if (error instanceof CostingDomainError)
++          throw new TRPCError({
++            code: "BAD_REQUEST",
++            message: error.message,
++            cause: error,
++          });
++        throw error;
++      }
++    }),
++  createSnapshot: protectedProcedure
++    .input(
++      z.object({
++        organizationId,
++        targetItemId: z.string().trim().min(1).max(128),
++        structureId: z.string().trim().min(1).max(32).nullable().optional(),
++        items: z.array(costingItem).min(1).max(500),
++        gamma: z.object({
++          active: z.boolean(),
++          percentage: z
++            .string()
++            .regex(/^\d+(?:\.\d{1,4})?$/)
++            .default("1.2"),
++          selectedGroupIds: z.array(z.string().trim().min(1).max(32)).max(100),
++          baseBatchCost: z.string().optional(),
++          adjustmentBatchCost: z.string().optional(),
++          adjustmentUnitCost: z.string().optional(),
++          baseLines: z
++            .array(
++              z.object({
++                itemId: z.string(),
++                groupId: z.string(),
++                quantity: z.string(),
++                unit: z.string(),
++                unitCost: z.string(),
++                batchCost: z.string(),
++              })
++            )
++            .optional(),
++        }),
++        result: z.object({
++          itemId: z.string(),
++          unit: z.string(),
++          exactUnitCost: z.string(),
++          displayUnitCost: z.string(),
++          lines: z.array(
++            z.object({
++              componentItemId: z.string(),
++              quantity: z.string(),
++              enteredUnit: z.string(),
++              referenceUnit: z.string(),
++              conversionFactor: z.string(),
++              componentUnitCost: z.string(),
++              batchLineCost: z.string(),
++            })
++          ),
++        }),
++        calculatedAt: z.string().datetime(),
++      })
++    )
++    .mutation(async ({ ctx, input }) => {
++      await requireTenantPermission(
++        ctx.user.id,
++        input.organizationId,
++        "costing.read"
++      );
++      return createCostingSnapshot({
++        ...input,
++        sourceItems: input.items as CostingItem[],
++        result: input.result,
++        gamma: input.gamma,
++      });
++    }),
++  snapshots: protectedProcedure
++    .input(
++      z.object({
++        organizationId,
++        itemId: z.string().trim().min(1).max(32),
++        limit: z.number().int().min(1).max(100).default(50),
++      })
++    )
++    .query(async ({ ctx, input }) => {
++      await requireTenantPermission(
++        ctx.user.id,
++        input.organizationId,
++        "costing.read"
++      );
++      return listCostingSnapshots(
++        input.organizationId,
++        input.itemId,
++        input.limit
++      );
++    }),
++  publishStructure: protectedProcedure
++    .input(
++      z.object({
++        organizationId,
++        structureId: z.string().trim().min(1).max(32),
++      })
++    )
++    .mutation(async ({ ctx, input }) => {
++      await requireTenantPermission(
++        ctx.user.id,
++        input.organizationId,
++        "workspace.manage"
++      );
++      return publishCostStructure(input.organizationId, input.structureId);
++    }),
+ });
+diff --git a/tsconfig.json b/tsconfig.json
+index a0203ee..54de26a 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -5,6 +5,7 @@
+     "incremental": true,
+     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
+     "noEmit": true,
++    "target": "ES2020",
+     "module": "ESNext",
+     "strict": true,
+     "lib": ["esnext", "dom", "dom.iterable"],

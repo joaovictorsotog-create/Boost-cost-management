@@ -1,0 +1,11 @@
+Full project suite result from the reconstructed tree:
+
+231 test files executed: 229 passed, 2 failed.
+833 tests executed: 831 passed, 2 failed.
+
+The two failures are unrelated environment/configuration contracts:
+
+- server/app-runtime-password.contract.test.ts: expected HTTP 204, received 503 because app_runtime configuration is absent.
+- server/supabase-server-client.contract.test.ts: isServerSupabaseConfigured was false because Supabase configuration is absent.
+
+No Costing test failed in the full suite. The targeted Costing suite passed 46/46 tests.

@@ -1,0 +1,2447 @@
+[1mdiff --git a/drizzle/pg/0036_costing_foundation.sql b/drizzle/pg/0036_costing_foundation.sql[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b8ff2a8[m
+[1m--- /dev/null[m
+[1m+++ b/drizzle/pg/0036_costing_foundation.sql[m
+[36m@@ -0,0 +1,111 @@[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_groups" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "name" varchar(120) NOT NULL,[m
+[32m+[m[32m  "description" text,[m
+[32m+[m[32m  "position" integer NOT NULL DEFAULT 0,[m
+[32m+[m[32m  "active" boolean NOT NULL DEFAULT true,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_groups_org_id_id_unique" UNIQUE ("organizationId", "id"),[m
+[32m+[m[32m  CONSTRAINT "cost_groups_org_name_unique" UNIQUE ("organizationId", "name")[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_groups_org_active_position_idx" ON "cost_groups" ("organizationId", "active", "position");[m
+[32m+[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_items" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "groupId" varchar(32),[m
+[32m+[m[32m  "code" varchar(64),[m
+[32m+[m[32m  "name" varchar(240) NOT NULL,[m
+[32m+[m[32m  "description" text,[m
+[32m+[m[32m  "itemType" text NOT NULL,[m
+[32m+[m[32m  "referenceUnit" varchar(24) NOT NULL,[m
+[32m+[m[32m  "manualUnitCost" numeric(24,3),[m
+[32m+[m[32m  "active" boolean NOT NULL DEFAULT true,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_items_org_id_id_unique" UNIQUE ("organizationId", "id"),[m
+[32m+[m[32m  CONSTRAINT "cost_items_org_code_unique" UNIQUE ("organizationId", "code"),[m
+[32m+[m[32m  CONSTRAINT "cost_items_org_group_fk" FOREIGN KEY ("organizationId", "groupId") REFERENCES "cost_groups" ("organizationId", "id") ON DELETE RESTRICT[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_items_org_name_idx" ON "cost_items" ("organizationId", "name");[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_items_org_group_active_idx" ON "cost_items" ("organizationId", "groupId", "active");[m
+[32m+[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_structures" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "itemId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "version" integer NOT NULL,[m
+[32m+[m[32m  "status" text NOT NULL DEFAULT 'DRAFT',[m
+[32m+[m[32m  "outputQuantity" numeric(24,3) NOT NULL DEFAULT 1,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_structures_org_id_id_unique" UNIQUE ("organizationId", "id"),[m
+[32m+[m[32m  CONSTRAINT "cost_structures_org_item_version_unique" UNIQUE ("organizationId", "itemId", "version"),[m
+[32m+[m[32m  CONSTRAINT "cost_structures_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE UNIQUE INDEX IF NOT EXISTS "cost_structures_one_active_per_item_idx" ON "cost_structures" ("organizationId", "itemId") WHERE "status" = 'ACTIVE';[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_structures_org_item_status_idx" ON "cost_structures" ("organizationId", "itemId", "status");[m
+[32m+[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_structure_lines" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "structureId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "componentItemId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "quantity" numeric(24,3) NOT NULL,[m
+[32m+[m[32m  "quantityUnit" varchar(24) NOT NULL,[m
+[32m+[m[32m  "position" integer NOT NULL DEFAULT 0,[m
+[32m+[m[32m  "notes" text,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_structure_lines_org_structure_fk" FOREIGN KEY ("organizationId", "structureId") REFERENCES "cost_structures" ("organizationId", "id") ON DELETE CASCADE,[m
+[32m+[m[32m  CONSTRAINT "cost_structure_lines_org_component_fk" FOREIGN KEY ("organizationId", "componentItemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_structure_lines_structure_position_idx" ON "cost_structure_lines" ("organizationId", "structureId", "position");[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_structure_lines_component_idx" ON "cost_structure_lines" ("organizationId", "componentItemId");[m
+[32m+[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "cost_calculations" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "itemId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "structureId" varchar(32),[m
+[32m+[m[32m  "exactCostNumerator" text NOT NULL,[m
+[32m+[m[32m  "exactCostDenominator" text NOT NULL,[m
+[32m+[m[32m  "displayUnitCost" numeric(24,3) NOT NULL,[m
+[32m+[m[32m  "snapshotVersion" integer NOT NULL DEFAULT 1,[m
+[32m+[m[32m  "calculationSnapshot" jsonb NOT NULL,[m
+[32m+[m[32m  "calculatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "cost_calculations_org_item_fk" FOREIGN KEY ("organizationId", "itemId") REFERENCES "cost_items" ("organizationId", "id") ON DELETE RESTRICT,[m
+[32m+[m[32m  CONSTRAINT "cost_calculations_org_structure_fk" FOREIGN KEY ("organizationId", "structureId") REFERENCES "cost_structures" ("organizationId", "id") ON DELETE RESTRICT[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE INDEX IF NOT EXISTS "cost_calculations_org_item_date_idx" ON "cost_calculations" ("organizationId", "itemId", "calculatedAt");[m
+[32m+[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "costing_gamma_settings" ([m
+[32m+[m[32m  "id" varchar(32) PRIMARY KEY,[m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "active" boolean NOT NULL DEFAULT false,[m
+[32m+[m[32m  "percentage" numeric(8,4) NOT NULL DEFAULT 1.2000,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  "updatedAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "costing_gamma_settings_org_unique" UNIQUE ("organizationId")[m
+[32m+[m[32m);[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS "costing_gamma_groups" ([m
+[32m+[m[32m  "organizationId" varchar(32) NOT NULL REFERENCES "organizations"("id") ON DELETE CASCADE,[m
+[32m+[m[32m  "groupId" varchar(32) NOT NULL,[m
+[32m+[m[32m  "createdAt" text NOT NULL,[m
+[32m+[m[32m  CONSTRAINT "costing_gamma_groups_org_group_unique" UNIQUE ("organizationId", "groupId"),[m
+[32m+[m[32m  CONSTRAINT "costing_gamma_groups_org_group_fk" FOREIGN KEY ("organizationId", "groupId") REFERENCES "cost_groups" ("organizationId", "id") ON DELETE CASCADE[m
+[32m+[m[32m);[m
+[32m+[m
+[32m+[m[32mCREATE OR REPLACE FUNCTION "prevent_cost_calculation_update"() RETURNS trigger LANGUAGE plpgsql AS $$[m
+[32m+[m[32mBEGIN[m
+[32m+[m[32m  IF ROW(NEW."organizationId", NEW."itemId", NEW."structureId", NEW."exactCostNumerator", NEW."exactCostDenominator", NEW."displayUnitCost", NEW."snapshotVersion", NEW."calculationSnapshot", NEW."calculatedAt") IS DISTINCT FROM[m
+[32m+[m[32m     ROW(OLD."organizationId", OLD."itemId", OLD."structureId", OLD."exactCostNumerator", OLD."exactCostDenominator", OLD."displayUnitCost", OLD."snapshotVersion", OLD."calculationSnapshot", OLD."calculatedAt") THEN[m
+[32m+[m[32m    RAISE EXCEPTION 'Cost calculation snapshots are immutable';[m
+[32m+[m[32m  END IF;[m
+[32m+[m[32m  RETURN NEW;[m
+[32m+[m[32mEND;[m
+[32m+[m[32m$$;[m
+[32m+[m[32mDROP TRIGGER IF EXISTS "cost_calculations_immutable" ON "cost_calculations";[m
+[32m+[m[32mCREATE TRIGGER "cost_calculations_immutable" BEFORE UPDATE ON "cost_calculations" FOR EACH ROW EXECUTE FUNCTION "prevent_cost_calculation_update"();[m
+[1mdiff --git a/drizzle/pg/schema.costing.ts b/drizzle/pg/schema.costing.ts[m
+[1mindex 428cc8c..3d9ddb0 100644[m
+[1m--- a/drizzle/pg/schema.costing.ts[m
+[1m+++ b/drizzle/pg/schema.costing.ts[m
+[36m@@ -10,7 +10,6 @@[m [mimport {[m
+   unique,[m
+   uniqueIndex,[m
+   varchar,[m
+[31m-[m
+ } from "drizzle-orm/pg-core";[m
+ import { sql } from "drizzle-orm";[m
+ import { organizations } from "../schema.pg";[m
+[36m@@ -21,142 +20,246 @@[m [mimport { organizations } from "../schema.pg";[m
+  * Valores monetários são strings decimais ou frações racionais. Não usar[m
+  * mode: "number": a precisão exata do motor depende de não passar por float.[m
+  */[m
+[31m-export const costGroups = pgTable("cost_groups", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  name: varchar("name", { length: 120 }).notNull(),[m
+[31m-  description: text("description"),[m
+[31m-  position: integer("position").default(0).notNull(),[m
+[31m-  active: boolean("active").default(true).notNull(),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-  updatedAt: text("updatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  unique("cost_groups_org_id_id_unique").on(table.organizationId, table.id),[m
+[31m-  unique("cost_groups_org_name_unique").on(table.organizationId, table.name),[m
+[31m-  index("cost_groups_org_active_position_idx").on(table.organizationId, table.active, table.position),[m
+[31m-]);[m
+[32m+[m[32mexport const costGroups = pgTable([m
+[32m+[m[32m  "cost_groups",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    name: varchar("name", { length: 120 }).notNull(),[m
+[32m+[m[32m    description: text("description"),[m
+[32m+[m[32m    position: integer("position").default(0).notNull(),[m
+[32m+[m[32m    active: boolean("active").default(true).notNull(),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m    updatedAt: text("updatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("cost_groups_org_id_id_unique").on(table.organizationId, table.id),[m
+[32m+[m[32m    unique("cost_groups_org_name_unique").on(table.organizationId, table.name),[m
+[32m+[m[32m    index("cost_groups_org_active_position_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.active,[m
+[32m+[m[32m      table.position[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costItems = pgTable("cost_items", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  groupId: varchar("groupId", { length: 32 }),[m
+[31m-  code: varchar("code", { length: 64 }),[m
+[31m-  name: varchar("name", { length: 240 }).notNull(),[m
+[31m-  description: text("description"),[m
+[31m-  itemType: text("itemType").$type<"SIMPLE" | "COMPOSITE">().notNull(),[m
+[31m-  referenceUnit: varchar("referenceUnit", { length: 24 }).notNull(),[m
+[31m-  manualUnitCost: decimal("manualUnitCost", { precision: 24, scale: 3, mode: "string" }),[m
+[31m-  active: boolean("active").default(true).notNull(),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-  updatedAt: text("updatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  unique("cost_items_org_id_id_unique").on(table.organizationId, table.id),[m
+[31m-  unique("cost_items_org_code_unique").on(table.organizationId, table.code),[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_items_org_group_fk",[m
+[31m-    columns: [table.organizationId, table.groupId],[m
+[31m-    foreignColumns: [costGroups.organizationId, costGroups.id],[m
+[31m-  }).onDelete("restrict"),[m
+[31m-  index("cost_items_org_name_idx").on(table.organizationId, table.name),[m
+[31m-  index("cost_items_org_group_active_idx").on(table.organizationId, table.groupId, table.active),[m
+[31m-]);[m
+[32m+[m[32mexport const costItems = pgTable([m
+[32m+[m[32m  "cost_items",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    groupId: varchar("groupId", { length: 32 }),[m
+[32m+[m[32m    code: varchar("code", { length: 64 }),[m
+[32m+[m[32m    name: varchar("name", { length: 240 }).notNull(),[m
+[32m+[m[32m    description: text("description"),[m
+[32m+[m[32m    itemType: text("itemType").$type<"SIMPLE" | "COMPOSITE">().notNull(),[m
+[32m+[m[32m    referenceUnit: varchar("referenceUnit", { length: 24 }).notNull(),[m
+[32m+[m[32m    manualUnitCost: decimal("manualUnitCost", {[m
+[32m+[m[32m      precision: 24,[m
+[32m+[m[32m      scale: 3,[m
+[32m+[m[32m      mode: "string",[m
+[32m+[m[32m    }),[m
+[32m+[m[32m    active: boolean("active").default(true).notNull(),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m    updatedAt: text("updatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("cost_items_org_id_id_unique").on(table.organizationId, table.id),[m
+[32m+[m[32m    unique("cost_items_org_code_unique").on(table.organizationId, table.code),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_items_org_group_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.groupId],[m
+[32m+[m[32m      foreignColumns: [costGroups.organizationId, costGroups.id],[m
+[32m+[m[32m    }).onDelete("restrict"),[m
+[32m+[m[32m    index("cost_items_org_name_idx").on(table.organizationId, table.name),[m
+[32m+[m[32m    index("cost_items_org_group_active_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.groupId,[m
+[32m+[m[32m      table.active[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costStructures = pgTable("cost_structures", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  itemId: varchar("itemId", { length: 32 }).notNull(),[m
+[31m-  version: integer("version").notNull(),[m
+[31m-  status: text("status").$type<"DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE">().default("DRAFT").notNull(),[m
+[31m-  outputQuantity: decimal("outputQuantity", { precision: 24, scale: 3, mode: "string" }).default("1").notNull(),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-  updatedAt: text("updatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  unique("cost_structures_org_id_id_unique").on(table.organizationId, table.id),[m
+[31m-  unique("cost_structures_org_item_version_unique").on(table.organizationId, table.itemId, table.version),[m
+[31m-  // A single published structure is authoritative for an item at any moment.[m
+[31m-  // Drafts and historical versions remain unrestricted.[m
+[31m-  uniqueIndex("cost_structures_one_active_per_item_idx")[m
+[31m-    .on(table.organizationId, table.itemId)[m
+[31m-    .where(sql`${table.status} = 'ACTIVE'`),[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_structures_org_item_fk",[m
+[31m-    columns: [table.organizationId, table.itemId],[m
+[31m-    foreignColumns: [costItems.organizationId, costItems.id],[m
+[31m-  }).onDelete("restrict"),[m
+[31m-  index("cost_structures_org_item_status_idx").on(table.organizationId, table.itemId, table.status),[m
+[31m-]);[m
+[32m+[m[32mexport const costStructures = pgTable([m
+[32m+[m[32m  "cost_structures",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    itemId: varchar("itemId", { length: 32 }).notNull(),[m
+[32m+[m[32m    version: integer("version").notNull(),[m
+[32m+[m[32m    status: text("status")[m
+[32m+[m[32m      .$type<"DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE">()[m
+[32m+[m[32m      .default("DRAFT")[m
+[32m+[m[32m      .notNull(),[m
+[32m+[m[32m    outputQuantity: decimal("outputQuantity", {[m
+[32m+[m[32m      precision: 24,[m
+[32m+[m[32m      scale: 3,[m
+[32m+[m[32m      mode: "string",[m
+[32m+[m[32m    })[m
+[32m+[m[32m      .default("1")[m
+[32m+[m[32m      .notNull(),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m    updatedAt: text("updatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("cost_structures_org_id_id_unique").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.id[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    unique("cost_structures_org_item_version_unique").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.itemId,[m
+[32m+[m[32m      table.version[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    // A single published structure is authoritative for an item at any moment.[m
+[32m+[m[32m    // Drafts and historical versions remain unrestricted.[m
+[32m+[m[32m    uniqueIndex("cost_structures_one_active_per_item_idx")[m
+[32m+[m[32m      .on(table.organizationId, table.itemId)[m
+[32m+[m[32m      .where(sql`${table.status} = 'ACTIVE'`),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_structures_org_item_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.itemId],[m
+[32m+[m[32m      foreignColumns: [costItems.organizationId, costItems.id],[m
+[32m+[m[32m    }).onDelete("restrict"),[m
+[32m+[m[32m    index("cost_structures_org_item_status_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.itemId,[m
+[32m+[m[32m      table.status[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costStructureLines = pgTable("cost_structure_lines", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  structureId: varchar("structureId", { length: 32 }).notNull(),[m
+[31m-  componentItemId: varchar("componentItemId", { length: 32 }).notNull(),[m
+[31m-  quantity: decimal("quantity", { precision: 24, scale: 3, mode: "string" }).notNull(),[m
+[31m-  quantityUnit: varchar("quantityUnit", { length: 24 }).notNull(),[m
+[31m-  position: integer("position").default(0).notNull(),[m
+[31m-  notes: text("notes"),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-  updatedAt: text("updatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_structure_lines_org_structure_fk",[m
+[31m-    columns: [table.organizationId, table.structureId],[m
+[31m-    foreignColumns: [costStructures.organizationId, costStructures.id],[m
+[31m-  }).onDelete("cascade"),[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_structure_lines_org_component_fk",[m
+[31m-    columns: [table.organizationId, table.componentItemId],[m
+[31m-    foreignColumns: [costItems.organizationId, costItems.id],[m
+[31m-  }).onDelete("restrict"),[m
+[31m-  index("cost_structure_lines_structure_position_idx").on(table.organizationId, table.structureId, table.position),[m
+[31m-  index("cost_structure_lines_component_idx").on(table.organizationId, table.componentItemId),[m
+[31m-]);[m
+[32m+[m[32mexport const costStructureLines = pgTable([m
+[32m+[m[32m  "cost_structure_lines",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    structureId: varchar("structureId", { length: 32 }).notNull(),[m
+[32m+[m[32m    componentItemId: varchar("componentItemId", { length: 32 }).notNull(),[m
+[32m+[m[32m    quantity: decimal("quantity", {[m
+[32m+[m[32m      precision: 24,[m
+[32m+[m[32m      scale: 3,[m
+[32m+[m[32m      mode: "string",[m
+[32m+[m[32m    }).notNull(),[m
+[32m+[m[32m    quantityUnit: varchar("quantityUnit", { length: 24 }).notNull(),[m
+[32m+[m[32m    position: integer("position").default(0).notNull(),[m
+[32m+[m[32m    notes: text("notes"),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m    updatedAt: text("updatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_structure_lines_org_structure_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.structureId],[m
+[32m+[m[32m      foreignColumns: [costStructures.organizationId, costStructures.id],[m
+[32m+[m[32m    }).onDelete("cascade"),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_structure_lines_org_component_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.componentItemId],[m
+[32m+[m[32m      foreignColumns: [costItems.organizationId, costItems.id],[m
+[32m+[m[32m    }).onDelete("restrict"),[m
+[32m+[m[32m    index("cost_structure_lines_structure_position_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.structureId,[m
+[32m+[m[32m      table.position[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    index("cost_structure_lines_component_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.componentItemId[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costCalculations = pgTable("cost_calculations", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  itemId: varchar("itemId", { length: 32 }).notNull(),[m
+[31m-  structureId: varchar("structureId", { length: 32 }),[m
+[31m-  exactCostNumerator: text("exactCostNumerator").notNull(),[m
+[31m-  exactCostDenominator: text("exactCostDenominator").notNull(),[m
+[31m-  displayUnitCost: decimal("displayUnitCost", { precision: 24, scale: 3, mode: "string" }).notNull(),[m
+[31m-  snapshotVersion: integer("snapshotVersion").default(1).notNull(),[m
+[31m-  calculationSnapshot: jsonb("calculationSnapshot").$type<Record<string, unknown>>().notNull(),[m
+[31m-  calculatedAt: text("calculatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_calculations_org_item_fk",[m
+[31m-    columns: [table.organizationId, table.itemId],[m
+[31m-    foreignColumns: [costItems.organizationId, costItems.id],[m
+[31m-  }).onDelete("restrict"),[m
+[31m-  foreignKey({[m
+[31m-    name: "cost_calculations_org_structure_fk",[m
+[31m-    columns: [table.organizationId, table.structureId],[m
+[31m-    foreignColumns: [costStructures.organizationId, costStructures.id],[m
+[31m-  }).onDelete("restrict"),[m
+[31m-  index("cost_calculations_org_item_date_idx").on(table.organizationId, table.itemId, table.calculatedAt),[m
+[31m-]);[m
+[32m+[m[32mexport const costCalculations = pgTable([m
+[32m+[m[32m  "cost_calculations",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    itemId: varchar("itemId", { length: 32 }).notNull(),[m
+[32m+[m[32m    structureId: varchar("structureId", { length: 32 }),[m
+[32m+[m[32m    exactCostNumerator: text("exactCostNumerator").notNull(),[m
+[32m+[m[32m    exactCostDenominator: text("exactCostDenominator").notNull(),[m
+[32m+[m[32m    displayUnitCost: decimal("displayUnitCost", {[m
+[32m+[m[32m      precision: 24,[m
+[32m+[m[32m      scale: 3,[m
+[32m+[m[32m      mode: "string",[m
+[32m+[m[32m    }).notNull(),[m
+[32m+[m[32m    snapshotVersion: integer("snapshotVersion").default(1).notNull(),[m
+[32m+[m[32m    calculationSnapshot: jsonb("calculationSnapshot")[m
+[32m+[m[32m      .$type<Record<string, unknown>>()[m
+[32m+[m[32m      .notNull(),[m
+[32m+[m[32m    calculatedAt: text("calculatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_calculations_org_item_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.itemId],[m
+[32m+[m[32m      foreignColumns: [costItems.organizationId, costItems.id],[m
+[32m+[m[32m    }).onDelete("restrict"),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "cost_calculations_org_structure_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.structureId],[m
+[32m+[m[32m      foreignColumns: [costStructures.organizationId, costStructures.id],[m
+[32m+[m[32m    }).onDelete("restrict"),[m
+[32m+[m[32m    index("cost_calculations_org_item_date_idx").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.itemId,[m
+[32m+[m[32m      table.calculatedAt[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costingGammaSettings = pgTable("costing_gamma_settings", {[m
+[31m-  id: varchar("id", { length: 32 }).primaryKey(),[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  active: boolean("active").default(false).notNull(),[m
+[31m-  percentage: decimal("percentage", { precision: 8, scale: 4, mode: "string" }).default("1.2000").notNull(),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-  updatedAt: text("updatedAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  unique("costing_gamma_settings_org_unique").on(table.organizationId),[m
+[31m-]);[m
+[32m+[m[32mexport const costingGammaSettings = pgTable([m
+[32m+[m[32m  "costing_gamma_settings",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    id: varchar("id", { length: 32 }).primaryKey(),[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    active: boolean("active").default(false).notNull(),[m
+[32m+[m[32m    percentage: decimal("percentage", {[m
+[32m+[m[32m      precision: 8,[m
+[32m+[m[32m      scale: 4,[m
+[32m+[m[32m      mode: "string",[m
+[32m+[m[32m    })[m
+[32m+[m[32m      .default("1.2000")[m
+[32m+[m[32m      .notNull(),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m    updatedAt: text("updatedAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("costing_gamma_settings_org_unique").on(table.organizationId),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+ [m
+[31m-export const costingGammaGroups = pgTable("costing_gamma_groups", {[m
+[31m-  organizationId: varchar("organizationId", { length: 32 }).notNull().references(() => organizations.id, { onDelete: "cascade" }),[m
+[31m-  groupId: varchar("groupId", { length: 32 }).notNull(),[m
+[31m-  createdAt: text("createdAt").notNull(),[m
+[31m-}, table => [[m
+[31m-  unique("costing_gamma_groups_org_group_unique").on(table.organizationId, table.groupId),[m
+[31m-  foreignKey({[m
+[31m-    name: "costing_gamma_groups_org_group_fk",[m
+[31m-    columns: [table.organizationId, table.groupId],[m
+[31m-    foreignColumns: [costGroups.organizationId, costGroups.id],[m
+[31m-  }).onDelete("cascade"),[m
+[31m-]);[m
+[32m+[m[32mexport const costingGammaGroups = pgTable([m
+[32m+[m[32m  "costing_gamma_groups",[m
+[32m+[m[32m  {[m
+[32m+[m[32m    organizationId: varchar("organizationId", { length: 32 })[m
+[32m+[m[32m      .notNull()[m
+[32m+[m[32m      .references(() => organizations.id, { onDelete: "cascade" }),[m
+[32m+[m[32m    groupId: varchar("groupId", { length: 32 }).notNull(),[m
+[32m+[m[32m    createdAt: text("createdAt").notNull(),[m
+[32m+[m[32m  },[m
+[32m+[m[32m  table => [[m
+[32m+[m[32m    unique("costing_gamma_groups_org_group_unique").on([m
+[32m+[m[32m      table.organizationId,[m
+[32m+[m[32m      table.groupId[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    foreignKey({[m
+[32m+[m[32m      name: "costing_gamma_groups_org_group_fk",[m
+[32m+[m[32m      columns: [table.organizationId, table.groupId],[m
+[32m+[m[32m      foreignColumns: [costGroups.organizationId, costGroups.id],[m
+[32m+[m[32m    }).onDelete("cascade"),[m
+[32m+[m[32m  ][m
+[32m+[m[32m);[m
+[1mdiff --git a/server/db.ts b/server/db.ts[m
+[1mindex cdc80e3..dc96f7f 100644[m
+[1m--- a/server/db.ts[m
+[1m+++ b/server/db.ts[m
+[36m@@ -15,13 +15,21 @@[m [mexport async function getDb(): Promise<ReturnType<typeof drizzle> | null> {[m
+   if (requestRuntimeDb) return requestRuntimeDb as ReturnType<typeof drizzle>;[m
+   if (!_db && process.env.SUPABASE_DATABASE_URL) {[m
+     try {[m
+[31m-      _sql = postgres([m
+[31m-        normalizeSupabasePostgresUrl([m
+[31m-          process.env.SUPABASE_DATABASE_URL,[m
+[31m-          process.env.VITE_SUPABASE_URL[m
+[31m-        ),[m
+[31m-        { prepare: false, ssl: "require", max: 5 }[m
+[32m+[m[32m      const databaseUrl = normalizeSupabasePostgresUrl([m
+[32m+[m[32m        process.env.SUPABASE_DATABASE_URL,[m
+[32m+[m[32m        process.env.VITE_SUPABASE_URL[m
+       );[m
+[32m+[m[32m      const localDatabase =[m
+[32m+[m[32m        new URL(databaseUrl).hostname === "127.0.0.1" ||[m
+[32m+[m[32m        new URL(databaseUrl).hostname === "localhost";[m
+[32m+[m[32m      const connectionOptions = localDatabase[m
+[32m+[m[32m        ? { ssl: false }[m
+[32m+[m[32m        : { ssl: "require" as const };[m
+[32m+[m[32m      _sql = postgres(databaseUrl, {[m
+[32m+[m[32m        prepare: false,[m
+[32m+[m[32m        max: 5,[m
+[32m+[m[32m        ...connectionOptions,[m
+[32m+[m[32m      });[m
+       _db = drizzle(_sql, {[m
+         logger: process.env.NODE_ENV === "development",[m
+       });[m
+[1mdiff --git a/server/db/costing.ts b/server/db/costing.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..267dcda[m
+[1m--- /dev/null[m
+[1m+++ b/server/db/costing.ts[m
+[36m@@ -0,0 +1,133 @@[m
+[32m+[m[32mimport { and, asc, eq } from "drizzle-orm";[m
+[32m+[m[32mimport { nanoid } from "nanoid";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  costCalculations,[m
+[32m+[m[32m  costStructureLines,[m
+[32m+[m[32m  costStructures,[m
+[32m+[m[32m} from "../../drizzle/pg/schema.costing";[m
+[32m+[m[32mimport { getDb } from "../db";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  createCostingCalculationSnapshot,[m
+[32m+[m[32m  type CostingCalculationSnapshot,[m
+[32m+[m[32m  type CostingGammaSnapshot,[m
+[32m+[m[32m} from "../domain/costing/snapshot";[m
+[32m+[m[32mimport type { CostingItem, CostingResult } from "../domain/costing/engine";[m
+[32m+[m
+[32m+[m[32masync function requireDb() {[m
+[32m+[m[32m  const db = await getDb();[m
+[32m+[m[32m  if (!db) throw new Error("Banco de dados indisponível");[m
+[32m+[m[32m  return db;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function createCostingSnapshot(input: {[m
+[32m+[m[32m  organizationId: string;[m
+[32m+[m[32m  targetItemId: string;[m
+[32m+[m[32m  structureId?: string | null;[m
+[32m+[m[32m  sourceItems: readonly CostingItem[];[m
+[32m+[m[32m  gamma: CostingGammaSnapshot;[m
+[32m+[m[32m  result: CostingResult;[m
+[32m+[m[32m  calculatedAt: string;[m
+[32m+[m[32m}): Promise<{ id: string; snapshot: CostingCalculationSnapshot }> {[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  const snapshot = createCostingCalculationSnapshot(input);[m
+[32m+[m[32m  const id = nanoid(20);[m
+[32m+[m[32m  await db.transaction(async tx => {[m
+[32m+[m[32m    await tx.insert(costCalculations).values({[m
+[32m+[m[32m      id,[m
+[32m+[m[32m      organizationId: input.organizationId,[m
+[32m+[m[32m      itemId: input.targetItemId,[m
+[32m+[m[32m      structureId: input.structureId ?? null,[m
+[32m+[m[32m      exactCostNumerator: snapshot.exactUnitCost.numerator,[m
+[32m+[m[32m      exactCostDenominator: snapshot.exactUnitCost.denominator,[m
+[32m+[m[32m      displayUnitCost: snapshot.result.displayUnitCost,[m
+[32m+[m[32m      snapshotVersion: snapshot.snapshotVersion,[m
+[32m+[m[32m      calculationSnapshot: snapshot as unknown as Record<string, unknown>,[m
+[32m+[m[32m      calculatedAt: snapshot.calculatedAt,[m
+[32m+[m[32m    });[m
+[32m+[m[32m  });[m
+[32m+[m[32m  return { id, snapshot };[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function listCostingSnapshots([m
+[32m+[m[32m  organizationId: string,[m
+[32m+[m[32m  itemId: string,[m
+[32m+[m[32m  limit = 50[m
+[32m+[m[32m) {[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  return db[m
+[32m+[m[32m    .select()[m
+[32m+[m[32m    .from(costCalculations)[m
+[32m+[m[32m    .where([m
+[32m+[m[32m      and([m
+[32m+[m[32m        eq(costCalculations.organizationId, organizationId),[m
+[32m+[m[32m        eq(costCalculations.itemId, itemId)[m
+[32m+[m[32m      )[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .orderBy(asc(costCalculations.calculatedAt))[m
+[32m+[m[32m    .limit(Math.min(limit, 100));[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function publishCostStructure([m
+[32m+[m[32m  organizationId: string,[m
+[32m+[m[32m  targetStructureId: string[m
+[32m+[m[32m) {[m
+[32m+[m[32m  const db = await requireDb();[m
+[32m+[m[32m  return db.transaction(async tx => {[m
+[32m+[m[32m    const [target] = await tx[m
+[32m+[m[32m      .select()[m
+[32m+[m[32m      .from(costStructures)[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costStructures.organizationId, organizationId),[m
+[32m+[m[32m          eq(costStructures.id, targetStructureId)[m
+[32m+[m[32m        )[m
+[32m+[m[32m      )[m
+[32m+[m[32m      .for("update")[m
+[32m+[m[32m      .limit(1);[m
+[32m+[m[32m    if (!target) throw new Error("Estrutura não encontrada");[m
+[32m+[m[32m    if (target.status !== "DRAFT")[m
+[32m+[m[32m      throw new Error("Somente uma estrutura DRAFT pode ser publicada");[m
+[32m+[m[32m    const active = await tx[m
+[32m+[m[32m      .select({ id: costStructures.id })[m
+[32m+[m[32m      .from(costStructures)[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costStructures.organizationId, organizationId),[m
+[32m+[m[32m          eq(costStructures.itemId, target.itemId),[m
+[32m+[m[32m          eq(costStructures.status, "ACTIVE")[m
+[32m+[m[32m        )[m
+[32m+[m[32m      )[m
+[32m+[m[32m      .for("update");[m
+[32m+[m[32m    await tx[m
+[32m+[m[32m      .update(costStructures)[m
+[32m+[m[32m      .set({ status: "SUPERSEDED", updatedAt: Date.now().toString() })[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costStructures.organizationId, organizationId),[m
+[32m+[m[32m          eq(costStructures.itemId, target.itemId),[m
+[32m+[m[32m          eq(costStructures.status, "ACTIVE")[m
+[32m+[m[32m        )[m
+[32m+[m[32m      );[m
+[32m+[m[32m    const [published] = await tx[m
+[32m+[m[32m      .update(costStructures)[m
+[32m+[m[32m      .set({ status: "ACTIVE", updatedAt: Date.now().toString() })[m
+[32m+[m[32m      .where([m
+[32m+[m[32m        and([m
+[32m+[m[32m          eq(costStructures.organizationId, organizationId),[m
+[32m+[m[32m          eq(costStructures.id, targetStructureId),[m
+[32m+[m[32m          eq(costStructures.status, "DRAFT")[m
+[32m+[m[32m        )[m
+[32m+[m[32m      )[m
+[32m+[m[32m      .returning();[m
+[32m+[m[32m    if (!published) throw new Error("Estrutura não pôde ser publicada");[m
+[32m+[m[32m    return { published, supersededStructureIds: active.map(row => row.id) };[m
+[32m+[m[32m  });[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function updateCostStructureLine(): Promise<never> {[m
+[32m+[m[32m  throw new Error([m
+[32m+[m[32m    "Estruturas publicadas são imutáveis; crie uma nova versão DRAFT"[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport { costStructureLines };[m
+[1mdiff --git a/server/domain/costing/engine.test.ts b/server/domain/costing/engine.test.ts[m
+[1mindex 858af12..a5885ca 100644[m
+[1m--- a/server/domain/costing/engine.test.ts[m
+[1m+++ b/server/domain/costing/engine.test.ts[m
+[36m@@ -1,8 +1,18 @@[m
+ import { describe, expect, it } from "vitest";[m
+[31m-import { calculateItemCost, CostingDomainError, formatCostForDisplay, type CostingItem } from "./engine";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  calculateItemCost,[m
+[32m+[m[32m  calculateItemCostWithGamma,[m
+[32m+[m[32m  CostingDomainError,[m
+[32m+[m[32m  formatCostForDisplay,[m
+[32m+[m[32m  type CostingItem,[m
+[32m+[m[32m} from "./engine";[m
+ [m
+ const simple = (id: string, cost: string, active = true): CostingItem => ({[m
+[31m-  id, type: "SIMPLE", active, unit: "unidade", manualUnitCost: cost,[m
+[32m+[m[32m  id,[m
+[32m+[m[32m  type: "SIMPLE",[m
+[32m+[m[32m  active,[m
+[32m+[m[32m  unit: "unidade",[m
+[32m+[m[32m  manualUnitCost: cost,[m
+ });[m
+ [m
+ describe("costing domain engine", () => {[m
+[36m@@ -74,60 +84,136 @@[m [mdescribe("costing domain engine", () => {[m
+ [m
+   it("calculates multi-level structures and repeated occurrences", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      simple("bolt", "0.1"), simple("plate", "10"),[m
+[31m-      { id: "sub", type: "COMPOSITE", active: true, unit: "unidade", structure: [{ componentItemId: "bolt", quantity: "2" }] },[m
+[31m-      { id: "finished", type: "COMPOSITE", active: true, unit: "unidade", structure: [[m
+[31m-        { componentItemId: "sub", quantity: "3" }, { componentItemId: "plate", quantity: "1.5" },[m
+[31m-        { componentItemId: "bolt", quantity: "2" },[m
+[31m-      ] },[m
+[32m+[m[32m      simple("bolt", "0.1"),[m
+[32m+[m[32m      simple("plate", "10"),[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "sub",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "unidade",[m
+[32m+[m[32m        structure: [{ componentItemId: "bolt", quantity: "2" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "unidade",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "sub", quantity: "3" },[m
+[32m+[m[32m          { componentItemId: "plate", quantity: "1.5" },[m
+[32m+[m[32m          { componentItemId: "bolt", quantity: "2" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "finished");[m
+     expect(result.exactUnitCost).toBe("15.8");[m
+     expect(result.displayUnitCost).toBe("15.8");[m
+[31m-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["0.6", "15", "0.2"]);[m
+[32m+[m[32m    expect(result.lines.map(line => line.batchLineCost)).toEqual([[m
+[32m+[m[32m      "0.6",[m
+[32m+[m[32m      "15",[m
+[32m+[m[32m      "0.2",[m
+[32m+[m[32m    ]);[m
+   });[m
+ [m
+   it("rejects composition cycles", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "a", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "b", quantity: "1" }] },[m
+[31m-      { id: "b", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "a", quantity: "1" }] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "a",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "b", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "b",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "a", quantity: "1" }],[m
+[32m+[m[32m      },[m
+     ];[m
+[31m-    expect(() => calculateItemCost(items, "a")).toThrowError(expect.objectContaining({ code: "CYCLE_DETECTED" }));[m
+[32m+[m[32m    expect(() => calculateItemCost(items, "a")).toThrowError([m
+[32m+[m[32m      expect.objectContaining({ code: "CYCLE_DETECTED" })[m
+[32m+[m[32m    );[m
+   });[m
+ [m
+   it("rejects inactive components", () => {[m
+[31m-    const items: CostingItem[] = [simple("x", "2", false), {[m
+[31m-      id: "parent", type: "COMPOSITE", active: true, unit: "un",[m
+[31m-      structure: [{ componentItemId: "x", quantity: "1" }],[m
+[31m-    }];[m
+[31m-    expect(() => calculateItemCost(items, "parent")).toThrowError(expect.objectContaining({ code: "COMPONENT_INACTIVE" }));[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      simple("x", "2", false),[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "parent",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "x", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    expect(() => calculateItemCost(items, "parent")).toThrowError([m
+[32m+[m[32m      expect.objectContaining({ code: "COMPONENT_INACTIVE" })[m
+[32m+[m[32m    );[m
+   });[m
+ [m
+   it("rejects manual cost on a composite", () => {[m
+[31m-    const items: CostingItem[] = [simple("x", "2"), {[m
+[31m-      id: "parent", type: "COMPOSITE", active: true, unit: "un", manualUnitCost: "99",[m
+[31m-      structure: [{ componentItemId: "x", quantity: "1" }],[m
+[31m-    }];[m
+[31m-    expect(() => calculateItemCost(items, "parent")).toThrowError(expect.objectContaining({ code: "COMPOSITE_HAS_MANUAL_COST" }));[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      simple("x", "2"),[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "parent",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        manualUnitCost: "99",[m
+[32m+[m[32m        structure: [{ componentItemId: "x", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    expect(() => calculateItemCost(items, "parent")).toThrowError([m
+[32m+[m[32m      expect.objectContaining({ code: "COMPOSITE_HAS_MANUAL_COST" })[m
+[32m+[m[32m    );[m
+   });[m
+ [m
+   it("rejects missing components and malformed decimal quantities", () => {[m
+[31m-    const missing: CostingItem[] = [{ id: "p", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "ghost", quantity: "1" }] }];[m
+[31m-    expect(() => calculateItemCost(missing, "p")).toThrowError(expect.objectContaining({ code: "COMPONENT_NOT_FOUND" }));[m
+[31m-    const malformed: CostingItem[] = [simple("x", "2"), { id: "p", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "x", quantity: "1,2" }] }];[m
+[31m-    expect(() => calculateItemCost(malformed, "p")).toThrowError(CostingDomainError);[m
+[32m+[m[32m    const missing: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "p",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "ghost", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    expect(() => calculateItemCost(missing, "p")).toThrowError([m
+[32m+[m[32m      expect.objectContaining({ code: "COMPONENT_NOT_FOUND" })[m
+[32m+[m[32m    );[m
+[32m+[m[32m    const malformed: CostingItem[] = [[m
+[32m+[m[32m      simple("x", "2"),[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "p",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "x", quantity: "1,2" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    expect(() => calculateItemCost(malformed, "p")).toThrowError([m
+[32m+[m[32m      CostingDomainError[m
+[32m+[m[32m    );[m
+   });[m
+ [m
+   it("rejects user-entered values with more than three decimal places", () => {[m
+[31m-    expect(() => calculateItemCost([simple("invalid", "1.2345")], "invalid")).toThrowError([m
+[31m-      expect.objectContaining({ code: "INVALID_DECIMAL" }),[m
+[31m-    );[m
+[32m+[m[32m    expect(() =>[m
+[32m+[m[32m      calculateItemCost([simple("invalid", "1.2345")], "invalid")[m
+[32m+[m[32m    ).toThrowError(expect.objectContaining({ code: "INVALID_DECIMAL" }));[m
+     const items: CostingItem[] = [[m
+       simple("part", "1"),[m
+[31m-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [{ componentItemId: "part", quantity: "0.0001" }] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "part", quantity: "0.0001" }],[m
+[32m+[m[32m      },[m
+     ];[m
+     expect(() => calculateItemCost(items, "finished")).toThrowError([m
+[31m-      expect.objectContaining({ code: "INVALID_DECIMAL" }),[m
+[32m+[m[32m      expect.objectContaining({ code: "INVALID_DECIMAL" })[m
+     );[m
+   });[m
+ [m
+[36m@@ -151,19 +237,26 @@[m [mdescribe("costing domain engine", () => {[m
+     const result = calculateItemCost(items, "mechanism");[m
+     expect(result.exactUnitCost).toBe("44");[m
+     expect(result.displayUnitCost).toBe("44");[m
+[31m-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["10", "30", "4"]);[m
+[32m+[m[32m    expect(result.lines.map(line => line.batchLineCost)).toEqual([[m
+[32m+[m[32m      "10",[m
+[32m+[m[32m      "30",[m
+[32m+[m[32m      "4",[m
+[32m+[m[32m    ]);[m
+   });[m
+ [m
+[31m-  it("applies final three-decimal rounding to the Mini Torniquete Inox source total", () => {[m
+[31m-    // Source workbook group totals retain more than three decimal places internally.[m
+[31m-    // This verifies presentation rounding only; those historical totals are not valid[m
+[31m-    // user-entered values under the new three-decimal input rule.[m
+[31m-    expect(formatCostForDisplay("1558.0634818")).toBe("1558.063");[m
+[32m+[m[32m  it("rounds an artificial exact result only for presentation", () => {[m
+[32m+[m[32m    expect(formatCostForDisplay("123.4564818")).toBe("123.456");[m
+   });[m
+ [m
+   it("allocates a three-decimal tube purchase across the output quantity", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "tube-meter", type: "SIMPLE", active: true, unit: "m", manualUnitCost: "44.474" },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "tube-meter",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "m",[m
+[32m+[m[32m        manualUnitCost: "44.474",[m
+[32m+[m[32m      },[m
+       {[m
+         id: "tube-lot",[m
+         type: "COMPOSITE",[m
+[36m@@ -197,7 +290,7 @@[m [mdescribe("costing domain engine", () => {[m
+     const result = calculateItemCost(items, "three-unit-batch");[m
+     expect(result.exactUnitCost).toBe("1");[m
+     expect(result.displayUnitCost).toBe("1");[m
+[31m-    expect(result.lines.map((line) => line.batchLineCost)).toEqual(["1", "2"]);[m
+[32m+[m[32m    expect(result.lines.map(line => line.batchLineCost)).toEqual(["1", "2"]);[m
+   });[m
+ [m
+   it("rejects a zero output quantity", () => {[m
+[36m@@ -213,31 +306,58 @@[m [mdescribe("costing domain engine", () => {[m
+       },[m
+     ];[m
+     expect(() => calculateItemCost(items, "invalid-batch")).toThrowError([m
+[31m-      expect.objectContaining({ code: "INVALID_OUTPUT_QUANTITY" }),[m
+[32m+[m[32m      expect.objectContaining({ code: "INVALID_OUTPUT_QUANTITY" })[m
+     );[m
+   });[m
+ [m
+   it("converts grams to kilograms exactly and records the conversion audit data", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },[m
+[31m-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "steel", quantity: "500", quantityUnit: "g" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "steel",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "kg",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "assembly",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "steel", quantity: "500", quantityUnit: "g" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "assembly");[m
+     expect(result.exactUnitCost).toBe("5");[m
+     expect(result.lines[0]).toMatchObject({[m
+[31m-      quantity: "500", enteredUnit: "g", referenceUnit: "kg",[m
+[31m-      conversionFactor: "0.001", batchLineCost: "5",[m
+[32m+[m[32m      quantity: "500",[m
+[32m+[m[32m      enteredUnit: "g",[m
+[32m+[m[32m      referenceUnit: "kg",[m
+[32m+[m[32m      conversionFactor: "0.001",[m
+[32m+[m[32m      batchLineCost: "5",[m
+     });[m
+   });[m
+ [m
+   it("converts centimeters to meters without intermediate rounding", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "profile", type: "SIMPLE", active: true, unit: "m", manualUnitCost: "10" },[m
+[31m-      { id: "frame", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "profile", quantity: "50", quantityUnit: "cm" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "profile",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "m",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "frame",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "profile", quantity: "50", quantityUnit: "cm" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "frame");[m
+     expect(result.exactUnitCost).toBe("5");[m
+[36m@@ -246,34 +366,74 @@[m [mdescribe("costing domain engine", () => {[m
+ [m
+   it("rejects conversions between different dimensions", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },[m
+[31m-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "steel", quantity: "2", quantityUnit: "m" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "steel",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "kg",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "assembly",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "steel", quantity: "2", quantityUnit: "m" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     expect(() => calculateItemCost(items, "assembly")).toThrowError([m
+[31m-      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" }),[m
+[32m+[m[32m      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" })[m
+     );[m
+   });[m
+ [m
+   it("rejects units outside the controlled unit catalog", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },[m
+[31m-      { id: "assembly", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "steel", quantity: "2", quantityUnit: "caixa" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "steel",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "kg",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "assembly",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "steel", quantity: "2", quantityUnit: "caixa" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     expect(() => calculateItemCost(items, "assembly")).toThrowError([m
+[31m-      expect.objectContaining({ code: "UNIT_NOT_SUPPORTED" }),[m
+[32m+[m[32m      expect.objectContaining({ code: "UNIT_NOT_SUPPORTED" })[m
+     );[m
+   });[m
+ [m
+   it("supports service-priced items without treating services as countable units", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "machining", type: "SIMPLE", active: true, unit: "serviço", manualUnitCost: "25" },[m
+[31m-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "machining", quantity: "2", quantityUnit: "serviço" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "machining",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "serviço",[m
+[32m+[m[32m        manualUnitCost: "25",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          {[m
+[32m+[m[32m            componentItemId: "machining",[m
+[32m+[m[32m            quantity: "2",[m
+[32m+[m[32m            quantityUnit: "serviço",[m
+[32m+[m[32m          },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "finished");[m
+     expect(result.exactUnitCost).toBe("50");[m
+[36m@@ -281,13 +441,189 @@[m [mdescribe("costing domain engine", () => {[m
+ [m
+   it("does not silently convert a service into a generic unit", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "machining", type: "SIMPLE", active: true, unit: "serviço", manualUnitCost: "25" },[m
+[31m-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "machining", quantity: "2", quantityUnit: "un" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "machining",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "serviço",[m
+[32m+[m[32m        manualUnitCost: "25",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "machining", quantity: "2", quantityUnit: "un" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     expect(() => calculateItemCost(items, "finished")).toThrowError([m
+[31m-      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" }),[m
+[32m+[m[32m      expect.objectContaining({ code: "INCOMPATIBLE_UNITS" })[m
+     );[m
+   });[m
+[32m+[m
+[32m+[m[32m  it("applies the default 1.2% once to one selected group", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "raw-a",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-a",[m
+[32m+[m[32m        manualUnitCost: "100",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "raw-a", quantity: "2" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "finished", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["g-a"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("200");[m
+[32m+[m[32m    expect(result.adjustmentBatchCost).toBe("2.4");[m
+[32m+[m[32m    expect(result.result.exactUnitCost).toBe("202.4");[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("sums several selected groups and ignores an unselected group", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "a",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-a",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "b",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-b",[m
+[32m+[m[32m        manualUnitCost: "20",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "c",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g-c",[m
+[32m+[m[32m        manualUnitCost: "30",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "a", quantity: "1" },[m
+[32m+[m[32m          { componentItemId: "b", quantity: "1" },[m
+[32m+[m[32m          { componentItemId: "c", quantity: "1" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "finished", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["g-a", "g-b"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("30");[m
+[32m+[m[32m    expect(result.result.exactUnitCost).toBe("60.36");[m
+[32m+[m[32m    expect(result.baseLines).toHaveLength(2);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("resolves manual selected items through different composition levels without recursion", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "manual",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g",[m
+[32m+[m[32m        manualUnitCost: "50",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "sub",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        outputQuantity: "2",[m
+[32m+[m[32m        structure: [{ componentItemId: "manual", quantity: "1" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "root",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [{ componentItemId: "sub", quantity: "4" }],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "root", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["g"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("100");[m
+[32m+[m[32m    expect(result.adjustmentBatchCost).toBe("1.2");[m
+[32m+[m[32m    expect(result.result.exactUnitCost).toBe("101.2");[m
+[32m+[m[32m    expect(result.baseLines).toHaveLength(1);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("counts each physical line once, keeps duplicate group IDs harmless, and preserves exact gamma data", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "manual",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "g",[m
+[32m+[m[32m        manualUnitCost: "1",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "root",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "manual", quantity: "2" },[m
+[32m+[m[32m          { componentItemId: "manual", quantity: "3" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const result = calculateItemCostWithGamma(items, "root", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["g", "g"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(result.baseBatchCost).toBe("5");[m
+[32m+[m[32m    expect(result.adjustmentBatchCost).toBe("0.06");[m
+[32m+[m[32m    expect(result.baseLines.map(line => line.batchCost)).toEqual(["2", "3"]);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it("does not apply gamma when inactive or when the selected base is empty", () => {[m
+[32m+[m[32m    const items: CostingItem[] = [[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "manual",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        groupId: "other",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ];[m
+[32m+[m[32m    const inactive = calculateItemCostWithGamma(items, "manual", {[m
+[32m+[m[32m      active: false,[m
+[32m+[m[32m      selectedGroupIds: ["other"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    const empty = calculateItemCostWithGamma(items, "manual", {[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      selectedGroupIds: ["missing"],[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(inactive.result.exactUnitCost).toBe("10");[m
+[32m+[m[32m    expect(empty.result.exactUnitCost).toBe("10");[m
+[32m+[m[32m    expect(empty.baseBatchCost).toBe("0");[m
+[32m+[m[32m  });[m
+ });[m
+[1mdiff --git a/server/domain/costing/engine.ts b/server/domain/costing/engine.ts[m
+[1mindex 0ef8ce4..b39a22a 100644[m
+[1m--- a/server/domain/costing/engine.ts[m
+[1m+++ b/server/domain/costing/engine.ts[m
+[36m@@ -4,53 +4,131 @@[m
+  * No database, framework, floating-point money arithmetic, or commercial pricing.[m
+  */[m
+ export type CostingItemType = "SIMPLE" | "COMPOSITE";[m
+[31m-export interface CostingStructureLine { componentItemId: string; quantity: string; /** Unit used to enter this consumption; defaults to the component reference unit for legacy callers. */ quantityUnit?: string }[m
+[32m+[m[32mexport interface CostingStructureLine {[m
+[32m+[m[32m  componentItemId: string;[m
+[32m+[m[32m  quantity: string;[m
+[32m+[m[32m  /** Unit used to enter this consumption; defaults to the component reference unit for legacy callers. */ quantityUnit?: string;[m
+[32m+[m[32m}[m
+ export interface CostingItem {[m
+[31m-  id: string; type: CostingItemType; active: boolean; unit: string;[m
+[32m+[m[32m  id: string;[m
+[32m+[m[32m  type: CostingItemType;[m
+[32m+[m[32m  active: boolean;[m
+[32m+[m[32m  unit: string;[m
+[32m+[m[32m  groupId?: string | null;[m
+   /** Number of finished units represented by the composite structure; defaults to 1. */[m
+   outputQuantity?: string;[m
+[31m-  manualUnitCost?: string | null; structure?: readonly CostingStructureLine[];[m
+[32m+[m[32m  manualUnitCost?: string | null;[m
+[32m+[m[32m  structure?: readonly CostingStructureLine[];[m
+ }[m
+ export interface CostingLineResult {[m
+[31m-  componentItemId: string; quantity: string; enteredUnit: string; referenceUnit: string; conversionFactor: string; componentUnitCost: string; batchLineCost: string;[m
+[32m+[m[32m  componentItemId: string;[m
+[32m+[m[32m  quantity: string;[m
+[32m+[m[32m  enteredUnit: string;[m
+[32m+[m[32m  referenceUnit: string;[m
+[32m+[m[32m  conversionFactor: string;[m
+[32m+[m[32m  componentUnitCost: string;[m
+[32m+[m[32m  batchLineCost: string;[m
+ }[m
+ export interface CostingResult {[m
+[31m-  itemId: string; unit: string;[m
+[32m+[m[32m  itemId: string;[m
+[32m+[m[32m  unit: string;[m
+   /** Exact decimal, or an exact numerator/denominator string when the value is recurring. */[m
+   exactUnitCost: string;[m
+   /** Final unit cost rounded to at most three places by the fourth decimal digit (0–5 down, 6–9 up). */[m
+   displayUnitCost: string;[m
+   lines: CostingLineResult[];[m
+ }[m
+[32m+[m[32mexport interface CostingGammaBaseLine {[m
+[32m+[m[32m  itemId: string;[m
+[32m+[m[32m  groupId: string;[m
+[32m+[m[32m  quantity: string;[m
+[32m+[m[32m  unit: string;[m
+[32m+[m[32m  unitCost: string;[m
+[32m+[m[32m  batchCost: string;[m
+[32m+[m[32m}[m
+[32m+[m[32mexport interface CostingGammaInput {[m
+[32m+[m[32m  active: boolean;[m
+[32m+[m[32m  percentage?: string;[m
+[32m+[m[32m  selectedGroupIds: readonly string[];[m
+[32m+[m[32m}[m
+[32m+[m[32mexport interface CostingGammaResult {[m
+[32m+[m[32m  baseBatchCost: string;[m
+[32m+[m[32m  adjustmentBatchCost: string;[m
+[32m+[m[32m  adjustmentUnitCost: string;[m
+[32m+[m[32m  baseLines: CostingGammaBaseLine[];[m
+[32m+[m[32m  result: CostingResult;[m
+[32m+[m[32m}[m
+ export type CostingErrorCode =[m
+[31m-  | "DUPLICATE_ITEM_ID" | "ITEM_NOT_FOUND" | "ITEM_INACTIVE" | "INVALID_ITEM_TYPE"[m
+[31m-  | "INVALID_UNIT" | "INVALID_DECIMAL" | "SIMPLE_HAS_STRUCTURE" | "SIMPLE_COST_MISSING"[m
+[31m-  | "COMPOSITE_STRUCTURE_MISSING" | "COMPOSITE_HAS_MANUAL_COST" | "COMPONENT_NOT_FOUND"[m
+[31m-  | "COMPONENT_INACTIVE" | "CYCLE_DETECTED" | "INVALID_OUTPUT_QUANTITY"[m
+[31m-  | "UNIT_NOT_SUPPORTED" | "INCOMPATIBLE_UNITS";[m
+[32m+[m[32m  | "DUPLICATE_ITEM_ID"[m
+[32m+[m[32m  | "ITEM_NOT_FOUND"[m
+[32m+[m[32m  | "ITEM_INACTIVE"[m
+[32m+[m[32m  | "INVALID_ITEM_TYPE"[m
+[32m+[m[32m  | "INVALID_UNIT"[m
+[32m+[m[32m  | "INVALID_DECIMAL"[m
+[32m+[m[32m  | "SIMPLE_HAS_STRUCTURE"[m
+[32m+[m[32m  | "SIMPLE_COST_MISSING"[m
+[32m+[m[32m  | "COMPOSITE_STRUCTURE_MISSING"[m
+[32m+[m[32m  | "COMPOSITE_HAS_MANUAL_COST"[m
+[32m+[m[32m  | "COMPONENT_NOT_FOUND"[m
+[32m+[m[32m  | "COMPONENT_INACTIVE"[m
+[32m+[m[32m  | "CYCLE_DETECTED"[m
+[32m+[m[32m  | "INVALID_OUTPUT_QUANTITY"[m
+[32m+[m[32m  | "UNIT_NOT_SUPPORTED"[m
+[32m+[m[32m  | "INCOMPATIBLE_UNITS";[m
+ export class CostingDomainError extends Error {[m
+   readonly code: CostingErrorCode;[m
+   readonly itemId?: string;[m
+   readonly componentItemId?: string;[m
+[31m-  constructor(code: CostingErrorCode, message: string, details: { itemId?: string; componentItemId?: string } = {}) {[m
+[31m-    super(message); this.name = "CostingDomainError"; this.code = code;[m
+[31m-    this.itemId = details.itemId; this.componentItemId = details.componentItemId;[m
+[32m+[m[32m  constructor([m
+[32m+[m[32m    code: CostingErrorCode,[m
+[32m+[m[32m    message: string,[m
+[32m+[m[32m    details: { itemId?: string; componentItemId?: string } = {}[m
+[32m+[m[32m  ) {[m
+[32m+[m[32m    super(message);[m
+[32m+[m[32m    this.name = "CostingDomainError";[m
+[32m+[m[32m    this.code = code;[m
+[32m+[m[32m    this.itemId = details.itemId;[m
+[32m+[m[32m    this.componentItemId = details.componentItemId;[m
+   }[m
+ }[m
+[31m-interface Fraction { numerator: bigint; denominator: bigint }[m
+[32m+[m[32minterface Fraction {[m
+[32m+[m[32m  numerator: bigint;[m
+[32m+[m[32m  denominator: bigint;[m
+[32m+[m[32m}[m
+ function gcd(a: bigint, b: bigint): bigint {[m
+[31m-  a = a < 0n ? -a : a; b = b < 0n ? -b : b;[m
+[31m-  while (b !== 0n) { const remainder = a % b; a = b; b = remainder; }[m
+[32m+[m[32m  a = a < 0n ? -a : a;[m
+[32m+[m[32m  b = b < 0n ? -b : b;[m
+[32m+[m[32m  while (b !== 0n) {[m
+[32m+[m[32m    const remainder = a % b;[m
+[32m+[m[32m    a = b;[m
+[32m+[m[32m    b = remainder;[m
+[32m+[m[32m  }[m
+   return a;[m
+ }[m
+ function fraction(numerator: bigint, denominator = 1n): Fraction {[m
+   if (denominator === 0n) throw new Error("Zero denominator");[m
+   const sign = denominator < 0n ? -1n : 1n;[m
+   const divisor = gcd(numerator, denominator);[m
+[31m-  return { numerator: numerator / divisor * sign, denominator: denominator / divisor * sign };[m
+[32m+[m[32m  return {[m
+[32m+[m[32m    numerator: (numerator / divisor) * sign,[m
+[32m+[m[32m    denominator: (denominator / divisor) * sign,[m
+[32m+[m[32m  };[m
+[32m+[m[32m}[m
+[32m+[m[32mtype UnitDimension =[m
+[32m+[m[32m  | "mass"[m
+[32m+[m[32m  | "length"[m
+[32m+[m[32m  | "count"[m
+[32m+[m[32m  | "service"[m
+[32m+[m[32m  | "set"[m
+[32m+[m[32m  | "pair"[m
+[32m+[m[32m  | "piece"[m
+[32m+[m[32m  | "time"[m
+[32m+[m[32m  | "volume"[m
+[32m+[m[32m  | "area";[m
+[32m+[m[32minterface UnitDefinition {[m
+[32m+[m[32m  dimension: UnitDimension;[m
+[32m+[m[32m  factorToBase: Fraction;[m
+ }[m
+[31m-type UnitDimension = "mass" | "length" | "count" | "service" | "set" | "pair" | "piece" | "time" | "volume" | "area";[m
+[31m-interface UnitDefinition { dimension: UnitDimension; factorToBase: Fraction }[m
+ /** Exact factors to a canonical unit: kg, m, un, h, L and m². */[m
+ const UNIT_DEFINITIONS: Record<string, UnitDefinition> = {[m
+   kg: { dimension: "mass", factorToBase: fraction(1n) },[m
+[36m@@ -79,61 +157,107 @@[m [mconst UNIT_DEFINITIONS: Record<string, UnitDefinition> = {[m
+ };[m
+ function getUnitDefinition(unit: string, itemId: string): UnitDefinition {[m
+   const definition = UNIT_DEFINITIONS[unit];[m
+[31m-  if (!definition) throw new CostingDomainError("UNIT_NOT_SUPPORTED", "Unsupported unit '" + unit + "' on item " + itemId, { itemId });[m
+[32m+[m[32m  if (!definition)[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "UNIT_NOT_SUPPORTED",[m
+[32m+[m[32m      "Unsupported unit '" + unit + "' on item " + itemId,[m
+[32m+[m[32m      { itemId }[m
+[32m+[m[32m    );[m
+   return definition;[m
+ }[m
+[31m-function convertQuantity(quantity: Fraction, enteredUnit: string, referenceUnit: string, itemId: string): { quantity: Fraction; factor: Fraction } {[m
+[32m+[m[32mfunction convertQuantity([m
+[32m+[m[32m  quantity: Fraction,[m
+[32m+[m[32m  enteredUnit: string,[m
+[32m+[m[32m  referenceUnit: string,[m
+[32m+[m[32m  itemId: string[m
+[32m+[m[32m): { quantity: Fraction; factor: Fraction } {[m
+   const entered = getUnitDefinition(enteredUnit, itemId);[m
+   const reference = getUnitDefinition(referenceUnit, itemId);[m
+   if (entered.dimension !== reference.dimension) {[m
+[31m-    throw new CostingDomainError("INCOMPATIBLE_UNITS", "Cannot convert " + enteredUnit + " to " + referenceUnit + " for item " + itemId, { itemId });[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "INCOMPATIBLE_UNITS",[m
+[32m+[m[32m      "Cannot convert " +[m
+[32m+[m[32m        enteredUnit +[m
+[32m+[m[32m        " to " +[m
+[32m+[m[32m        referenceUnit +[m
+[32m+[m[32m        " for item " +[m
+[32m+[m[32m        itemId,[m
+[32m+[m[32m      { itemId }[m
+[32m+[m[32m    );[m
+   }[m
+   const factor = divide(entered.factorToBase, reference.factorToBase, itemId);[m
+   return { quantity: multiply(quantity, factor), factor };[m
+ }[m
+ function parseDecimal(value: string, context: string): Fraction {[m
+   if (typeof value !== "string" || !/^\d+(?:\.\d{1,3})?$/.test(value)) {[m
+[31m-    throw new CostingDomainError("INVALID_DECIMAL", "Expected a non-negative decimal with at most three decimal places for " + context + ": " + String(value));[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "INVALID_DECIMAL",[m
+[32m+[m[32m      "Expected a non-negative decimal with at most three decimal places for " +[m
+[32m+[m[32m        context +[m
+[32m+[m[32m        ": " +[m
+[32m+[m[32m        String(value)[m
+[32m+[m[32m    );[m
+   }[m
+   const parts = value.split(".");[m
+   const scale = (parts[1] || "").length;[m
+   return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt(scale));[m
+ }[m
+ function add(a: Fraction, b: Fraction): Fraction {[m
+[31m-  return fraction(a.numerator * b.denominator + b.numerator * a.denominator, a.denominator * b.denominator);[m
+[32m+[m[32m  return fraction([m
+[32m+[m[32m    a.numerator * b.denominator + b.numerator * a.denominator,[m
+[32m+[m[32m    a.denominator * b.denominator[m
+[32m+[m[32m  );[m
+ }[m
+ function multiply(a: Fraction, b: Fraction): Fraction {[m
+   return fraction(a.numerator * b.numerator, a.denominator * b.denominator);[m
+ }[m
+ function divide(a: Fraction, b: Fraction, itemId: string): Fraction {[m
+   if (b.numerator === 0n) {[m
+[31m-    throw new CostingDomainError("INVALID_OUTPUT_QUANTITY", "Output quantity must be greater than zero: " + itemId, { itemId });[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "INVALID_OUTPUT_QUANTITY",[m
+[32m+[m[32m      "Output quantity must be greater than zero: " + itemId,[m
+[32m+[m[32m      { itemId }[m
+[32m+[m[32m    );[m
+   }[m
+   return fraction(a.numerator * b.denominator, a.denominator * b.numerator);[m
+ }[m
+ function terminatingDecimal(value: Fraction): string | null {[m
+[31m-  let denominator = value.denominator, twos = 0, fives = 0;[m
+[31m-  while (denominator % 2n === 0n) { denominator /= 2n; twos += 1; }[m
+[31m-  while (denominator % 5n === 0n) { denominator /= 5n; fives += 1; }[m
+[32m+[m[32m  let denominator = value.denominator,[m
+[32m+[m[32m    twos = 0,[m
+[32m+[m[32m    fives = 0;[m
+[32m+[m[32m  while (denominator % 2n === 0n) {[m
+[32m+[m[32m    denominator /= 2n;[m
+[32m+[m[32m    twos += 1;[m
+[32m+[m[32m  }[m
+[32m+[m[32m  while (denominator % 5n === 0n) {[m
+[32m+[m[32m    denominator /= 5n;[m
+[32m+[m[32m    fives += 1;[m
+[32m+[m[32m  }[m
+   if (denominator !== 1n) return null;[m
+   const scale = Math.max(twos, fives);[m
+[31m-  const coefficient = value.numerator * 2n ** BigInt(scale - twos) * 5n ** BigInt(scale - fives);[m
+[32m+[m[32m  const coefficient =[m
+[32m+[m[32m    value.numerator * 2n ** BigInt(scale - twos) * 5n ** BigInt(scale - fives);[m
+   const negative = coefficient < 0n;[m
+   const digits = (negative ? -coefficient : coefficient).toString();[m
+   if (scale === 0) return (negative ? "-" : "") + digits;[m
+[31m-  const padded = digits.padStart(scale + 1, "0"), splitAt = padded.length - scale;[m
+[32m+[m[32m  const padded = digits.padStart(scale + 1, "0"),[m
+[32m+[m[32m    splitAt = padded.length - scale;[m
+   let result = padded.slice(0, splitAt) + "." + padded.slice(splitAt);[m
+   result = result.replace(/0+$/, "").replace(/\.$/, "");[m
+   return (negative ? "-" : "") + result;[m
+ }[m
+ function fractionToExactString(value: Fraction): string {[m
+[31m-  return terminatingDecimal(value) ?? (value.numerator.toString() + "/" + value.denominator.toString());[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    terminatingDecimal(value) ??[m
+[32m+[m[32m    value.numerator.toString() + "/" + value.denominator.toString()[m
+[32m+[m[32m  );[m
+ }[m
+ /** Round the final result to three places. Exact ties stay down, matching the approved convention. */[m
+ function roundFractionToThree(value: Fraction): string {[m
+   const scaledNumerator = value.numerator * 1000n;[m
+   let rounded = scaledNumerator / value.denominator;[m
+[31m-  const fourthDecimalDigit = (scaledNumerator * 10n / value.denominator) % 10n;[m
+[32m+[m[32m  const fourthDecimalDigit =[m
+[32m+[m[32m    ((scaledNumerator * 10n) / value.denominator) % 10n;[m
+   if (fourthDecimalDigit > 5n) rounded += 1n;[m
+   const negative = rounded < 0n;[m
+   const digits = (negative ? -rounded : rounded).toString().padStart(4, "0");[m
+[36m@@ -148,52 +272,152 @@[m [mfunction parseExactString(value: string): Fraction {[m
+   }[m
+   if (/^\d+(?:\.\d+)?$/.test(value)) {[m
+     const parts = value.split(".");[m
+[31m-    return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt((parts[1] || "").length));[m
+[32m+[m[32m    return fraction([m
+[32m+[m[32m      BigInt(parts[0] + (parts[1] || "")),[m
+[32m+[m[32m      10n ** BigInt((parts[1] || "").length)[m
+[32m+[m[32m    );[m
+   }[m
+[31m-  throw new CostingDomainError("INVALID_DECIMAL", "Invalid exact decimal value: " + value);[m
+[32m+[m[32m  throw new CostingDomainError([m
+[32m+[m[32m    "INVALID_DECIMAL",[m
+[32m+[m[32m    "Invalid exact decimal value: " + value[m
+[32m+[m[32m  );[m
+ }[m
+ export function formatCostForDisplay(exactValue: string): string {[m
+   return roundFractionToThree(parseExactString(exactValue));[m
+ }[m
+[31m-export function calculateItemCost(sourceItems: readonly CostingItem[], targetItemId: string): CostingResult {[m
+[32m+[m[32mexport function calculateItemCost([m
+[32m+[m[32m  sourceItems: readonly CostingItem[],[m
+[32m+[m[32m  targetItemId: string[m
+[32m+[m[32m): CostingResult {[m
+   const items = new Map<string, CostingItem>();[m
+   for (const item of sourceItems) {[m
+[31m-    if (items.has(item.id)) throw new CostingDomainError("DUPLICATE_ITEM_ID", "Duplicate item identifier: " + item.id, { itemId: item.id });[m
+[32m+[m[32m    if (items.has(item.id))[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "DUPLICATE_ITEM_ID",[m
+[32m+[m[32m        "Duplicate item identifier: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+     items.set(item.id, item);[m
+   }[m
+   const root = items.get(targetItemId);[m
+[31m-  if (!root) throw new CostingDomainError("ITEM_NOT_FOUND", "Item not found: " + targetItemId, { itemId: targetItemId });[m
+[32m+[m[32m  if (!root)[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "ITEM_NOT_FOUND",[m
+[32m+[m[32m      "Item not found: " + targetItemId,[m
+[32m+[m[32m      { itemId: targetItemId }[m
+[32m+[m[32m    );[m
+   const visiting: string[] = [];[m
+[31m-  const resolve = (item: CostingItem): { result: CostingResult; exactCost: Fraction } => {[m
+[31m-    if (!item.active) throw new CostingDomainError("ITEM_INACTIVE", "Item is inactive: " + item.id, { itemId: item.id });[m
+[31m-    if (!item.unit.trim()) throw new CostingDomainError("INVALID_UNIT", "Item has no unit: " + item.id, { itemId: item.id });[m
+[31m-    if (item.type !== "SIMPLE" && item.type !== "COMPOSITE") throw new CostingDomainError("INVALID_ITEM_TYPE", "Invalid item type: " + item.id, { itemId: item.id });[m
+[32m+[m[32m  const resolve = ([m
+[32m+[m[32m    item: CostingItem[m
+[32m+[m[32m  ): { result: CostingResult; exactCost: Fraction } => {[m
+[32m+[m[32m    if (!item.active)[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "ITEM_INACTIVE",[m
+[32m+[m[32m        "Item is inactive: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+[32m+[m[32m    if (!item.unit.trim())[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "INVALID_UNIT",[m
+[32m+[m[32m        "Item has no unit: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+[32m+[m[32m    if (item.type !== "SIMPLE" && item.type !== "COMPOSITE")[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "INVALID_ITEM_TYPE",[m
+[32m+[m[32m        "Invalid item type: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+     const cycleIndex = visiting.indexOf(item.id);[m
+[31m-    if (cycleIndex >= 0) throw new CostingDomainError("CYCLE_DETECTED", "Composition cycle detected: " + [...visiting.slice(cycleIndex), item.id].join(" -> "), { itemId: item.id });[m
+[32m+[m[32m    if (cycleIndex >= 0)[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "CYCLE_DETECTED",[m
+[32m+[m[32m        "Composition cycle detected: " +[m
+[32m+[m[32m          [...visiting.slice(cycleIndex), item.id].join(" -> "),[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+     if (item.type === "SIMPLE") {[m
+[31m-      if (item.structure && item.structure.length > 0) throw new CostingDomainError("SIMPLE_HAS_STRUCTURE", "Simple item cannot have a structure: " + item.id, { itemId: item.id });[m
+[31m-      if (item.manualUnitCost == null || item.manualUnitCost === "") throw new CostingDomainError("SIMPLE_COST_MISSING", "Simple item has no manual cost: " + item.id, { itemId: item.id });[m
+[32m+[m[32m      if (item.structure && item.structure.length > 0)[m
+[32m+[m[32m        throw new CostingDomainError([m
+[32m+[m[32m          "SIMPLE_HAS_STRUCTURE",[m
+[32m+[m[32m          "Simple item cannot have a structure: " + item.id,[m
+[32m+[m[32m          { itemId: item.id }[m
+[32m+[m[32m        );[m
+[32m+[m[32m      if (item.manualUnitCost == null || item.manualUnitCost === "")[m
+[32m+[m[32m        throw new CostingDomainError([m
+[32m+[m[32m          "SIMPLE_COST_MISSING",[m
+[32m+[m[32m          "Simple item has no manual cost: " + item.id,[m
+[32m+[m[32m          { itemId: item.id }[m
+[32m+[m[32m        );[m
+       const cost = parseDecimal(item.manualUnitCost, "item " + item.id);[m
+       const exactUnitCost = fractionToExactString(cost);[m
+[31m-      return { exactCost: cost, result: { itemId: item.id, unit: item.unit, exactUnitCost, displayUnitCost: formatCostForDisplay(exactUnitCost), lines: [] } };[m
+[32m+[m[32m      return {[m
+[32m+[m[32m        exactCost: cost,[m
+[32m+[m[32m        result: {[m
+[32m+[m[32m          itemId: item.id,[m
+[32m+[m[32m          unit: item.unit,[m
+[32m+[m[32m          exactUnitCost,[m
+[32m+[m[32m          displayUnitCost: formatCostForDisplay(exactUnitCost),[m
+[32m+[m[32m          lines: [],[m
+[32m+[m[32m        },[m
+[32m+[m[32m      };[m
+     }[m
+[31m-    if (item.manualUnitCost != null && item.manualUnitCost !== "") throw new CostingDomainError("COMPOSITE_HAS_MANUAL_COST", "Composite item cannot have manual cost: " + item.id, { itemId: item.id });[m
+[31m-    if (!item.structure || item.structure.length === 0) throw new CostingDomainError("COMPOSITE_STRUCTURE_MISSING", "Composite item has no structure: " + item.id, { itemId: item.id });[m
+[32m+[m[32m    if (item.manualUnitCost != null && item.manualUnitCost !== "")[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "COMPOSITE_HAS_MANUAL_COST",[m
+[32m+[m[32m        "Composite item cannot have manual cost: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+[32m+[m[32m    if (!item.structure || item.structure.length === 0)[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "COMPOSITE_STRUCTURE_MISSING",[m
+[32m+[m[32m        "Composite item has no structure: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+     visiting.push(item.id);[m
+     try {[m
+[31m-      const outputQuantity = parseDecimal(item.outputQuantity ?? "1", "output quantity in " + item.id);[m
+[32m+[m[32m      const outputQuantity = parseDecimal([m
+[32m+[m[32m        item.outputQuantity ?? "1",[m
+[32m+[m[32m        "output quantity in " + item.id[m
+[32m+[m[32m      );[m
+       if (outputQuantity.numerator === 0n) {[m
+[31m-        throw new CostingDomainError("INVALID_OUTPUT_QUANTITY", "Output quantity must be greater than zero: " + item.id, { itemId: item.id });[m
+[32m+[m[32m        throw new CostingDomainError([m
+[32m+[m[32m          "INVALID_OUTPUT_QUANTITY",[m
+[32m+[m[32m          "Output quantity must be greater than zero: " + item.id,[m
+[32m+[m[32m          { itemId: item.id }[m
+[32m+[m[32m        );[m
+       }[m
+       let batchTotal = fraction(0n);[m
+       const lines: CostingLineResult[] = [];[m
+       for (const line of item.structure) {[m
+         const component = items.get(line.componentItemId);[m
+[31m-        if (!component) throw new CostingDomainError("COMPONENT_NOT_FOUND", "Component " + line.componentItemId + " referenced by " + item.id + " does not exist", { itemId: item.id, componentItemId: line.componentItemId });[m
+[31m-        if (!component.active) throw new CostingDomainError("COMPONENT_INACTIVE", "Inactive component " + component.id + " is used by " + item.id, { itemId: item.id, componentItemId: component.id });[m
+[31m-        const enteredQuantity = parseDecimal(line.quantity, "quantity in " + item.id);[m
+[32m+[m[32m        if (!component)[m
+[32m+[m[32m          throw new CostingDomainError([m
+[32m+[m[32m            "COMPONENT_NOT_FOUND",[m
+[32m+[m[32m            "Component " +[m
+[32m+[m[32m              line.componentItemId +[m
+[32m+[m[32m              " referenced by " +[m
+[32m+[m[32m              item.id +[m
+[32m+[m[32m              " does not exist",[m
+[32m+[m[32m            { itemId: item.id, componentItemId: line.componentItemId }[m
+[32m+[m[32m          );[m
+[32m+[m[32m        if (!component.active)[m
+[32m+[m[32m          throw new CostingDomainError([m
+[32m+[m[32m            "COMPONENT_INACTIVE",[m
+[32m+[m[32m            "Inactive component " + component.id + " is used by " + item.id,[m
+[32m+[m[32m            { itemId: item.id, componentItemId: component.id }[m
+[32m+[m[32m          );[m
+[32m+[m[32m        const enteredQuantity = parseDecimal([m
+[32m+[m[32m          line.quantity,[m
+[32m+[m[32m          "quantity in " + item.id[m
+[32m+[m[32m        );[m
+         const enteredUnit = line.quantityUnit ?? component.unit;[m
+[31m-        const conversion = convertQuantity(enteredQuantity, enteredUnit, component.unit, item.id);[m
+[32m+[m[32m        const conversion = convertQuantity([m
+[32m+[m[32m          enteredQuantity,[m
+[32m+[m[32m          enteredUnit,[m
+[32m+[m[32m          component.unit,[m
+[32m+[m[32m          item.id[m
+[32m+[m[32m        );[m
+         const child = resolve(component);[m
+         const batchLineCost = multiply(conversion.quantity, child.exactCost);[m
+         batchTotal = add(batchTotal, batchLineCost);[m
+[36m@@ -212,9 +436,148 @@[m [mexport function calculateItemCost(sourceItems: readonly CostingItem[], targetIte[m
+       const exactUnitCost = fractionToExactString(exactCost);[m
+       return {[m
+         exactCost,[m
+[31m-        result: { itemId: item.id, unit: item.unit, exactUnitCost, displayUnitCost: roundFractionToThree(exactCost), lines },[m
+[32m+[m[32m        result: {[m
+[32m+[m[32m          itemId: item.id,[m
+[32m+[m[32m          unit: item.unit,[m
+[32m+[m[32m          exactUnitCost,[m
+[32m+[m[32m          displayUnitCost: roundFractionToThree(exactCost),[m
+[32m+[m[32m          lines,[m
+[32m+[m[32m        },[m
+       };[m
+[31m-    } finally { visiting.pop(); }[m
+[32m+[m[32m    } finally {[m
+[32m+[m[32m      visiting.pop();[m
+[32m+[m[32m    }[m
+   };[m
+   return resolve(root).result;[m
+ }[m
+[32m+[m
+[32m+[m[32mfunction parseGammaPercentage(value: string): Fraction {[m
+[32m+[m[32m  if (typeof value !== "string" || !/^\d+(?:\.\d{1,4})?$/.test(value)) {[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "INVALID_DECIMAL",[m
+[32m+[m[32m      "Gama deve ser um percentual não negativo com até quatro casas decimais."[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+[32m+[m[32m  const parts = value.split("."),[m
+[32m+[m[32m    scale = (parts[1] || "").length;[m
+[32m+[m[32m  return fraction(BigInt(parts[0] + (parts[1] || "")), 10n ** BigInt(scale));[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Applies Gama once to the resolved manual-price bases. Composite group IDs[m
+[32m+[m[32m * are never used as bases: only SIMPLE items with a selected group contribute,[m
+[32m+[m[32m * so nested compositions cannot apply the percentage recursively.[m
+[32m+[m[32m */[m
+[32m+[m[32mexport function calculateItemCostWithGamma([m
+[32m+[m[32m  sourceItems: readonly CostingItem[],[m
+[32m+[m[32m  targetItemId: string,[m
+[32m+[m[32m  gamma: CostingGammaInput[m
+[32m+[m[32m): CostingGammaResult {[m
+[32m+[m[32m  const result = calculateItemCost(sourceItems, targetItemId);[m
+[32m+[m[32m  const items = new Map(sourceItems.map(item => [item.id, item]));[m
+[32m+[m[32m  const root = items.get(targetItemId);[m
+[32m+[m[32m  if (!root)[m
+[32m+[m[32m    throw new CostingDomainError([m
+[32m+[m[32m      "ITEM_NOT_FOUND",[m
+[32m+[m[32m      "Item not found: " + targetItemId,[m
+[32m+[m[32m      { itemId: targetItemId }[m
+[32m+[m[32m    );[m
+[32m+[m[32m  const selected = new Set(gamma.selectedGroupIds);[m
+[32m+[m[32m  const baseLines: CostingGammaBaseLine[] = [];[m
+[32m+[m[32m  const visiting = new Set<string>();[m
+[32m+[m[32m  const collect = (item: CostingItem, consumedQuantity: Fraction): Fraction => {[m
+[32m+[m[32m    if (visiting.has(item.id))[m
+[32m+[m[32m      throw new CostingDomainError([m
+[32m+[m[32m        "CYCLE_DETECTED",[m
+[32m+[m[32m        "Composition cycle detected: " + item.id,[m
+[32m+[m[32m        { itemId: item.id }[m
+[32m+[m[32m      );[m
+[32m+[m[32m    if (item.type === "SIMPLE") {[m
+[32m+[m[32m      if ([m
+[32m+[m[32m        item.groupId &&[m
+[32m+[m[32m        selected.has(item.groupId) &&[m
+[32m+[m[32m        item.manualUnitCost != null[m
+[32m+[m[32m      ) {[m
+[32m+[m[32m        const unitCost = parseDecimal(item.manualUnitCost, "item " + item.id);[m
+[32m+[m[32m        const batchCost = multiply(consumedQuantity, unitCost);[m
+[32m+[m[32m        baseLines.push({[m
+[32m+[m[32m          itemId: item.id,[m
+[32m+[m[32m          groupId: item.groupId,[m
+[32m+[m[32m          quantity: fractionToExactString(consumedQuantity),[m
+[32m+[m[32m          unit: item.unit,[m
+[32m+[m[32m          unitCost: fractionToExactString(unitCost),[m
+[32m+[m[32m          batchCost: fractionToExactString(batchCost),[m
+[32m+[m[32m        });[m
+[32m+[m[32m        return batchCost;[m
+[32m+[m[32m      }[m
+[32m+[m[32m      return fraction(0n);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    if (!item.structure) return fraction(0n);[m
+[32m+[m[32m    visiting.add(item.id);[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      let total = fraction(0n);[m
+[32m+[m[32m      const outputQuantity = parseDecimal([m
+[32m+[m[32m        item.outputQuantity ?? "1",[m
+[32m+[m[32m        "output quantity in " + item.id[m
+[32m+[m[32m      );[m
+[32m+[m[32m      for (const line of item.structure) {[m
+[32m+[m[32m        const component = items.get(line.componentItemId);[m
+[32m+[m[32m        if (!component)[m
+[32m+[m[32m          throw new CostingDomainError([m
+[32m+[m[32m            "COMPONENT_NOT_FOUND",[m
+[32m+[m[32m            "Component not found: " + line.componentItemId,[m
+[32m+[m[32m            { itemId: item.id, componentItemId: line.componentItemId }[m
+[32m+[m[32m          );[m
+[32m+[m[32m        const converted = convertQuantity([m
+[32m+[m[32m          parseDecimal(line.quantity, "quantity in " + item.id),[m
+[32m+[m[32m          line.quantityUnit ?? component.unit,[m
+[32m+[m[32m          component.unit,[m
+[32m+[m[32m          item.id[m
+[32m+[m[32m        );[m
+[32m+[m[32m        total = add([m
+[32m+[m[32m          total,[m
+[32m+[m[32m          collect([m
+[32m+[m[32m            component,[m
+[32m+[m[32m            multiply([m
+[32m+[m[32m              divide(consumedQuantity, outputQuantity, item.id),[m
+[32m+[m[32m              converted.quantity[m
+[32m+[m[32m            )[m
+[32m+[m[32m          )[m
+[32m+[m[32m        );[m
+[32m+[m[32m      }[m
+[32m+[m[32m      return total;[m
+[32m+[m[32m    } finally {[m
+[32m+[m[32m      visiting.delete(item.id);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  };[m
+[32m+[m[32m  const baseBatch = gamma.active ? collect(root, fraction(1n)) : fraction(0n);[m
+[32m+[m[32m  const percentage = gamma.active[m
+[32m+[m[32m    ? parseGammaPercentage(gamma.percentage ?? "1.2")[m
+[32m+[m[32m    : fraction(0n);[m
+[32m+[m[32m  const adjustmentBatch = divide([m
+[32m+[m[32m    multiply(baseBatch, percentage),[m
+[32m+[m[32m    fraction(100n),[m
+[32m+[m[32m    targetItemId[m
+[32m+[m[32m  );[m
+[32m+[m[32m  const outputQuantity = parseDecimal([m
+[32m+[m[32m    root.outputQuantity ?? "1",[m
+[32m+[m[32m    "output quantity in " + root.id[m
+[32m+[m[32m  );[m
+[32m+[m[32m  const adjustmentUnit = divide(adjustmentBatch, outputQuantity, targetItemId);[m
+[32m+[m[32m  const adjustedExact = add([m
+[32m+[m[32m    parseExactString(result.exactUnitCost),[m
+[32m+[m[32m    adjustmentUnit[m
+[32m+[m[32m  );[m
+[32m+[m[32m  const adjusted: CostingResult = {[m
+[32m+[m[32m    ...result,[m
+[32m+[m[32m    exactUnitCost: fractionToExactString(adjustedExact),[m
+[32m+[m[32m    displayUnitCost: roundFractionToThree(adjustedExact),[m
+[32m+[m[32m  };[m
+[32m+[m[32m  return {[m
+[32m+[m[32m    baseBatchCost: fractionToExactString(baseBatch),[m
+[32m+[m[32m    adjustmentBatchCost: fractionToExactString(adjustmentBatch),[m
+[32m+[m[32m    adjustmentUnitCost: fractionToExactString(adjustmentUnit),[m
+[32m+[m[32m    baseLines,[m
+[32m+[m[32m    result: adjusted,[m
+[32m+[m[32m  };[m
+[32m+[m[32m}[m
+[1mdiff --git a/server/domain/costing/snapshot.test.ts b/server/domain/costing/snapshot.test.ts[m
+[1mindex 79c93c1..b561af6 100644[m
+[1m--- a/server/domain/costing/snapshot.test.ts[m
+[1m+++ b/server/domain/costing/snapshot.test.ts[m
+[36m@@ -6,17 +6,33 @@[m [mimport { planStructurePublication } from "./structure-publication";[m
+ describe("costing calculation snapshots", () => {[m
+   it("captures the complete input graph, result, and Gama configuration", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "steel", type: "SIMPLE", active: true, unit: "kg", manualUnitCost: "10" },[m
+[31m-      { id: "frame", type: "COMPOSITE", active: true, unit: "un", structure: [[m
+[31m-        { componentItemId: "steel", quantity: "500", quantityUnit: "g" },[m
+[31m-      ] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "steel",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "kg",[m
+[32m+[m[32m        manualUnitCost: "10",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "frame",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [[m
+[32m+[m[32m          { componentItemId: "steel", quantity: "500", quantityUnit: "g" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "frame");[m
+     const snapshot = createCostingCalculationSnapshot({[m
+       organizationId: "org-12345678",[m
+       targetItemId: "frame",[m
+       sourceItems: items,[m
+[31m-      gamma: { active: true, percentage: "1.2000", selectedGroupIds: ["raw-materials"] },[m
+[32m+[m[32m      gamma: {[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        percentage: "1.2000",[m
+[32m+[m[32m        selectedGroupIds: ["raw-materials"],[m
+[32m+[m[32m      },[m
+       result,[m
+       calculatedAt: "2026-11-10T15:00:00.000Z",[m
+     });[m
+[36m@@ -25,39 +41,77 @@[m [mdescribe("costing calculation snapshots", () => {[m
+     expect(snapshot.engineVersion).toBe("costing-engine-v1");[m
+     expect(snapshot.sourceItems).toHaveLength(2);[m
+     expect(snapshot.result.exactUnitCost).toBe("5");[m
+[31m-    expect(snapshot.exactUnitCost).toEqual({ numerator: "5", denominator: "1" });[m
+[32m+[m[32m    expect(snapshot.exactUnitCost).toEqual({[m
+[32m+[m[32m      numerator: "5",[m
+[32m+[m[32m      denominator: "1",[m
+[32m+[m[32m    });[m
+     expect(snapshot.gamma).toEqual({[m
+[31m-      active: true, percentage: "1.2000", selectedGroupIds: ["raw-materials"],[m
+[32m+[m[32m      active: true,[m
+[32m+[m[32m      percentage: "1.2000",[m
+[32m+[m[32m      selectedGroupIds: ["raw-materials"],[m
+     });[m
+     expect(JSON.parse(JSON.stringify(snapshot))).toEqual(snapshot);[m
+   });[m
+ [m
+   it("stores recurring exact costs as numerator and denominator", () => {[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "raw", type: "SIMPLE", active: true, unit: "un", manualUnitCost: "1" },[m
+[31m-      { id: "third", type: "COMPOSITE", active: true, unit: "un", outputQuantity: "3",[m
+[31m-        structure: [{ componentItemId: "raw", quantity: "1" }] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "raw",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        manualUnitCost: "1",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "third",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        outputQuantity: "3",[m
+[32m+[m[32m        structure: [{ componentItemId: "raw", quantity: "1" }],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "third");[m
+     const snapshot = createCostingCalculationSnapshot({[m
+[31m-      organizationId: "org-12345678", targetItemId: "third", sourceItems: items,[m
+[32m+[m[32m      organizationId: "org-12345678",[m
+[32m+[m[32m      targetItemId: "third",[m
+[32m+[m[32m      sourceItems: items,[m
+       gamma: { active: false, percentage: "1.2000", selectedGroupIds: [] },[m
+[31m-      result, calculatedAt: "2026-11-10T15:00:00.000Z",[m
+[32m+[m[32m      result,[m
+[32m+[m[32m      calculatedAt: "2026-11-10T15:00:00.000Z",[m
+[32m+[m[32m    });[m
+[32m+[m[32m    expect(snapshot.exactUnitCost).toEqual({[m
+[32m+[m[32m      numerator: "1",[m
+[32m+[m[32m      denominator: "3",[m
+     });[m
+[31m-    expect(snapshot.exactUnitCost).toEqual({ numerator: "1", denominator: "3" });[m
+   });[m
+ [m
+   it("copies nested source lines so later mutations do not rewrite the snapshot", () => {[m
+     const line = { componentItemId: "raw", quantity: "1", quantityUnit: "un" };[m
+     const items: CostingItem[] = [[m
+[31m-      { id: "raw", type: "SIMPLE", active: true, unit: "un", manualUnitCost: "2" },[m
+[31m-      { id: "finished", type: "COMPOSITE", active: true, unit: "un", structure: [line] },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "raw",[m
+[32m+[m[32m        type: "SIMPLE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        manualUnitCost: "2",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      {[m
+[32m+[m[32m        id: "finished",[m
+[32m+[m[32m        type: "COMPOSITE",[m
+[32m+[m[32m        active: true,[m
+[32m+[m[32m        unit: "un",[m
+[32m+[m[32m        structure: [line],[m
+[32m+[m[32m      },[m
+     ];[m
+     const result = calculateItemCost(items, "finished");[m
+     const snapshot = createCostingCalculationSnapshot({[m
+[31m-      organizationId: "org-12345678", targetItemId: "finished", sourceItems: items,[m
+[32m+[m[32m      organizationId: "org-12345678",[m
+[32m+[m[32m      targetItemId: "finished",[m
+[32m+[m[32m      sourceItems: items,[m
+       gamma: { active: false, percentage: "1.2000", selectedGroupIds: [] },[m
+[31m-      result, calculatedAt: "2026-11-10T15:00:00.000Z",[m
+[32m+[m[32m      result,[m
+[32m+[m[32m      calculatedAt: "2026-11-10T15:00:00.000Z",[m
+     });[m
+     line.quantity = "99";[m
+     expect(snapshot.sourceItems[1].structure?.[0].quantity).toBe("1");[m
+[36m@@ -66,32 +120,52 @@[m [mdescribe("costing calculation snapshots", () => {[m
+ [m
+ describe("cost structure publication planning", () => {[m
+   it("plans atomic replacement of the currently active version", () => {[m
+[31m-    expect(planStructurePublication([[m
+[31m-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },[m
+[31m-      { id: "v2", itemId: "item-a", version: 2, status: "DRAFT" },[m
+[31m-      { id: "other", itemId: "item-b", version: 1, status: "ACTIVE" },[m
+[31m-    ], "v2")).toEqual({[m
+[32m+[m[32m    expect([m
+[32m+[m[32m      planStructurePublication([m
+[32m+[m[32m        [[m
+[32m+[m[32m          { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },[m
+[32m+[m[32m          { id: "v2", itemId: "item-a", version: 2, status: "DRAFT" },[m
+[32m+[m[32m          { id: "other", itemId: "item-b", version: 1, status: "ACTIVE" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m        "v2"[m
+[32m+[m[32m      )[m
+[32m+[m[32m    ).toEqual({[m
+       activateStructureId: "v2",[m
+       supersedeStructureIds: ["v1"],[m
+     });[m
+   });[m
+ [m
+   it("rejects publishing a non-draft or missing version", () => {[m
+[31m-    expect(() => planStructurePublication([[m
+[31m-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },[m
+[31m-    ], "v1")).toThrow("Only a DRAFT structure can be published.");[m
+[31m-    expect(() => planStructurePublication([], "missing")).toThrow("Structure version not found.");[m
+[32m+[m[32m    expect(() =>[m
+[32m+[m[32m      planStructurePublication([m
+[32m+[m[32m        [{ id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" }],[m
+[32m+[m[32m        "v1"[m
+[32m+[m[32m      )[m
+[32m+[m[32m    ).toThrow("Only a DRAFT structure can be published.");[m
+[32m+[m[32m    expect(() => planStructurePublication([], "missing")).toThrow([m
+[32m+[m[32m      "Structure version not found."[m
+[32m+[m[32m    );[m
+   });[m
+ [m
+   it("detects corrupt existing states and duplicate version numbers", () => {[m
+[31m-    expect(() => planStructurePublication([[m
+[31m-      { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },[m
+[31m-      { id: "v2", itemId: "item-a", version: 2, status: "ACTIVE" },[m
+[31m-      { id: "v3", itemId: "item-a", version: 3, status: "DRAFT" },[m
+[31m-    ], "v3")).toThrow("Data integrity error");[m
+[31m-    expect(() => planStructurePublication([[m
+[31m-      { id: "v1", itemId: "item-a", version: 1, status: "INACTIVE" },[m
+[31m-      { id: "v2", itemId: "item-a", version: 1, status: "DRAFT" },[m
+[31m-    ], "v2")).toThrow("Duplicate structure version number.");[m
+[32m+[m[32m    expect(() =>[m
+[32m+[m[32m      planStructurePublication([m
+[32m+[m[32m        [[m
+[32m+[m[32m          { id: "v1", itemId: "item-a", version: 1, status: "ACTIVE" },[m
+[32m+[m[32m          { id: "v2", itemId: "item-a", version: 2, status: "ACTIVE" },[m
+[32m+[m[32m          { id: "v3", itemId: "item-a", version: 3, status: "DRAFT" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m        "v3"[m
+[32m+[m[32m      )[m
+[32m+[m[32m    ).toThrow("Data integrity error");[m
+[32m+[m[32m    expect(() =>[m
+[32m+[m[32m      planStructurePublication([m
+[32m+[m[32m        [[m
+[32m+[m[32m          { id: "v1", itemId: "item-a", version: 1, status: "INACTIVE" },[m
+[32m+[m[32m          { id: "v2", itemId: "item-a", version: 1, status: "DRAFT" },[m
+[32m+[m[32m        ],[m
+[32m+[m[32m        "v2"[m
+[32m+[m[32m      )[m
+[32m+[m[32m    ).toThrow("Duplicate structure version number.");[m
+   });[m
+ });[m
+[1mdiff --git a/server/domain/costing/snapshot.ts b/server/domain/costing/snapshot.ts[m
+[1mindex f1fbc62..bc580a2 100644[m
+[1m--- a/server/domain/costing/snapshot.ts[m
+[1m+++ b/server/domain/costing/snapshot.ts[m
+[36m@@ -1,4 +1,8 @@[m
+[31m-import type { CostingItem, CostingResult } from "./engine";[m
+[32m+[m[32mimport type {[m
+[32m+[m[32m  CostingGammaBaseLine,[m
+[32m+[m[32m  CostingItem,[m
+[32m+[m[32m  CostingResult,[m
+[32m+[m[32m} from "./engine";[m
+ [m
+ export const COSTING_SNAPSHOT_VERSION = 1 as const;[m
+ export const COSTING_ENGINE_VERSION = "costing-engine-v1" as const;[m
+[36m@@ -8,6 +12,10 @@[m [mexport interface CostingGammaSnapshot {[m
+   percentage: string;[m
+   /** IDs of the groups explicitly selected when this calculation was made. */[m
+   selectedGroupIds: readonly string[];[m
+[32m+[m[32m  baseBatchCost?: string;[m
+[32m+[m[32m  adjustmentBatchCost?: string;[m
+[32m+[m[32m  adjustmentUnitCost?: string;[m
+[32m+[m[32m  baseLines?: readonly CostingGammaBaseLine[];[m
+ }[m
+ [m
+ export interface CostingCalculationSnapshot {[m
+[36m@@ -38,7 +46,9 @@[m [mexport function createCostingCalculationSnapshot(input: {[m
+   calculatedAt: string;[m
+ }): CostingCalculationSnapshot {[m
+   if (!input.organizationId.trim() || !input.targetItemId.trim()) {[m
+[31m-    throw new Error("Organization and target item are required for a costing snapshot.");[m
+[32m+[m[32m    throw new Error([m
+[32m+[m[32m      "Organization and target item are required for a costing snapshot."[m
+[32m+[m[32m    );[m
+   }[m
+   if (!Number.isFinite(Date.parse(input.calculatedAt))) {[m
+     throw new Error("A valid calculation timestamp is required.");[m
+[36m@@ -57,7 +67,10 @@[m [mexport function createCostingCalculationSnapshot(input: {[m
+   }[m
+   let n = BigInt(numerator);[m
+   let d = BigInt(denominator);[m
+[31m-  if (n < 0n || d <= 0n) throw new Error("The exact cost must be non-negative with a positive denominator.");[m
+[32m+[m[32m  if (n < 0n || d <= 0n)[m
+[32m+[m[32m    throw new Error([m
+[32m+[m[32m      "The exact cost must be non-negative with a positive denominator."[m
+[32m+[m[32m    );[m
+   const gcd = (left: bigint, right: bigint): bigint => {[m
+     while (right !== 0n) [left, right] = [right, left % right];[m
+     return left;[m
+[36m@@ -82,6 +95,18 @@[m [mexport function createCostingCalculationSnapshot(input: {[m
+       active: input.gamma.active,[m
+       percentage: input.gamma.percentage,[m
+       selectedGroupIds: [...input.gamma.selectedGroupIds],[m
+[32m+[m[32m      ...(input.gamma.baseBatchCost === undefined[m
+[32m+[m[32m        ? {}[m
+[32m+[m[32m        : { baseBatchCost: input.gamma.baseBatchCost }),[m
+[32m+[m[32m      ...(input.gamma.adjustmentBatchCost === undefined[m
+[32m+[m[32m        ? {}[m
+[32m+[m[32m        : { adjustmentBatchCost: input.gamma.adjustmentBatchCost }),[m
+[32m+[m[32m      ...(input.gamma.adjustmentUnitCost === undefined[m
+[32m+[m[32m        ? {}[m
+[32m+[m[32m        : { adjustmentUnitCost: input.gamma.adjustmentUnitCost }),[m
+[32m+[m[32m      ...(input.gamma.baseLines === undefined[m
+[32m+[m[32m        ? {}[m
+[32m+[m[32m        : { baseLines: input.gamma.baseLines.map(line => ({ ...line })) }),[m
+     },[m
+     result: {[m
+       ...input.result,[m
+[1mdiff --git a/server/domain/costing/structure-publication.ts b/server/domain/costing/structure-publication.ts[m
+[1mindex 2754324..df58d42 100644[m
+[1m--- a/server/domain/costing/structure-publication.ts[m
+[1m+++ b/server/domain/costing/structure-publication.ts[m
+[36m@@ -1,4 +1,8 @@[m
+[31m-export type CostStructureStatus = "DRAFT" | "ACTIVE" | "SUPERSEDED" | "INACTIVE";[m
+[32m+[m[32mexport type CostStructureStatus =[m
+[32m+[m[32m  | "DRAFT"[m
+[32m+[m[32m  | "ACTIVE"[m
+[32m+[m[32m  | "SUPERSEDED"[m
+[32m+[m[32m  | "INACTIVE";[m
+ [m
+ export interface CostStructureVersionState {[m
+   id: string;[m
+[36m@@ -21,20 +25,29 @@[m [mexport interface StructurePublicationPlan {[m
+  */[m
+ export function planStructurePublication([m
+   structures: readonly CostStructureVersionState[],[m
+[31m-  targetStructureId: string,[m
+[32m+[m[32m  targetStructureId: string[m
+ ): StructurePublicationPlan {[m
+[31m-  const target = structures.find(structure => structure.id === targetStructureId);[m
+[32m+[m[32m  const target = structures.find([m
+[32m+[m[32m    structure => structure.id === targetStructureId[m
+[32m+[m[32m  );[m
+   if (!target) throw new Error("Structure version not found.");[m
+[31m-  if (target.status !== "DRAFT") throw new Error("Only a DRAFT structure can be published.");[m
+[32m+[m[32m  if (target.status !== "DRAFT")[m
+[32m+[m[32m    throw new Error("Only a DRAFT structure can be published.");[m
+ [m
+[31m-  const sameItem = structures.filter(structure => structure.itemId === target.itemId);[m
+[32m+[m[32m  const sameItem = structures.filter([m
+[32m+[m[32m    structure => structure.itemId === target.itemId[m
+[32m+[m[32m  );[m
+   const duplicateVersions = new Set<number>();[m
+   for (const structure of sameItem) {[m
+[31m-    if (duplicateVersions.has(structure.version)) throw new Error("Duplicate structure version number.");[m
+[32m+[m[32m    if (duplicateVersions.has(structure.version))[m
+[32m+[m[32m      throw new Error("Duplicate structure version number.");[m
+     duplicateVersions.add(structure.version);[m
+   }[m
+   const active = sameItem.filter(structure => structure.status === "ACTIVE");[m
+[31m-  if (active.length > 1) throw new Error("Data integrity error: more than one ACTIVE structure exists for this item.");[m
+[32m+[m[32m  if (active.length > 1)[m
+[32m+[m[32m    throw new Error([m
+[32m+[m[32m      "Data integrity error: more than one ACTIVE structure exists for this item."[m
+[32m+[m[32m    );[m
+ [m
+   return {[m
+     activateStructureId: target.id,[m
+[1mdiff --git a/server/routers/costing.ts b/server/routers/costing.ts[m
+[1mindex a77af27..db7586a 100644[m
+[1m--- a/server/routers/costing.ts[m
+[1m+++ b/server/routers/costing.ts[m
+[36m@@ -1,14 +1,50 @@[m
+ import { TRPCError } from "@trpc/server";[m
+ import { z } from "zod";[m
+[31m-import { calculateItemCost, CostingDomainError, type CostingItem } from "../domain/costing/engine";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  calculateItemCost,[m
+[32m+[m[32m  calculateItemCostWithGamma,[m
+[32m+[m[32m  CostingDomainError,[m
+[32m+[m[32m  type CostingItem,[m
+[32m+[m[32m} from "../domain/costing/engine";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  createCostingSnapshot,[m
+[32m+[m[32m  listCostingSnapshots,[m
+[32m+[m[32m  publishCostStructure,[m
+[32m+[m[32m} from "../db/costing";[m
+ import { requireTenantPermission } from "../services/tenant-access";[m
+ import { protectedProcedure, router } from "../_core/trpc";[m
+ [m
+ const organizationId = z.string().min(8).max(64);[m
+[31m-const decimalInput = z.string().regex(/^\\d+(?:\\.\\d{1,3})?$/, "Use um número não negativo com até três casas decimais.");[m
+[32m+[m[32mconst decimalInput = z[m
+[32m+[m[32m  .string()[m
+[32m+[m[32m  .regex([m
+[32m+[m[32m    /^\\d+(?:\\.\\d{1,3})?$/,[m
+[32m+[m[32m    "Use um número não negativo com até três casas decimais."[m
+[32m+[m[32m  );[m
+ const unitInput = z.enum([[m
+[31m-  "kg", "g", "mg", "t", "m", "cm", "mm", "un", "unidade", "serviço", "servico", "conjunto", "par", "peça", "peca",[m
+[31m-  "h", "min", "s", "L", "mL", "m²", "cm²", "mm²",[m
+[32m+[m[32m  "kg",[m
+[32m+[m[32m  "g",[m
+[32m+[m[32m  "mg",[m
+[32m+[m[32m  "t",[m
+[32m+[m[32m  "m",[m
+[32m+[m[32m  "cm",[m
+[32m+[m[32m  "mm",[m
+[32m+[m[32m  "un",[m
+[32m+[m[32m  "unidade",[m
+[32m+[m[32m  "serviço",[m
+[32m+[m[32m  "servico",[m
+[32m+[m[32m  "conjunto",[m
+[32m+[m[32m  "par",[m
+[32m+[m[32m  "peça",[m
+[32m+[m[32m  "peca",[m
+[32m+[m[32m  "h",[m
+[32m+[m[32m  "min",[m
+[32m+[m[32m  "s",[m
+[32m+[m[32m  "L",[m
+[32m+[m[32m  "mL",[m
+[32m+[m[32m  "m²",[m
+[32m+[m[32m  "cm²",[m
+[32m+[m[32m  "mm²",[m
+ ]);[m
+ const structureLine = z.object({[m
+   componentItemId: z.string().trim().min(1).max(128),[m
+[36m@@ -20,6 +56,7 @@[m [mconst costingItem = z.object({[m
+   type: z.enum(["SIMPLE", "COMPOSITE"]),[m
+   active: z.boolean(),[m
+   unit: unitInput,[m
+[32m+[m[32m  groupId: z.string().trim().min(1).max(32).nullable().optional(),[m
+   outputQuantity: decimalInput.optional(),[m
+   manualUnitCost: decimalInput.nullable().optional(),[m
+   structure: z.array(structureLine).max(1000).optional(),[m
+[36m@@ -27,20 +64,169 @@[m [mconst costingItem = z.object({[m
+ [m
+ export const costingRouter = router({[m
+   calculate: protectedProcedure[m
+[31m-    .input(z.object({[m
+[31m-      organizationId,[m
+[31m-      items: z.array(costingItem).min(1).max(500),[m
+[31m-      targetItemId: z.string().trim().min(1).max(128),[m
+[31m-    }))[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        items: z.array(costingItem).min(1).max(500),[m
+[32m+[m[32m        targetItemId: z.string().trim().min(1).max(128),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+     .mutation(async ({ ctx, input }) => {[m
+[31m-      await requireTenantPermission(ctx.user.id, input.organizationId, "costing.read");[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "costing.read"[m
+[32m+[m[32m      );[m
+       try {[m
+[31m-        return calculateItemCost(input.items as CostingItem[], input.targetItemId);[m
+[32m+[m[32m        return calculateItemCost([m
+[32m+[m[32m          input.items as CostingItem[],[m
+[32m+[m[32m          input.targetItemId[m
+[32m+[m[32m        );[m
+       } catch (error) {[m
+         if (error instanceof CostingDomainError) {[m
+[31m-          throw new TRPCError({ code: "BAD_REQUEST", message: error.message, cause: error });[m
+[32m+[m[32m          throw new TRPCError({[m
+[32m+[m[32m            code: "BAD_REQUEST",[m
+[32m+[m[32m            message: error.message,[m
+[32m+[m[32m            cause: error,[m
+[32m+[m[32m          });[m
+         }[m
+         throw error;[m
+       }[m
+     }),[m
+[32m+[m[32m  calculateWithGamma: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        items: z.array(costingItem).min(1).max(500),[m
+[32m+[m[32m        targetItemId: z.string().trim().min(1).max(128),[m
+[32m+[m[32m        gamma: z.object({[m
+[32m+[m[32m          active: z.boolean(),[m
+[32m+[m[32m          percentage: z[m
+[32m+[m[32m            .string()[m
+[32m+[m[32m            .regex(/^\d+(?:\.\d{1,4})?$/)[m
+[32m+[m[32m            .default("1.2"),[m
+[32m+[m[32m          selectedGroupIds: z.array(z.string().trim().min(1).max(32)).max(100),[m
+[32m+[m[32m        }),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .mutation(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "costing.read"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      try {[m
+[32m+[m[32m        return calculateItemCostWithGamma([m
+[32m+[m[32m          input.items as CostingItem[],[m
+[32m+[m[32m          input.targetItemId,[m
+[32m+[m[32m          input.gamma[m
+[32m+[m[32m        );[m
+[32m+[m[32m      } catch (error) {[m
+[32m+[m[32m        if (error instanceof CostingDomainError)[m
+[32m+[m[32m          throw new TRPCError({[m
+[32m+[m[32m            code: "BAD_REQUEST",[m
+[32m+[m[32m            message: error.message,[m
+[32m+[m[32m            cause: error,[m
+[32m+[m[32m          });[m
+[32m+[m[32m        throw error;[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }),[m
+[32m+[m[32m  createSnapshot: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        targetItemId: z.string().trim().min(1).max(128),[m
+[32m+[m[32m        structureId: z.string().trim().min(1).max(32).nullable().optional(),[m
+[32m+[m[32m        items: z.array(costingItem).min(1).max(500),[m
+[32m+[m[32m        gamma: z.object({[m
+[32m+[m[32m          active: z.boolean(),[m
+[32m+[m[32m          percentage: z[m
+[32m+[m[32m            .string()[m
+[32m+[m[32m            .regex(/^\d+(?:\.\d{1,4})?$/)[m
+[32m+[m[32m            .default("1.2"),[m
+[32m+[m[32m          selectedGroupIds: z.array(z.string().trim().min(1).max(32)).max(100),[m
+[32m+[m[32m          baseBatchCost: z.string().optional(),[m
+[32m+[m[32m          adjustmentBatchCost: z.string().optional(),[m
+[32m+[m[32m          adjustmentUnitCost: z.string().optional(),[m
+[32m+[m[32m          baseLines: z[m
+[32m+[m[32m            .array([m
+[32m+[m[32m              z.object({[m
+[32m+[m[32m                itemId: z.string(),[m
+[32m+[m[32m                groupId: z.string(),[m
+[32m+[m[32m                quantity: z.string(),[m
+[32m+[m[32m                unit: z.string(),[m
+[32m+[m[32m                unitCost: z.string(),[m
+[32m+[m[32m                batchCost: z.string(),[m
+[32m+[m[32m              })[m
+[32m+[m[32m            )[m
+[32m+[m[32m            .optional(),[m
+[32m+[m[32m        }),[m
+[32m+[m[32m        result: z.object({[m
+[32m+[m[32m          itemId: z.string(),[m
+[32m+[m[32m          unit: z.string(),[m
+[32m+[m[32m          exactUnitCost: z.string(),[m
+[32m+[m[32m          displayUnitCost: z.string(),[m
+[32m+[m[32m          lines: z.array([m
+[32m+[m[32m            z.object({[m
+[32m+[m[32m              componentItemId: z.string(),[m
+[32m+[m[32m              quantity: z.string(),[m
+[32m+[m[32m              enteredUnit: z.string(),[m
+[32m+[m[32m              referenceUnit: z.string(),[m
+[32m+[m[32m              conversionFactor: z.string(),[m
+[32m+[m[32m              componentUnitCost: z.string(),[m
+[32m+[m[32m              batchLineCost: z.string(),[m
+[32m+[m[32m            })[m
+[32m+[m[32m          ),[m
+[32m+[m[32m        }),[m
+[32m+[m[32m        calculatedAt: z.string().datetime(),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .mutation(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "costing.read"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      return createCostingSnapshot({[m
+[32m+[m[32m        ...input,[m
+[32m+[m[32m        sourceItems: input.items as CostingItem[],[m
+[32m+[m[32m        result: input.result,[m
+[32m+[m[32m        gamma: input.gamma,[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }),[m
+[32m+[m[32m  snapshots: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        itemId: z.string().trim().min(1).max(32),[m
+[32m+[m[32m        limit: z.number().int().min(1).max(100).default(50),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .query(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "costing.read"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      return listCostingSnapshots([m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        input.itemId,[m
+[32m+[m[32m        input.limit[m
+[32m+[m[32m      );[m
+[32m+[m[32m    }),[m
+[32m+[m[32m  publishStructure: protectedProcedure[m
+[32m+[m[32m    .input([m
+[32m+[m[32m      z.object({[m
+[32m+[m[32m        organizationId,[m
+[32m+[m[32m        structureId: z.string().trim().min(1).max(32),[m
+[32m+[m[32m      })[m
+[32m+[m[32m    )[m
+[32m+[m[32m    .mutation(async ({ ctx, input }) => {[m
+[32m+[m[32m      await requireTenantPermission([m
+[32m+[m[32m        ctx.user.id,[m
+[32m+[m[32m        input.organizationId,[m
+[32m+[m[32m        "workspace.manage"[m
+[32m+[m[32m      );[m
+[32m+[m[32m      return publishCostStructure(input.organizationId, input.structureId);[m
+[32m+[m[32m    }),[m
+ });[m
+[1mdiff --git a/tsconfig.json b/tsconfig.json[m
+[1mindex a0203ee..54de26a 100644[m
+[1m--- a/tsconfig.json[m
+[1m+++ b/tsconfig.json[m
+[36m@@ -5,6 +5,7 @@[m
+     "incremental": true,[m
+     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",[m
+     "noEmit": true,[m
+[32m+[m[32m    "target": "ES2020",[m
+     "module": "ESNext",[m
+     "strict": true,[m
+     "lib": ["esnext", "dom", "dom.iterable"],[m
