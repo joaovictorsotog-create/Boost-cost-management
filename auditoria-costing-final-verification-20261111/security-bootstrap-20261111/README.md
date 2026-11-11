@@ -5,6 +5,7 @@ Documentary package for the local application commit `3350e6e884be85b410d31e5ca9
 ## Contents
 
 - `RELATORIO-SEGURANCA-E-CRUD.md` — objective report and the seven mandatory answers.
+- `RELATORIO-INTEGRACAO-FINAL-20261111.md` — branch state, commit chain and recommendation for `main`.
 - `artifacts/` — complete diff, individual commit patch, and changed-file list.
 - `source/` — byte-for-byte copies from the committed application tree, including migrations, RLS helpers, CRUD service/router and harnesses.
 - `evidence/` — typecheck, targeted tests, disposable PostgreSQL RLS/identity/installation/concurrency logs, preflight cases and Git state.

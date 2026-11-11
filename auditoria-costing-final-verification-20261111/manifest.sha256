@@ -38,7 +38,8 @@ ddc19ceff46fca78dcc828b41d254873219f064e8b66b7bdd2c19be308d52b5c  ./final-comple
 4f0a714e62c03c5c2e44dcf66b93b7370fefbfd251bac53fa9c651f4b8d708e6  ./final-completion-20261111/source/run-costing-correction-pg.sh
 7623517970324cad6d6e5d0f82a324ca48bc6acb0665dd5564c8e5045938bee1  ./final-completion-20261111/source/run-costing-final-verification-pg.sh
 873f545355992bae146c50b6196dc5d282fc96f8a73d65fa2fc734480a485692  ./final-completion-20261111/source/run-costing-rls-pg.sh
-56d6c3d21a996ce652f40ddb41aa90513005073a28a43c34e226f1dacf07da70  ./security-bootstrap-20261111/README.md
+ba64cf85e412d85f89a6b0a58fab4017c2adac9435150ca4b28a22efe0191ef8  ./security-bootstrap-20261111/README.md
+9e6755c0396901aea64fb153e698256fbec43841c8d6c34f5c24be85fbc975a0  ./security-bootstrap-20261111/RELATORIO-INTEGRACAO-FINAL-20261111.md
 feef3827f84ec59d5f1ad457bde23586d87ad9e35ad73366efa73bc2b014ebc2  ./security-bootstrap-20261111/RELATORIO-SEGURANCA-E-CRUD.md
 aaf72eb51c2b3ed87c7154fca66f6a0bee1a0c962d9509bfedc6f73a9fbf02fe  ./security-bootstrap-20261111/artifacts/changed-files.txt
 fb2a554a7d507673828e938e3bf2cb282fa3a3604fc2282194248fdc0e50e67f  ./security-bootstrap-20261111/artifacts/commit-3350e6e.patch
@@ -50,7 +51,7 @@ f3be519e03a64f496c5c1905f7426c808fd2abd3d36ea1c221f1e7642e0b39e1  ./security-boo
 99a441078c49e16a7068dbf30fd62b9ac6a9547cfb8c6454b1ed905db9df94c6  ./security-bootstrap-20261111/evidence/rls-harness.log
 7c56afcd4da3be1874626af5a33533c4681168a84da39cc34269a30841a1f800  ./security-bootstrap-20261111/evidence/targeted-tests.txt
 bf3904449b0636f6a0d43099918887c09c06ba84d02044013abcd187d5575183  ./security-bootstrap-20261111/evidence/typecheck.txt
-095d4147454a9a8d0f741422d777c3871db887e24d20e28f481c4da71e168410  ./security-bootstrap-20261111/manifest.sha256
+fa901da5deea75ec711ffd26c42d8d6fc106d4cfdacdcabcd92a6b2e02dcc936  ./security-bootstrap-20261111/manifest.sha256
 0e4d568c4c1b8d1205799add67ae49208e2ddd7149dbdfd77712ae0ef5b38f80  ./security-bootstrap-20261111/source/drizzle/pg/0039_costing_rls_security.sql
 95021a408b1b673c386e6570fbc7dafa039211b835ab595203a6eb34e80b842d  ./security-bootstrap-20261111/source/drizzle/pg/0040_costing_security_identity_bootstrap.sql
 9c180271857d91bb9e8b74f6f859072219fd46728857aca8bc85c2503b1900e2  ./security-bootstrap-20261111/source/drizzle/pg/meta/_journal.json
