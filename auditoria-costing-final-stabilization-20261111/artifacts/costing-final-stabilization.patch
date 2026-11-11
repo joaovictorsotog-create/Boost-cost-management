@@ -1,0 +1,564 @@
+diff --git a/drizzle/pg/0038_costing_final_stabilization.sql b/drizzle/pg/0038_costing_final_stabilization.sql
+new file mode 100644
+index 0000000..b98e137
+--- /dev/null
++++ b/drizzle/pg/0038_costing_final_stabilization.sql
+@@ -0,0 +1,78 @@
++-- Final stabilization: keep the counter as the next available version and
++-- serialize line mutations with structure publication.
++
++INSERT INTO "cost_structure_version_counters" ("organizationId", "itemId", "nextVersion")
++SELECT "organizationId", "itemId", MAX("version") + 1
++FROM "cost_structures"
++GROUP BY "organizationId", "itemId"
++ON CONFLICT ("organizationId", "itemId") DO UPDATE
++SET "nextVersion" = GREATEST(
++  "cost_structure_version_counters"."nextVersion",
++  EXCLUDED."nextVersion"
++);
++
++CREATE OR REPLACE FUNCTION "prevent_published_cost_structure_line_mutation"() RETURNS trigger LANGUAGE plpgsql AS $$
++DECLARE
++  source_status text;
++  destination_status text;
++BEGIN
++  IF TG_OP = 'INSERT' THEN
++    SELECT "status" INTO destination_status
++    FROM "cost_structures"
++    WHERE "organizationId" = NEW."organizationId" AND "id" = NEW."structureId"
++    FOR UPDATE;
++    IF destination_status IS DISTINCT FROM 'DRAFT' THEN
++      RAISE EXCEPTION 'Lines of published cost structures are immutable';
++    END IF;
++    RETURN NEW;
++  END IF;
++
++  IF TG_OP = 'UPDATE' THEN
++    -- Always acquire source and destination structure locks in the same
++    -- organization/id order used by publication. This serializes a line
++    -- mutation with publication and avoids opposite-order deadlocks when a
++    -- line is moved between two DRAFT structures.
++    PERFORM 1
++    FROM "cost_structures"
++    WHERE ("organizationId", "id") IN (
++      (OLD."organizationId", OLD."structureId"),
++      (NEW."organizationId", NEW."structureId")
++    )
++    ORDER BY "organizationId", "id"
++    FOR UPDATE;
++
++    SELECT "status" INTO source_status
++    FROM "cost_structures"
++    WHERE "organizationId" = OLD."organizationId" AND "id" = OLD."structureId";
++    IF source_status IS DISTINCT FROM 'DRAFT' THEN
++      RAISE EXCEPTION 'Lines of published cost structures are immutable';
++    END IF;
++
++    IF NEW."organizationId" <> OLD."organizationId" THEN
++      RAISE EXCEPTION 'A cost structure line cannot change organization';
++    END IF;
++
++    SELECT "status" INTO destination_status
++    FROM "cost_structures"
++    WHERE "organizationId" = NEW."organizationId" AND "id" = NEW."structureId";
++    IF destination_status IS DISTINCT FROM 'DRAFT' THEN
++      RAISE EXCEPTION 'Lines of published cost structures are immutable';
++    END IF;
++    RETURN NEW;
++  END IF;
++
++  SELECT "status" INTO source_status
++  FROM "cost_structures"
++  WHERE "organizationId" = OLD."organizationId" AND "id" = OLD."structureId"
++  FOR UPDATE;
++  IF source_status IS DISTINCT FROM 'DRAFT' THEN
++    RAISE EXCEPTION 'Lines of published cost structures are immutable';
++  END IF;
++  RETURN OLD;
++END;
++$$;
++
++DROP TRIGGER IF EXISTS "cost_structure_lines_published_immutable" ON "cost_structure_lines";
++CREATE TRIGGER "cost_structure_lines_published_immutable"
++BEFORE INSERT OR UPDATE OR DELETE ON "cost_structure_lines"
++FOR EACH ROW EXECUTE FUNCTION "prevent_published_cost_structure_line_mutation"();
+diff --git a/scripts/costing-correction-pg.ts b/scripts/costing-correction-pg.ts
+index 38afe5a..6106c8d 100644
+--- a/scripts/costing-correction-pg.ts
++++ b/scripts/costing-correction-pg.ts
+@@ -4,6 +4,7 @@ import {
+   costCalculations,
+   costStructureLines,
+   costStructures,
++  costStructureVersionCounters,
+ } from "../drizzle/pg/schema.costing";
+ import {
+   calculateAndCreateCostingSnapshot,
+@@ -181,6 +182,133 @@ for (let i = 1; i < history.length; i += 1) {
+   );
+ }
+ 
++const [targetACounterBeforeConcurrency] = await db
++  .select({ nextVersion: costStructureVersionCounters.nextVersion })
++  .from(costStructureVersionCounters)
++  .where(
++    and(
++      eq(costStructureVersionCounters.organizationId, "org-correction-a"),
++      eq(costStructureVersionCounters.itemId, "target-a")
++    )
++  )
++  .limit(1);
++assert(
++  targetACounterBeforeConcurrency?.nextVersion === 6,
++  `counter did not preserve MAX+1 before concurrency: ${targetACounterBeforeConcurrency?.nextVersion}`
++);
++
++const emptyVersion = await createCostStructure({
++  organizationId: "org-correction-a",
++  itemId: "target-empty",
++});
++assert(emptyVersion.version === 1, "empty item did not start at version 1");
++const oneVersion = await createCostStructure({
++  organizationId: "org-correction-a",
++  itemId: "target-one",
++});
++assert(
++  oneVersion.version === 2,
++  "single-version item did not allocate version 2"
++);
++const gapVersion = await createCostStructure({
++  organizationId: "org-correction-a",
++  itemId: "target-gap",
++});
++assert(gapVersion.version === 4, "non-contiguous item did not allocate MAX+1");
++
++const [emptyCounterBeforeRollback] = await db
++  .select({ nextVersion: costStructureVersionCounters.nextVersion })
++  .from(costStructureVersionCounters)
++  .where(
++    and(
++      eq(costStructureVersionCounters.organizationId, "org-correction-a"),
++      eq(costStructureVersionCounters.itemId, "target-empty")
++    )
++  )
++  .limit(1);
++try {
++  await db.transaction(async tx => {
++    await tx
++      .update(costStructureVersionCounters)
++      .set({
++        nextVersion: sql`${costStructureVersionCounters.nextVersion} + 1`,
++      })
++      .where(
++        and(
++          eq(costStructureVersionCounters.organizationId, "org-correction-a"),
++          eq(costStructureVersionCounters.itemId, "target-empty")
++        )
++      );
++    throw new Error("counter rollback marker");
++  });
++} catch (error) {
++  assert(
++    String(error).includes("counter rollback marker"),
++    "unexpected counter rollback error"
++  );
++}
++const [emptyCounterAfterRollback] = await db
++  .select({ nextVersion: costStructureVersionCounters.nextVersion })
++  .from(costStructureVersionCounters)
++  .where(
++    and(
++      eq(costStructureVersionCounters.organizationId, "org-correction-a"),
++      eq(costStructureVersionCounters.itemId, "target-empty")
++    )
++  )
++  .limit(1);
++assert(
++  emptyCounterAfterRollback?.nextVersion ===
++    emptyCounterBeforeRollback?.nextVersion,
++  "counter rollback did not restore nextVersion"
++);
++const repeatedEmptyVersion = await createCostStructure({
++  organizationId: "org-correction-a",
++  itemId: "target-empty",
++});
++assert(
++  repeatedEmptyVersion.version === 2,
++  "post-rollback allocation reused a version"
++);
++
++await db.execute(sql`
++  CREATE OR REPLACE FUNCTION "costing_test_fail_after_counter"() RETURNS trigger LANGUAGE plpgsql AS $$
++  BEGIN
++    IF NEW."itemId" = 'target-failing' THEN
++      RAISE EXCEPTION 'forced create rollback';
++    END IF;
++    RETURN NEW;
++  END;
++  $$
++`);
++await db.execute(sql`
++  CREATE TRIGGER "costing_test_fail_after_counter_trigger"
++  BEFORE INSERT ON "cost_structures"
++  FOR EACH ROW EXECUTE FUNCTION "costing_test_fail_after_counter"()
++`);
++let forcedRollback = false;
++try {
++  await createCostStructure({
++    organizationId: "org-correction-a",
++    itemId: "target-failing",
++  });
++} catch (error) {
++  const cause = error as { cause?: unknown };
++  forcedRollback =
++    String(error).includes("forced create rollback") ||
++    String(cause.cause).includes("forced create rollback");
++}
++assert(forcedRollback, "create failure did not expose the forced rollback");
++await db.execute(
++  sql`DROP TRIGGER "costing_test_fail_after_counter_trigger" ON "cost_structures"`
++);
++await db.execute(sql`DROP FUNCTION "costing_test_fail_after_counter"()`);
++const recoveredVersion = await createCostStructure({
++  organizationId: "org-correction-a",
++  itemId: "target-failing",
++});
++assert(recoveredVersion.version === 1, "failed creation consumed a version");
++
+ const tenConcurrentDrafts = await Promise.all(
+   Array.from({ length: 10 }, () =>
+     createCostStructure({
+@@ -246,6 +374,21 @@ assert(
+   concurrent.filter(result => result.status === "fulfilled").length >= 1,
+   "concurrent publication failed entirely"
+ );
++for (const result of concurrent) {
++  if (result.status === "fulfilled") {
++    assert(
++      result.value.published.status === "ACTIVE",
++      "fulfilled publication did not return ACTIVE"
++    );
++  } else {
++    assert(
++      String(result.reason).includes("DRAFT") ||
++        String(result.reason).includes("immutable") ||
++        String(result.reason).includes("40001"),
++      `unexpected concurrent publication rejection: ${String(result.reason)}`
++    );
++  }
++}
+ const finalTargetStructures = await listCostStructures(
+   "org-correction-a",
+   "target-a"
+@@ -312,6 +455,13 @@ console.log(
+     historyReturned: history.length,
+     snapshotsPersisted: Number(snapshotCount?.count ?? 0),
+     draftLifecycle: "create-line-update-line-delete-line-publish",
++    edgeCaseVersions: {
++      empty: emptyVersion.version,
++      singleExisting: oneVersion.version,
++      nonContiguous: gapVersion.version,
++      afterRollback: repeatedEmptyVersion.version,
++    },
++    counterBeforeConcurrency: targetACounterBeforeConcurrency?.nextVersion,
+     tenConcurrentVersions: tenVersions,
+     scopedConcurrentCreations: scopedConcurrentDrafts.length,
+     concurrentPublication: concurrent.map(result => result.status),
+diff --git a/scripts/costing-line-publication-race-pg.ts b/scripts/costing-line-publication-race-pg.ts
+new file mode 100644
+index 0000000..ed8ec58
+--- /dev/null
++++ b/scripts/costing-line-publication-race-pg.ts
+@@ -0,0 +1,113 @@
++import postgres from "postgres";
++
++const url = process.env.SUPABASE_DATABASE_URL;
++if (!url) throw new Error("database unavailable");
++
++const admin = postgres(url, { max: 1 });
++const a = postgres(url, { max: 1 });
++const b = postgres(url, { max: 1 });
++
++try {
++  await admin`
++    INSERT INTO "cost_items" ("id","organizationId","name","itemType","referenceUnit","active","createdAt","updatedAt")
++    VALUES
++      ('race-item-a','org-correction-a','Race item A','COMPOSITE','un',true,'now','now'),
++      ('race-item-b','org-correction-a','Race item B','COMPOSITE','un',true,'now','now')
++  `;
++  await admin`
++    INSERT INTO "cost_structures" ("id","organizationId","itemId","version","status","outputQuantity","createdAt","updatedAt")
++    VALUES
++      ('race-a-old','org-correction-a','race-item-a',1,'ACTIVE','1','now','now'),
++      ('race-a-draft','org-correction-a','race-item-a',2,'DRAFT','1','now','now'),
++      ('race-b-old','org-correction-a','race-item-b',1,'ACTIVE','1','now','now'),
++      ('race-b-draft','org-correction-a','race-item-b',2,'DRAFT','1','now','now')
++  `;
++
++  const [pidA, pidB] = await Promise.all([
++    a`select pg_backend_pid() as pid`,
++    b`select pg_backend_pid() as pid`,
++  ]);
++  if (pidA[0]?.pid === pidB[0]?.pid) {
++    throw new Error("race test did not obtain independent PostgreSQL sessions");
++  }
++
++  // Barrier: both independent sessions are in a transaction before either
++  // side starts its state transition.
++  await Promise.all([a`begin`, b`begin`]);
++  await a`
++    INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")
++    VALUES ('race-a-line','org-correction-a','race-a-draft','source-a','1','un',0,'now','now')
++  `;
++  await a`commit`;
++  await b`
++    UPDATE "cost_structures" SET "status" = 'SUPERSEDED', "updatedAt" = 'now'
++    WHERE "id" = 'race-a-old'
++  `;
++  await b`
++    UPDATE "cost_structures" SET "status" = 'ACTIVE', "updatedAt" = 'now'
++    WHERE "id" = 'race-a-draft'
++  `;
++  await b`commit`;
++
++  await b`begin`;
++  await b`
++    SELECT "id" FROM "cost_structures"
++    WHERE "id" = 'race-b-draft'
++    FOR UPDATE
++  `;
++  await a`begin`;
++  const rejectedInsert = a`
++    INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")
++    VALUES ('race-b-line','org-correction-a','race-b-draft','source-a','1','un',0,'now','now')
++  `;
++  await b`
++    UPDATE "cost_structures" SET "status" = 'SUPERSEDED', "updatedAt" = 'now'
++    WHERE "id" = 'race-b-old'
++  `;
++  await b`
++    UPDATE "cost_structures" SET "status" = 'ACTIVE', "updatedAt" = 'now'
++    WHERE "id" = 'race-b-draft'
++  `;
++  await b`commit`;
++  let rejected = false;
++  try {
++    await rejectedInsert;
++  } catch (error) {
++    rejected = String(error).includes(
++      "Lines of published cost structures are immutable"
++    );
++  }
++  await a`rollback`;
++  if (!rejected)
++    throw new Error("line insert after publication was not rejected");
++
++  const [finalA] = await admin`
++    SELECT "status" FROM "cost_structures" WHERE "id" = 'race-a-draft'
++  `;
++  const [finalB] = await admin`
++    SELECT "status" FROM "cost_structures" WHERE "id" = 'race-b-draft'
++  `;
++  const [lineA] = await admin`
++    SELECT count(*)::int AS count FROM "cost_structure_lines" WHERE "id" = 'race-a-line'
++  `;
++  const [lineB] = await admin`
++    SELECT count(*)::int AS count FROM "cost_structure_lines" WHERE "id" = 'race-b-line'
++  `;
++  if (finalA?.status !== "ACTIVE" || finalB?.status !== "ACTIVE") {
++    throw new Error("race publication did not produce ACTIVE structures");
++  }
++  if (lineA?.count !== 1 || lineB?.count !== 0) {
++    throw new Error("race line state was not atomic");
++  }
++  console.log(
++    JSON.stringify({
++      independentBackendPids: [pidA[0]?.pid, pidB[0]?.pid],
++      lineBeforePublication: "committed-before-publication",
++      lineAfterPublication: "rejected",
++      finalStatuses: [finalA?.status, finalB?.status],
++      finalLineCounts: [lineA?.count, lineB?.count],
++    })
++  );
++} finally {
++  await Promise.all([a.end(), b.end(), admin.end()]);
++}
+diff --git a/scripts/run-costing-correction-pg.sh b/scripts/run-costing-correction-pg.sh
+index c82826c..5b485ad 100755
+--- a/scripts/run-costing-correction-pg.sh
++++ b/scripts/run-costing-correction-pg.sh
+@@ -30,6 +30,10 @@ INSERT INTO "cost_items" ("id","organizationId","groupId","name","itemType","ref
+   ('source-a','org-correction-a','group-a','Artificial source A','SIMPLE','un','100',true,'now','now'),
+   ('target-a','org-correction-a',NULL,'Artificial target A','COMPOSITE','un',NULL,true,'now','now'),
+   ('target-c','org-correction-a',NULL,'Artificial target C','COMPOSITE','un',NULL,true,'now','now'),
++  ('target-empty','org-correction-a',NULL,'Artificial empty target','COMPOSITE','un',NULL,true,'now','now'),
++  ('target-one','org-correction-a',NULL,'Artificial one-version target','COMPOSITE','un',NULL,true,'now','now'),
++  ('target-gap','org-correction-a',NULL,'Artificial gap target','COMPOSITE','un',NULL,true,'now','now'),
++  ('target-failing','org-correction-a',NULL,'Artificial rollback target','COMPOSITE','un',NULL,true,'now','now'),
+   ('source-b','org-correction-b','group-b','Artificial foreign source B','SIMPLE','un','999',true,'now','now'),
+   ('target-b','org-correction-b',NULL,'Artificial target B','COMPOSITE','un',NULL,true,'now','now');
+ INSERT INTO "cost_structures" ("id","organizationId","itemId","version","status","outputQuantity","createdAt","updatedAt") VALUES
+@@ -37,7 +41,10 @@ INSERT INTO "cost_structures" ("id","organizationId","itemId","version","status"
+   ('draft-a','org-correction-a','target-a',2,'DRAFT','1','now','now'),
+   ('superseded-a','org-correction-a','target-a',3,'SUPERSEDED','1','now','now'),
+   ('inactive-a','org-correction-a','target-a',4,'INACTIVE','1','now','now'),
+-  ('direct-active','org-correction-a','target-c',1,'ACTIVE','1','now','now');
++  ('direct-active','org-correction-a','target-c',1,'ACTIVE','1','now','now'),
++  ('one-v1','org-correction-a','target-one',1,'DRAFT','1','now','now'),
++  ('gap-v1','org-correction-a','target-gap',1,'DRAFT','1','now','now'),
++  ('gap-v3','org-correction-a','target-gap',3,'DRAFT','1','now','now');
+ SQL
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+ INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt") VALUES
+@@ -46,6 +53,8 @@ INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","compone
+   ('direct-active-line','org-correction-a','direct-active','source-a','1','un',0,'now','now');
+ SQL
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0037_costing_correction_integrity.sql" >/dev/null
++psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0038_costing_final_stabilization.sql" >/dev/null
++psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f "$ROOT_DIR/drizzle/pg/0038_costing_final_stabilization.sql" >/dev/null
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+ INSERT INTO "costing_gamma_settings" ("id","organizationId","active","percentage","createdAt","updatedAt") VALUES
+   ('gamma-a','org-correction-a',true,'1.2000','now','now');
+@@ -53,6 +62,7 @@ INSERT INTO "costing_gamma_groups" ("organizationId","groupId","createdAt") VALU
+   ('org-correction-a','group-a','now');
+ SQL
+ SUPABASE_DATABASE_URL="postgres://$(whoami)@127.0.0.1:$PORT/postgres" pnpm --dir "$ROOT_DIR" exec tsx "$ROOT_DIR/scripts/costing-correction-pg.ts"
++SUPABASE_DATABASE_URL="postgres://$(whoami)@127.0.0.1:$PORT/postgres" pnpm --dir "$ROOT_DIR" exec tsx "$ROOT_DIR/scripts/costing-line-publication-race-pg.ts"
+ 
+ psql -h "$SOCKET" -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+ DO $$ BEGIN
+@@ -133,6 +143,14 @@ DO $$ BEGIN
+   UPDATE "cost_structure_lines" SET "quantity" = '2' WHERE "id" = 'draft-direct-line';
+   DELETE FROM "cost_structure_lines" WHERE "id" = 'draft-direct-line';
+ END $$;
++DO $$ BEGIN
++  UPDATE "cost_structure_lines"
++  SET "organizationId" = 'org-correction-b', "structureId" = 'direct-active'
++  WHERE "id" = 'draft-line-a';
++  RAISE EXCEPTION 'simultaneous organization and structure mutation was accepted';
++EXCEPTION WHEN OTHERS THEN
++  IF SQLERRM NOT LIKE '%cannot change organization%' THEN RAISE; END IF;
++END $$;
+ DO $$ BEGIN
+   INSERT INTO "cost_structure_lines" ("id","organizationId","structureId","componentItemId","quantity","quantityUnit","position","createdAt","updatedAt")
+   VALUES ('insert-active-line','org-correction-a','direct-active','source-a','1','un',1,'now','now');
+@@ -179,4 +197,14 @@ EXCEPTION WHEN OTHERS THEN
+   IF SQLERRM NOT LIKE '%Lines of published cost structures are immutable%' THEN RAISE; END IF;
+ END $$;
+ SELECT 'direct-published-immutability-and-line-protection-ok' AS result;
++SELECT "organizationId", "itemId", "nextVersion"
++FROM "cost_structure_version_counters"
++WHERE "organizationId" = 'org-correction-a'
++  AND "itemId" IN ('target-a','target-empty','target-one','target-gap')
++ORDER BY "itemId";
++SELECT "organizationId", "itemId", "status", count(*) AS structure_count
++FROM "cost_structures"
++WHERE "organizationId" = 'org-correction-a' AND "itemId" = 'target-a'
++GROUP BY "organizationId", "itemId", "status"
++ORDER BY "status";
+ SQL
+diff --git a/server/db/costing.ts b/server/db/costing.ts
+index 9fd9cbc..c227240 100644
+--- a/server/db/costing.ts
++++ b/server/db/costing.ts
+@@ -1,4 +1,4 @@
+-import { and, asc, desc, eq, max, sql } from "drizzle-orm";
++import { and, asc, desc, eq, max, or, sql } from "drizzle-orm";
+ import { nanoid } from "nanoid";
+ import {
+   costCalculations,
+@@ -159,23 +159,33 @@ async function createCostStructureOnce(
+           eq(costStructures.itemId, input.itemId)
+         )
+       );
+-    const [counter] = await tx
++    await tx
+       .insert(costStructureVersionCounters)
+       .values({
+         organizationId: input.organizationId,
+         itemId: input.itemId,
+         nextVersion: Number(versionRow?.maxVersion ?? 0) + 1,
+       })
+-      .onConflictDoUpdate({
++      .onConflictDoNothing({
+         target: [
+           costStructureVersionCounters.organizationId,
+           costStructureVersionCounters.itemId,
+         ],
+-        set: {
+-          nextVersion: sql`${costStructureVersionCounters.nextVersion} + 1`,
+-        },
++      });
++    const [counter] = await tx
++      .update(costStructureVersionCounters)
++      .set({
++        nextVersion: sql`${costStructureVersionCounters.nextVersion} + 1`,
+       })
+-      .returning({ version: costStructureVersionCounters.nextVersion });
++      .where(
++        and(
++          eq(costStructureVersionCounters.organizationId, input.organizationId),
++          eq(costStructureVersionCounters.itemId, input.itemId)
++        )
++      )
++      .returning({
++        version: sql<number>`${costStructureVersionCounters.nextVersion} - 1`,
++      });
+     const version = Number(counter?.version);
+     if (!Number.isInteger(version) || version < 1) {
+       throw new Error("Não foi possível reservar uma versão de estrutura");
+@@ -565,8 +575,11 @@ export async function publishCostStructure(
+ ) {
+   const db = await requireDb();
+   return db.transaction(async tx => {
+-    await tx.execute(sql`set transaction isolation level repeatable read`);
+-    const [target] = await tx
++    // Publication is a row-lock serialized state transition. READ COMMITTED
++    // is intentional here: after waiting for a competing publisher, the
++    // locking SELECT must observe its committed status before revalidating.
++    await tx.execute(sql`set transaction isolation level read committed`);
++    const [candidate] = await tx
+       .select()
+       .from(costStructures)
+       .where(
+@@ -575,22 +588,32 @@ export async function publishCostStructure(
+           eq(costStructures.id, targetStructureId)
+         )
+       )
+-      .for("update")
+       .limit(1);
+-    if (!target) throw new Error("Estrutura não encontrada");
+-    if (target.status !== "DRAFT")
+-      throw new Error("Somente uma estrutura DRAFT pode ser publicada");
+-    const active = await tx
+-      .select({ id: costStructures.id })
++    if (!candidate) throw new Error("Estrutura não encontrada");
++    const lockedStructures = await tx
++      .select()
+       .from(costStructures)
+       .where(
+         and(
+           eq(costStructures.organizationId, organizationId),
+-          eq(costStructures.itemId, target.itemId),
+-          eq(costStructures.status, "ACTIVE")
++          eq(costStructures.itemId, candidate.itemId),
++          or(
++            eq(costStructures.id, targetStructureId),
++            eq(costStructures.status, "ACTIVE")
++          )
+         )
+       )
++      .orderBy(asc(costStructures.id))
+       .for("update");
++    const target = lockedStructures.find(
++      structure => structure.id === targetStructureId
++    );
++    if (!target) throw new Error("Estrutura não encontrada");
++    if (target.status !== "DRAFT")
++      throw new Error("Somente uma estrutura DRAFT pode ser publicada");
++    const active = lockedStructures
++      .filter(structure => structure.status === "ACTIVE")
++      .map(structure => ({ id: structure.id }));
+     await tx
+       .update(costStructures)
+       .set({ status: "SUPERSEDED", updatedAt: nowText() })

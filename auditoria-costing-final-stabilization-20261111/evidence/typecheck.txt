@@ -1,0 +1,7 @@
+COMMAND: pnpm check
+
+> alianza-ai-platform@1.0.0 check /tmp/alianza-reconstruction
+> tsc --noEmit
+
+
+EXIT_CODE=0

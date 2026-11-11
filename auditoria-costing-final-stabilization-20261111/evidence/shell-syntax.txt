@@ -1,0 +1,3 @@
+COMMAND: bash -n scripts/run-costing-correction-pg.sh
+
+EXIT_CODE=0

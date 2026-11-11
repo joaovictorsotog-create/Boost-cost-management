@@ -1,0 +1,16 @@
+COMMAND: pnpm exec vitest run server/domain/costing/engine.test.ts server/domain/costing/snapshot.test.ts server/routers/costing.test.ts
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.
+
+ RUN  v3.2.7 /tmp/alianza-reconstruction
+
+ ✓ server/domain/costing/engine.test.ts (28 tests) 13ms
+ ✓ server/domain/costing/snapshot.test.ts (6 tests) 8ms
+ ✓ server/routers/costing.test.ts (18 tests) 15ms
+
+ Test Files  3 passed (3)
+      Tests  52 passed (52)
+   Start at  15:05:40
+   Duration  463ms (transform 240ms, setup 0ms, collect 385ms, tests 36ms, environment 1ms, prepare 190ms)
+
+
+EXIT_CODE=0

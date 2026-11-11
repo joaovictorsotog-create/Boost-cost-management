@@ -1,0 +1,11 @@
+Repository: /tmp/alianza-reconstruction
+Base: e110f98b8298d7732e3424e4b84da09df9bad9ca
+Final: 0fe7df0bcd6412b90bd3bd1d5be2341a7408fb69
+
+pnpm exec vitest run server/domain/costing/engine.test.ts server/domain/costing/snapshot.test.ts server/routers/costing.test.ts
+pnpm check
+pnpm exec prettier --check server/db/costing.ts server/domain/costing/snapshot.ts server/domain/costing/snapshot.test.ts server/routers/costing.ts server/routers/costing.test.ts scripts/costing-correction-pg.ts scripts/costing-line-publication-race-pg.ts drizzle/pg/schema.costing.ts
+git diff --check
+bash -n scripts/run-costing-correction-pg.sh
+scripts/run-costing-correction-pg.sh
+pnpm test

@@ -1,0 +1,58 @@
+COMMAND: scripts/run-costing-correction-pg.sh
+CREATE TABLE
+INSERT 0 2
+psql:/tmp/alianza-reconstruction/drizzle/pg/0036_costing_foundation.sql:110: NOTICE:  trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping
+INSERT 0 2
+INSERT 0 9
+INSERT 0 8
+INSERT 0 3
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:43: NOTICE:  trigger "cost_structures_published_immutable" for relation "cost_structures" does not exist, skipping
+psql:/tmp/alianza-reconstruction/drizzle/pg/0037_costing_correction_integrity.sql:82: NOTICE:  trigger "cost_structure_lines_published_immutable" for relation "cost_structure_lines" does not exist, skipping
+INSERT 0 1
+INSERT 0 1
+{"activeStructure":"active-a","exactUnitCost":"50.6","gamma":"0.6","historyReturned":2,"snapshotsPersisted":3,"draftLifecycle":"create-line-update-line-delete-line-publish","edgeCaseVersions":{"empty":1,"singleExisting":2,"nonContiguous":4,"afterRollback":2},"counterBeforeConcurrency":6,"tenConcurrentVersions":[6,7,8,9,10,11,12,13,14,15],"scopedConcurrentCreations":10,"concurrentPublication":["fulfilled","fulfilled"],"finalActiveForTarget":["HHEtsXY1hclev_FjLPI4"],"rollback":"ok"}
+{"independentBackendPids":[55247,55248],"lineBeforePublication":"committed-before-publication","lineAfterPublication":"rejected","finalStatuses":["ACTIVE","ACTIVE"],"finalLineCounts":[1,0]}
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+                        result                        
+------------------------------------------------------
+ direct-published-immutability-and-line-protection-ok
+(1 row)
+
+  organizationId  |    itemId    | nextVersion 
+------------------+--------------+-------------
+ org-correction-a | target-a     |          18
+ org-correction-a | target-empty |           3
+ org-correction-a | target-gap   |           5
+ org-correction-a | target-one   |           3
+(4 rows)
+
+  organizationId  |  itemId  |   status   | structure_count 
+------------------+----------+------------+-----------------
+ org-correction-a | target-a | ACTIVE     |               1
+ org-correction-a | target-a | DRAFT      |              11
+ org-correction-a | target-a | INACTIVE   |               1
+ org-correction-a | target-a | SUPERSEDED |               4
+(4 rows)
+
+
+EXIT_CODE=0

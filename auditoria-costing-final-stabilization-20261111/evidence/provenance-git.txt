@@ -1,0 +1,37 @@
+COMMAND: git status --short --branch
+## [32mcosting-final-stabilization-20261111[m
+
+COMMAND: git show -s
+HEAD=0fe7df0bcd6412b90bd3bd1d5be2341a7408fb69
+PARENT=e110f98b8298d7732e3424e4b84da09df9bad9ca
+AUTHOR=joaovictorsotog-create <3.09903845e+08+joaovictorsotog-create@users.noreply.github.com>
+DATE=2026-11-11T15:05:19+00:00
+SUBJECT=fix(costing): finalize versioning and publication races
+
+COMMAND: git log --oneline --decorate -8
+[33m0fe7df0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcosting-final-stabilization-20261111[m[33m)[m fix(costing): finalize versioning and publication races
+[33me110f98[m[33m ([m[1;32mcosting-integrity-concurrency-round-20261111[m[33m)[m fix(costing): close integrity and concurrency gaps
+[33mb9fc34b[m[33m ([m[1;31morigin/costing-correction-round-20261111[m[33m, [m[1;32mcosting-correction-round-20261111[m[33m)[m fix(costing): enforce snapshot integrity and draft lifecycle
+[33m0e1457c[m[33m ([m[1;32mfeature/alianza-costing-foundation-20261110[m[33m)[m reconstruct(costing): apply recovered audit corrections
+[33m5415538[m reconstruct(costing): restore initial costing implementation
+[33m27df6b0[m[33m ([m[1;31morigin/feature/alianza-costing-foundation-20261110[m[33m)[m Normalize exact rational values in costing snapshots
+[33m68a673b[m Test calculation snapshots and structure publication planning
+[33m04a63cb[m Add validated costing structure publication plan
+
+COMMAND: git diff --stat BASE..FINAL
+ drizzle/pg/0038_costing_final_stabilization.sql |  78 [32m++++++++++++[m
+ scripts/costing-correction-pg.ts                | 150 [32m++++++++++++++++++++++++[m
+ scripts/costing-line-publication-race-pg.ts     | 113 [32m++++++++++++++++++[m
+ scripts/run-costing-correction-pg.sh            |  30 [32m++++[m[31m-[m
+ server/db/costing.ts                            |  57 [32m++++++[m[31m---[m
+ 5 files changed, 410 insertions(+), 18 deletions(-)
+
+COMMAND: git diff --name-status BASE..FINAL
+A	drizzle/pg/0038_costing_final_stabilization.sql
+M	scripts/costing-correction-pg.ts
+A	scripts/costing-line-publication-race-pg.ts
+M	scripts/run-costing-correction-pg.sh
+M	server/db/costing.ts
+
+COMMAND: git diff --check BASE..FINAL
+EXIT=0
