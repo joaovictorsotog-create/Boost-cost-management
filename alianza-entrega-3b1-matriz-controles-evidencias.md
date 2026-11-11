@@ -1,4 +1,4 @@
-# Entrega 3B.1.5 — Matriz de controlos e evidências
+# Entrega 3B.1.6 — Matriz de controlos e evidências
 
 **Projeto:** Alianza — Sistema de Custos  
 **Role:** `alianza_audit_ro`  
@@ -19,7 +19,9 @@
 | Sequences | Etapa 7 e `sequence_state`: `USAGE`, `SELECT`, `UPDATE` | Qualquer privilégio operacional, especialmente `UPDATE` | Sequences não visíveis ou catálogo incompleto |
 | Large Objects | Etapa 9B e `large_object_state`: OID, owner, ACL, PUBLIC, memberships e `has_large_object_privilege` | Leitura ou alteração não autorizada | Catálogo/função ausente, invisível ou incompatível |
 | Funções executáveis | Etapa 9A e `executable_function_state` | Função com efeito perigoso comprovado | Função executável sem revisão individual baseada em evidências; linguagem/implementação não verificável |
+| Registo individual de funções | Etapa 9D e `review_state`: identidade completa, status, responsável, data, evidência e hashes | Revisão aprovada para outra assinatura, owner, linguagem, extensão ou definição; status rejeitado | Linha ausente, duplicada, stale, hash divergente ou CTE externa não fornecida |
 | `SECURITY DEFINER` | `security_definer_state`, `pg_depend`, owner tree e inventário de definição | Owner/membership privilegiada com caminho de risco comprovado | Owner, ACL, `search_path`, dependências ou definição sem visibilidade/revisão |
+| Privilégios efectivos do owner | `owner_effective_privilege_state`: relações, colunas, sequences, Large Objects, schemas e objetos externos | Owner efectivo pode escrever, criar, alterar LO ou possui objeto externo relevante | Função de privilégio, owner, membership, ACL ou catálogo não verificável |
 | Extensões e linguagens | Etapas 9A e 9C: extensão de origem, linguagem, validator, owner e ACL | Owner/privilégio perigoso confirmado | Linguagem externa, C/internal ou extensão sem implementação/revisão suficiente |
 | FDW e foreign servers | Etapa 9C: `pg_foreign_data_wrapper`, `pg_foreign_server` | Ownership ou ACL perigoso | Catálogo/ACL não disponível |
 | Event triggers | Etapa 9C: owner, evento, enabled, handler | Ownership indevido ou handler perigoso comprovado | Owner/handler não verificável |
@@ -56,5 +58,7 @@ Para cada função executável, o registo externo deve conter:
 10. resultado da revisão;
 11. justificativa baseada em evidências;
 12. responsável e data da revisão.
+
+O registo deve ainda conter `definition_sha256` calculado sobre os bytes UTF-8 da definição visível e `definition_md5` auxiliar. A consulta final compara os campos de identidade, exige `review_status = APPROVED`, conta todas as funções executáveis e reprova a validade lógica do registo quando houver entrada duplicada, ausente ou desatualizada.
 
 O SQL não executa funções e não transforma uma classificação manual sem evidências em aprovação.

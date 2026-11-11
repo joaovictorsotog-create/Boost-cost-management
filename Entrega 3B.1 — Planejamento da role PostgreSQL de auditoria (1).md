@@ -236,6 +236,27 @@ A role não deve receber `EXECUTE`. Contudo, funções podem ter privilégios he
 9. não usar expressões regulares sobre o corpo como prova suficiente de segurança; a decisão depende da revisão manual da definição, dependências e possíveis chamadas indiretas;
 10. tratar eventual revogação de `EXECUTE FROM PUBLIC` como mudança administrativa separada, nunca como parte automática deste plano.
 
+### Registo formal e reconciliação da revisão individual
+
+A revisão individual será mantida fora da base de dados, em registo versionado e assinado, porque esta entrega não autoriza DDL ou DML. Cada linha representa uma única função/procedure e contém schema, nome, argumentos de identidade, tipo de objeto, linguagem, owner, modo de segurança, extensão, `definition_sha256`, `definition_md5`, status, responsável, data, referência da evidência, conclusão técnica e justificativa do risco.
+
+Na execução read-only, o cliente injeta esse registo como uma CTE `VALUES` tipada. A reconciliação compara cada linha com o inventário da sessão por identidade completa e verifica `review_status = 'APPROVED'`, responsável, data, evidência, conclusão, justificativa e `definition_md5`. O cliente calcula o SHA-256 sobre os bytes UTF-8 da definição visível; a divergência de SHA-256 ou MD5, owner, assinatura, linguagem, modo de segurança ou extensão invalida a revisão. Entradas duplicadas, ausentes, stale ou não reconciliadas deixam o resultado como `INDETERMINADA`.
+
+Não são aceites declarações genéricas, uma única linha “todas as funções” ou revisão sem evidência individual. A reconciliação é feita contra a identidade obtida na mesma sessão auditada, impedindo que uma revisão de outra base, versão ou owner seja reutilizada.
+
+### Privilégios efectivos dos proprietários
+
+Para cada `SECURITY DEFINER` executável, o plano também avalia os privilégios efectivos do owner — incluindo os herdados pelas memberships — sobre:
+
+- `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`, `REFERENCES` e `TRIGGER` nas relações;
+- `INSERT`, `UPDATE` e `REFERENCES` por coluna;
+- `USAGE`, `SELECT` e `UPDATE` em sequences;
+- `UPDATE` e `SELECT` em Large Objects;
+- `CREATE` na base de dados e em schemas não sistémicos;
+- ownership de FDWs, foreign servers e event triggers.
+
+Um caminho executável com owner que possua esses privilégios, ou com ownership externo relevante, é risco confirmado e resulta em `REPROVADA`. Se a consulta do privilégio efectivo, owner, membership, ACL ou catálogo falhar, resulta em `INDETERMINADA`; a análise não se limita a `SUPERUSER`, `CREATEROLE` e `BYPASSRLS`.
+
 Não propor revogações globais nesta entrega: um `REVOKE EXECUTE ON ALL FUNCTIONS ... FROM PUBLIC` poderia quebrar a aplicação e alterar o modelo de segurança de produção.
 
 ### Funções SECURITY INVOKER e extensões
@@ -383,12 +404,13 @@ Nenhuma destas ações foi executada.
 
 Este documento requer revisão e aprovação do administrador do Supabase. Até essa aprovação, não executar o SQL, não criar a role, não configurar secrets e não iniciar a Entrega 3B.
 
-## 16. Artefactos da revisão 3B.1.5
+## 16. Artefactos da revisão 3B.1.6
 
 Além deste plano e do SQL comentado, a revisão entrega:
 
 1. uma matriz de controlos e evidências, com a consulta correspondente e os critérios de `REPROVADA`/`INDETERMINADA`;
 2. um relatório de alterações em relação à 3B.1.3;
-3. uma matriz de compatibilidade por versão PostgreSQL, sempre condicionada à confirmação de `server_version_num` na conexão real.
+3. uma matriz de compatibilidade por versão PostgreSQL, sempre condicionada à confirmação de `server_version_num` na conexão real;
+4. o modelo externo `alianza-entrega-3b1-6-registro-revisoes-funcoes.csv`, sem dados preenchidos, para reconciliação individual.
 
 Esses artefactos são documentais. Nenhum resultado de produção é afirmado antes de uma execução autorizada através da conexão independente da role.

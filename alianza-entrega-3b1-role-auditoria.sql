@@ -729,6 +729,107 @@ ORDER BY function_signature, referenced_class, referenced_object_id;
 -- muda o resultado para APROVADA.
 
 -- ============================================================================
+-- ETAPA 9D — Registro externo e reconciliação das revisões individuais
+-- ============================================================================
+-- O registro abaixo é EXTERNO ao banco e deve ser fornecido pelo cliente da
+-- auditoria como CSV/JSON assinado ou como uma CTE VALUES gerada localmente.
+-- Não criar tabela, não inserir dados e não confiar em uma declaração genérica.
+-- Cada linha deve identificar exatamente uma função/procedure executável.
+--
+-- Campos obrigatórios do registro externo:
+--   schema_name, object_name, identity_arguments, object_type, language_name,
+--   owner_name, security_mode, extension_name, definition_sha256,
+--   definition_md5, review_status, reviewer, reviewed_at, evidence_ref,
+--   technical_conclusion, risk_justification.
+--
+-- `definition_sha256` é calculado pelo cliente sobre os bytes UTF-8 da
+-- definição visível sem normalização. `definition_md5` é exposto pelo SQL
+-- apenas como verificação auxiliar de alteração. Se a definição mudar, o
+-- registro perde validade mesmo que os demais campos permaneçam iguais.
+-- O cliente deve substituir a CTE vazia por VALUES tipado, sem executar DDL.
+WITH review_registry AS (
+  SELECT *
+  FROM (VALUES
+    (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
+     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
+     NULL::text, NULL::text, NULL::timestamptz, NULL::text,
+     NULL::text, NULL::text)
+  ) AS v(schema_name, object_name, identity_arguments, object_type,
+         language_name, owner_name, security_mode, extension_name,
+         definition_sha256, definition_md5, review_status, reviewer,
+         reviewed_at, evidence_ref, technical_conclusion, risk_justification)
+  WHERE schema_name IS NOT NULL
+), function_inventory AS (
+  SELECT n.nspname AS schema_name,
+         p.proname AS object_name,
+         pg_get_function_identity_arguments(p.oid) AS identity_arguments,
+         CASE WHEN p.prokind = 'p' THEN 'procedure' ELSE 'function' END
+           AS object_type,
+         lang.lanname AS language_name,
+         owner.rolname AS owner_name,
+         CASE WHEN p.prosecdef THEN 'SECURITY DEFINER'
+              ELSE 'SECURITY INVOKER' END AS security_mode,
+         ext.extname AS extension_name,
+         md5(pg_get_functiondef(p.oid)) AS definition_md5,
+         has_function_privilege(current_user, p.oid, 'EXECUTE') AS can_execute
+  FROM pg_catalog.pg_proc p
+  JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+  JOIN pg_catalog.pg_language lang ON lang.oid = p.prolang
+  LEFT JOIN pg_catalog.pg_roles owner ON owner.oid = p.proowner
+  LEFT JOIN pg_catalog.pg_depend dep
+    ON dep.classid = 'pg_proc'::regclass
+   AND dep.objid = p.oid
+   AND dep.refclassid = 'pg_extension'::regclass
+   AND dep.deptype = 'e'
+  LEFT JOIN pg_catalog.pg_extension ext ON ext.oid = dep.refobjid
+  WHERE n.nspname NOT LIKE 'pg_%'
+    AND n.nspname <> 'information_schema'
+    AND p.prokind IN ('f', 'p')
+), review_reconciliation AS (
+  SELECT
+    COALESCE(bool_and(
+      rr.review_status = 'APPROVED'
+      AND rr.definition_md5 = fi.definition_md5
+      AND rr.schema_name = fi.schema_name
+      AND rr.object_name = fi.object_name
+      AND rr.identity_arguments = fi.identity_arguments
+      AND rr.object_type = fi.object_type
+      AND rr.language_name = fi.language_name
+      AND rr.owner_name = fi.owner_name
+      AND rr.security_mode = fi.security_mode
+      AND COALESCE(rr.extension_name, '') = COALESCE(fi.extension_name, '')
+      AND rr.reviewer IS NOT NULL
+      AND rr.reviewed_at IS NOT NULL
+      AND rr.evidence_ref IS NOT NULL
+      AND rr.technical_conclusion IS NOT NULL
+      AND rr.risk_justification IS NOT NULL
+    ) FILTER (WHERE fi.can_execute), true) AS all_reviews_valid,
+    COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NULL), false)
+      AS has_missing_review,
+    COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NOT NULL
+      AND (rr.review_status <> 'APPROVED'
+        OR rr.definition_md5 <> fi.definition_md5
+        OR rr.schema_name <> fi.schema_name
+        OR rr.object_name <> fi.object_name
+        OR rr.identity_arguments <> fi.identity_arguments
+        OR rr.object_type <> fi.object_type
+        OR rr.language_name <> fi.language_name
+        OR rr.owner_name <> fi.owner_name
+        OR rr.security_mode <> fi.security_mode
+        OR COALESCE(rr.extension_name, '') <> COALESCE(fi.extension_name, ''))), false)
+      AS has_stale_or_invalid_review,
+    count(*) FILTER (WHERE fi.can_execute) AS executable_function_count,
+    count(*) FILTER (WHERE rr.schema_name IS NOT NULL) AS registry_entry_count
+  FROM function_inventory fi
+  LEFT JOIN review_registry rr
+    ON rr.schema_name = fi.schema_name
+   AND rr.object_name = fi.object_name
+   AND rr.identity_arguments = fi.identity_arguments
+   AND rr.object_type = fi.object_type
+)
+SELECT * FROM review_reconciliation;
+
+-- ============================================================================
 -- ETAPA 9B — Large Objects
 -- ============================================================================
 -- Executar somente se pg_largeobject_metadata e has_large_object_privilege
@@ -935,6 +1036,87 @@ ROLLBACK;
 -- ou inventário truncado deve ser tratado pelo cliente como INDETERMINADA;
 -- não deve ser convertido em ausência de risco.
 WITH RECURSIVE
+review_registry AS (
+  SELECT *
+  FROM (VALUES
+    (NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
+     NULL::text, NULL::text, NULL::text, NULL::text, NULL::text,
+     NULL::text, NULL::text, NULL::timestamptz, NULL::text,
+     NULL::text, NULL::text)
+  ) AS v(schema_name, object_name, identity_arguments, object_type,
+         language_name, owner_name, security_mode, extension_name,
+         definition_sha256, definition_md5, review_status, reviewer,
+         reviewed_at, evidence_ref, technical_conclusion, risk_justification)
+  WHERE schema_name IS NOT NULL
+),
+review_inventory_final AS (
+  SELECT n.nspname AS schema_name,
+         p.proname AS object_name,
+         pg_get_function_identity_arguments(p.oid) AS identity_arguments,
+         CASE WHEN p.prokind = 'p' THEN 'procedure' ELSE 'function' END
+           AS object_type,
+         lang.lanname AS language_name,
+         owner.rolname AS owner_name,
+         CASE WHEN p.prosecdef THEN 'SECURITY DEFINER'
+              ELSE 'SECURITY INVOKER' END AS security_mode,
+         ext.extname AS extension_name,
+         md5(pg_get_functiondef(p.oid)) AS definition_md5,
+         has_function_privilege(current_user, p.oid, 'EXECUTE') AS can_execute
+  FROM pg_catalog.pg_proc p
+  JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+  JOIN pg_catalog.pg_language lang ON lang.oid = p.prolang
+  LEFT JOIN pg_catalog.pg_roles owner ON owner.oid = p.proowner
+  LEFT JOIN pg_catalog.pg_depend dep
+    ON dep.classid = 'pg_proc'::regclass
+   AND dep.objid = p.oid
+   AND dep.refclassid = 'pg_extension'::regclass
+   AND dep.deptype = 'e'
+  LEFT JOIN pg_catalog.pg_extension ext ON ext.oid = dep.refobjid
+  WHERE n.nspname NOT LIKE 'pg_%'
+    AND n.nspname <> 'information_schema'
+    AND p.prokind IN ('f', 'p')
+),
+review_state AS (
+  SELECT
+    COALESCE(bool_and(
+      rr.review_status = 'APPROVED'
+      AND rr.definition_md5 = fi.definition_md5
+      AND rr.schema_name = fi.schema_name
+      AND rr.object_name = fi.object_name
+      AND rr.identity_arguments = fi.identity_arguments
+      AND rr.object_type = fi.object_type
+      AND rr.language_name = fi.language_name
+      AND rr.owner_name = fi.owner_name
+      AND rr.security_mode = fi.security_mode
+      AND COALESCE(rr.extension_name, '') = COALESCE(fi.extension_name, '')
+      AND rr.reviewer IS NOT NULL AND rr.reviewed_at IS NOT NULL
+      AND rr.evidence_ref IS NOT NULL
+      AND rr.technical_conclusion IS NOT NULL
+      AND rr.risk_justification IS NOT NULL
+    ) FILTER (WHERE fi.can_execute), true) AS all_function_reviews_valid,
+    COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NULL), false)
+      AS has_missing_function_review,
+    COALESCE(bool_or(fi.can_execute AND rr.schema_name IS NOT NULL
+      AND (rr.review_status <> 'APPROVED'
+        OR rr.definition_md5 <> fi.definition_md5
+        OR rr.schema_name <> fi.schema_name
+        OR rr.object_name <> fi.object_name
+        OR rr.identity_arguments <> fi.identity_arguments
+        OR rr.object_type <> fi.object_type
+        OR rr.language_name <> fi.language_name
+        OR rr.owner_name <> fi.owner_name
+        OR rr.security_mode <> fi.security_mode
+        OR COALESCE(rr.extension_name, '') <> COALESCE(fi.extension_name, ''))), false)
+      AS has_stale_function_review,
+    count(*) FILTER (WHERE fi.can_execute) AS executable_function_count,
+    count(*) FILTER (WHERE rr.schema_name IS NOT NULL) AS registry_entry_count
+  FROM review_inventory_final fi
+  LEFT JOIN review_registry rr
+    ON rr.schema_name = fi.schema_name
+   AND rr.object_name = fi.object_name
+   AND rr.identity_arguments = fi.identity_arguments
+   AND rr.object_type = fi.object_type
+),
 role_tree AS (
   SELECT r.oid AS role_oid,
          r.rolname,
@@ -1105,6 +1287,89 @@ ownership_state AS (
                WHERE pg_get_userbyid(l.lanowner) = current_user)
     AS has_relevant_ownership
 ),
+owner_effective_privilege_state AS (
+  SELECT p.oid AS function_oid,
+    (
+      has_database_privilege(owner.oid, current_database(), 'CREATE')
+      OR EXISTS (
+        SELECT 1 FROM pg_catalog.pg_namespace n2
+        WHERE n2.nspname NOT LIKE 'pg_%'
+          AND n2.nspname <> 'information_schema'
+          AND has_schema_privilege(owner.oid, n2.oid, 'CREATE')
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM pg_catalog.pg_class c2
+        JOIN pg_catalog.pg_namespace n2 ON n2.oid = c2.relnamespace
+        WHERE c2.relkind IN ('r', 'p', 'f', 'v', 'm')
+          AND n2.nspname NOT LIKE 'pg_%'
+          AND n2.nspname <> 'information_schema'
+          AND (
+            has_table_privilege(owner.oid, c2.oid, 'INSERT')
+            OR has_table_privilege(owner.oid, c2.oid, 'UPDATE')
+            OR has_table_privilege(owner.oid, c2.oid, 'DELETE')
+            OR has_table_privilege(owner.oid, c2.oid, 'TRUNCATE')
+            OR has_table_privilege(owner.oid, c2.oid, 'REFERENCES')
+            OR has_table_privilege(owner.oid, c2.oid, 'TRIGGER')
+            OR has_any_column_privilege(owner.oid, c2.oid, 'INSERT')
+            OR has_any_column_privilege(owner.oid, c2.oid, 'UPDATE')
+            OR has_any_column_privilege(owner.oid, c2.oid, 'REFERENCES')
+          )
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM pg_catalog.pg_class s2
+        JOIN pg_catalog.pg_namespace n2 ON n2.oid = s2.relnamespace
+        WHERE s2.relkind = 'S'
+          AND n2.nspname NOT LIKE 'pg_%'
+          AND n2.nspname <> 'information_schema'
+          AND (
+            has_sequence_privilege(owner.oid, s2.oid, 'USAGE')
+            OR has_sequence_privilege(owner.oid, s2.oid, 'SELECT')
+            OR has_sequence_privilege(owner.oid, s2.oid, 'UPDATE')
+          )
+      )
+      OR EXISTS (
+        SELECT 1 FROM pg_catalog.pg_largeobject_metadata lo
+        WHERE has_large_object_privilege(owner.oid, lo.oid, 'UPDATE')
+      )
+    ) AS has_owner_effective_write_risk,
+    EXISTS (
+      SELECT 1 FROM pg_catalog.pg_largeobject_metadata lo
+      WHERE has_large_object_privilege(owner.oid, lo.oid, 'SELECT')
+    ) AS has_owner_large_object_read,
+    EXISTS (
+      SELECT 1 FROM pg_catalog.pg_foreign_data_wrapper f2
+      WHERE pg_get_userbyid(f2.fdwowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_foreign_server s2
+      WHERE pg_get_userbyid(s2.srvowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_event_trigger e2
+      WHERE pg_get_userbyid(e2.evtowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_publication p2
+      WHERE pg_get_userbyid(p2.pubowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_subscription s2
+      WHERE pg_get_userbyid(s2.subowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_language l2
+      WHERE pg_get_userbyid(l2.lanowner) = owner.rolname
+    )
+    OR EXISTS (
+      SELECT 1 FROM pg_catalog.pg_extension x2
+      WHERE pg_get_userbyid(x2.extowner) = owner.rolname
+    ) AS has_owner_external_ownership
+  FROM pg_catalog.pg_proc p
+  JOIN pg_catalog.pg_roles owner ON owner.oid = p.proowner
+  WHERE p.prosecdef AND p.prokind IN ('f', 'p')
+),
 security_definer_state AS (
   SELECT
     COALESCE(bool_or(
@@ -1123,6 +1388,8 @@ security_definer_state AS (
                  OR ancestor.rolbypassrls
                  OR has_database_privilege(ancestor.oid, current_database(), 'CREATE'))
         )
+        OR COALESCE(oeps.has_owner_effective_write_risk, false)
+        OR COALESCE(oeps.has_owner_external_ownership, false)
       )
     ), false) AS has_security_definer_risk,
     COALESCE(bool_or(
@@ -1146,10 +1413,18 @@ security_definer_state AS (
         )
         OR pg_get_functiondef(p.oid) IS NULL
       )
-    ), false) AS has_security_definer_metadata_indeterminate
+    ), false) AS has_security_definer_metadata_indeterminate,
+    COALESCE(bool_or(
+      p.prosecdef
+      AND has_function_privilege(current_user, p.oid, 'EXECUTE')
+      AND (COALESCE(oeps.has_owner_effective_write_risk, false)
+           OR COALESCE(oeps.has_owner_large_object_read, false)
+           OR COALESCE(oeps.has_owner_external_ownership, false))
+    ), false) AS has_owner_effective_privilege_risk
   FROM pg_catalog.pg_proc p
   JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
   LEFT JOIN pg_catalog.pg_roles owner ON owner.oid = p.proowner
+  LEFT JOIN owner_effective_privilege_state oeps ON oeps.function_oid = p.oid
   WHERE p.prokind IN ('f', 'p')
     AND n.nspname NOT LIKE 'pg_%'
     AND n.nspname <> 'information_schema'
@@ -1242,6 +1517,7 @@ final_flags AS (
     ms.*,
     ss.*,
     rs.*,
+    frs.*,
     seqs.*,
     los.*,
     os.*,
@@ -1258,9 +1534,9 @@ final_flags AS (
   FROM membership_state ms
   CROSS JOIN schema_state ss
   CROSS JOIN relation_state rs
+  CROSS JOIN review_state frs
   CROSS JOIN sequence_state seqs
   CROSS JOIN large_object_state los
-  CROSS JOIN ownership_state os
   CROSS JOIN security_definer_state sd
   CROSS JOIN executable_function_state ef
   CROSS JOIN catalog_state cs
@@ -1290,10 +1566,10 @@ SELECT CASE
            OR NOT default_acl_catalog_selectable
            OR visible_schema_count = 0
            OR visible_relation_count = 0
-           OR has_security_definer_review_required
-           OR has_security_definer_metadata_indeterminate
-           OR has_executable_function_review_required
-           OR has_nonverifiable_executable_function
+           OR has_missing_function_review
+           OR has_stale_function_review
+           OR NOT all_function_reviews_valid
+           OR registry_entry_count <> executable_function_count
            OR NOT has_migration_select
          THEN 'INDETERMINADA'
          WHEN can_create_temp
@@ -1323,10 +1599,16 @@ SELECT CASE
        has_security_definer_review_required,
        security_definer_review_count,
        has_security_definer_metadata_indeterminate,
+       has_owner_effective_privilege_risk,
        security_definer_dependency_count,
        has_executable_function_review_required,
        executable_function_review_count,
        has_nonverifiable_executable_function,
+       all_function_reviews_valid,
+       has_missing_function_review,
+       has_stale_function_review,
+       executable_function_count,
+       registry_entry_count,
        transaction_read_only_ok,
        required_catalogs_visible,
        required_catalogs_selectable,

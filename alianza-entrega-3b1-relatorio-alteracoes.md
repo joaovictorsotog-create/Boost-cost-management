@@ -1,4 +1,4 @@
-# Entrega 3B.1.5 — Relatório de alterações e compatibilidade
+# Entrega 3B.1.6 — Relatório de alterações e compatibilidade
 
 **Projeto:** Alianza — Sistema de Custos  
 **Role proposta:** `alianza_audit_ro`  
@@ -73,3 +73,21 @@ Só pode ocorrer quando todos os controlos obrigatórios forem comprovados, cada
 ## 5. Integridade da entrega
 
 Todos os comandos administrativos continuam comentados. Não foram executados `CREATE ROLE`, `ALTER ROLE`, `GRANT`, `REVOKE`, DDL, DML, migrations, execução de funções ou conexão de produção.
+
+## 6. Correcções da Entrega 3B.1.6
+
+### 6.1 Registo individual reconciliável
+
+Foi acrescentada a Etapa 9D e a CTE `review_state`. O registo externo identifica cada função/procedure por schema, nome, argumentos de identidade, tipo, linguagem, owner, modo de segurança e extensão. Também registra status, responsável, data, referência de evidência, conclusão técnica, justificativa e hashes.
+
+A consolidação compara o inventário da sessão com esse registo. Uma revisão só é válida quando a identidade permanece igual, o status é `APPROVED`, a definição não mudou (`definition_md5`) e os campos de evidência estão preenchidos. O SHA-256 é calculado pelo cliente sobre os bytes UTF-8 da definição visível; se divergir, a revisão é stale. Entradas ausentes, duplicadas, incompletas ou incompatíveis produzem `INDETERMINADA`. Declarações genéricas não são aceites.
+
+### 6.2 Privilégios efectivos do proprietário
+
+Foi acrescentada a CTE `owner_effective_privilege_state`. Para owners de funções `SECURITY DEFINER` executáveis, a análise agora cobre, através das funções de privilégio efectivas e memberships herdadas, relações, privilégios por coluna, sequences, Large Objects, `CREATE` em database/schemas e ownership de FDWs, foreign servers e event triggers.
+
+Um owner com caminho efectivo de escrita ou ownership externo relevante torna o risco confirmado e conduz a `REPROVADA`. Quando owner, memberships, ACLs, catálogos ou funções de privilégio não forem verificáveis, o resultado permanece `INDETERMINADA`; a classificação não depende apenas de atributos administrativos.
+
+### 6.3 Limitação deliberada
+
+O registo de revisões não é persistido no banco nesta entrega. O cliente read-only deve injectá-lo como CTE `VALUES` tipada, a partir do ficheiro auxiliar, sem DDL/DML. Isso preserva a proibição de escrita e mantém a reconciliação vinculada à mesma sessão e definição observadas.
