@@ -2,7 +2,7 @@
 
 ## Resultado executivo
 
-**Status: CORREÇÕES LOCAIS CONCLUÍDAS; NÃO LIBERADO PARA STAGING OU PRODUÇÃO.** A implementação Costing foi auditada na branch `costing-security-preflight-final-20261112`, criada a partir do SHA `0ee6d280f39e0ac1a6c15caaa00fb2f14f71a285` da implementação mais completa da branch `feature/alianza-costing-foundation-20261110`. O commit desta etapa é `09e459540186efaeaef12246e797254a44d58d27`.
+**Status: CORREÇÕES LOCAIS CONCLUÍDAS; NÃO LIBERADO PARA STAGING OU PRODUÇÃO.** A implementação Costing foi auditada na branch `costing-security-preflight-final-20261112`, criada a partir do SHA `0ee6d280f39e0ac1a6c15caaa00fb2f14f71a285` da implementação mais completa da branch `feature/alianza-costing-foundation-20261110`. O commit desta etapa é `16fde337f707734fbca13ac311f1ebe2d01a2472`.
 
 Nenhuma conexão com Supabase, staging remoto ou produção foi aberta. Nenhuma migration foi executada fora de PostgreSQL local descartável. Não houve push, merge, rebase ou alteração da `main`.
 
@@ -48,8 +48,8 @@ A suíte geral executou **842 testes: 840 aprovados e 2 falhas ambientais preexi
 
 - Repositório da aplicação: `joaovictorsotog-create/alianza-ai-platform`.
 - Base auditada: `0ee6d280f39e0ac1a6c15caaa00fb2f14f71a285`.
-- Commit final desta etapa: `09e459540186efaeaef12246e797254a44d58d27`.
+- Commit final desta etapa: `16fde337f707734fbca13ac311f1ebe2d01a2472`.
 - Branch de trabalho: `costing-security-preflight-final-20261112`.
 - Branch Boost documental: `entrega-3b1-9-correcoes-auditoria`, HEAD `4ab242c` antes deste pacote.
 - Working tree da aplicação ficou limpa após o commit; nenhum segredo, credencial ou dado de produção foi incluído.
-- O patch completo e as fontes exatas do commit estão no pacote independente `alianza-costing-security-audit-package-09e4595`.
+- O patch completo e as fontes exatas do commit estão no pacote independente `alianza-costing-security-audit-package-16fde337`.

@@ -4,7 +4,7 @@
 # O relatório consolida a auditoria da aplicação; o pacote independente contém o patch e fontes exatas do commit final.
 
 arquivo	tamanho_bytes	sha256	relação
-alianza-entrega-3b1-10-relatorio-seguranca-costing.md	5299	1b17db5c964992a5c77eeedabbe048d9619e2c9a297fa98877afea9aff1ef5d9	relatório documental
+alianza-entrega-3b1-10-relatorio-seguranca-costing.md	5300	593c76961724e70c519ed5576dda0694ad7e5179df8b02d694afaf441179dc1d	relatório documental
 alianza-entrega-3b1-10-matriz-controles-evidencias.md	2542	3d8f38768c40043a4ae46e1c70b7c18c310f3172a04ca84ad41d92508479dc85	relatório documental
 alianza-entrega-3b1-10-cenarios.md	1920	114a40dae1df5c9974f5e068957bbcaa8d22768cdcf947eaa86e33ac35301442	relatório documental
-alianza-costing-security-audit-package-09e4595.tar.gz	23520	571fa1e9f75e2f4b02d5ade0e12c9137d5f98114f92e0a2813c5d5e78d3a5c33	pacote independente da aplicação
+alianza-costing-security-audit-package-16fde337.tar.gz	21924	24a0ac76e37d88ad596039991dc3f7e7301dde01cae6593201b1ebc73c381ed1	pacote independente da aplicação
