@@ -1,0 +1,9 @@
+# Manifesto SHA-256 — Entrega 3B.1.11
+# Versão: 3B.1.11
+# Data UTC: 2026-11-12
+# Documentos gerados para reconciliação de proveniência Git, escopo RLS e continuidade Costing.
+
+arquivo	tamanho_bytes	sha256	relação
+alianza-entrega-3b1-11-relatorio-reconciliacao-costing.md	9226	00dd3b753961a76eac7cf0da99ebf5b2c317206cb7513649ad8c08a6dc911977	documento de reconciliação
+alianza-entrega-3b1-11-matriz-tabelas-rls.md	3200	0a3cc6737cb39f6ca5920a696faffcc874dbe1d32beff2a9975e0999d017f664	documento de reconciliação
+alianza-entrega-3b1-11-inventario-proveniencia-git.md	2477	95a993e04b7cbf33e23c1166076b2a26b25b811edf957264fa718ee83f2fd14c	documento de reconciliação
