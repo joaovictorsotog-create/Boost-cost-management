@@ -1,0 +1,10 @@
+# Manifesto SHA-256 — Entrega 3B.1.13
+# Base de aplicação: 16fde337f707734fbca13ac311f1ebe2d01a2472
+# Final local: ecbd686b2c58c46ec7c114c07e3bf22fdfbab028
+arquivo	tamanho_bytes	sha256
+alianza-entrega-3b1-13-relatorio-correcao-rls.md	5910	d8e41be0278a245faa55a6655c4dcef234f381aa7696ae515f7ab8402d7776af
+alianza-entrega-3b1-13-matriz-rls-sete-tabelas.md	2800	2453a1b112c50f587b7ef8dd64997411d8576562dc654d8da3002b2b7113c7ea
+alianza-entrega-3b1-13-errata-contagens-3b1-12.md	1385	bee248c785f9868af21f1df03c09e197bb76afc1a79492e1575a059260a13f17
+alianza-entrega-3b1-13-harness-postgresql.sh	9731	4d6a00d7401001f715aade89719d16b8ad53dcc358d3abab8f4bf93d56c93ef7
+alianza-entrega-3b1-13-evidencias-postgresql.log	19420	8b3b4c435b0d64d3ecba6790f64b5b2b90e7a172d8bd03f94ea3c028de56457a
+alianza-entrega-3b1-13-diff-correcao-rls.patch	3310	4ec805e3ebc7f90e8b2e98f00ef9b161049f38d96e68b515702e64ef4dc2b918

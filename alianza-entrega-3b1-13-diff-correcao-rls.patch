@@ -1,0 +1,54 @@
+[1mdiff --git a/drizzle/pg/rls_multitenant.sql b/drizzle/pg/rls_multitenant.sql[m
+[1mindex 7a53f72..78ec674 100644[m
+[1m--- a/drizzle/pg/rls_multitenant.sql[m
+[1m+++ b/drizzle/pg/rls_multitenant.sql[m
+[36m@@ -87,11 +87,12 @@[m [mbegin[m
+   end loop;[m
+ end $$;[m
+ [m
+[31m-revoke all on function private.current_app_user_id() from public, anon;[m
+[31m-revoke all on function private.has_organization_access(varchar) from public, anon;[m
+[31m-grant usage on schema private to authenticated;[m
+[31m-grant execute on function private.current_app_user_id() to authenticated;[m
+[31m-grant execute on function private.has_organization_access(varchar) to authenticated;[m
+[32m+[m[32mrevoke all on schema private from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mgrant usage on schema private to authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.current_app_user_id() from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mrevoke all on function private.has_organization_access(varchar) from public, anon, authenticated, app_runtime;[m
+[32m+[m[32mgrant execute on function private.current_app_user_id() to authenticated, app_runtime;[m
+[32m+[m[32mgrant execute on function private.has_organization_access(varchar) to authenticated, app_runtime;[m
+ [m
+ alter table public.users enable row level security;[m
+ alter table public.users force row level security;[m
+[36m@@ -162,6 +163,11 @@[m [mbegin[m
+       'create policy costing_tenant_read on public.%I for select to authenticated using (private.has_organization_access("organizationId"))',[m
+       current_table[m
+     );[m
+[32m+[m[32m    execute format('drop policy if exists costing_app_runtime_read on public.%I', current_table);[m
+[32m+[m[32m    execute format([m
+[32m+[m[32m      'create policy costing_app_runtime_read on public.%I for select to app_runtime using (private.has_organization_access("organizationId"))',[m
+[32m+[m[32m      current_table[m
+[32m+[m[32m    );[m
+     execute format('grant select, insert on table public.%I to app_runtime', current_table);[m
+     execute format('drop policy if exists costing_app_runtime_insert on public.%I', current_table);[m
+     execute format([m
+[1mdiff --git a/server/supabase-rls.contract.test.ts b/server/supabase-rls.contract.test.ts[m
+[1mindex 20ea622..886d8fd 100644[m
+[1m--- a/server/supabase-rls.contract.test.ts[m
+[1m+++ b/server/supabase-rls.contract.test.ts[m
+[36m@@ -40,6 +40,15 @@[m [mdescribe("RLS Supabase multi-tenant", () => {[m
+     expect(sql).toContain([m
+       "grant select, insert on table public.%I to app_runtime"[m
+     );[m
+[32m+[m[32m    expect(sql).toContain([m
+[32m+[m[32m      "create policy costing_app_runtime_read on public.%I for select to app_runtime"[m
+[32m+[m[32m    );[m
+[32m+[m[32m    expect(sql).toContain([m
+[32m+[m[32m      "grant usage on schema private to authenticated, app_runtime"[m
+[32m+[m[32m    );[m
+[32m+[m[32m    expect(sql).toContain([m
+[32m+[m[32m      "grant execute on function private.has_organization_access(varchar) to authenticated, app_runtime"[m
+[32m+[m[32m    );[m
+     expect(sql).not.toContain([m
+       "grant update, delete on table public.cost_calculations"[m
+     );[m
