@@ -1,0 +1,8 @@
+# Manifesto SHA-256 — Entrega 3B.1.15
+# Aplicação auditada: ecbd686b2c58c46ec7c114c07e3bf22fdfbab028
+# Boost base local: 3d49e361e502dbcb0fd7429e22df781aa2fde3c4
+arquivo	tamanho_bytes	sha256
+alianza-entrega-3b1-15-relatorio-auditoria-instalacao.md	6649	4a90c85598fbd219ce8d94bcddbe14e67d6fff5be56a398042c20cf4fef052de
+alianza-entrega-3b1-15-matriz-migrations.md	3853	b1ecdf7f7b83a00562999dfc2fae9d56aac0fbc1473f5d6531b2f4f4036ecfc1
+alianza-entrega-3b1-15-mapa-dependencias.md	4686	becee1a56d1ce40e448a2a34467c73fe722b0cd1e0bc3dbef785b853f09d7542
+alianza-entrega-3b1-15-plano-integracao-funcional.md	3730	346e4bbb1dbde788e47ba3178c82b313a234db736f65c15d8f3a415a503f3b11
