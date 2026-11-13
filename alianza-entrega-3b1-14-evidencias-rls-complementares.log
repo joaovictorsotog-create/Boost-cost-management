@@ -1,0 +1,289 @@
+CREATE ROLE
+CREATE ROLE
+CREATE ROLE
+CREATE SCHEMA
+CREATE FUNCTION
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+DO
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/0036_costing_foundation.sql:110: NOTICE:  trigger "cost_calculations_immutable" for relation "cost_calculations" does not exist, skipping
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:4: NOTICE:  schema "private" already exists, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:101: NOTICE:  policy "users_read_self" for relation "public.users" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:109: NOTICE:  policy "users_app_runtime_update_self" for relation "public.users" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.ai_agents" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.ai_return_rules" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.ai_runs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.alerts" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.audit_logs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.automation_jobs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.automations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.campaign_logs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.campaign_metrics" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.campaign_recipients" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.campaigns" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.channels" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.companies" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.contact_tags" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.contacts" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.conversation_events" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.conversations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.crm_activities" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.custom_fields" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.custom_role_permissions" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.custom_roles" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.deals" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.departments" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.follow_up_rules" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.handoffs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.integration_configs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.kanban_boards" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.kanban_cards" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.kanban_columns" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.knowledge_chunks" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.knowledge_documents" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.messages" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.organization_access_requests" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.organization_invitations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.organization_members" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.pipeline_stages" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.pipelines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.prompt_versions" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.service_queues" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.tags" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.webhook_deliveries" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:143: NOTICE:  policy "tenant_read" for relation "public.webhook_endpoints" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.cost_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.cost_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.cost_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.cost_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.cost_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.cost_items" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.cost_items" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.cost_items" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.cost_items" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.cost_items" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.cost_structures" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.cost_structures" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.cost_structures" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.cost_structures" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.cost_structures" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.cost_structure_lines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.cost_calculations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.cost_calculations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.cost_calculations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.costing_gamma_settings" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_tenant_read" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_read" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_insert" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_update" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:191: NOTICE:  policy "costing_app_runtime_delete" for relation "public.costing_gamma_groups" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:197: NOTICE:  policy "organization_read" for relation "public.organizations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:204: NOTICE:  policy "organization_invitations_insert" for relation "public.organization_invitations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:209: NOTICE:  policy "organization_invitations_update" for relation "public.organization_invitations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:215: NOTICE:  policy "organization_invitations_delete" for relation "public.organization_invitations" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:221: NOTICE:  policy "audit_logs_insert" for relation "public.audit_logs" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:229: NOTICE:  policy "ai_agents_app_runtime_insert" for relation "public.ai_agents" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:236: NOTICE:  policy "prompt_versions_app_runtime_insert" for relation "public.prompt_versions" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:244: NOTICE:  policy "ai_agents_app_runtime_update" for relation "public.ai_agents" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:252: NOTICE:  policy "prompt_versions_app_runtime_update" for relation "public.prompt_versions" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:261: NOTICE:  policy "contacts_app_runtime_insert" for relation "public.contacts" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:268: NOTICE:  policy "contacts_app_runtime_update" for relation "public.contacts" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:276: NOTICE:  policy "companies_app_runtime_insert" for relation "public.companies" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:283: NOTICE:  policy "companies_app_runtime_update" for relation "public.companies" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:291: NOTICE:  policy "crm_activities_app_runtime_insert" for relation "public.crm_activities" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:298: NOTICE:  policy "crm_activities_app_runtime_update" for relation "public.crm_activities" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:306: NOTICE:  policy "pipelines_app_runtime_insert" for relation "public.pipelines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:313: NOTICE:  policy "pipelines_app_runtime_update" for relation "public.pipelines" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:321: NOTICE:  policy "pipeline_stages_app_runtime_insert" for relation "public.pipeline_stages" does not exist, skipping
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:328: NOTICE:  policy "pipeline_stages_app_runtime_update" for relation "public.pipeline_stages" does not exist, skipping
+rls_run_1=ok
+psql:/home/ubuntu/work/alianza-ai-platform/drizzle/pg/rls_multitenant.sql:4: NOTICE:  schema "private" already exists, skipping
+rls_run_2=ok
+DO
+ runtime_private_usage | runtime_helper_execute | public_helper_execute | anon_helper_execute 
+-----------------------+------------------------+-----------------------+---------------------
+ t                     | t                      | f                     | f
+(1 row)
+
+ session_user | current_user 
+--------------+--------------
+ app_runtime  | app_runtime
+(1 row)
+
+ set_config 
+------------
+ 1
+(1 row)
+
+DO
+           result           
+----------------------------
+ runtime_read_own_tenant=ok
+(1 row)
+
+DO
+            result            
+------------------------------
+ runtime_authorized_writes=ok
+(1 row)
+
+snapshot_update=blocked
+ERROR:  permission denied for table cost_calculations
+snapshot_delete=blocked
+ERROR:  permission denied for table cost_calculations
+ set_config 
+------------
+ 1
+(1 row)
+
+DO
+              result               
+-----------------------------------
+ runtime_cross_tenant_isolation=ok
+(1 row)
+
+ session_user  | current_user  
+---------------+---------------
+ authenticated | authenticated
+(1 row)
+
+ set_config 
+------------
+ 2
+(1 row)
+
+              set_config              
+--------------------------------------
+ 00000000-0000-0000-0000-000000000001
+(1 row)
+
+DO
+ set_config 
+------------
+ 
+(1 row)
+
+DO
+                result                
+--------------------------------------
+ authenticated_identity_and_no_jwt=ok
+(1 row)
+
+anon_access=blocked
+ERROR:  permission denied for table cost_items
+ set_config 
+------------
+ 1
+(1 row)
+
+INSERT 0 1
+NOTICE:  isolation role=app_runtime org=org-a table=cost_groups own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=cost_items own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=cost_structures own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=cost_structure_lines own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=cost_calculations own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=costing_gamma_settings own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-a table=costing_gamma_groups own=1 other=0
+DO
+           result           
+----------------------------
+ runtime_org_a_all_seven=ok
+(1 row)
+
+ session_user | current_user 
+--------------+--------------
+ app_runtime  | app_runtime
+(1 row)
+
+ set_config 
+------------
+ 2
+(1 row)
+
+NOTICE:  isolation role=app_runtime org=org-b table=cost_groups own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=cost_items own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=cost_structures own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=cost_structure_lines own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=cost_calculations own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=costing_gamma_settings own=1 other=0
+NOTICE:  isolation role=app_runtime org=org-b table=costing_gamma_groups own=1 other=0
+DO
+           result           
+----------------------------
+ runtime_org_b_all_seven=ok
+(1 row)
+
+ set_config 
+------------
+ 1
+(1 row)
+
+NOTICE:  cross_update table=cost_groups blocked=no_visible_rows
+NOTICE:  cross_update table=cost_items blocked=no_visible_rows
+NOTICE:  cross_update table=cost_structures blocked=no_visible_rows
+NOTICE:  cross_update table=cost_structure_lines blocked=no_visible_rows
+NOTICE:  cross_update table=cost_calculations blocked=permission_denied
+NOTICE:  cross_update table=costing_gamma_settings blocked=no_visible_rows
+NOTICE:  cross_update table=costing_gamma_groups blocked=no_visible_rows
+DO
+NOTICE:  cross_delete table=cost_groups blocked=no_visible_rows
+NOTICE:  cross_delete table=cost_items blocked=no_visible_rows
+NOTICE:  cross_delete table=cost_structures blocked=no_visible_rows
+NOTICE:  cross_delete table=cost_structure_lines blocked=no_visible_rows
+NOTICE:  cross_delete table=cost_calculations blocked=permission_denied
+NOTICE:  cross_delete table=costing_gamma_settings blocked=no_visible_rows
+NOTICE:  cross_delete table=costing_gamma_groups blocked=no_visible_rows
+DO
+                  result                  
+------------------------------------------
+ runtime_cross_update_delete_all_seven=ok
+(1 row)
+
+ set_config 
+------------
+ 1
+(1 row)
+
+INSERT 0 0
+NOTICE:  cross_insert all_seven blocked
+DO
+              result               
+-----------------------------------
+ runtime_cross_insert_all_seven=ok
+(1 row)
+
+ set_config 
+------------
+ 1
+(1 row)
+
+INSERT 0 0
+NOTICE:  transfer_update all_seven blocked
+DO
+                 result                  
+-----------------------------------------
+ runtime_org_transfer_updates_blocked=ok
+(1 row)
+
+postgresql_rls_correction=PASS

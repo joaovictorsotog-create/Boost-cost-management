@@ -1,0 +1,8 @@
+# Manifesto SHA-256 — Entrega 3B.1.14
+# Aplicação auditada: ecbd686b2c58c46ec7c114c07e3bf22fdfbab028
+# Boost base documental: de83e2346456c81c50eef7eac9b8bc81eb74317c
+arquivo	tamanho_bytes	sha256
+alianza-entrega-3b1-14-relatorio-testes-rls-complementares.md	5142	d1f59191f76b66e9cd99be895febd7f7c06dc2c407d8f355b91122a30bd3f6bd
+alianza-entrega-3b1-14-matriz-cobertura-rls.md	2556	23afcf325a7fda3c1d1f4ee60101a2be3930e7052d946c9bb632476dcf2023ef
+alianza-entrega-3b1-14-harness-rls-complementar.sh	18822	4a42fe7dd72ee9efe009a2667f8d5299f04b2a71c37dfd81bd03a67c1cc480ee
+alianza-entrega-3b1-14-evidencias-rls-complementares.log	22562	d650cdd85a766f117ecafe31aac579ba1b1619f4c0b1ae8902f7079c4d474a9a
