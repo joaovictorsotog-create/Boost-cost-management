@@ -1,0 +1,27 @@
+# Manifesto documental corrigido — Entrega 3B.1.12
+# Data UTC: 2026-11-12
+
+## Manifestos anteriores
+
+manifesto_anterior=alianza-entrega-3b1-11-sha256.txt
+manifesto_anterior_sha256=d3a43a34dda59a5b7e6331a90c8b9c268a214fba1a152dc73e4d28fc314049a8
+
+## Três documentos históricos — hashes reais
+
+arquivo	tamanho_bytes	sha256
+alianza-entrega-3b1-11-relatorio-reconciliacao-costing.md	9226	00dd3b753961a76eac7cf0da99ebf5b2c317206cb7513649ad8c08a6dc911977
+alianza-entrega-3b1-11-matriz-tabelas-rls.md	3200	0a3cc6737cb39f6ca5920a696faffcc874dbe1d32beff2a9975e0999d017f664
+alianza-entrega-3b1-11-inventario-proveniencia-git.md	2477	95a993e04b7cbf33e23c1166076b2a26b25b811edf957264fa718ee83f2fd14c
+
+## Artefatos novos desta auditoria
+
+arquivo	tamanho_bytes	sha256
+alianza-entrega-3b1-12-relatorio-proveniencia-publicacao.md	7494	22381c5d06932d3d252f8c83d5cdbec9ab4e58a0a26e0dd0ee452e284391e19b
+alianza-entrega-3b1-12-matriz-commits-arquivos.md	3248	d1e10a72d03626529f63d1e4530289249028ec44595eb8876a1f6ec06a0f88ce
+alianza-entrega-3b1-12-evidencias-seguranca.md	2195	e29f3de58a59111fb55bfd3445bc9c4f1e2d33891687253a5163f6c2988d2388
+alianza-entrega-3b1-12-diff-27df6b0-a-16fde337.patch	159356	82049d3075c55281ae29adff0972eebbd66926e7b52b3cb3631b62ee2d56b777
+
+## Hash do manifesto
+
+O SHA-256 real deste arquivo está registrado separadamente em:
+`alianza-entrega-3b1-12-manifesto-corrigido.txt.sha256`
