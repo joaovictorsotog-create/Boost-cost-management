@@ -1,39 +1,29 @@
-# Entrega 3B.1.14 — Matriz de cobertura e evidências RLS
+# Entrega 3B.1.14 — Matriz de cobertura RLS e origem das rejeições
 
-Legenda:
+Aplicação auditada: `ecbd686b2c58c46ec7c114c07e3bf22fdfbab028`.
 
-- **Loop compartilhado / consulta individual:** o harness usa uma função/loop comum, mas executa uma consulta dinâmica separada para cada tabela e registra o resultado por tabela.
-- **Bloco com comandos individuais:** cada tabela possui uma instrução explícita no bloco SQL compartilhado.
-- **Inferido:** não usado para os resultados declarados abaixo; cada linha listada foi executada.
+| Cenário | cost_groups | cost_items | cost_structures | cost_structure_lines | cost_calculations | costing_gamma_settings | costing_gamma_groups |
+|---|---|---|---|---|---|---|---|
+| A lê A; A não lê B | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop |
+| B lê B; B não lê A | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop | PASS — consulta individual no loop |
+| A tenta UPDATE de B | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — privilégio ausente | PASS — zero linhas visíveis | PASS — zero linhas visíveis |
+| A tenta DELETE de B | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — zero linhas visíveis | PASS — privilégio ausente | PASS — zero linhas visíveis | PASS — zero linhas visíveis |
+| A tenta INSERT em B | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS | PASS — `42501`, mensagem RLS |
+| A transfere registro A→B | PASS — `42501`, RLS | PASS — `42501`, RLS | PASS — `42501`, RLS | PASS — `42501`, RLS | PASS — `42501`, privilégio ausente | PASS — `42501`, RLS | PASS — `42501`, RLS |
 
-| Cenário | `cost_groups` | `cost_items` | `cost_structures` | `cost_structure_lines` | `cost_calculations` | `costing_gamma_settings` | `costing_gamma_groups` | Forma de execução |
-|---|---:|---:|---:|---:|---:|---:|---:|---|
-| A lê A; A não lê B | PASS | PASS | PASS | PASS | PASS | PASS | PASS | loop compartilhado, 2 SELECTs por tabela |
-| B lê B; B não lê A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | loop compartilhado, 2 SELECTs por tabela |
-| A tenta UPDATE de B | PASS | PASS | PASS | PASS | PASS por privilégio | PASS | PASS | loop compartilhado, UPDATE dinâmico individual |
-| A tenta DELETE de B | PASS | PASS | PASS | PASS | PASS por privilégio | PASS | PASS | loop compartilhado, DELETE dinâmico individual |
-| A tenta INSERT em B | PASS | PASS | PASS | PASS | PASS | PASS | PASS | 7 INSERTs explícitos no bloco |
-| A transfere registro A→B | PASS | PASS | PASS | PASS | PASS por privilégio | PASS | PASS | 7 UPDATEs explícitos no bloco |
+## Critério de atribuição
 
-## Não inferido
+Os INSERTs só são PASS quando o harness captura `RETURNED_SQLSTATE = 42501` e `MESSAGE_TEXT` contendo `row-level security policy`. Erro de constraint, duplicidade, referência inválida ou qualquer mensagem diferente faz o teste falhar.
 
-Nenhum `1 / 0` nesta matriz é uma extrapolação de outra tabela. Para cada célula de isolamento, o harness executou as duas consultas:
+Para transferência, cada fixture A é verificada como visível antes do UPDATE e o comando altera somente `organizationId`. Seis tabelas retornaram mensagem de RLS. `cost_calculations` retornou `permission denied for table cost_calculations`; portanto, esse caso é PASS de bloqueio, mas **não** é evidência isolada de RLS.
 
-```sql
-SELECT count(*) FROM public.<tabela> WHERE "organizationId" = 'organização própria';
-SELECT count(*) FROM public.<tabela> WHERE "organizationId" = 'organização alheia';
-```
+## Forma de execução
 
-Para escritas cruzadas, cada célula corresponde a uma instrução dinâmica ou explícita aplicada à tabela indicada. `cost_calculations` possui resultado “por privilégio” porque a ausência de UPDATE/DELETE foi exercitada diretamente e retornou `permission denied`.
+- Isolamento: duas consultas individuais por tabela dentro de loop PL/pgSQL compartilhado.
+- INSERT: sete comandos explícitos, cada um com fixture e identificador exclusivos.
+- Transferência: sete UPDATEs explícitos, com confirmação de existência/visibilidade anterior.
+- Runtime: conexão direta como `app_runtime`, sem `SET ROLE`.
 
 ## Controles preservados
 
-| Controle | Evidência |
-|---|---|
-| conexão direta do runtime | `session_user=app_runtime`, `current_user=app_runtime` |
-| não uso de `SET ROLE` | conexão `psql -U app_runtime` no harness |
-| `authenticated` usa JWT | adulteração de `request.app_user_id` não alterou organização observada |
-| JWT ausente | zero registros |
-| anon | `permission denied` |
-| idempotência | `rls_run_1=ok`, `rls_run_2=ok` |
-| snapshot imutável | UPDATE/DELETE bloqueados |
+A matriz não infere resultados entre tabelas. Também foram preservados: autenticação por `auth.uid()`, resistência à adulteração de `request.app_user_id`, sessão sem JWT, bloqueio de `anon`, imutabilidade de snapshots e idempotência da aplicação RLS.

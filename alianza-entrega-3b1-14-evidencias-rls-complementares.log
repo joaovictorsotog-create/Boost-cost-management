@@ -266,7 +266,14 @@ DO
 (1 row)
 
 INSERT 0 0
-NOTICE:  cross_insert all_seven blocked
+NOTICE:  cross_insert table=cost_groups sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_groups"
+NOTICE:  cross_insert table=cost_items sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_items"
+NOTICE:  cross_insert table=cost_structures sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_structures"
+NOTICE:  cross_insert table=cost_structure_lines sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_structure_lines"
+NOTICE:  cross_insert table=cost_calculations sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_calculations"
+NOTICE:  cross_insert table=costing_gamma_settings sqlstate=42501 origin=rls message=new row violates row-level security policy for table "costing_gamma_settings"
+NOTICE:  cross_insert table=costing_gamma_groups sqlstate=42501 origin=rls message=new row violates row-level security policy for table "costing_gamma_groups"
+NOTICE:  cross_insert all_seven blocked_by_rls
 DO
               result               
 -----------------------------------
@@ -279,7 +286,14 @@ DO
 (1 row)
 
 INSERT 0 0
-NOTICE:  transfer_update all_seven blocked
+NOTICE:  transfer table=cost_groups sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_groups"
+NOTICE:  transfer table=cost_items sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_items"
+NOTICE:  transfer table=cost_structures sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_structures"
+NOTICE:  transfer table=cost_structure_lines sqlstate=42501 origin=rls message=new row violates row-level security policy for table "cost_structure_lines"
+NOTICE:  transfer table=cost_calculations sqlstate=42501 origin=privilege message=permission denied for table cost_calculations
+NOTICE:  transfer table=costing_gamma_settings sqlstate=42501 origin=rls message=new row violates row-level security policy for table "costing_gamma_settings"
+NOTICE:  transfer table=costing_gamma_groups sqlstate=42501 origin=rls message=new row violates row-level security policy for table "costing_gamma_groups"
+NOTICE:  transfer_update all_seven blocked_with_origin
 DO
                  result                  
 -----------------------------------------

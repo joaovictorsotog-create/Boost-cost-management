@@ -1,143 +1,55 @@
-# Entrega 3B.1.14 — Complementação final dos testes RLS Costing
+# Entrega 3B.1.14 — Ajuste final de evidência RLS Costing
 
-## Proveniência verificada antes dos testes
+## Proveniência e escopo
 
-Aplicação:
+Aplicação: branch `costing-security-preflight-final-20261112`, SHA `ecbd686b2c58c46ec7c114c07e3bf22fdfbab028`, working tree limpa e não alterada nesta rodada.
 
-- branch: `costing-security-preflight-final-20261112`
-- HEAD esperado e confirmado: `ecbd686b2c58c46ec7c114c07e3bf22fdfbab028`
-- working tree: limpa
-- nenhum arquivo da aplicação foi alterado nesta rodada
+Documentação: `joaovictorsotog-create/Boost-cost-management`, branch `entrega-3b1-9-correcoes-auditoria`, ajustada somente em novo commit documental derivado de `2afaf36d73d54e1c936efff1076b40aa026fb502`.
 
-Boost:
+Não houve push da aplicação, PR, merge, rebase, cherry-pick, deploy, conexão Supabase/produção ou alteração de migration/SQL de produção.
 
-- repositório: `joaovictorsotog-create/Boost-cost-management`
-- branch documental: `entrega-3b1-9-correcoes-auditoria`
-- HEAD esperado e confirmado antes desta rodada: `de83e2346456c81c50eef7eac9b8bc81eb74317c`
-- remoto confirmado na mesma branch e SHA
+## Execução
 
-## Harness executado agora
+O harness foi executado com Bash em PostgreSQL 16 descartável. As conexões de runtime foram abertas diretamente com `-U app_runtime`, sem `SET ROLE`. O log integral está em `alianza-entrega-3b1-14-evidencias-rls-complementares.log`.
 
-O harness atualizado foi executado em PostgreSQL descartável 16. As conexões de runtime foram abertas diretamente com `-U app_runtime`; não houve `SET ROLE`.
+A sessão registrou `session_user=app_runtime` e `current_user=app_runtime`. As fixtures são artificiais, isoladas e contêm uma linha válida por organização em cada uma das sete tabelas Costing.
 
-A sessão registrou:
+## INSERT cruzado — evidência atribuível a RLS
 
-```text
-session_user | current_user
--------------+--------------
-app_runtime  | app_runtime
-```
+Cada INSERT possui fixture própria, identificador exclusivo e referências estrangeiras válidas. O bloco captura `RETURNED_SQLSTATE` e `MESSAGE_TEXT`; somente é aceito como PASS quando `SQLSTATE=42501` e a mensagem contém `row-level security policy`. Qualquer outro SQLSTATE ou mensagem faria o harness falhar, sem conversão em sucesso.
 
-O fixture possui uma linha para a organização A e uma linha para a organização B em cada uma das sete tabelas:
+| Tabela | Organização da sessão | SQLSTATE | Mensagem/origem | Resultado |
+|---|---|---:|---|---|
+| `cost_groups` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `cost_items` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `cost_structures` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `cost_structure_lines` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `cost_calculations` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `costing_gamma_settings` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
+| `costing_gamma_groups` | A insere B | `42501` | `new row violates row-level security policy` | PASS — RLS |
 
-- `cost_groups`
-- `cost_items`
-- `cost_structures`
-- `cost_structure_lines`
-- `cost_calculations`
-- `costing_gamma_settings`
-- `costing_gamma_groups`
+Resultado: `runtime_cross_insert_all_seven=ok` e `cross_insert all_seven blocked_by_rls`.
 
-## Resultados novos — isolamento de leitura
+## Transferência A→B — origem diferenciada
 
-Foi executado um loop PL/pgSQL compartilhado que emitiu uma consulta individual por tabela, registrando `own=1` e `other=0` para cada caso.
+Antes de cada UPDATE, o harness confirmou que o registro da organização A estava visível para `app_runtime`. Cada comando alterou somente `organizationId`.
 
-### Organização A
+| Tabela | Fixture A visível | SQLSTATE | Origem observada | Resultado |
+|---|---:|---:|---|---|
+| `cost_groups` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
+| `cost_items` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
+| `cost_structures` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
+| `cost_structure_lines` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
+| `cost_calculations` | 1 | `42501` | `permission denied for table cost_calculations` | PASS — privilégio ausente; não é prova isolada de RLS |
+| `costing_gamma_settings` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
+| `costing_gamma_groups` | 1 | `42501` | mensagem de row-level security policy | PASS — RLS |
 
-```text
-cost_groups             own=1 other=0
-cost_items              own=1 other=0
-cost_structures         own=1 other=0
-cost_structure_lines    own=1 other=0
-cost_calculations       own=1 other=0
-costing_gamma_settings  own=1 other=0
-costing_gamma_groups    own=1 other=0
-```
+Resultado: `runtime_org_transfer_updates_blocked=ok` e `transfer_update all_seven blocked_with_origin`.
 
-Resultado: `runtime_org_a_all_seven=ok`.
+## Outros controles preservados
 
-### Organização B
-
-```text
-cost_groups             own=1 other=0
-cost_items              own=1 other=0
-cost_structures         own=1 other=0
-cost_structure_lines    own=1 other=0
-cost_calculations       own=1 other=0
-costing_gamma_settings  own=1 other=0
-costing_gamma_groups    own=1 other=0
-```
-
-Resultado: `runtime_org_b_all_seven=ok`.
-
-Portanto, tanto A quanto B leem somente seus próprios registros em todas as sete tabelas, e cada organização não lê registros da outra.
-
-## Resultados novos — escritas cruzadas
-
-### UPDATE e DELETE de registros da outra organização
-
-Foi executado um loop compartilhado com uma instrução dinâmica individual por tabela. Para as seis tabelas mutáveis, o resultado foi zero linhas visíveis; para `cost_calculations`, a tentativa foi bloqueada por privilégio ausente. Resultado:
-
-```text
-runtime_cross_update_delete_all_seven=ok
-```
-
-Todos os sete casos foram exercitados individualmente dentro do loop:
-
-- `cost_groups`: UPDATE/DELETE bloqueados;
-- `cost_items`: UPDATE/DELETE bloqueados;
-- `cost_structures`: UPDATE/DELETE bloqueados;
-- `cost_structure_lines`: UPDATE/DELETE bloqueados;
-- `cost_calculations`: UPDATE/DELETE bloqueados por `permission denied`;
-- `costing_gamma_settings`: UPDATE/DELETE bloqueados;
-- `costing_gamma_groups`: UPDATE/DELETE bloqueados.
-
-### INSERT em organização alheia
-
-Foram executados sete INSERTs individuais, um por tabela, dentro de um bloco PL/pgSQL compartilhado. Todos falharam conforme esperado pela policy `WITH CHECK`:
-
-```text
-runtime_cross_insert_all_seven=ok
-```
-
-### Transferência de registro entre organizações
-
-Foram executados sete UPDATEs individuais tentando alterar `organizationId` de A para B. Todos foram bloqueados, incluindo `cost_calculations`, que permanece bloqueado também pelo privilégio de UPDATE:
-
-```text
-runtime_org_transfer_updates_blocked=ok
-```
-
-## Testes preservados e repetidos
-
-O harness final também preservou e repetiu:
-
-- conexão direta como `app_runtime`;
-- `session_user=app_runtime`;
-- `current_user=app_runtime`;
-- adulteração de `request.app_user_id` para `authenticated`, que não suplanta `auth.uid()`;
-- sessão `authenticated` sem JWT, retornando zero registros;
-- acesso `anon`, bloqueado por privilégio;
-- aplicação RLS duas vezes, ambas concluídas com `rls_run_1=ok` e `rls_run_2=ok`;
-- imutabilidade dos snapshots, com UPDATE/DELETE bloqueados.
-
-## Testes direcionados
-
-Executados novamente nesta rodada:
-
-- 9 arquivos Vitest;
-- 78 testes aprovados;
-- engine Costing: 28;
-- snapshot: 6;
-- router/validador: 12;
-- identidade, RLS, preflight e fail-closed: 32.
-
-## Distinção entre evidência nova e histórica
-
-Os resultados `runtime_org_a_all_seven`, `runtime_org_b_all_seven`, `runtime_cross_update_delete_all_seven`, `runtime_cross_insert_all_seven` e `runtime_org_transfer_updates_blocked` foram executados agora e estão no log desta entrega.
-
-Os resultados da Entrega 3B.1.13 permanecem históricos, embora tenham sido preservados no harness: `runtime_read_own_tenant`, `runtime_authorized_writes`, `runtime_cross_tenant_isolation`, `authenticated_identity_and_no_jwt`, `anon_access=blocked` e `postgresql_rls_correction=PASS`.
+O harness também repetiu isolamento de leitura A/B nas sete tabelas (`own=1`, `other=0`), UPDATE/DELETE cruzado, identidade via `auth.uid()`, adulteração de `request.app_user_id`, sessão sem JWT, bloqueio de `anon`, aplicação RLS idempotente e imutabilidade dos snapshots. Os bloqueios de `cost_calculations` por UPDATE/DELETE continuam documentados separadamente como ausência de privilégio.
 
 ## Conclusão
 
-A cobertura complementar exigida foi executada sem alteração da lógica da aplicação. Não houve push da aplicação, PR, merge, rebase, cherry-pick, deploy, migration persistente, conexão Supabase ou acesso à produção.
+Os sete INSERTs cruzados são comprovadamente rejeitados pela policy `WITH CHECK`. Seis transferências A→B são comprovadamente rejeitadas pela camada RLS; `cost_calculations` é rejeitada pelo privilégio ausente e não é apresentada como prova isolada de RLS. Não há falsos positivos por constraint, duplicidade, fixture inválida ou erro genérico mascarado.
