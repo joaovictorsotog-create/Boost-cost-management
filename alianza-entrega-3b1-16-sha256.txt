@@ -1,0 +1,6 @@
+7e6c4df8f84b16f23f8e7663ffca2080319f149abae42f417f799a1eb10e7c7b  alianza-entrega-3b1-16-relatorio-compatibilidade-postgresql.md
+a5fec046301b7525d258ea5a5d54166b19da9775f1b81c101d717702a20472f4  alianza-entrega-3b1-16-matriz-modulos-postgresql.md
+fe9d003dd468dea26a53e94858486e53beaaf6e0a830d6a0950936d9ba3af604  alianza-entrega-3b1-16-plano-fechamento-postgresql.md
+8c1e4d7d11f7139a66b8b3cd51461fb0970a6ea2cf3d9197af2747e808133799  alianza-entrega-3b1-16-evidencia-proveniencia.md
+53cbb9b367c58ae78d5ae71578003dde799cfe7f6cdefd7264577255b5fbc957  alianza-entrega-3b1-16-evidencia-pnpm-check.log
+c0df00bddfc0491b53f23e3a1bf3d3889f060a2f4c845717c4d70fc8117323ad  alianza-entrega-3b1-16-evidencia-testes-costing.log

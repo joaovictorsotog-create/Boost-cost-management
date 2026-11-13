@@ -1,0 +1,14 @@
+ DEPRECATED  "environmentMatchGlobs" is deprecated. Use `test.projects` to define different configurations instead.
+
+ RUN  v3.2.7 /home/ubuntu/work/alianza-ai-platform
+
+ ✓ server/pg-schema-conversion.contract.test.ts (1 test) 3ms
+ ✓ server/domain/costing/engine.test.ts (28 tests) 8ms
+ ✓ server/domain/costing/snapshot.test.ts (6 tests) 5ms
+ ✓ server/routers/costing.test.ts (12 tests) 3ms
+
+ Test Files  4 passed (4)
+      Tests  47 passed (47)
+   Start at  10:46:21
+   Duration  821ms (transform 284ms, setup 0ms, collect 783ms, tests 20ms, environment 1ms, prepare 241ms)
+
