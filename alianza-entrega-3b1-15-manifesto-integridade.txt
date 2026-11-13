@@ -1,6 +1,6 @@
 # Manifesto SHA-256 — Entrega 3B.1.15
 Aplicação auditada: branch remota costing-security-preflight-final-20261112
-HEAD remoto: ecbd686b2c58c46ec7c114c07e3bf22fdfbab028
+HEAD remoto da aplicação: ecbd686b2c58c46ec7c114c07e3bf22fdfbab028
 arquivo	tamanho_bytes	sha256
 alianza-entrega-3b1-15-diagnostico-bootstrap-postgresql.md	2942	67bc6db599b34c9357c5f16aacba2b0319bfb853d880d4e05685436e459883af
 alianza-entrega-3b1-15-inventario-objetos-postgresql.md	3977	d64b041b28f7972a533b5a53ee5697476b0d44cd9db190d7c7996215d04a4743
@@ -8,3 +8,4 @@ alianza-entrega-3b1-15-mapa-dependencias-bootstrap.md	2797	37fc16915e366dd98b7bb
 alianza-entrega-3b1-15-comparacao-estrategias-bootstrap.md	2570	fd5025c41f3152e3e3ae85a2dba42100e201c6a71a63d57e456edbe590620892
 alianza-entrega-3b1-15-plano-tecnico-bootstrap.md	2771	55d278767092fcadb62309fcace8f407ece7040ff781164059125deabc642651
 alianza-entrega-3b1-15-riscos-bloqueios-bootstrap.md	2111	3d34cec3b914ef0515ffc3b1e5d4647d53a39469017201ab96a018768a01e5ef
+alianza-entrega-3b1-15-decisao-arquitetural-postgresql.md	4325	450f6c9acdadb6324d48660db8e3ae0843766afb9757ce008ed8b7170c896ecb
